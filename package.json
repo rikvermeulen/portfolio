@@ -1,0 +1,83 @@
+{
+  "name": "lightning",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Project:",
+  "scripts": {
+    "dev": "next dev && NODE_ENV=development",
+    "dev-turbo": "next dev --turbo && NODE_ENV=development",
+    "build": "next build && NODE_ENV=production",
+    "start": "next start",
+    "lint": "next lint",
+    "test": "vitest --passWithNoTests",
+    "build-prod": "run-s clean build export",
+    "postbuild": "next-sitemap",
+    "prepare": "husky install",
+    "format": "next lint --fix && prettier '**/*.{json,yaml}' --write --ignore-path .gitignore",
+    "check-types": "tsc",
+    "check-updates": "ncu -u && npm i"
+  },
+  "author": "Rik Vermeulen",
+  "contributors": [],
+  "license": "ISC",
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rikvermeulen/lightnings"
+  },
+  "prettier": {
+    "trailingComma": "es5",
+    "singleQuote": true,
+    "printWidth": 100,
+    "tabWidth": 2
+  },
+  "dependencies": {
+    "@next/font": "13.1.5",
+    "dotenv-safe": "^8.2.0",
+    "next": "13.1.5",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "tailwindcss": "^3.2.4"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^17.4.2",
+    "@commitlint/config-conventional": "^17.4.2",
+    "@commitlint/cz-commitlint": "^17.4.2",
+    "@ducanh2912/next-pwa": "^7.3.2",
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^13.4.0",
+    "@types/node": "18.11.18",
+    "@types/react": "18.0.27",
+    "@types/react-dom": "18.0.10",
+    "@typescript-eslint/eslint-plugin": "^5.49.0",
+    "@typescript-eslint/parser": "^5.49.0",
+    "@vitejs/plugin-react": "^3.0.1",
+    "autoprefixer": "^10.4.13",
+    "eslint": "8.32.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-airbnb-typescript": "^17.0.0",
+    "eslint-config-next": "13.1.5",
+    "eslint-config-prettier": "^8.6.0",
+    "eslint-plugin-cypress": "^2.12.1",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-jest": "^27.2.1",
+    "eslint-plugin-jest-dom": "^4.0.3",
+    "eslint-plugin-jest-formatting": "^3.1.0",
+    "eslint-plugin-jsx-a11y": "^6.7.1",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-react": "^7.32.1",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-simple-import-sort": "^9.0.0",
+    "eslint-plugin-tailwindcss": "^3.8.2",
+    "eslint-plugin-testing-library": "^5.10.0",
+    "eslint-plugin-unused-imports": "^2.0.0",
+    "husky": "^8.0.3",
+    "next-sitemap": "^3.1.47",
+    "postcss": "^8.4.21",
+    "prettier": "^2.8.3",
+    "typescript": "4.9.4",
+    "vitest": "^0.28.1"
+  }
+}
