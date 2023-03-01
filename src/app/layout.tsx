@@ -19,7 +19,7 @@ const FKDisplay = localFont({
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${FKDisplay.variable} ${inter.variable} relative`}>
+    <html lang="en" className={`${FKDisplay.variable} ${inter.variable} relative bg-black`}>
       <head />
       <body>
         <Header />

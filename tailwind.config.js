@@ -10,7 +10,11 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['var(--font-inter)', ...defaultTheme.fontFamily.sans],
+        sans: ['var(--font-inter)'],
+        fk: ['var(--font-fkdisplay)', ...defaultTheme.fontFamily.sans],
+      },
+      backgroundColor: {
+        header: 'hsla(0,0%,100%,.1)',
       },
     },
   },
