@@ -1,9 +1,11 @@
 import '../styles/global.css';
 
-import { Inter } from '@next/font/google';
-import localFont from '@next/font/local';
+import type { Metadata } from 'next';
+import { Inter } from 'next/font/google';
+import localFont from 'next/font/local';
 
 import Header from './components/Header';
+import { meta } from './meta';
 
 const inter = Inter({
   variable: '--font-inter',
@@ -16,6 +18,9 @@ const FKDisplay = localFont({
   variable: '--font-fkdisplay',
   display: 'swap',
 });
+export async function generateMetadata(): Promise<Metadata> {
+  return meta;
+}
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
