@@ -1,6 +1,6 @@
+/* eslint-disable import/no-extraneous-dependencies */
 /** @type {import('next').NextConfig} */
 
-// eslint-disable-next-line import/no-extraneous-dependencies
 const withPWA = require("@ducanh2912/next-pwa").default({
   dest: "public",
   register: true,
@@ -9,11 +9,11 @@ const withPWA = require("@ducanh2912/next-pwa").default({
 });
 
 
-export default withPWA({
+module.exports = withPWA({
   experimental: {
     appDir: true,
   },
-  images: {
+    images: {
     remotePatterns: [
       {
         protocol: 'https',
