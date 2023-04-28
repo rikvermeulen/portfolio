@@ -60,7 +60,7 @@ export default function meta(): Metadata {
     description:
       'Discover the portfolio of Rik Vermeulen, showcasing web development projects and skills.',
     referrer: 'origin-when-cross-origin',
-    keywords: ['Rik Vermeulen', 'Portfolio', 'Web Development', 'JavaScript', 'React', 'Next.js'],
+    keywords: ['Rik Vermeulen', 'Portfolio', 'Web Development'],
     authors: [
       {
         name: 'Rik Vermeulen',
