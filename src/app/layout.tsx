@@ -1,9 +1,11 @@
-import "@/styles/global.css";
-import meta from "@/app/meta";
-import Header from "@/components/Header";
-import { fontSans } from "@/lib/fonts";
-import type { RootLayoutProps } from "@/types/index";
-import type { Metadata } from "next";
+import '@/styles/global.css';
+import type { Metadata } from 'next';
+
+import type { RootLayoutProps } from '@/types/index';
+
+import { fontSans } from '@/lib/fonts';
+import Header from '@/components/Header';
+import meta from '@/app/meta';
 
 /**
  * generateMetadata is a function that returns a promise of Metadata.

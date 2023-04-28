@@ -1,8 +1,8 @@
-import type { Metadata } from "next";
+import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: "Home",
-  description: "Welcome to Lightning",
+  title: 'Home',
+  description: 'Welcome to Lightning',
 };
 
 export default function Home() {
@@ -14,8 +14,8 @@ export default function Home() {
             Boilerplate for your Next project
           </h1>
           <h2 className="mt-6 text-center text-gray-500 md:text-xl">
-            Lightning is an opinionated collection of packages, utilities and a
-            set of rules for your Next.js 13+ project.
+            Lightning is an opinionated collection of packages, utilities and a set of rules for
+            your Next.js 13+ project.
           </h2>
           <p className="mt-6 text-center text-sm text-gray-500">
             Get started by editing

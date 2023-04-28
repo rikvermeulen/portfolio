@@ -1,14 +1,11 @@
-import Image from "next/image";
-import Link from "next/link";
+import Image from 'next/image';
+import Link from 'next/link';
 
 export default function Header() {
   return (
     <header className="absolute top-0 z-10 w-full">
       <div className="mx-5 flex h-16 max-w-screen-xl items-center justify-between xl:mx-auto">
-        <Link
-          href="/"
-          className="flex items-center text-xl font-bold tracking-[-0.02em] "
-        >
+        <Link href="/" className="flex items-center text-xl font-bold tracking-[-0.02em] ">
           <Image
             src="/favicons/icon-192x192.png"
             alt="Lightning logo"
