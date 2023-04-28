@@ -1,23 +1,21 @@
-import type { Metadata } from 'next';
-import Link from 'next/link';
+import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: 'Home',
-  description: 'Welcome to Lightning',
+  title: "Home",
+  description: "Welcome to Lightning",
 };
 
 export default function Home() {
   return (
     <main>
-      <div className="fixed -z-0 h-screen w-full bg-gradient-to-br from-indigo-50 via-white to-cyan-100" />
       <section className="relative py-24">
         <div className="mx-auto max-w-xl flex-col px-5 xl:px-0">
           <h1 className="bg-gradient-to-br from-black to-stone-500 bg-clip-text text-center text-4xl font-bold tracking-[-0.02em] text-transparent drop-shadow-sm md:text-7xl md:leading-[5rem]">
             Boilerplate for your Next project
           </h1>
           <h2 className="mt-6 text-center text-gray-500 md:text-xl">
-            Lightning is an opinionated collection of packages, utilities and a set of rules for
-            your Next.js 13+ project.
+            Lightning is an opinionated collection of packages, utilities and a
+            set of rules for your Next.js 13+ project.
           </h2>
           <p className="mt-6 text-center text-sm text-gray-500">
             Get started by editing
@@ -74,7 +72,7 @@ export default function Home() {
       </section>
       <section>
         <div className="mx-auto my-10 grid w-full max-w-screen-md animate-[slide-down-fade_0.5s_ease-in-out] grid-cols-1 gap-5 px-5 md:grid-cols-2 xl:px-0 ">
-          <Link
+          <a
             className="relative col-span-1 h-44 overflow-hidden rounded-xl border border-gray-200 bg-white p-4 shadow-md transition-colors duration-300 hover:border-gray-800"
             href="https://beta.nextjs.org/docs"
             target="_blank"
@@ -85,10 +83,10 @@ export default function Home() {
             <p className="leading-normal text-gray-500">
               Find in-depth information about the Next.js features and api
             </p>
-          </Link>
-          <Link
+          </a>
+          <a
             className="relative col-span-1 h-44 overflow-hidden rounded-xl border border-gray-200 bg-white p-4 shadow-md transition-colors duration-300 hover:border-gray-800"
-            href="https://nextjs.org/learn/basics/create-nextjs-app"
+            href="https://www.nextjs.org/learn/basics/create-nextjs-app/"
             target="_blank"
           >
             <h3 className="mb-4 bg-gradient-to-br from-black to-stone-500 bg-clip-text text-xl font-bold text-transparent md:font-normal">
@@ -97,7 +95,7 @@ export default function Home() {
             <p className="leading-normal text-gray-500">
               Learn about Next.js in an interactive course with quizzes!
             </p>
-          </Link>
+          </a>
         </div>
       </section>
     </main>

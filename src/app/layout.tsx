@@ -1,34 +1,26 @@
-import '../styles/global.css';
+import "@/styles/global.css";
+import meta from "@/app/meta";
+import Header from "@/components/Header";
+import { fontSans } from "@/lib/fonts";
+import type { RootLayoutProps } from "@/types/index";
+import type { Metadata } from "next";
 
-import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
-
-import Header from './components/Header';
-import { meta } from './meta';
-
-/*
-    @next/font will automatically optimize your fonts (including custom fonts) and remove 
-    external network requests for improved privacy and performance.
-    Find out more at https://beta.nextjs.org/docs/optimizing/fonts
+/**
+ * generateMetadata is a function that returns a promise of Metadata.
+ * @see https://beta.nextjs.org/docs/guides/seo#dynamic-metadata
+ * @returns {Promise<Metadata>}
  */
-const inter = Inter({
-  variable: '--font-inter',
-  subsets: ['latin'],
-});
 
 export async function generateMetadata(): Promise<Metadata> {
-  return meta;
+  const metadata = await meta();
+  return metadata;
 }
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({ children }: RootLayoutProps) {
   return (
-    <html lang="en" className={`${inter.variable}`}>
-      {/*
-        <head /> will contain the components returned by the nearest parent
-        head.tsx. Find out more at https://beta.nextjs.org/docs/api-reference/file-conventions/head
-      */}
-      <head />
+    <html lang="en" className={`${fontSans.variable}`}>
       <body>
+        <div className="fixed -z-0 h-screen w-full bg-gradient-to-br from-indigo-50 via-white to-cyan-100" />
         <Header />
         {children}
       </body>
