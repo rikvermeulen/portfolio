@@ -1,32 +1,28 @@
-import '../styles/global.css';
-
+import '@/styles/global.css';
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
-import localFont from 'next/font/local';
 
-import Header from './components/Header';
-import { meta } from './meta';
+import type { RootLayoutProps } from '@/types/index';
 
-const inter = Inter({
-  variable: '--font-inter',
-  subsets: ['latin'],
-});
+import { FKDisplay, fontSans } from '@/lib/fonts';
+import Header from '@/components/Header';
+import meta from '@/app/meta';
 
-// Font files can be colocated inside of `app`
-const FKDisplay = localFont({
-  src: '../../public/fonts/FKDisplay-Regular.ttf',
-  variable: '--font-fkdisplay',
-  display: 'swap',
-});
+/**
+ * generateMetadata is a function that returns a promise of Metadata.
+ * @see https://beta.nextjs.org/docs/guides/seo#dynamic-metadata
+ * @returns {Promise<Metadata>}
+ */
+
 export async function generateMetadata(): Promise<Metadata> {
-  return meta;
+  const metadata = await meta();
+  return metadata;
 }
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({ children }: RootLayoutProps) {
   return (
-    <html lang="en" className={`${FKDisplay.variable} ${inter.variable} relative bg-black`}>
-      <head />
+    <html lang="en" className={`${FKDisplay.variable} ${fontSans.variable}`}>
       <body>
+        <div className="fixed -z-0 h-screen w-full bg-gradient-to-br from-indigo-50 via-white to-cyan-100" />
         <Header />
         {children}
       </body>

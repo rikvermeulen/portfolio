@@ -1,8 +1,8 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import { motion } from 'framer-motion';
-import { useEffect, useState } from 'react';
 
 import toggleBodyScrolling from '../util/toggleBodyScrolling';
 import Menubutton from './buttons/MenuButton';
@@ -48,14 +48,14 @@ export default function News({
       <div
         className={clsx(
           open &&
-            'absolute top-0 left-0 block h-screen w-screen opacity-100 backdrop-blur-lg transition-opacity',
-          'opacity-0'
+            'absolute left-0 top-0 block h-screen w-screen opacity-100 backdrop-blur-lg transition-opacity',
+          'opacity-0',
         )}
       />
       <div
         className={clsx(
           'relative z-50 flex transition-opacity',
-          isVisible && 'opacity-0 sm:opacity-100'
+          isVisible && 'opacity-0 sm:opacity-100',
         )}
       >
         <motion.div
@@ -80,7 +80,6 @@ export default function News({
                 image={item.image}
                 title={item.title}
                 description={item.description}
-                url={item.url}
                 isOpen={open}
               />
             );

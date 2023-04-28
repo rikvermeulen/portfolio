@@ -87,7 +87,7 @@ export default function Header() {
   }, [scrolled]);
 
   return (
-    <header className="fixed top-0 left-0 z-50 w-full">
+    <header className="fixed left-0 top-0 z-50 w-full">
       <Container className="flex place-items-start justify-between">
         <Navigation
           menu={menu}

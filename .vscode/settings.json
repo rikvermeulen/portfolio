@@ -1,23 +1,15 @@
 {
-  "workbench.colorCustomizations": {
-    "activityBar.background": "#2A275B",
-    "titleBar.activeBackground": "#3B367F",
-    "titleBar.activeForeground": "#FAFAFD"
-  },
   "typescript.tsdk": "node_modules/typescript/lib",
   "typescript.enablePromptUseWorkspaceTsdk": true,
-  "editor.tabSize": 4,
-  "editor.detectIndentation": false,
   "search.exclude": {
     "package-lock.json": true
   },
-  "editor.defaultFormatter": "dbaeumer.vscode-eslint",
-  "editor.formatOnSave": false,
-  "editor.codeActionsOnSave": ["source.addMissingImports", "source.fixAll.eslint"],
-  "[json][jsonc][yaml]": {
-    "editor.formatOnSave": true,
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true,
+    "source.addMissingImports": true
   },
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
   "prettier.ignorePath": ".gitignore",
-  "docwriter.style": "Auto-detect" // Don't run prettier for files listed in .gitignore
+  "prettier.documentSelectors": ["**/*.{cjs,mjs,ts,tsx,md,mdx,json,yaml,yml}"]
 }

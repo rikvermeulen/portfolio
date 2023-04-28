@@ -1,7 +1,8 @@
 'use client';
 
-import clsx from 'clsx';
 import { motion } from 'framer-motion';
+
+import { cc } from '@/lib/cc';
 
 import Menubutton from './buttons/MenuButton';
 
@@ -35,9 +36,9 @@ export default function Menu({
       className="flex"
     >
       <Menubutton
-        classNode={clsx(
+        classNode={cc(
           isOpen ? 'w-10' : 'w-[75px]',
-          'menu-scroll z-40 mr-2 justify-center sm:hidden'
+          'menu-scroll z-40 mr-2 justify-center sm:hidden',
         )}
         label={isOpen ? 'x' : 'Menu'}
         onClick={() => {
@@ -48,11 +49,11 @@ export default function Menu({
         return (
           <Menubutton
             key={key}
-            classNode={clsx(`${defaultClasses[key]} mr-2`, !isOpen && `${activeClasses[key]}`)}
+            classNode={cc(`${defaultClasses[key]} mr-2`, !isOpen && `${activeClasses[key]}`)}
             href={item?.url}
-            classLabel={clsx(
+            classLabel={cc(
               !isOpen && key === 0 && 'opacity-0 sm:opacity-100',
-              'transition-opacity'
+              'transition-opacity',
             )}
             label={item?.label}
             onClick={() => {

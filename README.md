@@ -1,3 +1,5 @@
+![header](./public/og.png)
+
 <h1 align="center">Lightning</h1>
 
 <p align="center">
@@ -5,47 +7,74 @@
 </p>
 
 <p align="center">
-  <a href="https://twitter.com/rikvermeulen_">
-    <img src="https://img.shields.io/twitter/follow/rikvermeulen_?style=flat&label=rikvermeulen_&logo=twitter&color=0bf&logoColor=fff" alt="Rik Vermeulen Twitter follower count" />
-  </a>
-  <a href="https://github.com/rikvermeulen/lightning">
-    <img src="https://img.shields.io/github/stars/rikvermeulen/lightning?label=rikvermeulen%2Flightning" alt="Lightning repo star count" />
-  </a>
+  Get started with lightning by running <code>npm create lightning-app@latest</code>
 </p>
 
 <p align="center">
-  <a href="#introduction"><strong>Introduction</strong></a> ·
-  <a href="#deploy"><strong>One-click Deploy</strong></a> ·
-  <a href="#features"><strong>Tech Stack + Features</strong></a> ·
-  <a href="#author"><strong>Author</strong></a>
+  <a href="#-introduction"><strong>Introduction</strong></a> ·
+  <a href="#-features"><strong>Tech Stack + Features</strong></a> ·
+  <a href="#-deploy"><strong>One-click Deploy</strong></a> ·
+  <a href="#-author"><strong>Author</strong></a>
 </p>
 
-## Introduction
+## 👋 Introduction
 
-Lightning is an opinionated collection of packages, utilities and a set of rules for your Next.js 13+ project.
+Lightning is an opinionated collection of packages, utilities and a set of rules for your Next.js 13.3 project.
 
-## Requirements
+### Requirements
 
-- Node.js 16+ and npm
+- Node.js 18+ and npm
 
-## Features
+## 🎁 Features
 
-- ⚡ [Next.js](https://nextjs.org) 13+
-- 🔥 Type checking [TypeScript](https://www.typescriptlang.org)
-- 💎 Integrate with [Tailwind CSS](https://tailwindcss.com)
-- ✅ Strict Mode for TypeScript and React 18
-- 📏 Linter with [ESLint](https://eslint.org) (default NextJS, NextJS Core Web Vitals, Tailwind CSS and Airbnb configuration)
-- 💖 Code Formatter with [Prettier](https://prettier.io)
-- 🦊 Husky for Git Hooks
-- 🚫 Lint-staged for running linters on Git staged files
-- 🦺 Unit Testing with Vitest and React Testing Library
-- 👷 Run tests on pull request with GitHub Actions
-- 💡 Absolute Imports using `@` prefix
-- 🗂 VSCode configuration: Debug, Settings, Tasks and extension for PostCSS, ESLint, Prettier, TypeScript, Jest
+- [Next.js](https://nextjs.org) 13.3
+- Type checking [TypeScript](https://www.typescriptlang.org)
+- Integrate with [Tailwind CSS](https://tailwindcss.com)
+- Strict Mode for TypeScript and React 18
+- Linter with [ESLint](https://eslint.org) (default NextJS, NextJS Core Web Vitals, Tailwind CSS and Airbnb configuration)
+- Code Formatter with [Prettier](https://prettier.io)
+- Husky for Git Hooks
+- Lint-staged for running linters on Git staged files
+- Run tests on pull request with GitHub Actions
+- Absolute Imports using `@` prefix
+- VSCode configuration: Debug, Settings, Tasks and extension for PostCSS, ESLint, Prettier, TypeScript
+- Fonts with Next/font for optimizing custom fonts and remove external network requests
 
-## Getting started
+### 📦 Expansion Pack
 
-Run the following command on your local environment:
+Easily install common libraries, additional components, and configs with `create lightning-app@latest` command.
+
+- Unit Testing with [Vitest]() and React Testing Library
+- PWA with Workbox and Next-PWA plugin
+- Handle user authentication with [Auth.js]() with providers like Google, Twitter, GitHub.
+
+## 👨🏻‍💻 Getting started
+
+**Recommended installation**<br>
+To create an app using `lightning`, run any of the following three commands and answer the command prompt questions:
+
+### npm
+
+```bash
+npm create lightning-app@latest
+```
+
+### yarn
+
+```bash
+yarn create lightning-app
+```
+
+### pnpm
+
+```bash
+pnpm create lightning-app@latest
+```
+
+\
+**Default installation**
+<br/>
+Or run the following command on your local environment:
 
 ```shell
 git clone --depth=1 https://github.com/rikvermeulen/lightning.git project-name
@@ -62,61 +91,54 @@ npm run dev
 Open http://localhost:3000 with your favorite browser to see your project.
 
 ```shell
-.
-├── __tests__                       # Mocks for testing
-├── .github                         # GitHub folder
-│   ├── workflow                    # GitHub actions folder
 ├── .husky                          # Husky configuration
 ├── .vscode                         # VSCode configuration
-├── src                             
+├── src                             # Project folder
 │   ├── app                         # App base
-│   │   ├── components              # Default components
-│   ├── pages                           # Next JS Pages
-│   │   ├── api                         # Next JS api 
-├── public                          # Public assets folder
-│   ├── images                      # Image/Icon/Favicon folder
+│   │   ├── api                     # Api router
+│   ├── components                  # Default components
+│   ├── config                      # Env folder
+│   ├── lib                         # Lib folder
 │   ├── styles                      # Styles folder
-├── tailwind.config.js              # Tailwind CSS configuration
-├── next.config.js                  # Next configuration
+│   ├── types                       # Types folder
+│   ├── middleware.ts               # Middleware file
+├── public                          # Public assets folder
+│   ├── favicons                    # Favicons folder
+├── tailwind.config.cjs             # Tailwind CSS configuration
+├── next.config.mjs                 # Next configuration
+├── tailwind.config.cjs             # Tailwind CSS configuration
+├── prettierrc.cjs                  # Prettier configuration
 ├── README.md                       # README file
+├── .eslintrc.cjs                   # Eslint config
 └── tsconfig.json                   # TypeScript configuration
+
 ```
-## Testing
 
-All tests are colocated with the source code inside the same directory. So, it makes it easier to find them. Unfortunately, it is not possible with the `pages` folder which is used by Next.js for routing. So, what is why we have a `pages.test` folder to write tests from files located in `pages` folder.
-
-## Deploy
-
-### Deploy to Vercel
+## 🚀 Deploy
 
 Deploy Lightning on Vercel in one click:
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/external?repository-url=https%3A%2F%2Fgithub.com%2Frikvermeulen%2Flightning)
-### Docker
 
-Build lightning with Docker
-
-## Roadmap
-
-- [x] Add PWA
-- [ ] Add tests
-- [ ] Add [optional] custom server
-- [ ] Add logger module
-- [ ] Add redirect module
-
-### VSCode information (optional)
+## 🗂 VSCode information (optional)
 
 For VSCode users, you can have a better integration with VSCode by installing the suggested extension in `.vscode/extension.json`. The starter code comes up with Settings for a seamless integration with VSCode. The Debug configuration is also provided for frontend and backend debugging experience.
 
 With the plugins installed on your VSCode, ESLint and Prettier can automatically fix the code and show you the errors. Same goes for testing, you can install VSCode Jest extension to automatically run your tests and it also show the code coverage in context.
 
-## License
+## 🤝 Contributing
 
-Licensed under the MIT License, Copyright © 2022
+1. Fork this repository;
+2. Create your branch: `git checkout -b my-awesome-contribution`;
+3. Commit your changes: `git commit -m 'feat: Add some awesome contribution'`;
+4. Push to the branch: `git push origin my-awesome-contribution`.
+
+## 📋 License
+
+Licensed under the MIT License, Copyright © 2023
 
 See [LICENSE](LICENSE) for more information.
 
-## Author
+## 👤 Author
 
-- Rik Vermeulen ([@rikvermeulen_](https://twitter.com/rikvermeulen_))
-
+- Rik Vermeulen ([@rikvermeulen\_](https://twitter.com/rikvermeulen_))

@@ -1,7 +1,7 @@
 'use client';
 
-import clsx from 'clsx';
 import Link from 'next/link';
+import clsx from 'clsx';
 
 export default function Menubutton({
   classNode,
@@ -20,10 +20,10 @@ export default function Menubutton({
 
   return (
     <Node
-      href={href || ''}
+      href="/"
       className={clsx(
         classNode,
-        'flex justify-center rounded-full bg-header px-4 py-2 text-sm text-white backdrop-blur-lg transition-[opacity,transform,width] duration-500 hover:bg-white hover:text-black'
+        'bg-header flex justify-center rounded-full px-4 py-2 text-sm text-white backdrop-blur-lg transition-[opacity,transform,width] duration-500 hover:bg-white hover:text-black',
       )}
       onClick={onClick}
     >
