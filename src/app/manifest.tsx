@@ -1,11 +1,5 @@
 import type { MetadataRoute } from 'next';
 
-/**
- * Template metadata for robots.txt
- * @see https://beta.nextjs.org/docs/api-reference/metadata
- * @returns {MetadataRoute.Manifest}
- */
-
 export default function robots(): MetadataRoute.Manifest {
   const host = process.env.NEXT_PUBLIC_APP_URL as string;
 

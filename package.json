@@ -12,7 +12,7 @@
     "url": "https://github.com/rikvermeulen/lightning"
   },
   "scripts": {
-    "dev": "next dev && NODE_ENV=development",
+    "dev": "next dev --turbo && NODE_ENV=development",
     "build": "next build && NODE_ENV=production",
     "start": "next start",
     "preview": "next build && next start && NODE_ENV=test",
@@ -23,10 +23,12 @@
     "check-updates": "ncu -u && npm i"
   },
   "dependencies": {
+    "@prisma/client": "^4.13.0",
+    "@vercel/analytics": "^1.0.0",
     "clsx": "^1.2.1",
-    "dotenv-safe": "^8.2.0",
     "framer-motion": "^9.1.7",
     "next": "^13.3.1",
+    "prisma": "^4.13.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "tailwind-merge": "^1.12.0"

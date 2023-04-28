@@ -2,50 +2,12 @@
 
 import { useEffect, useRef, useState } from 'react';
 
+import { menu, news } from '../content/navigation';
 import Container from './Container';
 import Navigation from './Navigation';
 import News from './News';
 
 const SCROLL_TRESHOLD = 50;
-
-const menu = [
-  {
-    label: 'Work',
-    url: '/',
-  },
-  {
-    label: 'About',
-    url: '/',
-  },
-  {
-    label: 'Archive',
-    url: '/',
-  },
-];
-
-const newsItem = [
-  {
-    image:
-      'https://uploads-ssl.webflow.com/6244a97f9e639f5341766070/636e40e79f60d8c4c1ba5496_Domestika-newsfeed-icon.png',
-    title: 'title',
-    description: 'description',
-    url: '/',
-  },
-  {
-    image:
-      'https://uploads-ssl.webflow.com/6244a97f9e639f5341766070/636e40e79f60d8c4c1ba5496_Domestika-newsfeed-icon.png',
-    title: 'title',
-    description: 'description',
-    url: '/',
-  },
-  {
-    image:
-      'https://uploads-ssl.webflow.com/6244a97f9e639f5341766070/636e40e79f60d8c4c1ba5496_Domestika-newsfeed-icon.png',
-    title: 'title',
-    description: 'description',
-    url: '/',
-  },
-];
 
 export default function Header() {
   const scrollPosition = useRef(0);
@@ -53,7 +15,7 @@ export default function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
 
-  const news = newsItem.slice(-3) || [];
+  const newsItems = news.slice(-3) || [];
 
   function handleIfScrolled() {
     if (window.innerWidth >= 640) {
@@ -96,7 +58,7 @@ export default function Header() {
             setShowMenu(state);
           }}
         />
-        <News news={news} hasScrolled={scrolled} isVisible={showMenu} />
+        <News news={newsItems} hasScrolled={scrolled} isVisible={showMenu} />
       </Container>
     </header>
   );

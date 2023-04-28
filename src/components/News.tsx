@@ -19,15 +19,14 @@ const test = {
   open: { y: '310px', x: 0, opacity: 1 },
 };
 
-export default function News({
-  news,
-  hasScrolled,
-  isVisible,
-}: {
+// Add TypeScript types for component props
+interface NewsProps {
   news: Array<{ image: string; title: string; description: string; url: string }>;
   hasScrolled: boolean;
   isVisible: boolean;
-}) {
+}
+
+export default function News({ news, hasScrolled, isVisible }: NewsProps) {
   const [open, setOpen] = useState(false);
   const [visible, setVisible] = useState(true);
 

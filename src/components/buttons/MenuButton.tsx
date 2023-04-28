@@ -3,19 +3,21 @@
 import Link from 'next/link';
 import clsx from 'clsx';
 
+interface MenuButtonProps {
+  classNode?: string;
+  classLabel?: string;
+  onClick?: () => void;
+  label: string;
+  href?: string;
+}
+
 export default function Menubutton({
   classNode,
   classLabel,
   onClick,
   label,
   href,
-}: {
-  classNode?: string;
-  classLabel?: string;
-  onClick?: () => void;
-  label: string;
-  href?: string;
-}) {
+}: MenuButtonProps) {
   const Node = href ? Link : 'button';
 
   return (

@@ -1,11 +1,11 @@
-import clsx from 'clsx';
+import cc from '@/lib/cc';
 
 export default function Container({
   className,
   children,
 }: {
-  className?: string;
   children: React.ReactNode;
+  className?: string;
 }) {
-  return <div className={clsx(className, 'p-5 sm:p-8')}>{children}</div>;
+  return <div className={cc(className, 'p-5 sm:p-8')}>{children}</div>;
 }
