@@ -2,13 +2,7 @@
 
 const config = {
   parser: '@typescript-eslint/parser',
-  extends: [
-    'airbnb-typescript',
-    'next/core-web-vitals',
-    'prettier',
-    'plugin:prettier/recommended',
-    'plugin:tailwindcss/recommended',
-  ],
+  extends: ['next/core-web-vitals', 'prettier', 'plugin:tailwindcss/recommended'],
   plugins: ['@typescript-eslint', 'tailwindcss'],
   ignorePatterns: ['out/*', 'node_modules/*', 'tailwind.config.ts'],
   overrides: [
@@ -20,6 +14,7 @@ const config = {
       },
       rules: {
         '@next/next/no-html-link-for-pages': ['off'],
+        'tailwindcss/no-custom-classname': 'off',
       },
       settings: {},
     },

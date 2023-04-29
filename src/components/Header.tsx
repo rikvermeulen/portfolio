@@ -1,23 +1,11 @@
-import Image from 'next/image';
-import Link from 'next/link';
+import Container from '@/components/Container';
 
 export default function Header() {
   return (
-    <header className="absolute top-0 z-10 w-full">
-      <div className="mx-5 flex h-16 max-w-screen-xl items-center justify-between xl:mx-auto">
-        <Link href="/" className="flex items-center text-xl font-bold tracking-[-0.02em] ">
-          <Image
-            src="/favicons/icon-192x192.png"
-            alt="Lightning logo"
-            width="20"
-            height="20"
-            className="mr-2 rounded-sm"
-          ></Image>
-          <p className="bg-gradient-to-br from-black to-stone-500 bg-clip-text text-transparent">
-            Lightning
-          </p>
-        </Link>
-      </div>
+    <header className="fixed left-0 top-0 z-50 w-full">
+      <Container className="flex place-items-start justify-between">
+        <div className="flex items-center gap-4"></div>
+      </Container>
     </header>
   );
 }

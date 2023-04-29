@@ -1,69 +1,21 @@
 import type { Metadata } from 'next';
 
-/**
- * Template metadata for app links
- * @see https://beta.nextjs.org/docs/api-reference/metadata
- * @returns {Metadata}
- */
-
 export default function meta(): Metadata {
   const host = process.env.NEXT_PUBLIC_APP_URL as string;
 
-  // Template metadata for app links
-  const appLinks = {
-    ios: {
-      url: '/link/to/ios/app',
-      app_store_id: 'app_store_id',
-    },
-    android: {
-      package: '/link/to/android/app',
-      app_name: 'app_name_android',
-    },
-    web: {
-      url: '/link/to/web/app',
-      should_fallback: true,
-    },
-  };
-
-  // Template metadata for language alternates
-  const alternates = {
-    metadataBase: new URL(host),
-    alternates: {
-      canonical: '/',
-      languages: {
-        'en-US': '/en-US',
-        'de-DE': '/de-DE',
-      },
-    },
-    media: {
-      'only screen and (max-width: 600px)': 'https://lightning-teal.vercel.app/',
-    },
-  };
-
-  // Template metadata for apple web apps
-  const appleWebApp = {
-    title: 'Lightning',
-    startupImage: [
-      '/',
-      {
-        url: '/',
-        media: '(device-width: 768px) and (device-height: 1024px)',
-      },
-    ],
-  };
-
   // Template metadata for open graph
   const openGraph = {
-    title: 'Lightning',
-    description: 'Lightning boilerplate for nextjs',
-    url: 'https://lightning-teal.vercel.app/',
-    siteName: 'Lightning',
+    title: 'Rik Vermeulen | Portfolio',
+    description:
+      'Discover the portfolio of Rik Vermeulen, showcasing web development projects and skills.',
+    url: host,
+    siteName: 'Rik Vermeulen Portfolio',
     images: [
       {
         url: `${host}/og.png`,
         width: 1200,
         height: 600,
-        alt: 'Lightning',
+        alt: 'Rik Vermeulen Portfolio',
       },
     ],
     locale: 'en-US',
@@ -86,35 +38,15 @@ export default function meta(): Metadata {
 
   // Template metadata for all icons
   const icons = {
-    icon: [
-      {
-        url: 'favicons/icon-32x32.png',
-      },
-    ],
-    shortcut: ['favicons/icon-32x32.png'],
-    apple: [
-      {
-        url: 'favicons/icon-60x60.png',
-      },
-      {
-        url: 'favicons/icon-180x180.png',
-        sizes: '180x180',
-        type: 'image/png',
-      },
-    ],
-    other: [
-      {
-        rel: 'apple-touch-icon-precomposed',
-        url: 'favicons/icon-512x512.png',
-      },
-    ],
+    // Add your favicon path here
   };
 
   // Template metadata for Twitter
   const twitter = {
     card: 'summary_large_image',
-    title: 'Lightning',
-    description: 'Lightning boilerplate for nextjs',
+    title: 'Rik Vermeulen | Portfolio',
+    description:
+      'Discover the portfolio of Rik Vermeulen, showcasing web development projects and skills.',
     siteId: '123456789',
     creator: '@rikvermeulen_',
     creatorId: '123456789',
@@ -123,14 +55,15 @@ export default function meta(): Metadata {
 
   return {
     generator: 'Next.js',
-    applicationName: 'Lightning',
-    title: 'Lightning',
-    description: 'Lightning boilerplate for nextjs',
+    applicationName: 'Rik Vermeulen Portfolio',
+    title: 'Rik Vermeulen | Portfolio',
+    description:
+      'Discover the portfolio of Rik Vermeulen, showcasing web development projects and skills.',
     referrer: 'origin-when-cross-origin',
-    keywords: ['Lightning', 'Next.js', 'React', 'JavaScript'],
+    keywords: ['Rik Vermeulen', 'Portfolio', 'Web Development'],
     authors: [
       {
-        name: 'Rik',
+        name: 'Rik Vermeulen',
         url: 'https://rikvermeulen.com',
       },
     ],
@@ -150,8 +83,5 @@ export default function meta(): Metadata {
     robots,
     icons,
     twitter,
-    appleWebApp,
-    alternates,
-    appLinks,
   };
 }

@@ -6,7 +6,11 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['var(--font-sans)', ...defaultTheme.fontFamily.sans],
+        sans: ['var(--font-sans)'],
+        fk: ['var(--font-fkdisplay)', ...defaultTheme.fontFamily.sans],
+      },
+      backgroundColor: {
+        header: 'hsla(0,0%,100%,.1)',
       },
     },
   },

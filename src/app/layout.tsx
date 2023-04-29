@@ -3,15 +3,11 @@ import type { Metadata } from 'next';
 
 import type { RootLayoutProps } from '@/types/index';
 
-import { fontSans } from '@/lib/fonts';
+import { FKDisplay, fontSans } from '@/lib/fonts';
+import { Analytics } from '@/components/Analytics';
 import Header from '@/components/Header';
+import { TailwindIndicator } from '@/components/TailwindIndicator';
 import meta from '@/app/meta';
-
-/**
- * generateMetadata is a function that returns a promise of Metadata.
- * @see https://beta.nextjs.org/docs/guides/seo#dynamic-metadata
- * @returns {Promise<Metadata>}
- */
 
 export async function generateMetadata(): Promise<Metadata> {
   const metadata = await meta();
@@ -20,11 +16,13 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
-    <html lang="en" className={`${fontSans.variable}`}>
+    <html lang="en" className={`${FKDisplay.variable} ${fontSans.variable}`}>
       <body>
         <div className="fixed -z-0 h-screen w-full bg-gradient-to-br from-indigo-50 via-white to-cyan-100" />
         <Header />
         {children}
+        <TailwindIndicator />
+        <Analytics />
       </body>
     </html>
   );

@@ -1,24 +1,19 @@
 import type { MetadataRoute } from 'next';
 
-/**
- * Template metadata for robots.txt
- * @see https://beta.nextjs.org/docs/api-reference/metadata
- * @returns {MetadataRoute.Manifest}
- */
-
 export default function robots(): MetadataRoute.Manifest {
   const host = process.env.NEXT_PUBLIC_APP_URL as string;
 
   return {
-    name: 'lightning',
-    short_name: 'lightning',
-    description: 'Boilerplate and building blocks for your Next project',
+    name: 'Rik Vermeulen | Portfolio',
+    short_name: 'Rik Vermeulen',
+    description:
+      'Discover the portfolio of Rik Vermeulen, showcasing web development projects and skills.',
     start_url: '/',
     scope: '/',
     display: 'standalone',
     background_color: '#ffffff',
     theme_color: '#ffffff',
-    categories: ['education', 'personalization', 'productivity', 'utilities'],
+    categories: ['education', 'personalization', 'productivity'],
     icons: [
       {
         src: `${host}/favicons/favicon.ico`,
