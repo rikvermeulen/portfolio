@@ -6,6 +6,7 @@ import type { RootLayoutProps } from '@/types/index';
 import { FKDisplay, fontSans } from '@/lib/fonts';
 import { Analytics } from '@/components/Analytics';
 import Header from '@/components/Header';
+import { TailwindIndicator } from '@/components/TailwindIndicator';
 import meta from '@/app/meta';
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -20,6 +21,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
         <div className="fixed -z-0 h-screen w-full bg-gradient-to-br from-indigo-50 via-white to-cyan-100" />
         <Header />
         {children}
+        <TailwindIndicator />
         <Analytics />
       </body>
     </html>
