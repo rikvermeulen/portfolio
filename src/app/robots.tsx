@@ -1,7 +1,8 @@
 import type { MetadataRoute } from 'next';
+import { env } from '@/env.mjs';
 
 export default function robots(): MetadataRoute.Robots {
-  const host = process.env.NEXT_PUBLIC_APP_URL as string;
+  const host = env.NEXT_PUBLIC_APP_URL;
 
   return {
     rules: {

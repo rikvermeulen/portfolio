@@ -1,13 +1,14 @@
 import '@/styles/global.css';
+
 import type { Metadata } from 'next';
 
 import type { RootLayoutProps } from '@/types/index';
 
-import { FKDisplay, fontSans } from '@/lib/fonts';
+import { fontSans } from '@/lib/fonts';
+import meta from '@/lib/meta';
 import { Analytics } from '@/components/Analytics';
 import Header from '@/components/Header';
 import { TailwindIndicator } from '@/components/TailwindIndicator';
-import meta from '@/app/meta';
 
 export async function generateMetadata(): Promise<Metadata> {
   const metadata = await meta();
@@ -16,7 +17,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
-    <html lang="en" className={`${FKDisplay.variable} ${fontSans.variable}`}>
+    <html lang="en" className={`${fontSans.variable}`}>
       <body>
         <div className="fixed -z-0 h-screen w-full bg-gradient-to-br from-indigo-50 via-white to-cyan-100" />
         <Header />

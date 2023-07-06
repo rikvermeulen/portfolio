@@ -1,22 +1,22 @@
 import type { MetadataRoute } from 'next';
+import { env } from '@/env.mjs';
 
-export default function robots(): MetadataRoute.Manifest {
-  const host = process.env.NEXT_PUBLIC_APP_URL as string;
+export default function manifest(): MetadataRoute.Manifest {
+  const host = env.NEXT_PUBLIC_APP_URL;
 
   return {
-    name: 'Rik Vermeulen | Portfolio',
-    short_name: 'Rik Vermeulen',
-    description:
-      'Discover the portfolio of Rik Vermeulen, showcasing web development projects and skills.',
+    name: 'lightning',
+    short_name: 'lightning',
+    description: 'Boilerplate and building blocks for your Next project',
     start_url: '/',
     scope: '/',
     display: 'standalone',
     background_color: '#ffffff',
     theme_color: '#ffffff',
-    categories: ['education', 'personalization', 'productivity'],
+    categories: ['education', 'personalization', 'productivity', 'utilities'],
     icons: [
       {
-        src: `${host}/favicons/favicon.ico`,
+        src: `${host}/favicons/icon-32x32.png`,
         sizes: '32x32',
         type: 'image/x-icon',
         purpose: 'maskable',

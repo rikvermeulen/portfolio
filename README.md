@@ -1,4 +1,4 @@
-![header](./public/og.png)
+![header](./public/images/og.png)
 
 <h1 align="center">Lightning</h1>
 
@@ -19,7 +19,7 @@
 
 ## 👋 Introduction
 
-Lightning is an opinionated collection of packages, utilities and a set of rules for your Next.js 13.3 project.
+Lightning is an opinionated collection of packages, utilities and a set of rules for your Next.js 13.4 project.
 
 ### Requirements
 
@@ -27,7 +27,7 @@ Lightning is an opinionated collection of packages, utilities and a set of rules
 
 ## 🎁 Features
 
-- [Next.js](https://nextjs.org) 13.3
+- [Next.js](https://nextjs.org) 13.4
 - Type checking [TypeScript](https://www.typescriptlang.org)
 - Integrate with [Tailwind CSS](https://tailwindcss.com)
 - Strict Mode for TypeScript and React 18
@@ -82,6 +82,12 @@ cd project-name
 npm install
 ```
 
+Copy `.env.example` to `.env.local` and update the variables.
+
+```sh
+cp .env.example .env.local
+```
+
 Then, you can run locally in development mode:
 
 ```shell
@@ -97,10 +103,10 @@ Open http://localhost:3000 with your favorite browser to see your project.
 │   ├── app                         # App base
 │   │   ├── api                     # Api router
 │   ├── components                  # Default components
-│   ├── config                      # Env folder
 │   ├── lib                         # Lib folder
 │   ├── styles                      # Styles folder
 │   ├── types                       # Types folder
+│   ├── env.mjs                      # type-safe env
 │   ├── middleware.ts               # Middleware file
 ├── public                          # Public assets folder
 │   ├── favicons                    # Favicons folder

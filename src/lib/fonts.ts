@@ -1,11 +1,10 @@
-import { Inter as sans } from 'next/font/google';
-import localFont from 'next/font/local';
+import { JetBrains_Mono as mono, Inter as sans } from 'next/font/google';
 
-export const FKDisplay = localFont({
-  src: '../../public/fonts/FKDisplay-Regular.ttf',
-  variable: '--font-fkdisplay',
-  display: 'swap',
+export const fontMono = mono({
+  subsets: ['latin'],
+  variable: '--font-mono',
 });
+
 export const fontSans = sans({
   subsets: ['latin'],
   variable: '--font-sans',

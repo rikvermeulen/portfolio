@@ -1,11 +1,9 @@
-import Container from '@/components/Container';
-
 export default function Header() {
   return (
-    <header className="fixed left-0 top-0 z-50 w-full">
-      <Container className="flex place-items-start justify-between">
+    <header className="absolute top-0 z-10 w-full">
+      {/* <Container className="flex place-items-start justify-between">
         <div className="flex items-center gap-4"></div>
-      </Container>
+      </Container> */}
     </header>
   );
 }
