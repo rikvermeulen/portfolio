@@ -1,7 +1,7 @@
 {
-  "name": "lightning",
+  "name": "portfolio",
   "version": "0.1.0",
-  "description": "Project: Lightning",
+  "description": "Project: Portfolio",
   "contributors": [],
   "license": "MIT",
   "engines": {
@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/rikvermeulen/lightning"
+    "url": "https://github.com/rikvermeulen/portfolio"
   },
   "scripts": {
     "dev": "next dev && NODE_ENV=development",
@@ -26,7 +26,7 @@
     "@t3-oss/env-nextjs": "^0.6.0",
     "@vercel/analytics": "^1.0.1",
     "clsx": "^1.2.1",
-    "next": "^13.4.8",
+    "next": "^13.4.10",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "tailwind-merge": "^1.13.2",
@@ -36,26 +36,26 @@
     "@commitlint/cli": "^17.6.6",
     "@commitlint/config-conventional": "^17.6.6",
     "@commitlint/cz-commitlint": "^17.5.0",
-    "@ianvs/prettier-plugin-sort-imports": "^4.0.2",
-    "@types/node": "20.4.0",
+    "@ianvs/prettier-plugin-sort-imports": "^4.1.0",
+    "@types/node": "20.4.2",
     "@types/prettier": "^2.7.3",
-    "@types/react": "18.2.14",
-    "@types/react-dom": "18.2.6",
-    "@typescript-eslint/eslint-plugin": "^5.61.0",
-    "@typescript-eslint/parser": "^5.61.0",
+    "@types/react": "18.2.15",
+    "@types/react-dom": "18.2.7",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
     "autoprefixer": "^10.4.14",
-    "eslint": "^8.44.0",
-    "eslint-config-next": "^13.4.8",
+    "eslint": "^8.45.0",
+    "eslint-config-next": "^13.4.10",
     "eslint-config-prettier": "^8.8.0",
     "eslint-import-resolver-typescript": "^3.5.5",
     "eslint-plugin-import": "^2.27.5",
-    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-prettier": "^5.0.0",
     "eslint-plugin-tailwindcss": "^3.13.0",
     "husky": "^8.0.3",
-    "postcss": "^8.4.24",
-    "prettier": "^2.8.8",
-    "prettier-plugin-tailwindcss": "^0.3.0",
-    "tailwindcss": "^3.3.2",
+    "postcss": "^8.4.26",
+    "prettier": "^3.0.0",
+    "prettier-plugin-tailwindcss": "^0.4.1",
+    "tailwindcss": "^3.3.3",
     "typescript": "5.1.6"
   }
 }
