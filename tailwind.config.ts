@@ -8,7 +8,10 @@ export default {
       fontFamily: {
         sans: ['var(--font-sans)', ...defaultTheme.fontFamily.sans],
       },
+      colors: {
+        primary: '#E2E2E2',
+        dark_grey: '#707070',
+      },
     },
   },
-  plugins: [require('prettier-plugin-tailwindcss')],
 } satisfies Config;

@@ -16,21 +16,15 @@ const config = {
     '^types$',
     '^@/types/(.*)$',
     '',
-    '^@/*$',
+    '^@/env(.*)$',
+    '^@/app/(.*)$',
     '^@/lib/(.*)$',
     '^@/components/(.*)$',
-    '^@/app/(.*)$',
     '',
     '^[./]',
   ],
-  importOrderSeparation: false,
-  importOrderSortSpecifiers: true,
-  importOrderBuiltinModulesToTop: true,
   importOrderParserPlugins: ['typescript', 'jsx', 'decorators-legacy'],
-  importOrderMergeDuplicateImports: true,
-  importOrderCombineTypeAndValueImports: true,
   plugins: ['prettier-plugin-tailwindcss', '@ianvs/prettier-plugin-sort-imports'],
-  pluginSearchDirs: false,
 };
 
 module.exports = config;

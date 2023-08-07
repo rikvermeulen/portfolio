@@ -13,10 +13,10 @@ export default async function meta(): Promise<Metadata> {
 
   // Template metadata for open graph
   const openGraph = {
-    title: 'Lightning',
-    description: 'Lightning boilerplate for nextjs',
-    url: 'https://lightning-teal.vercel.app/',
-    siteName: 'Lightning',
+    title: 'Portfolio - Rik Vermeulen',
+    description: 'Portfolio from Rik Vermeulen, a creative developer from the Netherlands',
+    url: 'www.rikvermeulen.com',
+    siteName: 'Portfolio - Rik Vermeulen',
     images: [
       {
         url: `${host}/images/og.png`,
@@ -70,12 +70,12 @@ export default async function meta(): Promise<Metadata> {
 
   return {
     metadataBase: new URL(host),
-    title: 'Lightning',
-    description: 'Lightning boilerplate for nextjs',
+    title: 'Portfolio - Rik Vermeulen',
+    description: 'Portfolio from Rik Vermeulen, a creative developer from the Netherlands',
     generator: 'Next.js',
-    applicationName: 'Lightning',
+    applicationName: 'Portfolio - Rik Vermeulen',
     referrer: 'origin-when-cross-origin',
-    keywords: ['Lightning', 'Next.js', 'React', 'JavaScript'],
+    keywords: ['Portfolio', 'Next.js', 'React'],
     authors: [
       {
         name: 'Rik',
