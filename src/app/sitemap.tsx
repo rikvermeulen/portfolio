@@ -1,4 +1,5 @@
 import type { MetadataRoute } from 'next';
+
 import { env } from '@/env.mjs';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {

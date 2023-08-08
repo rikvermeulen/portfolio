@@ -20,6 +20,7 @@
       "@/app/*": ["./app/*"],
       "@/components/*": ["./components/*"],
       "@/lib/*": ["./lib/*"],
+      "@/utils/*": ["./utils/*"],
       "@/types/*": ["./types/*"],
       "@/styles/*": ["./styles/*"]
     },

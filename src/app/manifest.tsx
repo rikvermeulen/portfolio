@@ -1,13 +1,14 @@
 import type { MetadataRoute } from 'next';
+
 import { env } from '@/env.mjs';
 
 export default function manifest(): MetadataRoute.Manifest {
   const host = env.NEXT_PUBLIC_APP_URL;
 
   return {
-    name: 'lightning',
-    short_name: 'lightning',
-    description: 'Boilerplate and building blocks for your Next project',
+    name: 'Portfolio Rik Vermeulen',
+    short_name: 'Portfolio RV',
+    description: 'Portfolio Rik Vermeulen',
     start_url: '/',
     scope: '/',
     display: 'standalone',

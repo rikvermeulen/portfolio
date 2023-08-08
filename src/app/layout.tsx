@@ -1,4 +1,4 @@
-import '@/styles/global.css';
+import '@/styles/globals.css';
 
 import type { Metadata } from 'next';
 
@@ -7,6 +7,7 @@ import type { RootLayoutProps } from '@/types/index';
 import { fontSans } from '@/lib/fonts';
 import meta from '@/lib/meta';
 import { Analytics } from '@/components/Analytics';
+import Footer from '@/components/Footer';
 import Header from '@/components/Header';
 import { TailwindIndicator } from '@/components/TailwindIndicator';
 
@@ -17,11 +18,11 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
-    <html lang="en" className={`${fontSans.variable}`}>
-      <body>
-        <div className="fixed -z-0 h-screen w-full bg-gradient-to-br from-indigo-50 via-white to-cyan-100" />
+    <html lang="en" className={`${fontSans.variable} bg-white text-black`}>
+      <body className="h-screen antialiased">
         <Header />
         {children}
+        <Footer />
         <TailwindIndicator />
         <Analytics />
       </body>
