@@ -1,10 +1,14 @@
 import React, { FC, ReactElement } from 'react';
 
+import Mouse from './types/Mouse';
+
 interface Icons {
   [index: string]: FC<any>;
 }
 
-const icons: Icons = {};
+const icons: Icons = {
+  mouse: Mouse,
+};
 
 interface IconProps {
   type: string;
