@@ -94,7 +94,7 @@ export default function Photos() {
     <Bento size="1x1" className="bento group">
       <div className="group relative h-full w-full overflow-hidden">
         <div className="absolute right-0 z-20 p-5">
-          <Link href="">
+          <a href="" target="_blank">
             <Image
               src="/images/icons/photos.png"
               className={`drop-shadow-md transition-transform duration-300 hover:scale-105`}
@@ -102,7 +102,7 @@ export default function Photos() {
               width={32}
               height={32}
             />
-          </Link>
+          </a>
         </div>
         {mediaFiles.map(renderMedia)}
         <div className="z-40 flex items-center justify-center">

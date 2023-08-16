@@ -87,7 +87,7 @@ const Music: React.FC = () => {
       } bento relative z-0 bg-gradient-to-b from-[#E96575] to-[#E63F45]`}
     >
       <div className="absolute right-0 z-20 p-5">
-        <Link href="">
+        <a href="https://music.apple.com/nl/playlist/r-b/pl.u-38oWX9ECd2XAl3" target="_blank">
           <Image
             src="/images/icons/music.png"
             className={`${
@@ -97,7 +97,7 @@ const Music: React.FC = () => {
             width={32}
             height={32}
           />
-        </Link>
+        </a>
       </div>
       <div
         className={`inset absolute z-0 h-full w-full bg-cover transition-opacity duration-500 ease-in-out ${
