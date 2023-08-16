@@ -1,7 +1,5 @@
 import Pill from '@/components/Pill';
 
-import Container from './Container';
-
 const items = [
   {
     name: 'About',
@@ -19,16 +17,10 @@ const items = [
 
 export default function Footer() {
   return (
-    <footer className="w-full">
-      <Container>
-        <div className="sticky bottom-5 flex items-center justify-center">
-          <Pill items={items} />
-        </div>
-        <div className="flex justify-between">
-          <p>Made with ❤️</p>
-          <p>© 2021 Rik Vermeulen</p>
-        </div>
-      </Container>
+    <footer className="fixed bottom-5 w-full">
+      <div className="z-50 flex items-center justify-center">
+        <Pill items={items} />
+      </div>
     </footer>
   );
 }
