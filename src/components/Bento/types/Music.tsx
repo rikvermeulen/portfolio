@@ -129,17 +129,17 @@ const Music: React.FC = () => {
           <div className="relative -top-1 text-white/70">{currentTrack?.artists[0].name}</div>
         </div>
         <div className="mt-4 flex w-full items-center justify-around">
-          <button onClick={prevTrack} className="w-5 fill-white">
+          <button onClick={prevTrack} className="w-5 fill-white" name="Previous song">
             <Icon type="next" />
           </button>
-          <button onClick={playPause} className="h-6 w-6 fill-white">
+          <button onClick={playPause} className="h-6 w-6 fill-white" name="Play / Pause">
             {isPlaying ? <Icon type="pause" /> : <Icon type="play" />}
           </button>
-          <button onClick={nextTrack} className="w-5 -scale-x-100 fill-white">
+          <button onClick={nextTrack} className="w-5 -scale-x-100 fill-white" name="Next song">
             <Icon type="next" />
           </button>
         </div>
-        <label className="mt-6 flex items-center justify-center gap-4">
+        <label className="mt-6 flex items-center justify-center gap-4" htmlFor="range">
           <Icon type="mute" className="w-2 fill-white" />
           <input
             type="range"
@@ -147,6 +147,8 @@ const Music: React.FC = () => {
             max="1"
             step="0.01"
             defaultValue="0.5"
+            id="range"
+            name="range"
             onChange={handleVolumeChange}
             className="slider"
             style={{ '--background-size': '50%' } as React.CSSProperties}

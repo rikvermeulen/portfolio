@@ -165,7 +165,7 @@ export default function Message() {
           {step < questionsAndActions.length && (
             <div className="flex max-h-9 w-full rounded-full border border-solid border-[#EAEBED]">
               <input
-                className="mx-3 w-full bg-transparent text-sm outline-none"
+                className="mx-3 w-full bg-transparent text-base outline-none sm:text-sm"
                 placeholder="Type your response here..."
                 value={message}
                 onChange={handleInputChange}
