@@ -21,7 +21,6 @@ export default function Home() {
             <p className="text-xs ">Click around...</p>
           </div>
           <Grid>
-            <Introduction />
             {BentoTypes.map((Item, index) => (
               <Item key={index} />
             ))}
