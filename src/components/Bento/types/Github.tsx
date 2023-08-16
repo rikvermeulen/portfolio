@@ -67,7 +67,7 @@ export default async function Github() {
             {totalContributions} contributions in the last {MONTH_RANGE} months
           </p>
         </div>
-        <Link href="https://github.com/rikvermeulen">
+        <a href="https://github.com/rikvermeulen" target="_blank">
           <Image
             src={'/images/icons/github.png'}
             alt="github"
@@ -75,7 +75,7 @@ export default async function Github() {
             height="32"
             className="cursor-pointer rounded-md drop-shadow-md transition-transform duration-300 hover:scale-105"
           />
-        </Link>
+        </a>
       </header>
       <MonthlyContribution contributions={monthlyContributions} />
       <Button className="mt-2 self-start" label="Follow" href="https://github.com/rikvermeulen" />

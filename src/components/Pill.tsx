@@ -19,7 +19,6 @@ export default function Pill({ className, items, activeIndex }: PillProps) {
   const indicatorRef = useRef<HTMLDivElement>(null);
 
   const linkRefs = useRef(items.map(() => createRef<HTMLAnchorElement>()));
-  const buttonRefs = useRef(items.map(() => createRef<HTMLButtonElement>()));
 
   useLayoutEffect(() => {
     const activeLinkIndex = getActiveLinkIndex(items, activeIndex, pathName);
@@ -79,7 +78,12 @@ export default function Pill({ className, items, activeIndex }: PillProps) {
                   {name}
                 </Link>
               ) : (
-                <button ref={buttonRefs.current[index]} onClick={onClick} className="px-5 py-1.5">
+                <Link
+                  ref={linkRefs.current[index]}
+                  onClick={onClick}
+                  href={''}
+                  className="px-5 py-1.5"
+                >
                   {icon && (
                     <Icon
                       className={cc(
@@ -89,7 +93,7 @@ export default function Pill({ className, items, activeIndex }: PillProps) {
                       type={icon}
                     />
                   )}
-                </button>
+                </Link>
               )}
             </li>
           );

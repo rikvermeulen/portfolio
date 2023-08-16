@@ -15,7 +15,7 @@ export const AdminMessage = ({
   <div className="flex gap-2">
     {!isSameSender && (
       <Image
-        src="/images/me.jpg"
+        src="/images/profile.jpg"
         alt="Me"
         width={40}
         height={40}
