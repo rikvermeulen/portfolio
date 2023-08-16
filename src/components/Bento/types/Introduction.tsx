@@ -6,14 +6,14 @@ export default function Introduction() {
   return (
     <Bento size="2x1">
       <Image
-        src={'/images/me.jpg'}
+        src={'/images/profile.jpg'}
         alt="Rik Vermeulen"
         width={'164'}
         height={'164'}
         className=" rounded-full"
       />
       <div className="pt-6">
-        <div className="font-bold md:text-3xl">
+        <div className="text-xl font-bold md:text-3xl">
           <h2>Hey hey, I’m Rik 👋🏻</h2>
         </div>
         <div className="max-w-xl pt-2 text-dark_grey md:text-lg">
