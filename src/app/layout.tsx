@@ -19,7 +19,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en" className={`${fontSans.variable} bg-white text-black`}>
-      <body className="h-screen antialiased">
+      <body className="h-full antialiased">
         <Header />
         {children}
         <Footer />

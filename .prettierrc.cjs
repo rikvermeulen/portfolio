@@ -21,6 +21,7 @@ const config = {
     '^@/lib/(.*)$',
     '^@/components/(.*)$',
     '^@/utils/(.*)$',
+    '^@/content/(.*)$',
     '',
     '^[./]',
   ],
