@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 
 import { BentoTypes } from '@/components/Bento/types/index';
+import Introduction from '@/components/Bento/types/Introduction';
 import Container from '@/components/Container';
 import Grid from '@/components/Grid';
 import Icon from '@/components/Icons/Icon';
@@ -20,6 +21,7 @@ export default function Home() {
             <p className="text-xs ">Click around...</p>
           </div>
           <Grid>
+            <Introduction />
             {BentoTypes.map((Item, index) => (
               <Item key={index} />
             ))}

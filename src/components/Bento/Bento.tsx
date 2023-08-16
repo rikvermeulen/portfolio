@@ -12,7 +12,7 @@ export default function Bento({
   [key: string]: any;
 }) {
   return (
-    <div data-bento="2x2" className={clsx('h-full w-full', className)} {...props}>
+    <div data-bento={size} className={clsx('h-full w-full', className)} {...props}>
       {children}
     </div>
   );
