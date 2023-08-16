@@ -17,7 +17,7 @@ const BREAKPOINTS = {
 export default function Grid({ className = '', children }: GridProps) {
   useEffect(() => {
     new BentoGrid({
-      target: 'grid-bento',
+      target: '.grid-bento',
       columns: 1,
       breakpointReference: 'window',
       breakpoints: BREAKPOINTS,
