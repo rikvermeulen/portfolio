@@ -78,22 +78,29 @@ export default function Pill({ className, items, activeIndex }: PillProps) {
                   {name}
                 </Link>
               ) : (
-                <Link
+                <a
                   ref={linkRefs.current[index]}
                   onClick={onClick}
-                  href={''}
-                  className="px-5 py-1.5"
+                  className="flex cursor-pointer items-center justify-center px-5"
                 >
                   {icon && (
-                    <Icon
-                      className={cc(
-                        isActive ? 'fill-black' : 'fill-[#707070]',
-                        'transition-colors duration-300 hover:fill-black  w-5',
+                    <>
+                      <Icon
+                        className={cc(
+                          isActive && 'opacity-0 transition-opacity duration-200 delay-200',
+                          'w-5 fill-[#707070]',
+                        )}
+                        type={icon}
+                      />
+                      {isActive && (
+                        <Icon
+                          className={'pop absolute w-5 hover:fill-black'}
+                          type={`${icon}Fill`}
+                        />
                       )}
-                      type={icon}
-                    />
+                    </>
                   )}
-                </Link>
+                </a>
               )}
             </li>
           );
