@@ -1,11 +1,11 @@
 import { FC, ReactElement } from 'react';
 
-import Apps from './types/Apps';
+import { Apps, AppsFill } from './types/Apps';
 import Arrow from './types/Arrow';
-import Dog from './types/Dog';
+import { Dog, DogFill } from './types/Dog';
 import Explicit from './types/Explicit';
-import Heart from './types/Heart';
-import Map from './types/Map';
+import { Heart, HeartFill } from './types/Heart';
+import { Map, MapFill } from './types/Map';
 import Mouse from './types/Mouse';
 import Mute from './types/Mute';
 import Next from './types/Next';
@@ -25,8 +25,11 @@ const icons: Icons = {
   plus: Plus,
   tail: Tail,
   map: Map,
+  mapFill: MapFill,
   heart: Heart,
+  heartFill: HeartFill,
   dog: Dog,
+  dogFill: DogFill,
   explicit: Explicit,
   next: Next,
   play: Play,
@@ -34,6 +37,7 @@ const icons: Icons = {
   mute: Mute,
   sound: Sound,
   apps: Apps,
+  appsFill: AppsFill,
 };
 
 interface IconProps {
