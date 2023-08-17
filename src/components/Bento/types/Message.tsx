@@ -172,7 +172,7 @@ export default function Message() {
                 onFocus={handleInputFocus}
               />
               <button
-                className={`flex rounded-full p-1 ${
+                className={`flex rounded-full p-1 transition-opacity duration-300 ${
                   !hasEnoughText(message) ? 'cursor-not-allowed opacity-50' : ''
                 }`}
                 type="submit"

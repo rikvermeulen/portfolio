@@ -13,8 +13,9 @@ export default async function meta(): Promise<Metadata> {
 
   // Template metadata for open graph
   const openGraph = {
-    title: 'Portfolio - Rik Vermeulen',
-    description: 'Portfolio from Rik Vermeulen, a creative developer from the Netherlands',
+    title: 'Rik Vermeulen - Creative Developer',
+    description:
+      'Discover the creative works and projects of Rik Vermeulen, a creative developer based in the Netherlands.',
     url: 'www.rikvermeulen.com',
     siteName: 'Portfolio - Rik Vermeulen',
     images: [
@@ -36,7 +37,7 @@ export default async function meta(): Promise<Metadata> {
     nocache: true,
     googleBot: {
       index: true,
-      follow: false,
+      follow: true,
       noimageindex: true,
       'max-video-preview': -1,
       'max-snippet': -1,
@@ -70,12 +71,13 @@ export default async function meta(): Promise<Metadata> {
 
   return {
     metadataBase: new URL(host),
-    title: 'Portfolio - Rik Vermeulen',
-    description: 'Portfolio from Rik Vermeulen, a creative developer from the Netherlands',
+    title: 'Rik Vermeulen - Creative Developer in the Netherlands',
+    description:
+      'Explore the portfolio of Rik Vermeulen, showcasing expertise in web development, design, and creative solutions.',
+    keywords: ['Web Development', 'Creative Design', 'Frontend Developer', 'Developer'],
     generator: 'Next.js',
     applicationName: 'Portfolio - Rik Vermeulen',
     referrer: 'origin-when-cross-origin',
-    keywords: ['Portfolio', 'Next.js', 'React'],
     authors: [
       {
         name: 'Rik',
