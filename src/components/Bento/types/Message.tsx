@@ -22,27 +22,17 @@ export default function Message() {
 
   const sendData = async (data: any) => {
     try {
-      const res = await fetch(`/api/send`, {
-        method: 'POST',
-        body: JSON.stringify(data),
-      });
+      const res = await fetch(`/api/send`, { method: 'POST', body: JSON.stringify(data) });
+      if (!res.ok) throw new Error();
 
-      if (res.ok) {
-        setChat((prevChat) => [
-          ...prevChat,
-          { sender: 'admin', text: 'Thanks 🙏 I will contact you soon' },
-        ]);
-      } else {
-        alert('An error occurred. Please try again later.');
-      }
+      addAdminMessage('Thanks 🙏 I will contact you soon');
     } catch (error) {
       alert('An error occurred. Please try again later.');
     }
   };
 
-  const sendAdminMessage = (text: string) => {
+  const addAdminMessage = (text: string) =>
     setChat((prevChat) => [...prevChat, { sender: 'admin', text }]);
-  };
 
   useEffect(() => {
     if (chatRef.current) {
@@ -85,7 +75,7 @@ export default function Message() {
       if (step === 3) errorMessage = 'Please provide a valid email address.';
 
       setTimeout(() => {
-        sendAdminMessage(errorMessage);
+        addAdminMessage(errorMessage);
       }, 5000); // delay by 5 seconds
     } else {
       const questionAndAction = questionsAndActions[step];
