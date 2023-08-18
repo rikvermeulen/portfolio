@@ -1,7 +1,6 @@
+import { Fragment } from 'react';
 import type { Metadata } from 'next';
 
-import { BentoTypes } from '@/components/Bento/types/index';
-import Introduction from '@/components/Bento/types/Introduction';
 import Container from '@/components/Container';
 import Grid from '@/components/Grid';
 import Icon from '@/components/Icons/Icon';
@@ -11,7 +10,23 @@ export const metadata: Metadata = {
   description: 'Welcome to my portfolio',
 };
 
-export default function Home() {
+export default function Layout({
+  children,
+  music,
+  photos,
+  map,
+  github,
+  contact,
+}: {
+  children: React.ReactNode;
+  music: React.ReactNode;
+  photos: React.ReactNode;
+  map: React.ReactNode;
+  github: React.ReactNode;
+  contact: React.ReactNode;
+}) {
+  const bento = [music, photos, map, github, contact];
+
   return (
     <main>
       <Container>
@@ -21,8 +36,9 @@ export default function Home() {
             <p className="text-xs ">Click around...</p>
           </div>
           <Grid>
-            {BentoTypes.map((Item, index) => (
-              <Item key={index} />
+            {children}
+            {bento.map((item, index) => (
+              <Fragment key={index}>{item}</Fragment>
             ))}
           </Grid>
         </section>

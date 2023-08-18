@@ -15,6 +15,7 @@ export const env = createEnv({
     RESEND_API_KEY: z.string().min(1),
     SPOTIFY_CLIENT_ID: z.string().min(1),
     SPOTIFY_CLIENT_SECRET: z.string().min(1),
+    SPOTIFY_CLIENT_RESET: z.string().min(1),
   },
   client: {
     NEXT_PUBLIC_APP_URL: z.string().min(1),
@@ -30,5 +31,6 @@ export const env = createEnv({
     SPOTIFY_CLIENT_ID: process.env.SPOTIFY_CLIENT_ID,
     SPOTIFY_CLIENT_SECRET: process.env.SPOTIFY_CLIENT_SECRET,
     NEXT_PUBLIC_MAPBOX_TOKEN: process.env.NEXT_PUBLIC_MAPBOX_TOKEN,
+    SPOTIFY_CLIENT_RESET: process.env.SPOTIFY_CLIENT_RESET,
   },
 });

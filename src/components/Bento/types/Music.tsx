@@ -2,8 +2,6 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
-import SpotifyWebApi from 'spotify-web-api-js';
 
 import { PlaylistItem } from '@/types/index';
 
@@ -12,21 +10,20 @@ import Icon from '@/components/Icons/Icon';
 
 import Bento from '../Bento';
 
-const spotifyApi = new SpotifyWebApi();
+interface MusicProps {
+  playlist: PlaylistItem[];
+}
 
-const Music: React.FC = () => {
+const Music: React.FC<MusicProps> = ({ playlist = [] }) => {
   const [playlistTracks, setPlaylistTracks] = useState<PlaylistItem[]>([]);
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
-
   const { audioRef, isPlaying, playPause, previewUrl, setPreviewUrl, handleTimeUpdate } =
     AudioPlayer({ initialUrl: '' });
 
   const handleVolumeChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      const { min, max, value } = e.target;
-      const size = ((+value - +min) / (+max - +min)) * 100;
+      const size = (e.target.valueAsNumber / Number(e.target.max)) * 100;
       e.target.style.setProperty('--background-size', `${size}%`);
-
       if (audioRef.current) {
         audioRef.current.volume = e.target.valueAsNumber;
       }
@@ -34,50 +31,30 @@ const Music: React.FC = () => {
     [audioRef],
   );
 
-  const nextTrack = useCallback(() => {
-    const newIndex = (currentTrackIndex + 1) % playlistTracks.length;
-    setCurrentTrackIndex(newIndex);
-    setPreviewUrl(playlistTracks[newIndex]?.track.preview_url || '');
-
-    if (isPlaying && audioRef.current) {
-      audioRef.current.play();
-    }
-  }, [currentTrackIndex, playlistTracks, isPlaying, audioRef]);
-
-  const prevTrack = useCallback(() => {
-    const newIndex = (currentTrackIndex - 1 + playlistTracks.length) % playlistTracks.length;
-    setCurrentTrackIndex(newIndex);
-    setPreviewUrl(playlistTracks[newIndex]?.track.preview_url || '');
-
-    if (isPlaying && audioRef.current) {
-      audioRef.current.play();
-    }
-  }, [currentTrackIndex, playlistTracks, isPlaying, audioRef]);
+  const changeTrack = useCallback(
+    (direction: 'next' | 'previous') => {
+      const modifier = direction === 'next' ? 1 : -1;
+      const newIndex =
+        (currentTrackIndex + modifier + playlistTracks.length) % playlistTracks.length;
+      setCurrentTrackIndex(newIndex);
+      setPreviewUrl(playlistTracks[newIndex]?.track?.preview_url || '');
+      if (isPlaying && audioRef.current) {
+        audioRef.current.play();
+      }
+    },
+    [currentTrackIndex, playlistTracks, isPlaying, audioRef],
+  );
 
   useEffect(() => {
-    fetch('/api/spotify')
-      .then((response) => response.json())
-      .then((data) => {
-        spotifyApi.setAccessToken(data.access_token);
-        return spotifyApi.getPlaylistTracks('0fYuugKPmiqUI38RCgKBEB');
-      })
-      .then((response) => {
-        setPlaylistTracks(response.items as unknown as PlaylistItem[]);
-        const track = response.items[0]?.track;
-        if ('preview_url' in track) {
-          const initialPreviewUrl = track.preview_url;
-          if (initialPreviewUrl) {
-            setPreviewUrl(initialPreviewUrl);
-          }
-        }
-      })
-      .catch((error) => {
-        console.error('Error fetching Spotify data:', error);
-      });
-  }, []);
+    setPlaylistTracks(playlist);
+    const initialPreviewUrl = playlist[0]?.track?.preview_url;
+    if (initialPreviewUrl) {
+      setPreviewUrl(initialPreviewUrl);
+    }
+  }, [playlist]);
 
   const currentTrack = playlistTracks[currentTrackIndex]?.track;
-  const image = currentTrack?.album.images[0]?.url || '/images/noalbum.png';
+  const image = currentTrack?.album?.images[0]?.url || '/images/noalbum.png';
 
   return (
     <Bento
@@ -129,13 +106,21 @@ const Music: React.FC = () => {
           <div className="relative -top-1 text-white/70">{currentTrack?.artists[0].name}</div>
         </div>
         <div className="mt-4 flex w-full items-center justify-around">
-          <button onClick={prevTrack} className="w-5 fill-white" name="Previous song">
+          <button
+            onClick={() => changeTrack('previous')}
+            className="w-5 fill-white"
+            name="Previous song"
+          >
             <Icon type="next" />
           </button>
           <button onClick={playPause} className="h-6 w-6 fill-white" name="Play / Pause">
             {isPlaying ? <Icon type="pause" /> : <Icon type="play" />}
           </button>
-          <button onClick={nextTrack} className="w-5 -scale-x-100 fill-white" name="Next song">
+          <button
+            onClick={() => changeTrack('next')}
+            className="w-5 -scale-x-100 fill-white"
+            name="Next song"
+          >
             <Icon type="next" />
           </button>
         </div>

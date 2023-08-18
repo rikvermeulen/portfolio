@@ -15,18 +15,30 @@ const BREAKPOINTS = {
 };
 
 export default function Grid({ className = '', children }: GridProps) {
+  const gridRef = useRef<HTMLDivElement>(null);
+  const [isLoaded, setIsLoaded] = useState(false);
+
   useEffect(() => {
+    if (!gridRef.current) return;
+
+    const currentGrid = gridRef.current;
+
     new BentoGrid({
-      target: '.grid-bento',
+      target: currentGrid,
       columns: 1,
       breakpointReference: 'window',
       breakpoints: BREAKPOINTS,
     });
+
+    setIsLoaded(true);
   }, []);
 
   return (
     <div
-      className={`grid-bento ${className} gap-row m-auto grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4`}
+      ref={gridRef}
+      className={`grid-bento ${className} gap-row m-auto grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 ${
+        isLoaded ? '' : 'hidden'
+      }`}
     >
       {children}
     </div>

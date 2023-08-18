@@ -1,14 +1,8 @@
 import Image from 'next/image';
-import Link from 'next/link';
-import { env } from 'env.mjs';
 
 import Bento from '@/components/Bento/Bento';
 import Button from '@/components/Button';
-import {
-  getContributionCalendar,
-  type ContributionDay,
-  type MonthlyContributions,
-} from '@/utils/contributions';
+import { type ContributionDay, type MonthlyContributions } from '@/utils/contributions';
 
 const MONTH_RANGE = 5;
 
@@ -35,36 +29,20 @@ const MonthlyContribution = ({ contributions }: MonthlyContributionProps) => (
   </div>
 );
 
-export default async function Github() {
-  const toDate = new Date();
-  const fromDate = new Date();
-  fromDate.setMonth(fromDate.getMonth() - MONTH_RANGE);
-
-  const contributionOptions = {
-    from: fromDate.toISOString(),
-    to: toDate.toISOString(),
-  };
-
-  let monthlyContributions = {};
-  let totalContributions = 0;
-
-  try {
-    ({ monthlyContributions, totalContributions } = await getContributionCalendar(
-      env.GITHUB_CLIENT_USERNAME,
-      env.GITHUB_CLIENT_TOKEN,
-      contributionOptions,
-    ));
-  } catch (error) {
-    console.error('Failed to load contribution data:', error);
-  }
-
+export default async function Github({
+  total,
+  montly,
+}: {
+  total: number;
+  montly: MonthlyContributions;
+}) {
   return (
     <Bento size="1x1" className="bento flex flex-col justify-between p-5">
       <header className="flex items-start justify-between">
         <div>
           <h3 className="text-lg font-bold">Github</h3>
           <p className="text-xs text-dark_grey">
-            {totalContributions} contributions in the last {MONTH_RANGE} months
+            {total} contributions in the last {MONTH_RANGE} months
           </p>
         </div>
         <a href="https://github.com/rikvermeulen" target="_blank">
@@ -77,7 +55,7 @@ export default async function Github() {
           />
         </a>
       </header>
-      <MonthlyContribution contributions={monthlyContributions} />
+      <MonthlyContribution contributions={montly} />
       <Button className="mt-2 self-start" label="Follow" href="https://github.com/rikvermeulen" />
     </Bento>
   );
