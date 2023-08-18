@@ -48,7 +48,6 @@ export class Spotify {
   }
 
   public async initializeWithCode(authCode: string): Promise<boolean> {
-    console.log('authCode', authCode);
     const response = await fetch('https://accounts.spotify.com/api/token', {
       method: 'POST',
       headers: {
@@ -61,8 +60,6 @@ export class Spotify {
         redirect_uri: this.redirectUri,
       }),
     });
-
-    // console.log(response);
 
     if (!response.ok) {
       console.error('Failed to exchange authorization code for tokens', await response.text());
@@ -104,7 +101,11 @@ export class Spotify {
     return !!data.access_token;
   }
 
-  public async getPlaylistTracks(playlist_id: string) {
+  private async makeAuthenticatedRequest(
+    url: string,
+    options: RequestInit = {},
+    retryCount: number = 1,
+  ): Promise<Response> {
     if (this.tokenIsExpired()) {
       const success = await this.refreshAccessToken();
       if (!success) {
@@ -112,11 +113,29 @@ export class Spotify {
       }
     }
 
-    const response = await fetch(`https://api.spotify.com/v1/playlists/${playlist_id}`, {
+    const response = await fetch(url, {
+      ...options,
       headers: {
+        ...(options.headers || {}),
         Authorization: `Bearer ${this.accessToken}`,
       },
     });
+
+    if (response.status === 401 && retryCount > 0) {
+      const success = await this.refreshAccessToken();
+      if (!success) {
+        throw new Error('Failed to refresh access token.');
+      }
+      return await this.makeAuthenticatedRequest(url, options, retryCount - 1); // retrying
+    }
+
+    return response;
+  }
+
+  public async getPlaylistTracks(playlist_id: string) {
+    const response = await this.makeAuthenticatedRequest(
+      `https://api.spotify.com/v1/playlists/${playlist_id}`,
+    );
 
     if (!response.ok) {
       throw new Error(`Failed to fetch playlist tracks: ${await response.text()}`);
@@ -126,24 +145,12 @@ export class Spotify {
   }
 
   public async getSingleShow(podcast_id: string, market?: string) {
-    if (this.tokenIsExpired()) {
-      const success = await this.refreshAccessToken();
-      if (!success) {
-        throw new Error('Failed to refresh access token.');
-      }
-    }
-
     let url = `https://api.spotify.com/v1/shows/${podcast_id}`;
     if (market) {
       url += `?market=${market}`;
     }
 
-    const response = await fetch(url, {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${this.accessToken}`,
-      },
-    });
+    const response = await this.makeAuthenticatedRequest(url);
 
     if (!response.ok) {
       throw new Error(`Failed to fetch podcast show: ${await response.text()}`);
@@ -153,24 +160,12 @@ export class Spotify {
   }
 
   public async getSingleEpisode(episode_id: string, market?: string) {
-    if (this.tokenIsExpired()) {
-      const success = await this.refreshAccessToken();
-      if (!success) {
-        throw new Error('Failed to refresh access token.');
-      }
-    }
-
     let url = `https://api.spotify.com/v1/shows/${episode_id}/episodes`;
     if (market) {
       url += `?market=${market}`;
     }
 
-    const response = await fetch(url, {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${this.accessToken}`,
-      },
-    });
+    const response = await this.makeAuthenticatedRequest(url);
 
     if (!response.ok) {
       throw new Error(`Failed to fetch podcast episode: ${await response.text()}`);
