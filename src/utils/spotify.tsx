@@ -124,4 +124,58 @@ export class Spotify {
 
     return await response.json();
   }
+
+  public async getSingleShow(podcast_id: string, market?: string) {
+    if (this.tokenIsExpired()) {
+      const success = await this.refreshAccessToken();
+      if (!success) {
+        throw new Error('Failed to refresh access token.');
+      }
+    }
+
+    let url = `https://api.spotify.com/v1/shows/${podcast_id}`;
+    if (market) {
+      url += `?market=${market}`;
+    }
+
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${this.accessToken}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch podcast show: ${await response.text()}`);
+    }
+
+    return await response.json();
+  }
+
+  public async getSingleEpisode(episode_id: string, market?: string) {
+    if (this.tokenIsExpired()) {
+      const success = await this.refreshAccessToken();
+      if (!success) {
+        throw new Error('Failed to refresh access token.');
+      }
+    }
+
+    let url = `https://api.spotify.com/v1/shows/${episode_id}/episodes`;
+    if (market) {
+      url += `?market=${market}`;
+    }
+
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${this.accessToken}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch podcast episode: ${await response.text()}`);
+    }
+
+    return await response.json();
+  }
 }

@@ -17,6 +17,7 @@ export default function Layout({
   map,
   github,
   contact,
+  podcast,
 }: {
   children: React.ReactNode;
   music: React.ReactNode;
@@ -24,8 +25,9 @@ export default function Layout({
   map: React.ReactNode;
   github: React.ReactNode;
   contact: React.ReactNode;
+  podcast: React.ReactNode;
 }) {
-  const bento = [music, photos, map, github, contact];
+  const bento = [music, photos, map, github, contact, podcast];
 
   return (
     <main>
