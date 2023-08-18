@@ -1,4 +1,3 @@
-import console from 'console';
 import { env } from 'env.mjs';
 
 import PodcastPlayer from '@/components/Bento/types/Podcast';

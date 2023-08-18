@@ -16,6 +16,8 @@ export const env = createEnv({
     SPOTIFY_CLIENT_ID: z.string().min(1),
     SPOTIFY_CLIENT_SECRET: z.string().min(1),
     SPOTIFY_CLIENT_ACCESS_TOKEN: z.string().min(1),
+    TMDB_CLIENT_KEY: z.string().min(1),
+    NEXT_PUBLIC_SUPABASE_PRISMA: z.string().min(1),
   },
   client: {
     NEXT_PUBLIC_APP_URL: z.string().min(1),
@@ -32,5 +34,7 @@ export const env = createEnv({
     SPOTIFY_CLIENT_SECRET: process.env.SPOTIFY_CLIENT_SECRET,
     NEXT_PUBLIC_MAPBOX_TOKEN: process.env.NEXT_PUBLIC_MAPBOX_TOKEN,
     SPOTIFY_CLIENT_ACCESS_TOKEN: process.env.SPOTIFY_CLIENT_ACCESS_TOKEN,
+    TMDB_CLIENT_KEY: process.env.TMDB_CLIENT_KEY,
+    NEXT_PUBLIC_SUPABASE_PRISMA: process.env.NEXT_PUBLIC_SUPABASE_PRISMA,
   },
 });

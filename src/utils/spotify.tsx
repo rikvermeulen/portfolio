@@ -68,7 +68,6 @@ export class Spotify {
 
     const data = await response.json();
 
-    console.log(data);
     await this.updateTokens(data);
     return !!data.access_token && !!data.refresh_token;
   }

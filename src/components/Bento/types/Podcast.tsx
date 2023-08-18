@@ -50,7 +50,6 @@ const Podcast: React.FC<PodcastProps> = ({ playlist = [], className }) => {
   useEffect(() => {
     const tracksWithPreview = playlist.filter((track) => !!track.audio_preview_url);
     setPlaylistTracks(tracksWithPreview);
-    console.log(tracksWithPreview[0]);
     const initialPreviewUrl = tracksWithPreview[0]?.audio_preview_url;
     if (initialPreviewUrl) {
       setPreviewUrl(initialPreviewUrl);
