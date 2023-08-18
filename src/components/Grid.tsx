@@ -16,7 +16,6 @@ const BREAKPOINTS = {
 
 export default function Grid({ className = '', children }: GridProps) {
   const gridRef = useRef<HTMLDivElement>(null);
-  const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
     if (!gridRef.current) return;
@@ -29,16 +28,12 @@ export default function Grid({ className = '', children }: GridProps) {
       breakpointReference: 'window',
       breakpoints: BREAKPOINTS,
     });
-
-    setIsLoaded(true);
   }, []);
 
   return (
     <div
       ref={gridRef}
-      className={`grid-bento ${className} gap-row m-auto grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 ${
-        isLoaded ? '' : 'hidden'
-      }`}
+      className={`grid-bento ${className} gap-row m-auto grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4`}
     >
       {children}
     </div>
