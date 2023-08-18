@@ -26,3 +26,31 @@ export const questionsAndActions: IQuestionAction[] = [
     action: (message, userData) => ({ ...userData, email: message }),
   },
 ];
+
+export const socials = [
+  {
+    name: 'Twitter',
+    icon: 'twitter',
+    url: 'https://twitter.com/rikvermeulen_',
+  },
+  {
+    name: 'Github',
+    icon: 'github',
+    url: 'https://github.com/rikvermeulen',
+  },
+  {
+    name: 'LinkedIn',
+    icon: 'linkedin',
+    url: 'https://www.linkedin.com/in/rik-vermeulen/',
+  },
+  {
+    name: 'Mail',
+    icon: 'gmail',
+    url: 'mailto:rik.vermeulen.1997@live.nl',
+  },
+  {
+    name: 'CV',
+    icon: 'cv',
+    url: '/',
+  },
+];

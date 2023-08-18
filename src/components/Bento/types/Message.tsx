@@ -1,22 +1,25 @@
 'use client';
 
 import { SetStateAction, useEffect, useMemo, useRef, useState } from 'react';
-import Link from 'next/link';
+import Image from 'next/image';
 import { IMessage } from '@/types';
 
+import cc from '@/lib/cc';
 import { AdminMessage, UserMessage } from '@/components/form/messages';
 import Icon from '@/components/Icons/Icon';
 import { hasEnoughText, isValidEmail, isValidPhoneNumber } from '@/utils/validation';
-import { initialMessages, questionsAndActions } from '@/content/messages/content';
+import { initialMessages, questionsAndActions, socials } from '@/content/messages/content';
 
 import Bento from '../Bento';
 
 export default function Message() {
   const [step, setStep] = useState<number>(0);
   const [message, setMessage] = useState<string>('');
+  const [showMenu, setShowMenu] = useState<boolean>(false);
   const [chat, setChat] = useState<IMessage[]>(initialMessages);
   const [userData, setUserData] = useState({ name: '', reason: '', phone: '', email: '' });
   const chatRef = useRef<HTMLDivElement>(null);
+  const menuRef = useRef(null);
 
   const initialChatLength = 2;
 
@@ -59,10 +62,29 @@ export default function Message() {
     }
   };
 
+  const handleClickOutside = (event: MouseEvent) => {
+    if (event.button !== 0) return;
+
+    if (menuRef.current && !(menuRef.current as HTMLElement).contains(event.target as Node)) {
+      setShowMenu(false);
+    }
+  };
+
+  const handlMenuClick = (e: { preventDefault: () => void }) => {
+    e.preventDefault();
+
+    if (showMenu) {
+      setShowMenu(false);
+      document.removeEventListener('mousedown', handleClickOutside);
+    } else {
+      setShowMenu(true);
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+  };
+
   const handleSendClick = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
 
-    // Add user message to chat immediately
     setChat((prevChat) => [...prevChat, { sender: 'user', text: message }]);
 
     if (
@@ -135,7 +157,12 @@ export default function Message() {
   );
 
   return (
-    <Bento size="2x1" className="bento relative flex max-h-[346px] flex-col">
+    <Bento size="2x1" className="bento relative flex max-h-[346px] flex-col ">
+      <div
+        className={`absolute h-full w-full bg-white/70 backdrop-blur-md transition-opacity duration-500 ease-in-out ${
+          showMenu ? 'z-30 opacity-100' : 'opacity-0'
+        }`}
+      ></div>
       <header className="h-11 w-full border-b border-solid border-[#ECECEC] bg-[#EBECEB]/40 backdrop-blur-xl"></header>
       <div
         ref={chatRef}
@@ -144,13 +171,39 @@ export default function Message() {
       >
         {chatContent}
       </div>
-      <div className="absolute bottom-0 flex w-full gap-3 bg-white/70 px-5 pb-5 pt-2 backdrop-blur-xl">
-        <Link
+      {/* {showMenu && ( */}
+      <ul
+        className={cc(
+          showMenu
+            ? 'opacity-100 translate-x-0 translate-y-0 scale-100'
+            : 'opacity-0 scale-50 translate-y-44 -translate-x-10',
+          'absolute bottom-4 left-5 z-40 duration-300 transition-[transform,opacity]',
+        )}
+        ref={menuRef}
+      >
+        {socials.map((social, index) => (
+          <li key={index} className="mb-4">
+            <a href={social.url} className="flex gap-4">
+              <Image
+                src={`/images/icons/${social.icon}.png`}
+                className="rounded-full border border-solid border-[#EAEBED]"
+                alt={social.name}
+                width={24}
+                height={24}
+              />
+              <p>{social.name}</p>
+            </a>
+          </li>
+        ))}
+      </ul>
+      {/* )} */}
+      <div className="absolute bottom-0 z-20 flex w-full gap-3 bg-white/70 px-5 pb-5 pt-2 backdrop-blur-xl">
+        <button
           className="flex h-9 w-9 items-center justify-center rounded-full bg-[#EAEBED] fill-[#848484] p-3"
-          href="/"
+          onClick={handlMenuClick}
         >
           <Icon type="plus" className="w-3" />
-        </Link>
+        </button>
         <form className="flex w-full">
           {step < questionsAndActions.length && (
             <div className="flex max-h-9 w-full rounded-full border border-solid border-[#EAEBED]">
