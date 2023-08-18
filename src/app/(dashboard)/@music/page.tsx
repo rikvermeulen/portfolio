@@ -9,7 +9,7 @@ async function getData() {
   let isInitialized = await spotify.initializeWithClientCredentials();
 
   if (!isInitialized) {
-    isInitialized = await spotify.initializeWithCode(env!.SPOTIFY_CLIENT_RESET);
+    isInitialized = await spotify.initializeWithCode(env!.SPOTIFY_CLIENT_ACCESS_TOKEN);
   }
 
   if (!isInitialized) {
