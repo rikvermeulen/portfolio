@@ -1,6 +1,6 @@
 import { env } from 'env.mjs';
 
-import Music from '@/components/Bento/types/Music';
+import MusicPlayer from '@/components/Bento/types/Music';
 import { Spotify } from '@/utils/spotify';
 
 async function getData() {
@@ -22,8 +22,10 @@ async function getData() {
   return playlist.tracks.items;
 }
 
-export default async function Tusic() {
+export default async function Music() {
   const playlist = await getData();
 
-  return <Music playlist={playlist} />;
+  return (
+    <MusicPlayer playlist={playlist} className="bg-gradient-to-b from-[#E96575] to-[#E63F45]" />
+  );
 }

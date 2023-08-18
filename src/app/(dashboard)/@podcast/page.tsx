@@ -1,6 +1,7 @@
 import console from 'console';
 import { env } from 'env.mjs';
 
+import PodcastPlayer from '@/components/Bento/types/Podcast';
 import { Spotify } from '@/utils/spotify';
 
 async function getData() {
@@ -22,8 +23,10 @@ async function getData() {
   return podcast.items;
 }
 
-export default async function Tusic() {
+export default async function Podcast() {
   const podcast = await getData();
 
-  return <></>;
+  return (
+    <PodcastPlayer playlist={podcast} className="bg-gradient-to-b from-[#BC6AEB] to-[#6E2AAD]" />
+  );
 }

@@ -1,10 +1,11 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 
 import { PlaylistItem } from '@/types/index';
 
+import cc from '@/lib/cc';
 import AudioPlayer from '@/components/AudioPlayer';
 import Icon from '@/components/Icons/Icon';
 
@@ -12,42 +13,39 @@ import Bento from '../Bento';
 
 interface MusicProps {
   playlist: PlaylistItem[];
+  className?: string;
 }
 
-const Music: React.FC<MusicProps> = ({ playlist = [] }) => {
+const Music: React.FC<MusicProps> = ({ playlist = [], className }) => {
   const [playlistTracks, setPlaylistTracks] = useState<PlaylistItem[]>([]);
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
-  const { audioRef, isPlaying, playPause, previewUrl, setPreviewUrl, handleTimeUpdate } =
-    AudioPlayer({ initialUrl: '' });
+  const [showPulse, setShowPulse] = useState(false);
+  const {
+    audioRef,
+    isPlaying,
+    previewUrl,
+    setPreviewUrl,
+    playOrPause,
+    handleVolumeChange,
+    changeTrack,
+    handleTimeUpdate,
+  } = AudioPlayer({
+    initialUrl: '',
+    playlistTracks: playlistTracks,
+    currentTrackIndex,
+    setCurrentTrackIndex,
+  });
 
-  const handleVolumeChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      const size = (e.target.valueAsNumber / Number(e.target.max)) * 100;
-      e.target.style.setProperty('--background-size', `${size}%`);
-      if (audioRef.current) {
-        audioRef.current.volume = e.target.valueAsNumber;
-      }
-    },
-    [audioRef],
-  );
-
-  const changeTrack = useCallback(
-    (direction: 'next' | 'previous') => {
-      const modifier = direction === 'next' ? 1 : -1;
-      const newIndex =
-        (currentTrackIndex + modifier + playlistTracks.length) % playlistTracks.length;
-      setCurrentTrackIndex(newIndex);
-      setPreviewUrl(playlistTracks[newIndex]?.track?.preview_url || '');
-      if (isPlaying && audioRef.current) {
-        audioRef.current.play();
-      }
-    },
-    [currentTrackIndex, playlistTracks, isPlaying, audioRef],
-  );
+  const handlePlayOrPause = () => {
+    playOrPause();
+    setShowPulse(true);
+    setTimeout(() => setShowPulse(false), 600);
+  };
 
   useEffect(() => {
-    setPlaylistTracks(playlist);
-    const initialPreviewUrl = playlist[0]?.track?.preview_url;
+    const tracksWithPreview = playlist.filter((track) => !!track.track.preview_url);
+    setPlaylistTracks(tracksWithPreview);
+    const initialPreviewUrl = tracksWithPreview[0]?.track?.preview_url;
     if (initialPreviewUrl) {
       setPreviewUrl(initialPreviewUrl);
     }
@@ -57,12 +55,7 @@ const Music: React.FC<MusicProps> = ({ playlist = [] }) => {
   const image = currentTrack?.album?.images[0]?.url || '/images/noalbum.png';
 
   return (
-    <Bento
-      size="1x1"
-      className={`${
-        isPlaying && '!border-none'
-      } bento relative z-0 bg-gradient-to-b from-[#E96575] to-[#E63F45]`}
-    >
+    <Bento size="1x1" className={cc(className, isPlaying && '', 'bento relative z-0 !border-none')}>
       <div className="absolute right-0 z-20 p-5">
         <a href="https://music.apple.com/nl/playlist/r-b/pl.u-38oWX9ECd2XAl3" target="_blank">
           <Image
@@ -87,14 +80,18 @@ const Music: React.FC<MusicProps> = ({ playlist = [] }) => {
         <div className=" h-full w-full backdrop-blur-xl"></div>
       </div>
       <div className={'relative z-10 h-full p-5'}>
-        <div className="flex w-full items-center justify-center">
+        <div className="flex h-40 w-full items-center justify-center">
           {image && (
             <Image
               src={image}
+              priority
               alt={currentTrack?.album.name || 'No album'}
-              width={164}
-              height={164}
-              className="rounded-md drop-shadow-md"
+              width={144}
+              height={144}
+              className={cc(
+                isPlaying ? 'pop-up' : 'pop-down',
+                'rounded-md drop-shadow-md duration-300 transition-transform scale-100',
+              )}
             />
           )}
         </div>
@@ -113,8 +110,28 @@ const Music: React.FC<MusicProps> = ({ playlist = [] }) => {
           >
             <Icon type="next" />
           </button>
-          <button onClick={playPause} className="h-6 w-6 fill-white" name="Play / Pause">
-            {isPlaying ? <Icon type="pause" /> : <Icon type="play" />}
+          <button
+            onClick={handlePlayOrPause}
+            className={cc(
+              showPulse ? 'button' : '',
+              'relative flex h-6 w-6 justify-center fill-white',
+            )}
+            name="Play / Pause"
+          >
+            <Icon
+              type="pause"
+              className={cc(
+                isPlaying ? 'opacity-100 scale-100' : 'opacity-0 scale-0',
+                'h-full transition-[opacity,transform] duration-300 active:scale-90',
+              )}
+            />
+            <Icon
+              type="play"
+              className={cc(
+                !isPlaying ? 'opacity-100 scale-100' : 'opacity-0 scale-0',
+                'transition-[opacity,transform] duration-300 absolute active:scale-90 h-full',
+              )}
+            />
           </button>
           <button
             onClick={() => changeTrack('next')}

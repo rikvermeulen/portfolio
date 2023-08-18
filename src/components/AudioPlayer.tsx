@@ -1,10 +1,23 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
+import { PlaylistItem } from '@/types/index';
+
+export interface PodcastItem {
+  audio_preview_url: string;
+}
 interface UseAudioPlayerProps {
   initialUrl: string;
+  playlistTracks?: PlaylistItem[] | PodcastItem[];
+  currentTrackIndex?: number;
+  setCurrentTrackIndex?: (index: number) => void;
 }
 
-const AudioPlayer = ({ initialUrl }: UseAudioPlayerProps) => {
+const AudioPlayer = ({
+  initialUrl,
+  playlistTracks = [],
+  currentTrackIndex = 0,
+  setCurrentTrackIndex,
+}: UseAudioPlayerProps) => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(initialUrl);
@@ -13,15 +26,20 @@ const AudioPlayer = ({ initialUrl }: UseAudioPlayerProps) => {
     if (!audioRef.current) return;
 
     const fadeDuration = 200;
+    const intervals = fadeDuration / 10;
     const originalVolume = audioRef.current.volume;
-    const step = originalVolume / (fadeDuration / 10);
+    const step = originalVolume / intervals;
+
+    let fadeCounter = 0;
+
     const fade = () => {
       if (!audioRef.current) return;
 
       const newVolume = audioRef.current.volume - step;
       audioRef.current.volume = Math.max(newVolume, 0);
+      fadeCounter++;
 
-      if (audioRef.current.volume > 0) {
+      if (fadeCounter < intervals) {
         setTimeout(fade, 10);
       } else {
         audioRef.current.pause();
@@ -33,18 +51,60 @@ const AudioPlayer = ({ initialUrl }: UseAudioPlayerProps) => {
     fade();
   }, [audioRef]);
 
-  const playPause = useCallback(() => {
-    if (!audioRef.current) return;
+  const handleVolumeChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const size = (e.target.valueAsNumber / Number(e.target.max)) * 100;
+      e.target.style.setProperty('--background-size', `${size}%`);
+      if (audioRef.current) {
+        audioRef.current.volume = e.target.valueAsNumber;
+      }
+    },
+    [audioRef],
+  );
 
-    if (audioRef.current.paused) {
-      audioRef.current.play().catch((error) => {
-        console.error('Error playing the audio:', error);
-      });
-      setIsPlaying(true);
-    } else {
-      fadeOut();
+  const changeTrack = useCallback(
+    (direction: 'next' | 'previous') => {
+      if (!setCurrentTrackIndex) return;
+
+      const modifier = direction === 'next' ? 1 : -1;
+      const newIndex =
+        (currentTrackIndex + modifier + playlistTracks.length) % playlistTracks.length;
+      setCurrentTrackIndex(newIndex);
+      if ('track' in playlistTracks[newIndex]) {
+        const track = playlistTracks[newIndex] as PlaylistItem;
+        setPreviewUrl(track.track?.preview_url);
+      } else if ('audio_preview_url' in playlistTracks[newIndex]) {
+        const podcast = playlistTracks[newIndex] as PodcastItem;
+        setPreviewUrl(podcast.audio_preview_url);
+      }
+
+      if (isPlaying && audioRef.current) {
+        audioRef.current.play();
+      }
+    },
+    [currentTrackIndex, playlistTracks, isPlaying, audioRef],
+  );
+
+  const immediatePause = () => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+      setIsPlaying(false);
     }
-  }, [audioRef, fadeOut]);
+  };
+
+  const playOrPause = () => {
+    if (audioRef.current) {
+      if (audioRef.current.paused) {
+        audioRef.current.play().catch((error) => {
+          console.error('Error playing the audio:', error);
+        });
+        setIsPlaying(true);
+      } else {
+        fadeOut();
+        // immediatePause();
+      }
+    }
+  };
 
   const handleTimeUpdate = useCallback(() => {
     if (audioRef.current && audioRef.current.currentTime >= 26) {
@@ -81,10 +141,10 @@ const AudioPlayer = ({ initialUrl }: UseAudioPlayerProps) => {
     setIsPlaying,
     previewUrl,
     setPreviewUrl,
-    playPause,
+    playOrPause,
+    handleVolumeChange,
+    changeTrack,
     handleTimeUpdate,
-    fadeOut,
-    endPreview,
   };
 };
 

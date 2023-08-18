@@ -24,6 +24,7 @@ export interface PodcastItem {
 const Podcast: React.FC<PodcastProps> = ({ playlist = [], className }) => {
   const [playlistTracks, setPlaylistTracks] = useState<PodcastItem[]>([]);
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
+  const [showPulse, setShowPulse] = useState(false);
   const {
     audioRef,
     isPlaying,
@@ -39,6 +40,12 @@ const Podcast: React.FC<PodcastProps> = ({ playlist = [], className }) => {
     currentTrackIndex,
     setCurrentTrackIndex,
   });
+
+  const handlePlayOrPause = () => {
+    playOrPause();
+    setShowPulse(true);
+    setTimeout(() => setShowPulse(false), 600);
+  };
 
   useEffect(() => {
     const tracksWithPreview = playlist.filter((track) => !!track.audio_preview_url);
@@ -111,15 +118,31 @@ const Podcast: React.FC<PodcastProps> = ({ playlist = [], className }) => {
             <Icon type="next" />
           </button>
           <button
-            onClick={playOrPause}
-            className="flex h-6 w-6 justify-center fill-white"
+            onClick={handlePlayOrPause}
+            className={cc(
+              showPulse ? 'button' : '',
+              'relative flex h-6 w-6 justify-center fill-white',
+            )}
             name="Play / Pause"
           >
-            {isPlaying ? <Icon type="pause" className="w-5" /> : <Icon type="play" />}
+            <Icon
+              type="pause"
+              className={cc(
+                isPlaying ? 'opacity-100 scale-100' : 'opacity-0 scale-0',
+                'h-full transition-[opacity,transform] duration-300 active:scale-90',
+              )}
+            />
+            <Icon
+              type="play"
+              className={cc(
+                !isPlaying ? 'opacity-100 scale-100' : 'opacity-0 scale-0',
+                'transition-[opacity,transform] duration-300 absolute active:scale-90 h-full',
+              )}
+            />
           </button>
           <button
             onClick={() => changeTrack('next')}
-            className="w-5 -scale-x-100 fill-white active:animate-ping"
+            className="w-5 -scale-x-100 fill-white"
             name="Next song"
           >
             <Icon type="next" />
