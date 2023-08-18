@@ -34,35 +34,40 @@
   --background-size: 0%;
   -webkit-appearance: none;
   appearance: none;
+  opacity: 0.8;
   width: 70%;
   height: 5px;
-  border-radius: 999px;
+  border-radius: 9999px;
   background: linear-gradient(
     to right,
     #ffffff 0%,
     #ffffff var(--background-size),
     rgba(255, 255, 255, 0.5) var(--background-size)
   );
+  transform: scale(1);
   outline: none;
-  transition: background 0.2s ease;
+  transition:
+    background 0.2s ease,
+    opacity 0.2s ease,
+    width 0.2s ease;
+  transform: 0.2s ease;
+}
+
+.slider:active {
+  transform: scaleY(1.4);
+  width: 74%;
+  opacity: 1;
 }
 
 .slider::-webkit-slider-thumb {
   -webkit-appearance: none;
+  box-shadow: none;
   appearance: none;
-  width: 5px;
+  width: 20px;
   height: 5px;
   background: #ffffff;
   cursor: pointer;
-  border-radius: 50%;
-}
-
-.slider::-moz-range-thumb {
-  width: 5px;
-  height: 5px;
-  background: #ffffff;
-  cursor: pointer;
-  border-radius: 50%;
+  border-radius: 25%;
 }
 
 .mapboxgl-ctrl-bottom-left {
@@ -103,7 +108,7 @@
   }
 }
 
-.pop {
+.popin {
   animation: popIn 500ms ease-in;
 }
 
@@ -116,5 +121,62 @@
   }
   100% {
     transform: scale(1);
+  }
+}
+
+.pop-up {
+  animation: popUp 500ms forwards;
+}
+
+.pop-down {
+  animation: popDown 500ms forwards;
+}
+
+@keyframes popUp {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.15);
+  }
+  100% {
+    transform: scale(1.1);
+  }
+}
+
+@keyframes popDown {
+  0% {
+    transform: scale(1.1);
+  }
+  50% {
+    transform: scale(0.95);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.button::before {
+  content: '';
+  position: absolute;
+  transform: scale(2);
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 50%;
+  animation: pulse-bg 600ms ease-out;
+  pointer-events: none; /* Ensures this pseudo-element doesn't interfere with any interactions */
+}
+
+@keyframes pulse-bg {
+  0% {
+    background-color: transparent;
+  }
+  50% {
+    background-color: rgba(237, 237, 237, 0.1); /* Adjust color to your liking */
+  }
+  100% {
+    background-color: transparent;
   }
 }

@@ -94,7 +94,7 @@ export default function Pill({ className, items, activeIndex }: PillProps) {
                       />
                       {isActive && (
                         <Icon
-                          className={'pop absolute w-5 hover:fill-black'}
+                          className={'popin absolute w-5 hover:fill-black'}
                           type={`${icon}Fill`}
                         />
                       )}
