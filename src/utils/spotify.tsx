@@ -16,26 +16,47 @@ export class Spotify {
     )}`;
     this.nextRefresh = '';
   }
+
   async makeRequest(endpoint: string) {
-    const res = await fetch(`${BASE_URL}/${endpoint}`, {
-      headers: { Authorization: `Bearer ${this.accessToken}` },
-    });
-    const data = await res.json();
-    return data;
+    try {
+      const res = await fetch(`${BASE_URL}/${endpoint}`, {
+        headers: { Authorization: `Bearer ${this.accessToken}` },
+      });
+
+      if (!res.ok) {
+        throw new Error(`Error making request to Spotify API. Status: ${res.status}`);
+      }
+
+      const data = await res.json();
+      return data;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
   }
 
   async refresh() {
-    const res = await fetch('https://accounts.spotify.com/api/token', {
-      method: 'POST',
-      headers: {
-        Authorization: this.authorizations,
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: 'grant_type=client_credentials',
-    });
-    const data = await res.json();
-    this.accessToken = data.access_token;
-    this.nextRefresh = Date.now() + data.expires_in;
+    try {
+      const res = await fetch('https://accounts.spotify.com/api/token', {
+        method: 'POST',
+        headers: {
+          Authorization: this.authorizations,
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: 'grant_type=client_credentials',
+      });
+
+      if (!res.ok) {
+        throw new Error(`Error refreshing Spotify token. Status: ${res.status}`);
+      }
+
+      const data = await res.json();
+      this.accessToken = data.access_token;
+      this.nextRefresh = Date.now() + data.expires_in;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
   }
 
   public async getTrack(playlist_id: string) {
@@ -47,19 +68,19 @@ export class Spotify {
     if (Date.now() >= Number(this.nextRefresh)) await this.refresh();
     return await this.makeRequest(`shows/${episode_id}/episodes?market=${market}`);
   }
-
-  // public async getSingleShow(podcast_id: string, market?: string) {
-  //   let url = `https://api.spotify.com/v1/shows/${podcast_id}`;
-  //   if (market) {
-  //     url += `?market=${market}`;
-  //   }
-
-  //   const response = await this.makeAuthenticatedRequest(url);
-
-  //   if (!response.ok) {
-  //     throw new Error(`Failed to fetch podcast show: ${await response.text()}`);
-  //   }
-
-  //   return await response.json();
-  // }
 }
+
+// public async getSingleShow(podcast_id: string, market?: string) {
+//   let url = `https://api.spotify.com/v1/shows/${podcast_id}`;
+//   if (market) {
+//     url += `?market=${market}`;
+//   }
+
+//   const response = await this.makeAuthenticatedRequest(url);
+
+//   if (!response.ok) {
+//     throw new Error(`Failed to fetch podcast show: ${await response.text()}`);
+//   }
+
+//   return await response.json();
+// }
