@@ -11,9 +11,9 @@ async function getData() {
 
   const playlist = await spotify.getTrack('0fYuugKPmiqUI38RCgKBEB');
 
-  if (!playlist.tracks.items) return;
+  if (!playlist?.tracks?.items) return;
 
-  return playlist.tracks.items;
+  return playlist?.tracks?.items;
 }
 
 export default async function Music() {

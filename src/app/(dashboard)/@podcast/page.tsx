@@ -1,3 +1,5 @@
+import console from 'console';
+
 import { env } from '@/env.mjs';
 
 import PodcastPlayer from '@/components/Bento/types/Podcast';
@@ -11,9 +13,9 @@ async function getData() {
 
   const podcast = await spotify.getSingleEpisode('5IQCDDwWlDkZDRahQYwZon', 'NL');
 
-  if (!podcast.items) return;
+  if (!podcast?.items) return;
 
-  return podcast.items;
+  return podcast?.items;
 }
 
 export default async function Podcast() {
