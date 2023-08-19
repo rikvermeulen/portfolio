@@ -21,6 +21,10 @@ export default function Message() {
   const chatRef = useRef<HTMLDivElement>(null);
   const menuRef = useRef(null);
 
+  const currentTime = `${String(new Date().getHours()).padStart(2, '0')}:${String(
+    new Date().getMinutes(),
+  ).padStart(2, '0')}`;
+
   const initialChatLength = 2;
 
   const sendData = async (data: any) => {
@@ -98,7 +102,7 @@ export default function Message() {
 
       setTimeout(() => {
         addAdminMessage(errorMessage);
-      }, 5000); // delay by 5 seconds
+      }, 5000);
     } else {
       const questionAndAction = questionsAndActions[step];
       const newUserData = questionAndAction.action(message, userData);
@@ -169,9 +173,12 @@ export default function Message() {
         className="chat flex flex-col gap-4 px-5 pb-20 pt-5 transition-all"
         style={{ overflowY: 'scroll', height: '100%' }}
       >
+        <p className="relative -top-3 flex w-full justify-center text-[10px] text-dark_grey">
+          <span className="font-bold">Today: </span>
+          &nbsp;{currentTime}
+        </p>
         {chatContent}
       </div>
-      {/* {showMenu && ( */}
       <ul
         className={cc(
           showMenu
@@ -196,10 +203,9 @@ export default function Message() {
           </li>
         ))}
       </ul>
-      {/* )} */}
       <div className="absolute bottom-0 z-20 flex w-full gap-3 bg-white/70 px-5 pb-5 pt-2 backdrop-blur-xl">
         <button
-          className="flex h-9 w-9 items-center justify-center rounded-full bg-[#EAEBED] fill-[#848484] p-3"
+          className="flex h-9 w-9 items-center justify-center rounded-full bg-[#EAEBED] fill-[#848484] p-3 transition-[colors,transform] duration-300 hover:bg-[#dadbdd] active:scale-90"
           onClick={handlMenuClick}
         >
           <Icon type="plus" className="w-3" />
