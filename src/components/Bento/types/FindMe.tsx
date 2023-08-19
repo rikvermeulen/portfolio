@@ -83,8 +83,8 @@ export default function FindMe() {
       mapRef.current.flyTo({
         center: [longitude, latitude],
         zoom: currentZoom + 3,
-        speed: 0.8,
-        curve: 1.2,
+        speed: 1,
+        curve: 1,
       });
     }
   }
@@ -95,8 +95,8 @@ export default function FindMe() {
       mapRef.current.flyTo({
         center: [longitude, latitude],
         zoom: currentZoom - 3,
-        speed: 0.8,
-        curve: 1.2,
+        speed: 1,
+        curve: 1,
       });
     }
   }

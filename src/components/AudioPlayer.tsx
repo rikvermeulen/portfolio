@@ -25,7 +25,7 @@ const AudioPlayer = ({
   const fadeOut = useCallback(() => {
     if (!audioRef.current) return;
 
-    const fadeDuration = 200;
+    const fadeDuration = 600;
     const intervals = fadeDuration / 10;
     const originalVolume = audioRef.current.volume;
     const step = originalVolume / intervals;

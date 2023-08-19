@@ -17,8 +17,8 @@ const items = [
 
 export default function Footer() {
   return (
-    <footer className="fixed bottom-5 w-full">
-      <div className="z-50 flex items-center justify-center">
+    <footer className="fixed bottom-5 z-50 w-full">
+      <div className="flex items-center justify-center">
         <Pill items={items} />
       </div>
     </footer>

@@ -39,7 +39,7 @@ const Photos: React.FC<AlbumsProps> = ({ albums }) => {
 
   const albumItems = albumNames.map((albumName, index) => ({
     name: albumName,
-    icon: albumName, // Adjust this if needed
+    icon: albumName,
     onClick: () => handleAlbumClick(index),
   }));
 
@@ -81,9 +81,9 @@ const Photos: React.FC<AlbumsProps> = ({ albums }) => {
           </a>
         </div>
         {mediaFiles.map(renderMedia)}
-        <div className="z-10 flex items-center justify-center">
+        <div className="z-20 flex items-center justify-center">
           <Pill
-            className="absolute bottom-5 translate-y-20 transition-all duration-300 ease-in-out group-hover:-translate-y-0"
+            className=" absolute -bottom-16 transition-[bottom] duration-200 will-change-contents group-hover:bottom-5"
             items={albumItems}
             activeIndex={activeAlbumIndex}
           />
