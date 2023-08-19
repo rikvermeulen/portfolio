@@ -161,9 +161,9 @@ export default function Message() {
   );
 
   return (
-    <Bento size="2x1" className="bento relative flex max-h-[346px] flex-col ">
+    <Bento size="2x1" className="bento relative flex max-h-[346px] flex-col">
       <div
-        className={`absolute h-full w-full bg-white/70 backdrop-blur-md transition-opacity duration-500 ease-in-out ${
+        className={`absolute z-0 h-full w-full bg-white/70 backdrop-blur-md transition-opacity duration-500 ease-in-out ${
           showMenu ? 'z-30 opacity-100' : 'opacity-0'
         }`}
       ></div>
@@ -205,7 +205,7 @@ export default function Message() {
       </ul>
       <div className="absolute bottom-0 z-20 flex w-full gap-3 bg-white/70 px-5 pb-5 pt-2 backdrop-blur-xl">
         <button
-          className="flex h-9 w-9 items-center justify-center rounded-full bg-[#EAEBED] fill-[#848484] p-3 transition-[colors,transform] duration-300 hover:bg-[#dadbdd] active:scale-90"
+          className="flex h-9 w-9 items-center justify-center rounded-full bg-[#EAEBED] fill-[#848484] p-3 transition-[background,transform] duration-300 hover:bg-[#dadbdd] active:scale-90"
           onClick={handlMenuClick}
         >
           <Icon type="plus" className="w-3" />
