@@ -111,7 +111,7 @@ export default function Message() {
       if (step === 3) errorMessage = 'Please provide a valid email address.';
 
       setTimeout(() => {
-        playSound('/sounds/receive.mp3');
+        playSound('receive');
         addAdminMessage(errorMessage);
       }, 1500);
     } else {
