@@ -7,19 +7,26 @@ import { IMessage } from '@/types';
 import cc from '@/lib/cc';
 import { AdminMessage, UserMessage } from '@/components/form/messages';
 import Icon from '@/components/Icons/Icon';
+import { useSound } from '@/utils/sound';
 import { hasEnoughText, isValidEmail, isValidPhoneNumber } from '@/utils/validation';
 import { initialMessages, questionsAndActions, socials } from '@/content/messages/content';
 
 import Bento from '../Bento';
 
 export default function Message() {
+  // State
   const [step, setStep] = useState<number>(0);
   const [message, setMessage] = useState<string>('');
   const [showMenu, setShowMenu] = useState<boolean>(false);
   const [chat, setChat] = useState<IMessage[]>(initialMessages);
   const [userData, setUserData] = useState({ name: '', reason: '', phone: '', email: '' });
+
+  // Refs
   const chatRef = useRef<HTMLDivElement>(null);
   const menuRef = useRef(null);
+
+  // Sounds
+  const { playSound } = useSound();
 
   const currentTime = `${String(new Date().getHours()).padStart(2, '0')}:${String(
     new Date().getMinutes(),
@@ -38,8 +45,9 @@ export default function Message() {
     }
   };
 
-  const addAdminMessage = (text: string) =>
+  const addAdminMessage = (text: string) => {
     setChat((prevChat) => [...prevChat, { sender: 'admin', text }]);
+  };
 
   useEffect(() => {
     if (chatRef.current) {
@@ -56,6 +64,7 @@ export default function Message() {
   const handleInputFocus = () => {
     if (step === 0 && chat.length === 2) {
       const firstQuestion = questionsAndActions[0].question;
+      playSound('receive');
       setChat([
         ...chat,
         {
@@ -89,6 +98,7 @@ export default function Message() {
   const handleSendClick = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
 
+    playSound('send');
     setChat((prevChat) => [...prevChat, { sender: 'user', text: message }]);
 
     if (
@@ -101,8 +111,9 @@ export default function Message() {
       if (step === 3) errorMessage = 'Please provide a valid email address.';
 
       setTimeout(() => {
+        playSound('/sounds/receive.mp3');
         addAdminMessage(errorMessage);
-      }, 5000);
+      }, 1500);
     } else {
       const questionAndAction = questionsAndActions[step];
       const newUserData = questionAndAction.action(message, userData);
@@ -115,6 +126,7 @@ export default function Message() {
 
         const addAdminMessageWithDelay = (message: string, delay: number) => {
           setTimeout(() => {
+            playSound('receive');
             setChat((prevChat) => [...prevChat, { sender: 'admin', text: message }]);
           }, delay);
         };

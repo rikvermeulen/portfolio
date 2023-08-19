@@ -1,3 +1,5 @@
+'use client';
+
 import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 
 interface SoundContextProps {
@@ -22,8 +24,9 @@ interface SoundProviderProps {
 export const SoundProvider: React.FC<SoundProviderProps> = ({ children }) => {
   const [sound, setSound] = useState<HTMLAudioElement | null>(null);
 
-  const playSound = (src: string) => {
-    const audio = new Audio(src);
+  const playSound = (fileName: string) => {
+    const path = `/sounds/${fileName}.mp3`;
+    const audio = new Audio(path);
     setSound(audio);
     audio.play();
   };
