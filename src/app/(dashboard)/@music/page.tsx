@@ -10,11 +10,9 @@ async function getData() {
 
     const playlist = await spotify.getTrack('0fYuugKPmiqUI38RCgKBEB');
 
-    if (playlist?.tracks && playlist?.tracks?.items) {
-      return playlist.tracks.items;
-    }
+    if (!playlist?.tracks?.items) return null;
 
-    return null;
+    return playlist.tracks.items;
   } catch (error) {
     console.error('Error fetching data from Spotify:', error);
     return null;
@@ -23,6 +21,8 @@ async function getData() {
 
 export default async function Music() {
   const playlist = await getData();
+
+  console.log(playlist);
 
   if (!playlist) return <></>;
 

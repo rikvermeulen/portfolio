@@ -12,11 +12,9 @@ async function getData() {
 
     const podcast = await spotify.getSingleEpisode('5IQCDDwWlDkZDRahQYwZon', 'NL');
 
-    if (podcast && podcast?.items) {
-      return podcast.items;
-    }
+    if (!podcast?.items) return null;
 
-    return null;
+    return podcast.items;
   } catch (error) {
     console.error('Error fetching data from Spotify:', error);
     return null;
@@ -25,6 +23,8 @@ async function getData() {
 
 const Podcast = async () => {
   const podcast = await getData();
+
+  console.log(podcast);
 
   if (!podcast) return <></>;
 
