@@ -8,12 +8,15 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 
 import { env } from 'env.mjs';
 
+import Icon from '@/components/Icons/Icon';
+
 import Bento from '../Bento';
 
 mapboxgl.accessToken = env.NEXT_PUBLIC_MAPBOX_TOKEN;
 
 export default function FindMe() {
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
+  const mapRef = useRef<null | mapboxgl.Map>(null);
 
   const latitude = 51.8738;
   const longitude = 5.07397;
@@ -27,6 +30,8 @@ export default function FindMe() {
         zoom: 12,
         attributionControl: false,
       });
+
+      mapRef.current = map;
 
       const markerElement = document.createElement('div');
       const pingSpan = document.createElement('span');
@@ -65,12 +70,39 @@ export default function FindMe() {
 
       map.dragPan.disable();
 
-      return () => map.remove();
+      return () => {
+        map.remove();
+      };
     }
   }, []);
 
+  function handleZoomIn() {
+    if (mapRef.current) {
+      const currentZoom = mapRef.current.getZoom();
+      if (currentZoom >= 12) return;
+      mapRef.current.flyTo({
+        center: [longitude, latitude],
+        zoom: currentZoom + 3,
+        speed: 0.8,
+        curve: 1.2,
+      });
+    }
+  }
+
+  function handleZoomOut() {
+    if (mapRef.current) {
+      const currentZoom = mapRef.current.getZoom();
+      mapRef.current.flyTo({
+        center: [longitude, latitude],
+        zoom: currentZoom - 3,
+        speed: 0.8,
+        curve: 1.2,
+      });
+    }
+  }
+
   return (
-    <Bento size="1x1" className="bento relative">
+    <Bento size="1x1" className="bento relative z-0">
       <div ref={mapContainerRef} style={{ width: '100%', height: '100%' }} />
       <div className="absolute top-0 z-10">
         <Image
@@ -89,8 +121,22 @@ export default function FindMe() {
           alt="cloud"
         />
       </div>
+      <div className="group absolute bottom-5 right-5 z-50 flex gap-3 rounded-xl bg-white/70 px-2 py-1">
+        <button onClick={handleZoomOut}>
+          <Icon
+            type="minus"
+            className="w-2 opacity-60 transition-opacity duration-300 group-hover:opacity-100"
+          />
+        </button>
+        <button onClick={handleZoomIn}>
+          <Icon
+            type="plus"
+            className="w-2 opacity-60 transition-opacity duration-300 group-hover:opacity-100"
+          />
+        </button>
+      </div>
       <div className="absolute bottom-5 left-5 z-10 rounded border border-solid border-[#e8e8e8] bg-white/70 p-1.5 drop-shadow-sm backdrop-blur-xl">
-        <p className="text-[10px]">Heukelum, The Netherlands</p>
+        <p className="text-[10px] text-dark_grey">Heukelum, The Netherlands 🏡</p>
       </div>
     </Bento>
   );
