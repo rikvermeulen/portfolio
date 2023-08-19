@@ -125,11 +125,11 @@
 }
 
 .pop-up {
-  animation: popUp 500ms forwards;
+  animation: popUp 800ms forwards;
 }
 
 .pop-down {
-  animation: popDown 500ms forwards;
+  animation: popDown 800ms forwards;
 }
 
 @keyframes popUp {

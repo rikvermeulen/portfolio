@@ -6,6 +6,7 @@ import { Dog, DogFill } from './types/Dog';
 import Explicit from './types/Explicit';
 import { Heart, HeartFill } from './types/Heart';
 import { Map, MapFill } from './types/Map';
+import Minus from './types/Minus';
 import Mouse from './types/Mouse';
 import Mute from './types/Mute';
 import Next from './types/Next';
@@ -38,6 +39,7 @@ const icons: Icons = {
   sound: Sound,
   apps: Apps,
   appsFill: AppsFill,
+  minus: Minus,
 };
 
 interface IconProps {

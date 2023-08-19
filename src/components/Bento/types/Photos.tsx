@@ -23,11 +23,15 @@ const Photos: React.FC<AlbumsProps> = ({ albums }) => {
     if (mediaFiles.length) {
       intervalId = setInterval(() => {
         setActiveMediaIndex((prevIndex) => (prevIndex + 1) % mediaFiles.length);
-      }, 5000);
+      }, 3000);
     }
 
     return () => clearInterval(intervalId);
   }, [mediaFiles]);
+
+  const handleImageClick = () => {
+    setActiveMediaIndex((prevIndex) => (prevIndex + 1) % mediaFiles.length);
+  };
 
   const handleAlbumClick = useCallback((index: number) => {
     setActiveAlbumIndex(index);
@@ -45,6 +49,7 @@ const Photos: React.FC<AlbumsProps> = ({ albums }) => {
       className={`absolute inset-0 transition-opacity duration-1000 ${
         activeMediaIndex === index ? 'opacity-100' : 'opacity-0'
       }`}
+      onClick={handleImageClick}
     >
       {media?.endsWith('.mp4') ? (
         <video src={media} autoPlay loop muted className="h-full w-full object-cover"></video>
