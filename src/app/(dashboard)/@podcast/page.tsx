@@ -7,24 +7,15 @@ import PodcastPlayer from '@/components/Bento/types/Podcast';
 import { Spotify } from '@/utils/spotify';
 
 async function getData() {
-  try {
-    const spotify = new Spotify(env.SPOTIFY_CLIENT_ID, env.SPOTIFY_CLIENT_SECRET);
+  const spotify = new Spotify(env.SPOTIFY_CLIENT_ID, env.SPOTIFY_CLIENT_SECRET);
 
-    const podcast = await spotify.getSingleEpisode('5IQCDDwWlDkZDRahQYwZon', 'NL');
+  const podcast = await spotify.getSingleEpisode('38bS44xjbVVZ3No3ByF1dJ', 'NL');
 
-    if (!podcast?.items) return null;
-
-    return podcast.items;
-  } catch (error) {
-    console.error('Error fetching data from Spotify:', error);
-    return null;
-  }
+  return podcast?.items;
 }
 
 const Podcast = async () => {
   const podcast = await getData();
-
-  console.log(podcast);
 
   if (!podcast) return <></>;
 

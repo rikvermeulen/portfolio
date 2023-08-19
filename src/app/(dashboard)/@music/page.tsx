@@ -5,24 +5,15 @@ import MusicPlayer from '@/components/Bento/types/Music';
 import { Spotify } from '@/utils/spotify';
 
 async function getData() {
-  try {
-    const spotify = new Spotify(env.SPOTIFY_CLIENT_ID, env.SPOTIFY_CLIENT_SECRET);
+  const spotify = new Spotify(env.SPOTIFY_CLIENT_ID, env.SPOTIFY_CLIENT_SECRET);
 
-    const playlist = await spotify.getTrack('0fYuugKPmiqUI38RCgKBEB');
+  const playlist = await spotify.getTrack('0fYuugKPmiqUI38RCgKBEB');
 
-    if (!playlist?.tracks?.items) return null;
-
-    return playlist.tracks.items;
-  } catch (error) {
-    console.error('Error fetching data from Spotify:', error);
-    return null;
-  }
+  return playlist?.tracks?.items;
 }
 
 export default async function Music() {
   const playlist = await getData();
-
-  console.log(playlist);
 
   if (!playlist) return <></>;
 

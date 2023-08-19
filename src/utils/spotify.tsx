@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 const BASE_URL = 'https://api.spotify.com/v1';
 
 export class Spotify {
@@ -19,16 +21,11 @@ export class Spotify {
 
   async makeRequest(endpoint: string) {
     try {
-      const res = await fetch(`${BASE_URL}/${endpoint}`, {
+      const response = await axios.get(`${BASE_URL}/${endpoint}`, {
         headers: { Authorization: `Bearer ${this.accessToken}` },
       });
 
-      if (!res.ok) {
-        throw new Error(`Error making request to Spotify API. Status: ${res.status}`);
-      }
-
-      const data = await res.json();
-      return data;
+      return response.data;
     } catch (error) {
       console.error(error);
       throw error;
@@ -37,22 +34,19 @@ export class Spotify {
 
   async refresh() {
     try {
-      const res = await fetch('https://accounts.spotify.com/api/token', {
-        method: 'POST',
-        headers: {
-          Authorization: this.authorizations,
-          'Content-Type': 'application/x-www-form-urlencoded',
+      const response = await axios.post(
+        'https://accounts.spotify.com/api/token',
+        'grant_type=client_credentials',
+        {
+          headers: {
+            Authorization: this.authorizations,
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
         },
-        body: 'grant_type=client_credentials',
-      });
+      );
 
-      if (!res.ok) {
-        throw new Error(`Error refreshing Spotify token. Status: ${res.status}`);
-      }
-
-      const data = await res.json();
-      this.accessToken = data.access_token;
-      this.nextRefresh = Date.now() + data.expires_in * 1000;
+      this.accessToken = response.data.access_token;
+      this.nextRefresh = Date.now() + response.data.expires_in * 1000;
     } catch (error) {
       console.error(error);
       throw error;
@@ -69,18 +63,3 @@ export class Spotify {
     return await this.makeRequest(`shows/${episode_id}/episodes?market=${market}`);
   }
 }
-
-// public async getSingleShow(podcast_id: string, market?: string) {
-//   let url = `https://api.spotify.com/v1/shows/${podcast_id}`;
-//   if (market) {
-//     url += `?market=${market}`;
-//   }
-
-//   const response = await this.makeAuthenticatedRequest(url);
-
-//   if (!response.ok) {
-//     throw new Error(`Failed to fetch podcast show: ${await response.text()}`);
-//   }
-
-//   return await response.json();
-// }
