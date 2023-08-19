@@ -6,8 +6,7 @@ import mapboxgl from 'mapbox-gl';
 
 import 'mapbox-gl/dist/mapbox-gl.css';
 
-import { env } from 'env.mjs';
-
+import { env } from '@/env.mjs';
 import Icon from '@/components/Icons/Icon';
 
 import Bento from '../Bento';
@@ -69,6 +68,10 @@ export default function FindMe() {
       map.boxZoom.disable();
 
       map.dragPan.disable();
+
+      map.on('load', function () {
+        map.resize();
+      });
 
       return () => {
         map.remove();

@@ -4,9 +4,10 @@ import { SetStateAction, useEffect, useMemo, useRef, useState } from 'react';
 import Image from 'next/image';
 import { IMessage } from '@/types';
 
-import cc from '@/lib/cc';
-import { AdminMessage, UserMessage } from '@/components/form/messages';
+import { AdminMessage, UserMessage } from '@/components/form/Messages';
 import Icon from '@/components/Icons/Icon';
+
+import cc from '@/lib/cc';
 import { useSound } from '@/utils/sound';
 import { hasEnoughText, isValidEmail, isValidPhoneNumber } from '@/utils/validation';
 import { initialMessages, questionsAndActions, socials } from '@/content/messages/content';

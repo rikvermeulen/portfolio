@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import Image from 'next/image';
 import { IMessage } from '@/types';
 
@@ -43,41 +42,12 @@ export const AdminMessage = ({
 );
 
 export const UserMessage = ({ message }: { message: IMessage }) => {
-  //   const uniqueID = `status-${message.text}-${Date.now()}`;
-
-  //   useEffect(() => {
-  //     const uniqueID = `status-${message.text}-${Date.now()}`;
-  //     const statusElement = document.getElementById(uniqueID);
-  //     const date = new Date().toLocaleTimeString('en-US', {
-  //       hour: '2-digit',
-  //       minute: '2-digit',
-  //       hour12: false,
-  //     });
-
-  //     let readTimer: NodeJS.Timeout | null = null;
-
-  //     if (statusElement) {
-  //       statusElement.innerText = `${date} Delivered`;
-
-  //       readTimer = setTimeout(() => {
-  //         statusElement.innerText = `${date} Read`;
-  //       }, 1000);
-  //     }
-
-  //     return () => {
-  //       if (readTimer) {
-  //         clearTimeout(readTimer);
-  //       }
-  //     };
-  //   }, [message.text]);
-
   return (
     <div className="flex flex-col">
       <div className="relative w-fit max-w-xs self-end rounded-2xl bg-[#007AFF] px-3 py-2 text-white">
         <Icon type="tail" className="absolute -right-1 bottom-0 h-4 w-4 fill-[#007AFF]" />
         {message.text}
       </div>
-      {/* <div className="mt-1 text-xs text-dark_grey" id={uniqueID}></div> */}
     </div>
   );
 };
