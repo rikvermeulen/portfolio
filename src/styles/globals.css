@@ -180,3 +180,21 @@
     background-color: transparent;
   }
 }
+
+.cloud-one {
+  animation:
+    moveCloud linear 15s infinite,
+    fadeInOut 15s infinite;
+}
+
+.cloud-two {
+  animation:
+    moveCloud linear 15s infinite,
+    fadeInOut 15s infinite;
+}
+
+@keyframes moveCloud {
+  100% {
+    transform: translateX(120%);
+  }
+}

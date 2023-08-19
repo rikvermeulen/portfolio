@@ -11,7 +11,7 @@ export default function Header() {
           <Link href="/">
             <Image src={'/images/logo.png'} alt="logo" width="20" height="20" />
           </Link>
-          <p className="text-sm">Rik Vermeulen</p>
+          <p className="text-xs sm:text-sm">Rik Vermeulen</p>
         </div>
       </Container>
     </header>

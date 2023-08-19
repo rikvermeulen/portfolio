@@ -63,8 +63,8 @@ const Photos: React.FC<AlbumsProps> = ({ albums }) => {
 
   return (
     <Bento size="1x1" className="bento group">
-      <div className="group relative h-full w-full overflow-hidden">
-        <div className="absolute right-0 z-20 p-5">
+      <div className="group relative z-0 h-full w-full overflow-hidden">
+        <div className="absolute right-0 z-10 p-5">
           <a href="" target="_blank">
             <Image
               src="/images/icons/photos.png"
@@ -76,7 +76,7 @@ const Photos: React.FC<AlbumsProps> = ({ albums }) => {
           </a>
         </div>
         {mediaFiles.map(renderMedia)}
-        <div className="z-40 flex items-center justify-center">
+        <div className="z-10 flex items-center justify-center">
           <Pill
             className="absolute bottom-5 translate-y-20 transition-all duration-300 ease-in-out group-hover:-translate-y-0"
             items={albumItems}
