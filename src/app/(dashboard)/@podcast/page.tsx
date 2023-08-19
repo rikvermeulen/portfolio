@@ -24,6 +24,7 @@ export default async function Podcast() {
   if (!podcast) return <></>;
 
   return (
-    <PodcastPlayer playlist={podcast} className="bg-gradient-to-b from-[#BC6AEB] to-[#6E2AAD]" />
+    // <PodcastPlayer playlist={podcast} className="bg-gradient-to-b from-[#BC6AEB] to-[#6E2AAD]" />
+    <></>
   );
 }

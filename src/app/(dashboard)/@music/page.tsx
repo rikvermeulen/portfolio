@@ -22,6 +22,7 @@ export default async function Music() {
   if (!playlist) return <></>;
 
   return (
-    <MusicPlayer playlist={playlist} className="bg-gradient-to-b from-[#E96575] to-[#E63F45]" />
+    <></>
+    // <MusicPlayer playlist={playlist} className="bg-gradient-to-b from-[#E96575] to-[#E63F45]" />
   );
 }
