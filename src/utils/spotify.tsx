@@ -4,7 +4,7 @@ export class Spotify {
   private clientId: string;
   private clientSecret: string;
   private tokenExpiry: Date = new Date(Date.now() + 3600 * 1000);
-  private redirectUri: string = 'https://www.rikvermeulen.com/callback'; // Consider passing this as an argument
+  private redirectUri: string = 'https://www.rikvermeulen.com/callback';
 
   constructor(clientId: string, clientSecret: string) {
     this.clientId = clientId;
