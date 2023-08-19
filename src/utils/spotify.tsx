@@ -5,7 +5,7 @@ export class Spotify {
   private clientId: string;
   private clientSecret: string;
   private authorizations: string;
-  private nextRefresh: string;
+  private nextRefresh: number;
 
   constructor(clientId: string, clientSecret: string) {
     this.clientId = clientId;
@@ -14,7 +14,7 @@ export class Spotify {
     this.authorizations = `Basic ${Buffer.from(`${this.clientId}:${this.clientSecret}`).toString(
       'base64',
     )}`;
-    this.nextRefresh = '';
+    this.nextRefresh = 0;
   }
 
   async makeRequest(endpoint: string) {
@@ -52,7 +52,7 @@ export class Spotify {
 
       const data = await res.json();
       this.accessToken = data.access_token;
-      this.nextRefresh = Date.now() + data.expires_in;
+      this.nextRefresh = Date.now() + data.expires_in * 1000;
     } catch (error) {
       console.error(error);
       throw error;
@@ -60,12 +60,12 @@ export class Spotify {
   }
 
   public async getTrack(playlist_id: string) {
-    if (Date.now() >= Number(this.nextRefresh)) await this.refresh();
+    if (Date.now() >= this.nextRefresh) await this.refresh();
     return await this.makeRequest(`playlists/${playlist_id}`);
   }
 
   public async getSingleEpisode(episode_id: string, market?: string) {
-    if (Date.now() >= Number(this.nextRefresh)) await this.refresh();
+    if (Date.now() >= this.nextRefresh) await this.refresh();
     return await this.makeRequest(`shows/${episode_id}/episodes?market=${market}`);
   }
 }
