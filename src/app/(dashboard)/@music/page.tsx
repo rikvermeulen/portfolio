@@ -1,5 +1,4 @@
-import { env } from 'env.mjs';
-
+import { env } from '@/env.mjs';
 import MusicPlayer from '@/components/Bento/types/Music';
 import { Spotify } from '@/utils/spotify';
 

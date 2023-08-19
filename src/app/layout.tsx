@@ -10,6 +10,7 @@ import { Analytics } from '@/components/Analytics';
 import Footer from '@/components/Footer';
 import Header from '@/components/Header';
 import { TailwindIndicator } from '@/components/TailwindIndicator';
+import { SoundProvider } from '@/utils/sound';
 
 export async function generateMetadata(): Promise<Metadata> {
   const metadata = await meta();
@@ -20,11 +21,13 @@ export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en" className={`${fontSans.variable} bg-white text-black`}>
       <body className="h-full antialiased">
-        <Header />
-        {children}
-        <Footer />
-        <TailwindIndicator />
-        <Analytics />
+        <SoundProvider>
+          <Header />
+          {children}
+          <Footer />
+          <TailwindIndicator />
+          <Analytics />
+        </SoundProvider>
       </body>
     </html>
   );

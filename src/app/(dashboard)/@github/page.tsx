@@ -1,5 +1,4 @@
-import { env } from 'env.mjs';
-
+import { env } from '@/env.mjs';
 import Contributions from '@/components/Bento/types/Github';
 import { getContributionCalendar } from '@/utils/contributions';
 
