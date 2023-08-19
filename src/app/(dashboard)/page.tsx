@@ -22,12 +22,10 @@ export default function Home() {
         <div className="text-xl font-bold md:text-3xl">
           <h2>Hey hey, I’m Rik 👋🏻</h2>
         </div>
-        <div className="max-w-xl pt-2 text-dark_grey md:text-lg">
-          <p>
-            I’m a Creative Developer based in Rotterdam, the Netherlands. I develop full-scale
-            creative digital experiences for some amazing agencies and hugely talented people. ✨
-          </p>
-        </div>
+        <p className="max-w-xl pt-2 text-dark_grey md:text-lg">
+          I’m a Creative Developer based in Rotterdam, the Netherlands. I develop full-scale
+          creative digital experiences for some amazing agencies and hugely talented people. ✨
+        </p>
       </div>
     </Bento>
   );
