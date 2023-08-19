@@ -19,9 +19,9 @@ async function getData() {
 }
 
 export default async function Podcast() {
-  const podcast = await getData();
+  // const podcast = await getData();
 
-  if (!podcast) return <></>;
+  // if (!podcast) return <></>;
 
   return (
     // <PodcastPlayer playlist={podcast} className="bg-gradient-to-b from-[#BC6AEB] to-[#6E2AAD]" />
