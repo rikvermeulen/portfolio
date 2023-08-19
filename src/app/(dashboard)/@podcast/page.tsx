@@ -1,4 +1,4 @@
-import console from 'console';
+import React from 'react';
 
 import { env } from '@/env.mjs';
 
@@ -7,18 +7,23 @@ import PodcastPlayer from '@/components/Bento/types/Podcast';
 import { Spotify } from '@/utils/spotify';
 
 async function getData() {
-  const spotify = new Spotify(env!.SPOTIFY_CLIENT_ID, env!.SPOTIFY_CLIENT_SECRET);
+  try {
+    const spotify = new Spotify(env.SPOTIFY_CLIENT_ID, env.SPOTIFY_CLIENT_SECRET);
 
-  if (!spotify) return;
+    const podcast = await spotify.getSingleEpisode('5IQCDDwWlDkZDRahQYwZon', 'NL');
 
-  const podcast = await spotify.getSingleEpisode('5IQCDDwWlDkZDRahQYwZon', 'NL');
+    if (podcast && podcast?.items) {
+      return podcast.items;
+    }
 
-  if (!podcast?.items) return;
-
-  return podcast?.items;
+    return null;
+  } catch (error) {
+    console.error('Error fetching data from Spotify:', error);
+    return null;
+  }
 }
 
-export default async function Podcast() {
+const Podcast = async () => {
   const podcast = await getData();
 
   if (!podcast) return <></>;
@@ -26,4 +31,6 @@ export default async function Podcast() {
   return (
     <PodcastPlayer playlist={podcast} className="bg-gradient-to-b from-[#BC6AEB] to-[#6E2AAD]" />
   );
-}
+};
+
+export default Podcast;
