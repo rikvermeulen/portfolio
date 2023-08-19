@@ -4,7 +4,7 @@ export class Spotify {
   private clientId: string;
   private clientSecret: string;
   private tokenExpiry: Date = new Date(Date.now() + 3600 * 1000);
-  private redirectUri: string = 'https://www.rikvermeulen.com/callback'; // Consider passing this as an argument
+  private redirectUri: string = 'https://www.rikvermeulen.com/callback';
 
   constructor(clientId: string, clientSecret: string) {
     this.clientId = clientId;
@@ -15,7 +15,7 @@ export class Spotify {
     return Buffer.from(`${this.clientId}:${this.clientSecret}`).toString('base64');
   }
 
-  private async updateTokens(data: any) {
+  private updateTokens(data: any) {
     if (data.access_token) {
       this.accessToken = data.access_token;
       this.tokenExpiry = new Date(Date.now() + data.expires_in * 1000);
@@ -25,51 +25,60 @@ export class Spotify {
     }
   }
 
-  public async initializeWithClientCredentials(): Promise<boolean> {
-    const response = await fetch('https://accounts.spotify.com/api/token', {
+  private async fetchToken(body: URLSearchParams): Promise<Response> {
+    return await fetch('https://accounts.spotify.com/api/token', {
       method: 'POST',
       headers: {
         Authorization: `Basic ${this.getBasicAuth()}`,
         'Content-Type': 'application/x-www-form-urlencoded',
       },
-      body: new URLSearchParams({
-        grant_type: 'client_credentials',
-      }),
+      body,
     });
+  }
 
+  private async handleTokenResponse(
+    response: Response,
+    checkRefreshToken: boolean = false,
+  ): Promise<boolean> {
     if (!response.ok) {
-      console.error('Failed to fetch token with client credentials', await response.text());
+      console.error('Error fetching token:', await response.text());
       return false;
     }
 
     const data = await response.json();
-    await this.updateTokens(data);
+    this.updateTokens(data);
+
+    if (checkRefreshToken) {
+      return !!data.access_token && !!data.refresh_token;
+    }
+
     return !!data.access_token;
   }
 
+  public async initializeWithClientCredentials(): Promise<boolean> {
+    const response = await this.fetchToken(
+      new URLSearchParams({ grant_type: 'client_credentials' }),
+    );
+    return this.handleTokenResponse(response);
+  }
+
   public async initializeWithCode(authCode: string): Promise<boolean> {
-    const response = await fetch('https://accounts.spotify.com/api/token', {
-      method: 'POST',
-      headers: {
-        Authorization: `Basic ${this.getBasicAuth()}`,
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: new URLSearchParams({
-        grant_type: 'authorization_code',
-        code: authCode,
-        redirect_uri: this.redirectUri,
-      }),
+    const body = new URLSearchParams({
+      grant_type: 'authorization_code',
+      code: authCode,
+      redirect_uri: this.redirectUri,
     });
+    const response = await this.fetchToken(body);
+    return this.handleTokenResponse(response, true);
+  }
 
-    if (!response.ok) {
-      console.error('Failed to exchange authorization code for tokens', await response.text());
-      return false;
-    }
-
-    const data = await response.json();
-
-    await this.updateTokens(data);
-    return !!data.access_token && !!data.refresh_token;
+  public async refreshAccessToken(): Promise<boolean> {
+    const body = new URLSearchParams({
+      grant_type: 'refresh_token',
+      refresh_token: this.refreshToken,
+    });
+    const response = await this.fetchToken(body);
+    return this.handleTokenResponse(response);
   }
 
   public tokenIsExpired(): boolean {
@@ -77,40 +86,25 @@ export class Spotify {
     return this.tokenExpiry.getTime() - bufferTimeInMs <= Date.now();
   }
 
-  public async refreshAccessToken(): Promise<boolean> {
-    const response = await fetch('https://accounts.spotify.com/api/token', {
-      method: 'POST',
-      headers: {
-        Authorization: `Basic ${this.getBasicAuth()}`,
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: new URLSearchParams({
-        grant_type: 'refresh_token',
-        refresh_token: this.refreshToken,
-      }),
-    });
-
-    if (!response.ok) {
-      console.error('Failed to refresh access token', await response.text());
-      return false;
+  public async ensureToken(): Promise<void> {
+    if (this.tokenIsExpired() && !this.refreshToken) {
+      throw new Error('Access token expired and no refresh token available.');
+    } else if (this.tokenIsExpired()) {
+      const refreshed = await this.refreshAccessToken();
+      if (!refreshed) {
+        throw new Error('Failed to refresh the access token.');
+      }
+    } else if (!this.accessToken) {
+      throw new Error('No access token available.');
     }
-
-    const data = await response.json();
-    this.updateTokens(data);
-    return !!data.access_token;
   }
 
   private async makeAuthenticatedRequest(
     url: string,
     options: RequestInit = {},
-    retryCount: number = 1,
+    retryCount: number = 2,
   ): Promise<Response> {
-    if (this.tokenIsExpired()) {
-      const success = await this.refreshAccessToken();
-      if (!success) {
-        throw new Error('Failed to refresh access token.');
-      }
-    }
+    await this.ensureToken();
 
     const response = await fetch(url, {
       ...options,
@@ -121,11 +115,13 @@ export class Spotify {
     });
 
     if (response.status === 401 && retryCount > 0) {
-      const success = await this.refreshAccessToken();
-      if (!success) {
-        throw new Error('Failed to refresh access token.');
+      const refreshed = await this.refreshAccessToken();
+      if (!refreshed) {
+        throw new Error('Failed to refresh the access token.');
       }
-      return await this.makeAuthenticatedRequest(url, options, retryCount - 1); // retrying
+      return await this.makeAuthenticatedRequest(url, options, retryCount - 1);
+    } else if (response.status === 401) {
+      throw new Error('Unauthorized. Token may be invalid or expired.');
     }
 
     return response;
