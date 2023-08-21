@@ -207,6 +207,7 @@ export default function Message() {
                 src={`/images/icons/${social.icon}.png`}
                 className="rounded-full border border-solid border-[#EAEBED]"
                 alt={social.name}
+                priority
                 width={24}
                 height={24}
               />

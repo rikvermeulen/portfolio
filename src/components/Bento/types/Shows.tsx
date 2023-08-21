@@ -72,8 +72,8 @@ export default function Shows({ current }: PropsShows) {
             src={`${imageURL}${current.still_path}`}
             className={`rounded-xl`}
             alt="media"
-            width={320}
-            height={320}
+            width={270}
+            height={150}
           />
         )}
         <div className="mt-3 flex flex-col text-sm text-white">
