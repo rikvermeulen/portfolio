@@ -17,7 +17,7 @@ interface PodcastProps {
 
 export interface PodcastItem {
   audio_preview_url: string;
-  images: [{ url: string }];
+  images: [{ url: string }, { url: string }];
   name: string;
   explicit: boolean;
 }
@@ -58,7 +58,7 @@ const Podcast: React.FC<PodcastProps> = ({ playlist = [], className }) => {
   }, [playlist]);
 
   const currentTrack = playlistTracks[currentTrackIndex];
-  const image = currentTrack?.images[0]?.url || '/images/noalbum.png';
+  const image = currentTrack?.images[1]?.url || '/images/noalbum.png';
 
   return (
     <Bento size="1x1" className={cc(className, isPlaying && '', 'bento relative z-0 !border-none')}>

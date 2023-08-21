@@ -53,7 +53,8 @@ const Music: React.FC<MusicProps> = ({ playlist = [], className }) => {
   }, [playlist]);
 
   const currentTrack = playlistTracks[currentTrackIndex]?.track;
-  const image = currentTrack?.album?.images[0]?.url || '/images/noalbum.png';
+
+  const image = currentTrack?.album?.images[1]?.url || '/images/noalbum.png';
 
   return (
     <Bento size="1x1" className={cc(className, isPlaying && '', 'bento relative z-0 !border-none')}>
@@ -108,6 +109,7 @@ const Music: React.FC<MusicProps> = ({ playlist = [], className }) => {
             onClick={() => changeTrack('previous')}
             className="w-5 fill-white"
             name="Previous song"
+            aria-label="Previous song"
           >
             <Icon type="next" />
           </button>
@@ -118,6 +120,7 @@ const Music: React.FC<MusicProps> = ({ playlist = [], className }) => {
               'relative flex h-6 w-6 justify-center fill-white',
             )}
             name="Play / Pause"
+            aria-label="Play / Pause"
           >
             <Icon
               type="pause"
@@ -138,6 +141,7 @@ const Music: React.FC<MusicProps> = ({ playlist = [], className }) => {
             onClick={() => changeTrack('next')}
             className="w-5 -scale-x-100 fill-white"
             name="Next song"
+            aria-label="Next song"
           >
             <Icon type="next" />
           </button>

@@ -25,7 +25,7 @@ export interface IQuestionAction {
 //Music
 export interface Track {
   preview_url: string | null;
-  album: { images: [{ url: string }]; name: string };
+  album: { images: [{ url: string }, { url: string }]; name: string };
   name: string;
   artists: [{ name: string }];
   explicit: boolean;
