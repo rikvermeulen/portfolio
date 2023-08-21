@@ -147,6 +147,7 @@ const Podcast: React.FC<PodcastProps> = ({ playlist = [], className }) => {
             className="w-5 -scale-x-100 fill-white"
             name="Next song"
             aria-label="Next song"
+            title="Next song"
           >
             <Icon type="next" />
           </button>

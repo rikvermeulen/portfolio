@@ -4,8 +4,9 @@ import Image from 'next/image';
 import Bento from '@/components/Bento/Bento';
 
 export const metadata: Metadata = {
-  title: 'Home',
-  description: 'Welcome to my portfolio',
+  title: 'Home - Rik Vermeulen Portfolio',
+  description:
+    'Rik Vermeulen - Creative Developer based in Rotterdam, the Netherlands. Explore Rik’s digital portfolio and the creative experiences he has developed through the years.',
 };
 
 export default function Home() {
@@ -13,7 +14,7 @@ export default function Home() {
     <Bento size="2x1">
       <Image
         src={'/images/profile.jpg'}
-        alt="Rik Vermeulen"
+        alt="Portrait of Rik Vermeulen"
         width={'164'}
         height={'164'}
         className=" rounded-full"
