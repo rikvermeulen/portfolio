@@ -9,7 +9,7 @@ import { Spotify } from '@/utils/spotify';
 async function getData() {
   const spotify = new Spotify(env.SPOTIFY_CLIENT_ID, env.SPOTIFY_CLIENT_SECRET);
 
-  const podcast = await spotify.getSingleEpisode('38bS44xjbVVZ3No3ByF1dJ', 'NL');
+  const podcast = await spotify.getSingleEpisode('5IQCDDwWlDkZDRahQYwZon', 'NL');
 
   return podcast?.items;
 }
