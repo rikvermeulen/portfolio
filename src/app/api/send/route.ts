@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { NextResponse } from 'next/server';
-import { env } from 'env.mjs';
 import { Resend } from 'resend';
+
+import { env } from '@/env.mjs';
 
 import { EmailTemplate } from '@/components/EmailTemplate';
 
