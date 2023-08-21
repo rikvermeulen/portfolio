@@ -114,6 +114,7 @@ const Podcast: React.FC<PodcastProps> = ({ playlist = [], className }) => {
             onClick={() => changeTrack('previous')}
             className="w-5 fill-white"
             name="Previous song"
+            aria-label="Previous song"
           >
             <Icon type="next" />
           </button>
@@ -124,6 +125,7 @@ const Podcast: React.FC<PodcastProps> = ({ playlist = [], className }) => {
               'relative flex h-6 w-6 justify-center fill-white',
             )}
             name="Play / Pause"
+            aria-label="Play / Pause"
           >
             <Icon
               type="pause"
@@ -144,6 +146,7 @@ const Podcast: React.FC<PodcastProps> = ({ playlist = [], className }) => {
             onClick={() => changeTrack('next')}
             className="w-5 -scale-x-100 fill-white"
             name="Next song"
+            aria-label="Next song"
           >
             <Icon type="next" />
           </button>
