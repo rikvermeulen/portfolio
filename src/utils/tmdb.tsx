@@ -25,3 +25,17 @@ export const getShowDetails = async (tvId: string) => {
     return null;
   }
 };
+
+export const getShowSeason = async (tvId: string, seasonNumber: string) => {
+  try {
+    const response = await axios.get(
+      `${BASE_URL}/tv/${tvId}/season/${seasonNumber}?api_key=${env.TMDB_CLIENT_KEY}`,
+    );
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching show season:', error);
+    return null;
+  }
+};
+
+// https://api.themoviedb.org/3/tv/{series_id}/episode_groups

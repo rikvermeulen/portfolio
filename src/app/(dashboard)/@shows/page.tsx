@@ -1,14 +1,15 @@
-import { getShowDetails } from '@/utils/tmdb';
+import BentoShow from '@/components/Bento/types/Shows';
+
+import { getShowDetails, getShowSeason } from '@/utils/tmdb';
 
 async function getData() {
-  const show = getShowDetails('2316');
+  const show = await getShowSeason('2316', '7');
 
-  return show;
+  return show.episodes[15];
 }
 
 export default async function Shows() {
-  // const shows = await getData();
-  // console.log(shows);
+  const shows = await getData();
 
-  return <></>;
+  return <BentoShow current={shows} />;
 }

@@ -36,7 +36,7 @@ export default function Message() {
 
   const sendData = async (data: any) => {
     try {
-      const res = await fetch(`/api/send`, { method: 'POST', body: JSON.stringify(data) });
+      const res = await fetch(`/api/message`, { method: 'POST', body: JSON.stringify(data) });
       if (!res.ok) throw new Error();
 
       addAdminMessage('Thanks 🙏 I will contact you soon');

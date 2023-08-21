@@ -4,7 +4,7 @@ import { Resend } from 'resend';
 
 import { env } from '@/env.mjs';
 
-import { EmailTemplate } from '@/components/EmailTemplate';
+import { MessageTemplate } from '@/components/EmailTemplate';
 
 const resend = new Resend(env.RESEND_API_KEY);
 
@@ -16,7 +16,7 @@ export async function POST(request: Request) {
       from: 'Rik Vermeulen <info@rikvermeulen.com>',
       to: ['rik.vermeulen.1997@live.nl'],
       subject: 'Contact form submission: rikvermeulen.com',
-      react: EmailTemplate({
+      react: MessageTemplate({
         name: name,
         reason: reason,
         phone: phone,

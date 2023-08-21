@@ -1,13 +1,18 @@
 import * as React from 'react';
 
-interface EmailTemplateProps {
+interface MessageTemplateProps {
   name: string;
   reason: string;
   phone: string;
   email: string;
 }
 
-export const EmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({
+interface RecommendationTemplateProps {
+  email: string;
+  recommendation: string;
+}
+
+export const MessageTemplate: React.FC<Readonly<MessageTemplateProps>> = ({
   name,
   reason,
   phone,
@@ -22,4 +27,13 @@ export const EmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({
   </div>
 );
 
-export default EmailTemplate;
+export const RecommendationTemplate: React.FC<Readonly<RecommendationTemplateProps>> = ({
+  email,
+  recommendation,
+}) => (
+  <div>
+    <h1>Contact form submision: rikvermeulen.com</h1>
+    <p>email: {email}</p>
+    <p>Recommendation: {recommendation}</p>
+  </div>
+);
