@@ -35,6 +35,7 @@ const Photos: React.FC<AlbumsProps> = ({ albums }) => {
 
   const handleAlbumClick = useCallback((index: number) => {
     setActiveAlbumIndex(index);
+    setActiveMediaIndex(0);
   }, []);
 
   const albumItems = albumNames.map((albumName, index) => ({

@@ -2,6 +2,7 @@ import Image from 'next/image';
 
 import Bento from '@/components/Bento/Bento';
 import Button from '@/components/Button';
+
 import { type ContributionDay, type MonthlyContributions } from '@/utils/contributions';
 
 const MONTH_RANGE = 5;

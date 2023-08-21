@@ -1,8 +1,9 @@
 import Image from 'next/image';
 import { IMessage } from '@/types';
 
-import cc from '@/lib/cc';
 import Icon from '@/components/Icons/Icon';
+
+import cc from '@/lib/cc';
 
 export const AdminMessage = ({
   message,

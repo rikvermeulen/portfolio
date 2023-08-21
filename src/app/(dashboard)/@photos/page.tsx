@@ -1,5 +1,6 @@
-import { supabase } from '@/lib/db';
 import Photos from '@/components/Bento/types/Photos';
+
+import { supabase } from '@/lib/db';
 
 const albums = [{ name: 'apps' }, { name: 'map' }, { name: 'heart' }, { name: 'dog' }];
 

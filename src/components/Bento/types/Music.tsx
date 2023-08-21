@@ -5,9 +5,10 @@ import Image from 'next/image';
 
 import { PlaylistItem } from '@/types/index';
 
-import cc from '@/lib/cc';
 import AudioPlayer from '@/components/AudioPlayer';
 import Icon from '@/components/Icons/Icon';
+
+import cc from '@/lib/cc';
 
 import Bento from '../Bento';
 

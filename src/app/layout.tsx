@@ -4,12 +4,13 @@ import type { Metadata } from 'next';
 
 import type { RootLayoutProps } from '@/types/index';
 
-import { fontSans } from '@/lib/fonts';
-import meta from '@/lib/meta';
 import { Analytics } from '@/components/Analytics';
 import Footer from '@/components/Footer';
 import Header from '@/components/Header';
 import { TailwindIndicator } from '@/components/TailwindIndicator';
+
+import { fontSans } from '@/lib/fonts';
+import meta from '@/lib/meta';
 import { SoundProvider } from '@/utils/sound';
 
 export async function generateMetadata(): Promise<Metadata> {
