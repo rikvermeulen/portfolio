@@ -2,6 +2,7 @@ import { FC, ReactElement } from 'react';
 
 import { Apps, AppsFill } from './types/Apps';
 import Arrow from './types/Arrow';
+import { Close } from './types/Close';
 import { Dog, DogFill } from './types/Dog';
 import Explicit from './types/Explicit';
 import { Heart, HeartFill } from './types/Heart';
@@ -40,6 +41,7 @@ const icons: Icons = {
   apps: Apps,
   appsFill: AppsFill,
   minus: Minus,
+  close: Close,
 };
 
 interface IconProps {
