@@ -1,15 +1,22 @@
 import BentoShow from '@/components/Bento/types/Shows';
 
-import { getShowDetails, getShowSeason } from '@/utils/tmdb';
+import { getFavoriteMovies, getFavoriteShow, getShowSeason } from '@/utils/tmdb';
 
 async function getData() {
-  const show = await getShowSeason('2316', '7');
+  const latestShow = await getShowSeason('2316', '7');
 
-  return show.episodes[15];
+  const shows = await getFavoriteShow();
+  const movies = await getFavoriteMovies();
+
+  return {
+    latestShow: latestShow.episodes[15],
+    shows: shows.results,
+    movies: movies.results,
+  };
 }
 
 export default async function Shows() {
-  const shows = await getData();
+  const data = await getData();
 
-  return <BentoShow current={shows} />;
+  return <BentoShow current={data.latestShow} shows={data.shows} movies={data.movies} />;
 }

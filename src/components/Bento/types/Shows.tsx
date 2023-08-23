@@ -5,16 +5,12 @@ import Image from 'next/image';
 
 import Button from '@/components/Button';
 import Icon from '@/components/Icons/Icon';
-
-import cc from '@/lib/cc';
+import Modal from '@/components/shows/Modal';
+import WatchList from '@/components/shows/WatchList';
 
 import Bento from '../Bento';
 
 const imageURL = 'https://image.tmdb.org/t/p/original';
-
-type PropsShows = {
-  current: Episode;
-};
 
 type Episode = {
   still_path: string;
@@ -23,16 +19,44 @@ type Episode = {
   episode_number: number;
 };
 
-export default function Shows({ current }: PropsShows) {
+type ShowOrMovie = {
+  backdrop_path: string;
+  name?: string;
+  title?: string;
+  overview: string;
+};
+
+type PropsShows = {
+  current: Episode;
+  movies: ShowOrMovie[];
+  shows: ShowOrMovie[];
+};
+
+type RecommendationModalProps = {
+  isVisible: boolean;
+  toggleModal: () => void;
+  formData: { email: string; recommendation: string };
+  setFormData: React.Dispatch<React.SetStateAction<any>>;
+  handleSubmit: () => void;
+};
+
+export default function Shows({ current, shows, movies }: PropsShows) {
   const [isModalVisible, setModalVisible] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
     recommendation: '',
   });
+  const [isListVisible, setListVisible] = useState(false);
+  const [filter, setFilter] = useState('Shows');
+  const [searchTerm, setSearchTerm] = useState('');
 
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
+
+  const filteredData = (filter === 'Shows' ? shows : movies).filter(
+    (item) => (item.name || item.title)?.toLowerCase().includes(searchTerm.toLowerCase()),
+  );
 
   const handleSubmit = async () => {
     try {
@@ -77,11 +101,18 @@ export default function Shows({ current }: PropsShows) {
             height={150}
           />
         )}
-        <div className="mt-3 flex flex-col text-sm text-white">
-          <p className="font-bold">{current?.name}</p>
-          <p className="relative -top-1 text-white/70">
-            Last seen - {`S${current?.season_number}, E${current.episode_number}`}
-          </p>
+        <div className="mt-3 flex items-center justify-between">
+          <div className="text-sm text-white">
+            <p className="font-bold">{current?.name}</p>
+            <p className="relative -top-1 text-white/70">
+              Last seen - {`S${current?.season_number}, E${current.episode_number}`}
+            </p>
+          </div>
+          <Icon
+            type="list"
+            className="cursor-pointer fill-white"
+            onClick={() => setListVisible(!isListVisible)}
+          />
         </div>
       </div>
       <footer>
@@ -91,44 +122,23 @@ export default function Shows({ current }: PropsShows) {
           onClick={toggleModal}
         />
       </footer>
-
-      <div
-        className={cc(
-          isModalVisible ? 'opacity-100 scale-100' : ' opacity-0 scale-0',
-          'absolute left-0 top-0 flex h-full w-full items-center justify-center bg-black/60 px-5 transition-[opacity,transform] duration-300',
-        )}
-      >
-        <div className="rounded-xl border border-solid border-[#4E5152] bg-[#1F2324] p-4">
-          <div className="flex justify-between">
-            <h2 className="mb-4 text-lg font-bold text-white">Suggestions 🎬</h2>
-            <Icon
-              type="close"
-              className="h-6 w-6 cursor-pointer rounded-full bg-[#4E5152] fill-white p-2 transition-colors duration-300 hover:bg-[#3d4040]"
-              onClick={toggleModal}
-            />
-          </div>
-          <input
-            type="email"
-            placeholder="Your Email"
-            value={formData.email}
-            onChange={(e) => setFormData((prev) => ({ ...prev, email: e.target.value }))}
-            className="mb-2 w-full rounded-md border border-none p-2 text-base text-white outline-none sm:text-sm"
-          />
-          <textarea
-            placeholder="Your recommendation"
-            value={formData.recommendation}
-            onChange={(e) => setFormData((prev) => ({ ...prev, recommendation: e.target.value }))}
-            className="mb-2 w-full resize-none rounded-md border border-none p-2 text-base text-white outline-none sm:text-sm"
-          ></textarea>
-          <div className="flex justify-between">
-            <Button
-              className="border-[#4E5152] bg-[#0F1314] text-white backdrop-blur-xl hover:bg-[#090b0b]"
-              label="Submit"
-              onClick={handleSubmit}
-            />
-          </div>
-        </div>
-      </div>
+      <Modal
+        isVisible={isModalVisible}
+        toggleModal={toggleModal}
+        formData={formData}
+        setFormData={setFormData}
+        handleSubmit={handleSubmit}
+      />
+      <WatchList
+        isListVisible={isListVisible}
+        toggleListVisibility={() => setListVisible(!isListVisible)}
+        filter={filter}
+        setFilter={setFilter}
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+        movies={movies}
+        shows={shows}
+      />
     </Bento>
   );
 }
