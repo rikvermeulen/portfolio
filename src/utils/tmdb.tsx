@@ -38,4 +38,30 @@ export const getShowSeason = async (tvId: string, seasonNumber: string) => {
   }
 };
 
-// https://api.themoviedb.org/3/tv/{series_id}/episode_groups
+export const getFavoriteShow = async () => {
+  try {
+    const response = await axios.get(`${BASE_URL}/account/9670374/favorite/tv`, {
+      headers: {
+        Authorization: `Bearer ${env.TMDB_CLIENT_SECRET}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching show details:', error);
+    return null;
+  }
+};
+
+export const getFavoriteMovies = async () => {
+  try {
+    const response = await axios.get(`${BASE_URL}/account/9670374/favorite/movies`, {
+      headers: {
+        Authorization: `Bearer ${env.TMDB_CLIENT_SECRET}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching show details:', error);
+    return null;
+  }
+};

@@ -2,10 +2,13 @@ import { FC, ReactElement } from 'react';
 
 import { Apps, AppsFill } from './types/Apps';
 import Arrow from './types/Arrow';
+import { Chevron } from './types/Chevron';
 import { Close } from './types/Close';
 import { Dog, DogFill } from './types/Dog';
 import Explicit from './types/Explicit';
 import { Heart, HeartFill } from './types/Heart';
+import List from './types/List';
+import Loop from './types/Loop';
 import { Map, MapFill } from './types/Map';
 import Minus from './types/Minus';
 import Mouse from './types/Mouse';
@@ -42,6 +45,9 @@ const icons: Icons = {
   appsFill: AppsFill,
   minus: Minus,
   close: Close,
+  loop: Loop,
+  list: List,
+  chevron: Chevron,
 };
 
 interface IconProps {
