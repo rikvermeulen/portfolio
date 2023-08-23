@@ -30,7 +30,7 @@ export default function Message() {
   // Sounds
   const { playSound } = useSound();
 
-  const currentTime = getCurrentTime();
+  // const currentTime = getCurrentTime();
 
   const initialChatLength = 2;
 
@@ -185,10 +185,10 @@ export default function Message() {
         className="chat flex flex-col gap-4 px-5 pb-20 pt-5 transition-all"
         style={{ overflowY: 'scroll', height: '100%' }}
       >
-        <p className="relative -top-3 flex w-full justify-center text-[10px] text-dark_grey">
+        {/* <p className="relative -top-3 flex w-full justify-center text-[10px] text-dark_grey">
           <span className="font-bold">Today: </span>
           &nbsp;{currentTime}
-        </p>
+        </p> */}
         {chatContent}
       </div>
       <ul
