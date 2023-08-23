@@ -146,12 +146,9 @@ const Music: React.FC<MusicProps> = ({ playlist = [], className }) => {
             <Icon type="next" />
           </button>
         </div>
-        <label
-          className="mt-6 flex items-center justify-center gap-4"
-          htmlFor="rangeMusic"
-          id="rangeMusic"
-        >
+        <label className="mt-6 flex items-center justify-center gap-4" htmlFor="rangeMusic">
           <Icon type="mute" className="w-2 fill-white" />
+          <span className="sr-only">Volume control for the music player</span>
           <input
             type="range"
             min="0"
@@ -160,7 +157,7 @@ const Music: React.FC<MusicProps> = ({ playlist = [], className }) => {
             defaultValue="0.5"
             id="rangeMusic"
             name="rangeMusic"
-            aria-labelledby="rangeMusic"
+            aria-describedby="rangeMusic"
             onChange={handleVolumeChange}
             className="slider"
             style={{ '--background-size': '50%' } as React.CSSProperties}

@@ -82,6 +82,8 @@ export default function Pill({ className, items, activeIndex }: PillProps) {
                   ref={linkRefs.current[index]}
                   onClick={onClick}
                   className="flex cursor-pointer items-center justify-center px-5"
+                  href="#"
+                  aria-label={`Album ${icon}`}
                 >
                   {icon && (
                     <>

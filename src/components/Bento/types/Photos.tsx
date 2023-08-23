@@ -70,7 +70,11 @@ const Photos: React.FC<AlbumsProps> = ({ albums }) => {
   return (
     <Bento size="1x1" className="bento group">
       <div className="group relative z-0 h-full w-full overflow-hidden">
-        <a className="absolute right-0 z-10 p-5" href="" target="_blank">
+        <a
+          className="absolute right-0 z-10 p-5"
+          href="https://www.icloud.com/sharedalbum/#B0fGWZuqDFg0VA"
+          target="_blank"
+        >
           <Image
             src="/images/icons/photos.png"
             className={`drop-shadow-md transition-transform duration-300 hover:scale-105`}
