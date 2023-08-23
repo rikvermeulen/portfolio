@@ -1,7 +1,9 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { Children, useEffect, useRef, useState } from 'react';
 import BentoGrid from '@bentogrid/core';
+
+import { BentoSkeleton } from '@/components/BentoSkeleton';
 
 interface GridProps {
   children: React.ReactNode;
@@ -17,6 +19,8 @@ const BREAKPOINTS = {
 export default function Grid({ className = '', children }: GridProps) {
   const gridRef = useRef<HTMLDivElement>(null);
   const [isLoaded, setIsLoaded] = useState(false);
+
+  const childrenArray = Children.toArray(children);
 
   useEffect(() => {
     if (!gridRef.current) return;
@@ -34,13 +38,25 @@ export default function Grid({ className = '', children }: GridProps) {
   }, []);
 
   return (
-    <div
-      ref={gridRef}
-      className={`grid-bento ${className} gap-row m-auto grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 ${
-        isLoaded ? '' : 'opacity-0'
-      }`}
-    >
-      {children}
-    </div>
+    <>
+      {!isLoaded && (
+        <div className="m-auto grid h-full w-full grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
+          {childrenArray.map((_, index) => (
+            <BentoSkeleton
+              key={index}
+              className={index === 0 || index === 5 ? 'md:col-span-2' : 'col-span-1'}
+            />
+          ))}
+        </div>
+      )}
+      <div
+        ref={gridRef}
+        className={`grid-bento ${className} gap-row m-auto grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 ${
+          isLoaded ? '' : 'opacity-0'
+        }`}
+      >
+        {children}
+      </div>
+    </>
   );
 }

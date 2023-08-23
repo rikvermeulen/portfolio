@@ -103,7 +103,7 @@ export default function Shows({ current }: PropsShows) {
             <h2 className="mb-4 text-lg font-bold text-white">Suggestions 🎬</h2>
             <Icon
               type="close"
-              className="h-6 w-6 rounded-full bg-[#4E5152] fill-white p-2 transition-colors duration-300 hover:bg-[#3d4040]"
+              className="h-6 w-6 cursor-pointer rounded-full bg-[#4E5152] fill-white p-2 transition-colors duration-300 hover:bg-[#3d4040]"
               onClick={toggleModal}
             />
           </div>

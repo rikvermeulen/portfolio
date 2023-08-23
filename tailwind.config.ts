@@ -11,6 +11,10 @@ export default {
       colors: {
         primary: '#E2E2E2',
         dark_grey: '#707070',
+        muted: {
+          DEFAULT: 'hsl(var(--muted))',
+          foreground: 'hsl(var(--muted-foreground))',
+        },
       },
     },
   },
