@@ -16,7 +16,7 @@ type PillProps = {
 
 export default function Pill({ className, items, activeIndex }: PillProps) {
   const pathName = usePathname();
-  const indicatorRef = useRef<HTMLDivElement>(null);
+  const indicatorRef = useRef<HTMLLIElement>(null);
 
   const linkRefs = useRef(items.map(() => createRef<HTMLAnchorElement>()));
 
@@ -36,7 +36,7 @@ export default function Pill({ className, items, activeIndex }: PillProps) {
 
   const updateIndicator = (
     activeLinkElement: HTMLAnchorElement | null,
-    indicatorElement: HTMLDivElement | null,
+    indicatorElement: HTMLLIElement | null,
   ) => {
     if (activeLinkElement && indicatorElement) {
       indicatorElement.style.transform = `translateX(${Math.max(
@@ -55,7 +55,7 @@ export default function Pill({ className, items, activeIndex }: PillProps) {
       )}
     >
       <ul className="relative flex flex-row gap-4">
-        <div
+        <li
           ref={indicatorRef}
           className="absolute -z-10 h-full w-24 rounded-full bg-white transition-transform duration-300 sm:w-full"
         />

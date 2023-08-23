@@ -152,16 +152,21 @@ const Podcast: React.FC<PodcastProps> = ({ playlist = [], className }) => {
             <Icon type="next" />
           </button>
         </div>
-        <label className="mt-6 flex items-center justify-center gap-4" htmlFor="range">
+        <label
+          className="mt-6 flex items-center justify-center gap-4"
+          htmlFor="rangePodcast"
+          id="rangePodcast"
+        >
           <Icon type="mute" className="w-1.5 fill-white" />
           <input
             type="range"
+            aria-labelledby="rangePodcast"
             min="0"
             max="1"
             step="0.01"
             defaultValue="0.5"
-            id="range"
-            name="range"
+            id="rangePodcast"
+            name="rangePodcast"
             onChange={handleVolumeChange}
             className="slider"
             style={{ '--background-size': '50%' } as React.CSSProperties}

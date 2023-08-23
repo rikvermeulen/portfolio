@@ -125,17 +125,17 @@ export default function FindMe() {
           alt="cloud"
         />
       </div>
-      <div className="group absolute bottom-5 right-5 z-50 flex gap-3 rounded-xl bg-white/70 px-2 py-1">
-        <button onClick={handleZoomOut}>
+      <div className="group absolute bottom-5 right-5 z-50 flex gap-3 rounded-xl bg-white/70 px-2.5 py-1.5">
+        <button onClick={handleZoomOut} id="minus" aria-label="Minus - zoom out">
           <Icon
             type="minus"
-            className="w-2 opacity-60 transition-opacity duration-300 group-hover:opacity-100"
+            className="w-3 opacity-60 transition-opacity duration-300 group-hover:opacity-100"
           />
         </button>
-        <button onClick={handleZoomIn}>
+        <button onClick={handleZoomIn} id="plus" aria-label="Plud - zoom in">
           <Icon
             type="plus"
-            className="w-2 opacity-60 transition-opacity duration-300 group-hover:opacity-100"
+            className="w-3 opacity-60 transition-opacity duration-300 group-hover:opacity-100"
           />
         </button>
       </div>

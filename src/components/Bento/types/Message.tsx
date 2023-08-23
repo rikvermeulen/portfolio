@@ -220,6 +220,8 @@ export default function Message() {
         <button
           className="flex h-9 w-9 items-center justify-center rounded-full bg-[#EAEBED] fill-[#848484] p-3 transition-[background,transform] duration-300 hover:bg-[#dadbdd] active:scale-90"
           onClick={handlMenuClick}
+          id="socials"
+          aria-label="Socials menu"
         >
           <Icon type="plus" className="w-3" />
         </button>
