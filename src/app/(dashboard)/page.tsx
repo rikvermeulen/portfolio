@@ -26,8 +26,8 @@ export default function Home() {
           </h2>
         </div>
         <p className="max-w-xl pt-2 text-dark_grey md:text-lg">
-          I’m a Creative Developer based in Rotterdam, the Netherlands. I develop full-scale
-          creative digital experiences for some amazing agencies and hugely talented people. ✨
+          I’m a Creative Developer based in Heukelum, the Netherlands. I develop full-scale creative
+          digital experiences for some amazing agencies and hugely talented people. ✨
         </p>
       </div>
     </Bento>

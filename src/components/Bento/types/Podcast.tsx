@@ -77,7 +77,7 @@ const Podcast: React.FC<PodcastProps> = ({ playlist = [], className }) => {
         </a>
       </div>
       <div
-        className={`absolute z-0 h-full w-full bg-cover transition-opacity duration-500 ease-in-out ${
+        className={`absolute z-0 h-full w-full bg-cover contrast-[0.90] transition-opacity duration-500 ease-in-out ${
           isPlaying ? 'opacity-100' : 'opacity-0'
         }`}
         style={{
