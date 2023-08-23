@@ -63,7 +63,7 @@ export default function WatchList({
             />
           </div>
         </div>
-        <div className="flex gap-2 py-2 text-xs text-white">
+        <div className="flex gap-2 py-2 text-xs font-medium text-white">
           <button
             onClick={() => setFilter('Shows')}
             className={`rounded-full px-3 py-1 ${filter === 'Shows' ? 'bg-blue-600' : ''}`}
@@ -79,14 +79,12 @@ export default function WatchList({
         </div>
       </header>
       <div className="max-h-[250px]" style={{ overflowY: 'scroll', height: '100%' }}>
-        <p className="border-b-[0.5px] border-solid border-[#484848] pb-1 text-sm font-bold text-white">
-          What I watched
-        </p>
+        <p className="pb-1 text-sm font-bold text-white">What I watched</p>
         {filteredData &&
           filteredData.map((show, index) => (
             <div
               key={index}
-              className="boder-b flex gap-3 border-b-[0.5px] border-solid border-[#484848] py-2"
+              className="flex gap-3 border-b-[0.5px] border-solid border-[#484848] py-2"
             >
               <Image
                 src={`${imageURL}${show.backdrop_path}`}
