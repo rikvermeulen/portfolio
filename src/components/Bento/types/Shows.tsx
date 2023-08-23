@@ -54,10 +54,6 @@ export default function Shows({ current, shows, movies }: PropsShows) {
     setModalVisible(!isModalVisible);
   };
 
-  const filteredData = (filter === 'Shows' ? shows : movies).filter(
-    (item) => (item.name || item.title)?.toLowerCase().includes(searchTerm.toLowerCase()),
-  );
-
   const handleSubmit = async () => {
     try {
       const res = await fetch(`/api/recommendation`, {
