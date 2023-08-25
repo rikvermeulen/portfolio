@@ -24,7 +24,7 @@ export default function Modal({
     <div
       className={cc(
         isVisible ? 'opacity-100' : ' opacity-0 -z-10',
-        'absolute left-0 top-0 flex h-full w-full items-center justify-center bg-[#828282]/40 px-5 backdrop-blur-lg transition-[opacity,transform] duration-300',
+        'absolute left-0 top-0 flex h-full w-full items-center justify-center bg-[#828282]/40 px-5 backdrop-blur-lg transition-[opacity,transform] ease-in-out duration-300',
       )}
     >
       <div
@@ -37,7 +37,7 @@ export default function Modal({
           <h2 className="mb-4 text-base font-bold text-white">Your suggestions 🍿</h2>
           <Icon
             type="close"
-            className="h-6 w-6 cursor-pointer rounded-full bg-[#4E5152] fill-white p-2 transition-colors duration-300 hover:bg-[#3d4040]"
+            className="h-6 w-6 cursor-pointer rounded-full bg-[#4E5152] fill-white p-2 transition-colors duration-300 ease-in-out hover:bg-[#3d4040]"
             onClick={toggleModal}
           />
         </div>

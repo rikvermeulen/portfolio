@@ -47,7 +47,7 @@ const Photos: React.FC<AlbumsProps> = ({ albums }) => {
   const renderMedia = (media: string, index: number) => (
     <div
       key={media}
-      className={`absolute inset-0 transition-opacity duration-1000 ${
+      className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
         activeMediaIndex === index ? 'opacity-100' : 'opacity-0'
       }`}
       onClick={handleImageClick}
@@ -86,7 +86,7 @@ const Photos: React.FC<AlbumsProps> = ({ albums }) => {
         {mediaFiles.map(renderMedia)}
         <div className="z-20 flex items-center justify-center">
           <Pill
-            className=" duration-400 absolute -bottom-16 transition-[bottom] will-change-contents group-hover:bottom-5"
+            className=" absolute -bottom-16 transition-[bottom] duration-500 ease-in-out will-change-contents group-hover:bottom-5"
             items={albumItems}
             activeIndex={activeAlbumIndex}
           />

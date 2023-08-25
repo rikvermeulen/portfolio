@@ -57,7 +57,7 @@ export default function Pill({ className, items, activeIndex }: PillProps) {
       <ul className="relative flex flex-row gap-4">
         <li
           ref={indicatorRef}
-          className="absolute -z-10 h-full w-24 rounded-full bg-white transition-transform duration-300 sm:w-full"
+          className="absolute -z-10 h-full w-24 rounded-full bg-white transition-transform duration-300 ease-in-out sm:w-full"
         />
         {items.map((item, index) => {
           const { url, name, icon, onClick } = item;
@@ -88,7 +88,8 @@ export default function Pill({ className, items, activeIndex }: PillProps) {
                     <>
                       <Icon
                         className={cc(
-                          isActive && 'opacity-0 transition-opacity duration-200 delay-200',
+                          isActive &&
+                            'opacity-0 transition-opacity ease-in-out duration-200 delay-200',
                           'w-5 fill-[#707070]',
                         )}
                         type={icon}

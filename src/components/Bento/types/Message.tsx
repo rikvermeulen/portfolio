@@ -196,7 +196,7 @@ export default function Message() {
           showMenu
             ? 'opacity-100 translate-x-0 translate-y-0 scale-100'
             : 'opacity-0 scale-50 translate-y-44 -translate-x-10',
-          'absolute bottom-4 left-5 z-40 duration-300 transition-[transform,opacity]',
+          'absolute bottom-4 left-5 z-40 duration-300 ease-in-out transition-[transform,opacity]',
         )}
         ref={menuRef}
       >

@@ -64,7 +64,7 @@ const Music: React.FC<MusicProps> = ({ playlist = [], className }) => {
             src="/images/icons/music.png"
             className={`${
               isPlaying && 'rounded-md bg-gradient-to-b from-[#E96575] to-[#E63F45]'
-            } drop-shadow-md transition-transform duration-300 hover:scale-105`}
+            } drop-shadow-md transition-transform duration-300 ease-in-out hover:scale-105`}
             alt="media"
             width={32}
             height={32}
@@ -92,7 +92,7 @@ const Music: React.FC<MusicProps> = ({ playlist = [], className }) => {
               height={144}
               className={cc(
                 isPlaying ? 'pop-up' : 'pop-down',
-                'rounded-md drop-shadow-md duration-300 transition-transform scale-100',
+                'rounded-md drop-shadow-md duration-300 ease-in-out transition-transform scale-100',
               )}
             />
           )}
@@ -104,7 +104,7 @@ const Music: React.FC<MusicProps> = ({ playlist = [], className }) => {
           </div>
           <div className="relative -top-1 text-white/70">{currentTrack?.artists[0].name}</div>
         </div>
-        <div className="mt-4 flex w-full items-center justify-around">
+        <div className="m-auto mt-4 flex w-full max-w-[184px] items-center justify-between">
           <button
             onClick={() => changeTrack('previous')}
             className="w-5 fill-white"
@@ -126,14 +126,14 @@ const Music: React.FC<MusicProps> = ({ playlist = [], className }) => {
               type="pause"
               className={cc(
                 isPlaying ? 'opacity-100 scale-100' : 'opacity-0 scale-0',
-                'h-full transition-[opacity,transform] duration-300 active:scale-90',
+                'h-full transition-[opacity,transform] duration-300 ease-in-out active:scale-90',
               )}
             />
             <Icon
               type="play"
               className={cc(
                 !isPlaying ? 'opacity-100 scale-100' : 'opacity-0 scale-0',
-                'transition-[opacity,transform] duration-300 absolute active:scale-90 h-full',
+                'transition-[opacity,transform] duration-300 ease-in-out absolute active:scale-90 h-full',
               )}
             />
           </button>

@@ -112,7 +112,7 @@ export default function FindMe() {
       <div ref={mapContainerRef} style={{ width: '100%', height: '100%' }} />
       <div className="absolute top-0 z-10">
         <Image
-          className=" cloud-one -translate-x-full -translate-y-32 transition-transform duration-[3s]"
+          className=" cloud-one -translate-x-full -translate-y-32 transition-transform duration-[3s] ease-in-out"
           src="/images/cloud.png"
           width={300}
           height={300}
@@ -120,7 +120,7 @@ export default function FindMe() {
         />
 
         <Image
-          className="cloud-two -translate-x-full -translate-y-32 transition-transform duration-[4s]"
+          className="cloud-two -translate-x-full -translate-y-32 transition-transform duration-[4s] ease-in-out"
           src="/images/cloud.png"
           width={300}
           height={300}
