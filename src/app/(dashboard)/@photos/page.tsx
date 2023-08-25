@@ -9,26 +9,31 @@ async function getData(albumName: string) {
 
   if (error) {
     console.error('Failed to fetch album:', error);
-    return;
+    return [];
   }
 
   const fetchPublicUrl = async (file: { name: string }) => {
     const fullPath = `${albumName}/${file.name}`;
     const { data: urlData } = await supabase.storage.from('photos').getPublicUrl(fullPath);
 
-    return urlData.publicUrl;
+    return urlData?.publicUrl;
   };
 
-  const urls = await Promise.all(data.map(fetchPublicUrl));
-
-  return urls;
+  return Promise.all(data.map(fetchPublicUrl));
 }
 
 export default async function Photoss() {
+  const albumPromises = albums.map(async (album) => {
+    const data = await getData(album.name);
+    return { name: album.name, data };
+  });
+
+  const resolvedAlbums = await Promise.all(albumPromises);
+
   const albumData: Record<string, any> = {};
-  for (const album of albums) {
-    albumData[album.name] = await getData(album.name);
-  }
+  resolvedAlbums.forEach((album) => {
+    albumData[album.name] = album.data;
+  });
 
   return <Photos albums={albumData} />;
 }

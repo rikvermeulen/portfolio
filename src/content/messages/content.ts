@@ -3,9 +3,9 @@ import { IMessage, IQuestionAction } from '@/types/index';
 export const initialMessages: IMessage[] = [
   {
     sender: 'admin',
-    text: 'want to work together? just want to chat? send me a text here (no, for real)',
+    text: 'Want to work together? just want to chat? send me a text here (no, for real)',
   },
-  { sender: 'user', text: 'sounds good 🙏' },
+  { sender: 'user', text: 'Sounds good 🙏' },
 ];
 
 export const questionsAndActions: IQuestionAction[] = [
@@ -18,7 +18,7 @@ export const questionsAndActions: IQuestionAction[] = [
     action: (message, userData) => ({ ...userData, reason: message }),
   },
   {
-    question: ['ahh I see 👀', 'What is your phone number? 📱'],
+    question: ['Ahh I see 👀', 'What is your phone number? 📱'],
     action: (message, userData) => ({ ...userData, phone: message }),
   },
   {
