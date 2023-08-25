@@ -63,7 +63,7 @@ const Music: React.FC<MusicProps> = ({ playlist = [], className }) => {
           <Image
             src="/images/icons/music.png"
             className={`${
-              isPlaying && 'rounded-md bg-gradient-to-b from-[#E96575] to-[#E63F45]'
+              isPlaying && 'rounded-md bg-gradient-to-b from-[#EA6776] to-[#E63E44]'
             } drop-shadow-md transition-transform duration-300 ease-in-out hover:scale-105`}
             alt="media"
             width={32}

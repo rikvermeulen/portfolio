@@ -10,6 +10,7 @@ export type ContributionDay = {
   contributionLevel: ContributionLevelName;
   date: string;
   color: string;
+  border: string;
 };
 
 const CONTRIBUTION_LEVELS = {
@@ -19,6 +20,15 @@ const CONTRIBUTION_LEVELS = {
   THIRD_QUARTILE: 3,
   FOURTH_QUARTILE: 4,
 };
+
+const CUSTOM_COLORS: Record<ContributionLevelName, string> = {
+  NONE: '#e2e4e7',
+  FIRST_QUARTILE: '#94e0a2',
+  SECOND_QUARTILE: '#3fbc60',
+  THIRD_QUARTILE: '#309b4b',
+  FOURTH_QUARTILE: '#1f6a37',
+};
+
 type ContributionLevelName = keyof typeof CONTRIBUTION_LEVELS;
 
 export type MonthlyContributions = {
@@ -80,7 +90,12 @@ export const getContributionCalendar = async (
     const { weeks, totalContributions } = contributionCalendar;
 
     const monthlyContributions = await groupContributionsByMonth(
-      weeks.map((week: { contributionDays: ContributionDay }) => week.contributionDays),
+      weeks.map((week: { contributionDays: ContributionDay[] }) =>
+        week.contributionDays.map((day) => ({
+          ...day,
+          border: CUSTOM_COLORS[day.contributionLevel],
+        })),
+      ),
     );
 
     return {

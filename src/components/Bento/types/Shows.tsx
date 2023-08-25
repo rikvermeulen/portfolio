@@ -78,7 +78,7 @@ export default function Shows({ current, shows, movies }: PropsShows) {
       className="bento relative z-0 flex flex-col justify-between bg-gradient-to-b from-[#2B3833] to-[#0F1314] p-5"
     >
       <header className="flex justify-between">
-        <p className="text-lg font-bold text-white">The collection</p>
+        <p className="text-lg font-bold text-white">Watching now</p>
         <Image
           src="/images/icons/shows.png"
           className={`p-1.5 drop-shadow-md transition-transform duration-300 hover:scale-105`}

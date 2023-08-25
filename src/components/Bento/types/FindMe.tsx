@@ -44,14 +44,14 @@ function FindMe() {
         'h-6',
         'w-6',
         'rounded-full',
-        'bg-[#729AF8]',
+        'bg-[#007AFF]',
         'opacity-75',
       );
       innerSpan.classList.add(
         'relative',
         'inline-flex',
-        'bg-[#729AF8]',
-        'border-2',
+        'bg-[#007AFF]',
+        'border-[3px]',
         'border-solid',
         'border-white',
         'h-6',
@@ -141,8 +141,8 @@ function FindMe() {
           />
         </button>
       </div>
-      <div className="absolute bottom-5 left-5 z-10 rounded border border-solid border-[#e8e8e8] bg-white/70 p-1.5 drop-shadow-sm backdrop-blur-xl">
-        <p className="text-[10px] text-dark_grey">Heukelum, The Netherlands 🏡</p>
+      <div className="absolute bottom-5 left-5 z-10 rounded-[8px] bg-white/70 px-2 py-1.5 shadow-[0px_0px_0px_1px_rgba(0,0,0,0.06)] backdrop-blur-[20px]">
+        <p className="text-[12px] text-dark_grey">Heukelum, The Netherlands 🏡</p>
       </div>
     </Bento>
   );
