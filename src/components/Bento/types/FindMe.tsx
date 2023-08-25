@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useRef } from 'react';
+import { memo, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import mapboxgl from 'mapbox-gl';
 
@@ -14,7 +14,7 @@ import Bento from '../Bento';
 
 mapboxgl.accessToken = env.NEXT_PUBLIC_MAPBOX_TOKEN;
 
-export default function FindMe() {
+function FindMe() {
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<null | mapboxgl.Map>(null);
 
@@ -147,3 +147,5 @@ export default function FindMe() {
     </Bento>
   );
 }
+
+export default memo(FindMe);

@@ -22,6 +22,7 @@ export default function Pill({ className, items, activeIndex }: PillProps) {
 
   useLayoutEffect(() => {
     const activeLinkIndex = getActiveLinkIndex(items, activeIndex, pathName);
+    console.log(activeLinkIndex);
     updateIndicator(linkRefs.current[activeLinkIndex]?.current, indicatorRef.current);
   }, [items, pathName, activeIndex]);
 
@@ -31,7 +32,18 @@ export default function Pill({ className, items, activeIndex }: PillProps) {
     pathName: string,
   ) => {
     if (activeIndex !== undefined) return activeIndex;
-    return items.findIndex((item) => item.url === pathName);
+    const exactMatchIndex = items.findIndex((item) => pathName === item.url);
+    if (exactMatchIndex !== -1) return exactMatchIndex;
+
+    const sortedItems = [...items].sort((a, b) => (b.url?.length || 0) - (a.url?.length || 0));
+
+    for (let i = 0; i < sortedItems.length; i++) {
+      if (pathName.startsWith(sortedItems[i].url || '')) {
+        return items.indexOf(sortedItems[i]);
+      }
+    }
+
+    return -1;
   };
 
   const updateIndicator = (
@@ -61,7 +73,17 @@ export default function Pill({ className, items, activeIndex }: PillProps) {
         />
         {items.map((item, index) => {
           const { url, name, icon, onClick } = item;
-          const isActive = activeIndex !== undefined ? index === activeIndex : pathName === url;
+          const isActive =
+            activeIndex !== undefined ? index === activeIndex : pathName.startsWith(url || '');
+
+          const handleClick = (e: { preventDefault: () => void }) => {
+            if (isActive && url !== pathName && url !== '/') {
+              e.preventDefault();
+              window.location.href = url || '';
+            } else if (onClick) {
+              onClick();
+            }
+          };
 
           return (
             <li key={index} className="flex text-base text-white">
@@ -69,7 +91,7 @@ export default function Pill({ className, items, activeIndex }: PillProps) {
                 <Link
                   href={url}
                   ref={linkRefs.current[index]}
-                  onClick={onClick}
+                  onClick={handleClick}
                   className={cc(
                     isActive ? 'text-black' : 'text-[#707070]',
                     'transition-colors duration-300 hover:text-black px-6 sm:px-9 py-3',
@@ -80,7 +102,7 @@ export default function Pill({ className, items, activeIndex }: PillProps) {
               ) : (
                 <a
                   ref={linkRefs.current[index]}
-                  onClick={onClick}
+                  onClick={handleClick}
                   className="flex cursor-pointer items-center justify-center px-5"
                   aria-label={`Album ${icon}`}
                 >
