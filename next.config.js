@@ -1,9 +1,8 @@
-// import million from 'million/compiler';
+// import './src/env.mjs';
 
-import './src/env.mjs';
+const { withContentlayer } = require('next-contentlayer');
 
 /** @type {import('next').NextConfig} */
-
 const config = {
   reactStrictMode: true,
   swcMinify: true,
@@ -26,4 +25,4 @@ const config = {
   },
 };
 
-export default config;
+module.exports = withContentlayer(config);

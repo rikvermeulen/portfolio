@@ -1,4 +1,6 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
+import { allProjects } from 'contentlayer/generated';
 
 import Container from '@/components/Container';
 
@@ -12,11 +14,14 @@ export default function Work() {
     <main className="h-screen">
       <Container>
         <section className="relative pb-24 pt-16 md:pt-32">
-          <h1 className="font-bold md:text-3xl">Almost There! 🚧</h1>
-          <p className="max-w-xl pt-2 text-dark_grey md:text-lg">
-            My portfolio is in the final stages of polishing. Like a perfectly baked Dutch
-            stroopwafel, I want everything to be just right. Come back soon to see the final result!
-          </p>
+          {allProjects.map((post: any) => (
+            <article key={post._id}>
+              <Link href={post.slug}>
+                <h2>{post.title}</h2>
+              </Link>
+              {post.description && <p>{post.description}</p>}
+            </article>
+          ))}
         </section>
       </Container>
     </main>

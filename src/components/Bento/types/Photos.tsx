@@ -5,6 +5,8 @@ import Image from 'next/image';
 
 import Pill from '@/components/Pill';
 
+import { useSound } from '@/utils/sound';
+
 import Bento from '../Bento';
 
 interface AlbumsProps {
@@ -16,6 +18,8 @@ const Photos: React.FC<AlbumsProps> = ({ albums }) => {
   const [activeMediaIndex, setActiveMediaIndex] = useState(0);
   const albumNames = Object.keys(albums);
   const mediaFiles = albums[albumNames[activeAlbumIndex]];
+
+  const { playSound } = useSound();
 
   useEffect(() => {
     let intervalId: NodeJS.Timeout;
@@ -31,9 +35,11 @@ const Photos: React.FC<AlbumsProps> = ({ albums }) => {
 
   const handleImageClick = () => {
     setActiveMediaIndex((prevIndex) => (prevIndex + 1) % mediaFiles.length);
+    playSound('tap');
   };
 
   const handleAlbumClick = useCallback((index: number) => {
+    playSound('tap');
     setActiveAlbumIndex(index);
     setActiveMediaIndex(0);
   }, []);
