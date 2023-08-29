@@ -4,7 +4,7 @@ import cc from '@/lib/cc';
 
 export function BentoSkeleton({ className }: { className?: string }) {
   return (
-    <div className={cc(className, 'bento relative min-h-[348px]  animate-pulse p-5')}>
+    <div className={cc(className, 'bento relative min-h-[348px] animate-pulse p-5')}>
       <div className="flex h-full flex-col justify-between">
         <div className="flex justify-between">
           <div className="flex w-full flex-col gap-2">

@@ -15,7 +15,7 @@ export const AdminMessage = ({
   <div className="flex gap-2">
     {!isSameSender && (
       <Image
-        src="/images/profile.jpg"
+        src="/images/profile.png"
         alt="Me"
         width={40}
         height={40}
@@ -23,7 +23,7 @@ export const AdminMessage = ({
       />
     )}
     <div>
-      {!isSameSender && <p className="text-xs text-[#8D8D93]">Rik</p>}
+      {!isSameSender && <p className="ml-3 text-xs text-[#8D8D93]">Rik</p>}
       <div
         className={cc(
           isSameSender && 'ml-10 md:ml-12 relative -top-3',

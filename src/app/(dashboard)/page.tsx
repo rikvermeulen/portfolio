@@ -13,7 +13,7 @@ export default function Home() {
   return (
     <Bento size="2x1">
       <Image
-        src={'/images/profile.jpg'}
+        src={'/images/me.jpg'}
         alt="Portrait of Rik Vermeulen"
         width={'164'}
         height={'164'}

@@ -1,10 +1,11 @@
+import { cache } from 'react';
 import axios from 'axios';
 
 import { env } from '@/env.mjs';
 
 const BASE_URL = 'https://api.themoviedb.org/3';
 
-export const searchShows = async (query: any) => {
+export const searchShows = cache(async (query: any) => {
   try {
     const response = await axios.get(
       `${BASE_URL}/search/tv?api_key=${env.TMDB_CLIENT_KEY}&query=${query}`,
@@ -14,9 +15,9 @@ export const searchShows = async (query: any) => {
     console.error('Error fetching shows:', error);
     return [];
   }
-};
+});
 
-export const getShowDetails = async (tvId: string) => {
+export const getShowDetails = cache(async (tvId: string) => {
   try {
     const response = await axios.get(`${BASE_URL}/tv/${tvId}?api_key=${env.TMDB_CLIENT_KEY}`);
     return response.data;
@@ -24,9 +25,9 @@ export const getShowDetails = async (tvId: string) => {
     console.error('Error fetching show details:', error);
     return null;
   }
-};
+});
 
-export const getShowSeason = async (tvId: string, seasonNumber: string) => {
+export const getShowSeason = cache(async (tvId: string, seasonNumber: string) => {
   try {
     const response = await axios.get(
       `${BASE_URL}/tv/${tvId}/season/${seasonNumber}?api_key=${env.TMDB_CLIENT_KEY}`,
@@ -36,9 +37,9 @@ export const getShowSeason = async (tvId: string, seasonNumber: string) => {
     console.error('Error fetching show season:', error);
     return null;
   }
-};
+});
 
-export const getFavoriteShow = async () => {
+export const getFavoriteShow = cache(async () => {
   try {
     const response = await axios.get(`${BASE_URL}/account/9670374/favorite/tv`, {
       headers: {
@@ -50,9 +51,9 @@ export const getFavoriteShow = async () => {
     console.error('Error fetching show details:', error);
     return null;
   }
-};
+});
 
-export const getFavoriteMovies = async () => {
+export const getFavoriteMovies = cache(async () => {
   try {
     const response = await axios.get(`${BASE_URL}/account/9670374/favorite/movies`, {
       headers: {
@@ -64,4 +65,4 @@ export const getFavoriteMovies = async () => {
     console.error('Error fetching show details:', error);
     return null;
   }
-};
+});
