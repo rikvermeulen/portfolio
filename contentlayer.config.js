@@ -21,12 +21,23 @@ export const Project = defineDocumentType(() => ({
       type: 'string',
       required: true,
     },
+    context: {
+      type: 'string',
+    },
     description: {
       type: 'string',
     },
-    date: {
-      type: 'date',
-      required: true,
+    timeline: {
+      type: 'string',
+    },
+    role: {
+      type: 'string',
+    },
+    tools: {
+      type: 'string',
+    },
+    website: {
+      type: 'string',
     },
   },
   computedFields,

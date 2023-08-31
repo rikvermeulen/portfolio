@@ -2,7 +2,9 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { allProjects } from 'contentlayer/generated';
 
+import Bento from '@/components/Bento/Bento';
 import Container from '@/components/Container';
+import Grid from '@/components/Grid';
 
 export const metadata: Metadata = {
   title: 'Work',
@@ -14,14 +16,16 @@ export default function Work() {
     <main className="h-screen">
       <Container>
         <section className="relative pb-24 pt-16 md:pt-32">
-          {allProjects.map((post: any) => (
-            <article key={post._id}>
-              <Link href={post.slug}>
-                <h2>{post.title}</h2>
-              </Link>
-              {post.description && <p>{post.description}</p>}
-            </article>
-          ))}
+          <Grid>
+            {allProjects.map((post: any) => (
+              <Bento size="2x2" className="bento" key={post._id}>
+                <Link href={post.slug}>
+                  <h2>{post.title}</h2>
+                </Link>
+                {post.description && <p>{post.description}</p>}
+              </Bento>
+            ))}
+          </Grid>
         </section>
       </Container>
     </main>
