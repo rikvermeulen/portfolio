@@ -20,7 +20,7 @@ export const CustomH1 = (props: React.ComponentPropsWithRef<'h1'>) => (
   <CustomHeading Component="h1" className="" {...props} />
 );
 export const CustomH2 = (props: React.ComponentPropsWithRef<'h2'>) => (
-  <CustomHeading Component="h2" className=" text-2xl font-medium" {...props} />
+  <CustomHeading Component="h2" className=" text-2xl font-semibold" {...props} />
 );
 export const CustomH3 = (props: React.ComponentPropsWithRef<'h3'>) => (
   <CustomHeading Component="h3" className="" {...props} />

@@ -21,6 +21,9 @@ export const Project = defineDocumentType(() => ({
       type: 'string',
       required: true,
     },
+    subtitle: {
+      type: 'string',
+    },
     context: {
       type: 'string',
     },

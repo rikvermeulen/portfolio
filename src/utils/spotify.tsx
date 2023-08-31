@@ -1,8 +1,10 @@
+import { cache } from 'react';
 import axios from 'axios';
 
 const BASE_URL = 'https://api.spotify.com/v1';
 
 export class Spotify {
+  private static cache: { [key: string]: any } = {};
   private accessToken: string = '';
   private clientId: string;
   private clientSecret: string;
@@ -54,12 +56,30 @@ export class Spotify {
   }
 
   public async getTrack(playlist_id: string) {
+    if (Spotify.cache[playlist_id]) {
+      return Spotify.cache[playlist_id];
+    }
+
     if (Date.now() >= this.nextRefresh) await this.refresh();
-    return await this.makeRequest(`playlists/${playlist_id}`);
+    const data = await this.makeRequest(`playlists/${playlist_id}`);
+
+    Spotify.cache[playlist_id] = data;
+
+    return data;
   }
 
   public async getSingleEpisode(episode_id: string, market?: string) {
+    const cacheKey = `${episode_id}:${market || 'default'}`;
+
+    if (Spotify.cache[cacheKey]) {
+      return Spotify.cache[cacheKey];
+    }
+
     if (Date.now() >= this.nextRefresh) await this.refresh();
-    return await this.makeRequest(`shows/${episode_id}/episodes?market=${market}`);
+    const data = await this.makeRequest(`shows/${episode_id}/episodes?market=${market}`);
+
+    Spotify.cache[cacheKey] = data;
+
+    return data;
   }
 }

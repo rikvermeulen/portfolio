@@ -14,7 +14,7 @@ const CustomElement: FunctionComponent<CustomElementProps> = ({
   const className = (() => {
     switch (Component) {
       case 'p':
-        return 'leading-relaxed text-base mb-3';
+        return 'leading-loose text-base mb-4';
       case 'ol':
         return 'list-decimal list-inside';
       case 'li':
