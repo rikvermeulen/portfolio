@@ -113,7 +113,7 @@ export default function Message() {
       setTimeout(() => {
         playSound('receive');
         addAdminMessage(errorMessage);
-      }, 1500);
+      }, 1000);
     } else {
       const questionAndAction = questionsAndActions[step];
       const newUserData = questionAndAction.action(message, userData);
@@ -133,10 +133,10 @@ export default function Message() {
 
         if (Array.isArray(nextQuestion)) {
           nextQuestion.forEach((q, i) => {
-            addAdminMessageWithDelay(q, (i + 1) * 1500);
+            addAdminMessageWithDelay(q, (i + 1) * 1000);
           });
         } else {
-          addAdminMessageWithDelay(nextQuestion, 1500);
+          addAdminMessageWithDelay(nextQuestion, 1000);
         }
       } else {
         sendData(newUserData);

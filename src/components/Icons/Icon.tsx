@@ -17,8 +17,10 @@ import Next from './types/Next';
 import Pause from './types/Pause';
 import Play from './types/Play';
 import Plus from './types/Plus';
+import Settings from './types/Settings';
 import Sound from './types/Sound';
 import Tail from './types/Tail';
+import Wave from './types/Wave';
 
 interface Icons {
   [index: string]: FC<any>;
@@ -48,6 +50,8 @@ const icons: Icons = {
   loop: Loop,
   list: List,
   chevron: Chevron,
+  wave: Wave,
+  settings: Settings,
 };
 
 interface IconProps {
