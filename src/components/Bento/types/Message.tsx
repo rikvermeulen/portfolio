@@ -193,15 +193,22 @@ export default function Message() {
       </div>
       <ul
         className={cc(
-          showMenu
-            ? 'opacity-100 translate-x-0 translate-y-0 scale-100'
-            : 'opacity-0 scale-50 translate-y-44 -translate-x-10',
-          'absolute bottom-4 left-5 z-40 duration-300 ease-in-out transition-[transform,opacity]',
+          showMenu ? 'opacity-100 scale-100' : 'opacity-0 scale-50 pointer-events-none',
+          'absolute bottom-4 left-5 z-40 duration-300 ease-in-out transition-[transform,opacity] origin-bottom-left',
         )}
         ref={menuRef}
       >
         {socials.map((social, index) => (
-          <li key={index} className="mb-4">
+          <li
+            key={index}
+            className={cc('mb-4')}
+            style={{
+              transform: showMenu
+                ? `translateY(0)`
+                : `translateY(${-1 * (socials.length - 1 - index) * -20}px)`,
+              transition: 'transform 0.3s ease-in-out',
+            }}
+          >
             <a href={social.url} className="flex gap-4">
               <Image
                 src={`/images/icons/${social.icon}.png`}
@@ -218,7 +225,9 @@ export default function Message() {
       </ul>
       <div className="absolute bottom-0 z-20 flex w-full gap-3 bg-white/70 px-5 pb-5 pt-2 backdrop-blur-xl">
         <button
-          className="flex h-9 w-9 items-center justify-center rounded-full bg-[#EAEBED] fill-[#848484] p-3 transition-[background,transform] duration-300 hover:bg-[#dadbdd] active:scale-90"
+          className={cc(
+            'flex h-9 w-9 items-center justify-center rounded-full bg-[#EAEBED] fill-[#848484] p-3 transition-[background,transform] duration-300 hover:bg-[#dadbdd] active:scale-90',
+          )}
           onClick={handlMenuClick}
           id="socials"
           aria-label="Socials menu"
