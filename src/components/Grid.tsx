@@ -1,6 +1,6 @@
 'use client';
 
-import { Children, useEffect, useRef, useState } from 'react';
+import { Children, isValidElement, useEffect, useRef, useState } from 'react';
 import BentoGrid from '@bentogrid/core';
 
 import { BentoSkeleton } from '@/components/BentoSkeleton';
@@ -49,12 +49,19 @@ export default function Grid({ className = '', children, breakpoints = BREAKPOIN
             'm-auto grid h-full w-full grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4',
           )}
         >
-          {childrenArray.map((_, index) => (
-            <BentoSkeleton
-              key={index}
-              className={index === 0 || index === 5 ? 'md:col-span-2' : 'col-span-1'}
-            />
-          ))}
+          {childrenArray.map((child, index) => {
+            if (!isValidElement(child)) {
+              return null;
+            }
+            const size = child.props['data-bento'];
+            return (
+              <BentoSkeleton
+                key={index}
+                className={index === 0 || index === 5 ? 'md:col-span-2' : 'col-span-1'}
+                size={size}
+              />
+            );
+          })}
         </div>
       )}
       <div
