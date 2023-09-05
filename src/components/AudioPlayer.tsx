@@ -2,6 +2,8 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { PlaylistItem } from '@/types/index';
 
+import { useMusic } from '@/utils/contextMusic';
+
 export interface PodcastItem {
   audio_preview_url: string;
 }
@@ -18,6 +20,8 @@ const AudioPlayer = ({
   currentTrackIndex = 0,
   setCurrentTrackIndex,
 }: UseAudioPlayerProps) => {
+  const { setMusicData } = useMusic();
+
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(initialUrl);
@@ -134,6 +138,20 @@ const AudioPlayer = ({
 
     audioRef.current.addEventListener('timeupdate', handleTimeUpdate);
   }, [previewUrl, isPlaying, handleTimeUpdate]);
+
+  useEffect(() => {
+    const currentTrack = playlistTracks[currentTrackIndex];
+
+    if (!currentTrack) return;
+
+    setMusicData({
+      isPlaying,
+      currentTrack: 'track' in currentTrack ? currentTrack?.track?.name : '',
+      albumName: 'track' in currentTrack ? currentTrack?.track?.album?.name : '',
+      artist: 'track' in currentTrack ? currentTrack?.track?.artists[0]?.name : '',
+      albumImage: 'track' in currentTrack ? currentTrack?.track?.album?.images[0]?.url : '',
+    });
+  }, [isPlaying, currentTrackIndex, playlistTracks, setMusicData]);
 
   return {
     audioRef,

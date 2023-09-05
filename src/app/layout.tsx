@@ -11,6 +11,7 @@ import { TailwindIndicator } from '@/components/TailwindIndicator';
 
 import { fontSans } from '@/lib/fonts';
 import meta from '@/lib/meta';
+import { MusicProvider } from '@/utils/contextMusic';
 import { SoundProvider } from '@/utils/sound';
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -22,13 +23,15 @@ export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en" className={`${fontSans.variable} bg-white text-black`}>
       <body className="h-full antialiased">
-        <SoundProvider>
-          <Header />
-          {children}
-          <Footer />
-          <TailwindIndicator />
-          <Analytics />
-        </SoundProvider>
+        <MusicProvider>
+          <SoundProvider>
+            <Header />
+            {children}
+            <Footer />
+            <TailwindIndicator />
+            <Analytics />
+          </SoundProvider>
+        </MusicProvider>
       </body>
     </html>
   );

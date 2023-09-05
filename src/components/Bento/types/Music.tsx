@@ -40,7 +40,6 @@ const Music: React.FC<MusicProps> = ({ playlist = [], className }) => {
   const handlePlayOrPause = () => {
     playOrPause();
     setShowPulse(true);
-    setTimeout(() => setShowPulse(false), 600);
   };
 
   useEffect(() => {
@@ -92,7 +91,7 @@ const Music: React.FC<MusicProps> = ({ playlist = [], className }) => {
               height={144}
               className={cc(
                 isPlaying ? 'pop-up' : 'pop-down',
-                'rounded-md drop-shadow-md duration-300 ease-in-out transition-transform scale-100',
+                'rounded-md drop-shadow-md duration-300 ease-in-out transition-transform scale-100 image-animation',
               )}
             />
           )}
