@@ -34,3 +34,24 @@ export interface Track {
 export interface PlaylistItem {
   track: Track;
 }
+
+//shows
+export type Episode = {
+  still_path: string;
+  name: string;
+  season_number: number;
+  episode_number: number;
+};
+
+export type ShowOrMovie = {
+  backdrop_path: string;
+  name?: string;
+  title?: string;
+  overview: string;
+};
+
+export type PropsShows = {
+  current: Episode;
+  movies: ShowOrMovie[];
+  shows: ShowOrMovie[];
+};

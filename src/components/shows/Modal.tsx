@@ -24,15 +24,10 @@ export default function Modal({
     <div
       className={cc(
         isVisible ? 'opacity-100' : ' opacity-0 -z-10',
-        'absolute left-0 top-0 flex h-full w-full items-center justify-center bg-[#828282]/40 px-5 backdrop-blur-lg transition-[opacity,transform] ease-in-out duration-300',
+        'absolute left-0 top-0 flex h-full w-full items-center justify-center bg-[#828282]/60 px-5 backdrop-blur-lg transition-[opacity,transform] ease-in-out duration-300 ',
       )}
     >
-      <div
-        className={cc(
-          isVisible ? 'scale-100' : ' scale-0',
-          'rounded-xl bg-black/60 p-4 backdrop-blur-lg',
-        )}
-      >
+      <div className={cc(isVisible ? 'scale-100' : ' scale-0', 'rounded-lg bg-black/70 p-4')}>
         <div className="flex justify-between">
           <h2 className="mb-4 text-base font-bold text-white">Your suggestions 🍿</h2>
           <Icon

@@ -14,6 +14,36 @@ type PillProps = {
   activeIndex?: number;
 };
 
+const updateIndicator = (
+  activeLinkElement: HTMLAnchorElement | null,
+  indicatorElement: HTMLLIElement | null,
+) => {
+  if (activeLinkElement && indicatorElement) {
+    indicatorElement.style.transform = `translateX(${Math.max(activeLinkElement.offsetLeft, 0)}px)`;
+    indicatorElement.style.width = `${activeLinkElement.offsetWidth}px`;
+  }
+};
+
+const getActiveLinkIndex = (
+  items: PillProps['items'],
+  activeIndex: number | undefined,
+  pathName: string,
+) => {
+  if (activeIndex !== undefined) return activeIndex;
+  const exactMatchIndex = items.findIndex((item) => pathName === item.url);
+  if (exactMatchIndex !== -1) return exactMatchIndex;
+
+  const sortedItems = [...items].sort((a, b) => (b.url?.length || 0) - (a.url?.length || 0));
+
+  for (let i = 0; i < sortedItems.length; i++) {
+    if (pathName.startsWith(sortedItems[i].url || '')) {
+      return items.indexOf(sortedItems[i]);
+    }
+  }
+
+  return -1;
+};
+
 export default function Pill({ className, items, activeIndex }: PillProps) {
   const pathName = usePathname();
   const indicatorRef = useRef<HTMLLIElement>(null);
@@ -22,42 +52,8 @@ export default function Pill({ className, items, activeIndex }: PillProps) {
 
   useLayoutEffect(() => {
     const activeLinkIndex = getActiveLinkIndex(items, activeIndex, pathName);
-    console.log(activeLinkIndex);
     updateIndicator(linkRefs.current[activeLinkIndex]?.current, indicatorRef.current);
   }, [items, pathName, activeIndex]);
-
-  const getActiveLinkIndex = (
-    items: PillProps['items'],
-    activeIndex: number | undefined,
-    pathName: string,
-  ) => {
-    if (activeIndex !== undefined) return activeIndex;
-    const exactMatchIndex = items.findIndex((item) => pathName === item.url);
-    if (exactMatchIndex !== -1) return exactMatchIndex;
-
-    const sortedItems = [...items].sort((a, b) => (b.url?.length || 0) - (a.url?.length || 0));
-
-    for (let i = 0; i < sortedItems.length; i++) {
-      if (pathName.startsWith(sortedItems[i].url || '')) {
-        return items.indexOf(sortedItems[i]);
-      }
-    }
-
-    return -1;
-  };
-
-  const updateIndicator = (
-    activeLinkElement: HTMLAnchorElement | null,
-    indicatorElement: HTMLLIElement | null,
-  ) => {
-    if (activeLinkElement && indicatorElement) {
-      indicatorElement.style.transform = `translateX(${Math.max(
-        activeLinkElement.offsetLeft,
-        0,
-      )}px)`;
-      indicatorElement.style.width = `${activeLinkElement.offsetWidth}px`;
-    }
-  };
 
   return (
     <div
@@ -69,7 +65,7 @@ export default function Pill({ className, items, activeIndex }: PillProps) {
       <ul className="relative flex flex-row gap-4">
         <li
           ref={indicatorRef}
-          className="absolute -z-10 h-full w-24 rounded-full bg-white transition-transform duration-300 ease-in-out sm:w-full"
+          className="absolute -z-10 h-full w-24 rounded-full bg-white transition-transform duration-300 ease-in-out sm:w-32"
         />
         {items.map((item, index) => {
           const { url, name, icon, onClick } = item;

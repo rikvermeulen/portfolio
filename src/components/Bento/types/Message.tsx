@@ -99,51 +99,73 @@ export default function Message() {
     e.preventDefault();
 
     playSound('send');
-    setChat((prevChat) => [...prevChat, { sender: 'user', text: message }]);
+    addUserMessageToChat();
 
-    if (
-      (step === 2 && !isValidPhoneNumber(message)) ||
-      (step === 3 && !isValidEmail(message)) ||
-      !hasEnoughText(message)
-    ) {
-      let errorMessage = 'Your message is too short. Please provide more details.';
-      if (step === 2) errorMessage = 'Please provide a valid phone number.';
-      if (step === 3) errorMessage = 'Please provide a valid email address.';
-
-      setTimeout(() => {
-        playSound('receive');
-        addAdminMessage(errorMessage);
-      }, 1000);
+    if (isInvalidInput()) {
+      sendErrorMessage();
     } else {
-      const questionAndAction = questionsAndActions[step];
-      const newUserData = questionAndAction.action(message, userData);
-      setUserData(newUserData);
-
-      if (step < questionsAndActions.length - 1) {
-        setStep((prevStep) => prevStep + 1);
-
-        const nextQuestion = questionsAndActions[step + 1].question;
-
-        const addAdminMessageWithDelay = (message: string, delay: number) => {
-          setTimeout(() => {
-            playSound('receive');
-            setChat((prevChat) => [...prevChat, { sender: 'admin', text: message }]);
-          }, delay);
-        };
-
-        if (Array.isArray(nextQuestion)) {
-          nextQuestion.forEach((q, i) => {
-            addAdminMessageWithDelay(q, (i + 1) * 1000);
-          });
-        } else {
-          addAdminMessageWithDelay(nextQuestion, 1000);
-        }
-      } else {
-        sendData(newUserData);
-      }
+      processUserInputAndMoveToNextStep();
     }
 
     setMessage('');
+  };
+
+  const addUserMessageToChat = () => {
+    setChat((prevChat) => [...prevChat, { sender: 'user', text: message }]);
+  };
+
+  const isInvalidInput = () => {
+    return (
+      (step === 2 && !isValidPhoneNumber(message)) ||
+      (step === 3 && !isValidEmail(message)) ||
+      !hasEnoughText(message)
+    );
+  };
+
+  const sendErrorMessage = () => {
+    const errorMessage = getErrorMessage();
+
+    setTimeout(() => {
+      playSound('receive');
+      addAdminMessage(errorMessage);
+    }, 1000);
+  };
+
+  const getErrorMessage = () => {
+    if (step === 2) return 'Please provide a valid phone number.';
+    if (step === 3) return 'Please provide a valid email address.';
+    return 'Your message is too short. Please provide more details.';
+  };
+
+  const processUserInputAndMoveToNextStep = () => {
+    const { action } = questionsAndActions[step];
+    const newUserData = action(message, userData);
+
+    setUserData(newUserData);
+
+    if (step < questionsAndActions.length - 1) {
+      setStep((prevStep) => prevStep + 1);
+      sendNextQuestion();
+    } else {
+      sendData(newUserData);
+    }
+  };
+
+  const sendNextQuestion = () => {
+    const nextQuestion = questionsAndActions[step + 1].question;
+
+    if (Array.isArray(nextQuestion)) {
+      nextQuestion.forEach((q, i) => addAdminMessageWithDelay(q, (i + 1) * 1000));
+    } else {
+      addAdminMessageWithDelay(nextQuestion, 1000);
+    }
+  };
+
+  const addAdminMessageWithDelay = (message: string, delay: number) => {
+    setTimeout(() => {
+      playSound('receive');
+      addAdminMessage(message);
+    }, delay);
   };
 
   const chatContent = useMemo(
@@ -175,7 +197,7 @@ export default function Message() {
   return (
     <Bento size="2x1" className="bento relative flex max-h-[346px] flex-col">
       <div
-        className={`absolute z-0 h-full w-full bg-white/70 backdrop-blur-md transition-opacity duration-500 ease-in-out ${
+        className={`absolute z-0 h-full w-full bg-white/70 backdrop-blur-md transition-opacity duration-300 ${
           showMenu ? 'z-30 opacity-100' : 'opacity-0'
         }`}
       ></div>
@@ -201,12 +223,11 @@ export default function Message() {
         {socials.map((social, index) => (
           <li
             key={index}
-            className={cc('mb-4')}
+            className={cc('mb-4 transition-transform duration-500 ease-in-out')}
             style={{
               transform: showMenu
                 ? `translateY(0)`
                 : `translateY(${-1 * (socials.length - 1 - index) * -20}px)`,
-              transition: 'transform 0.3s ease-in-out',
             }}
           >
             <a href={social.url} className="flex gap-4">
