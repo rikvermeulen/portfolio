@@ -12,22 +12,23 @@ export const metadata: Metadata = {
   description: 'Welcome to my portfolio',
 };
 
-type ProjectProps = {
-  id: string;
-  slug: string;
-  title: string;
-  description: string;
-  role: string;
+const BREAKPOINTS = {
+  768: { columns: 2, cellGap: 16 },
+  1536: { columns: 4, cellGap: 16 },
 };
 
 export default function Work() {
   return (
     <main className="h-screen">
       <Container>
-        <section className="relative pb-24 pt-16 md:pt-32">
-          <Grid>
+        <section className="relative mx-auto max-w-[710px] pb-24 pt-16 md:pt-32 2xl:max-w-none">
+          <Grid breakpoints={BREAKPOINTS} className="xl:grid-cols-2">
             {allProjects.map((project) => (
-              <Bento size="2x2" className="bento relative z-0 bg-gray-100 p-5" key={project._id}>
+              <Bento
+                size="2x2"
+                className="bento relative z-0 !row-span-1 bg-gray-100 p-5 md:!row-span-2"
+                key={project._id}
+              >
                 <Link href={project.slug}>
                   <div className="absolute inset-0 -z-10">
                     <Image
@@ -45,12 +46,16 @@ export default function Work() {
                           src={`/images/projects/${project.title}/logo.png`}
                           className={`rounded-md drop-shadow-md transition-transform duration-300 ease-in-out hover:scale-105`}
                           alt="media"
-                          width={40}
-                          height={40}
+                          width={32}
+                          height={32}
                         />
-                        <h2 className="text-2xl mix-blend-difference">{project.title}</h2>
+                        <h2 className="text-xl mix-blend-difference md:text-2xl">
+                          {project.title}
+                        </h2>
                       </div>
-                      <p className="mt-3 max-w-sm mix-blend-difference">{project.description}</p>
+                      <p className="mt-3 max-w-sm text-xs mix-blend-difference md:text-base">
+                        {project.description}
+                      </p>
                     </div>
                     <div className="text-white mix-blend-difference">
                       <p className="font-bold ">My role</p>

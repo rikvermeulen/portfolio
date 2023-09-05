@@ -5,8 +5,11 @@ import BentoGrid from '@bentogrid/core';
 
 import { BentoSkeleton } from '@/components/BentoSkeleton';
 
+import cc from '@/lib/cc';
+
 interface GridProps {
   children: React.ReactNode;
+  breakpoints?: Record<number, { columns: number; cellGap: number }>;
   className?: string;
 }
 
@@ -16,7 +19,7 @@ const BREAKPOINTS = {
   1536: { columns: 4, cellGap: 16 },
 };
 
-export default function Grid({ className = '', children }: GridProps) {
+export default function Grid({ className = '', children, breakpoints = BREAKPOINTS }: GridProps) {
   const gridRef = useRef<HTMLDivElement>(null);
   const [isLoaded, setIsLoaded] = useState(false);
 
@@ -31,16 +34,21 @@ export default function Grid({ className = '', children }: GridProps) {
       target: currentGrid,
       columns: 1,
       breakpointReference: 'window',
-      breakpoints: BREAKPOINTS,
+      breakpoints: breakpoints,
     });
 
     setIsLoaded(true);
-  }, []);
+  }, [breakpoints]);
 
   return (
     <>
       {!isLoaded && (
-        <div className="m-auto grid h-full w-full grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
+        <div
+          className={cc(
+            className,
+            'm-auto grid h-full w-full grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4',
+          )}
+        >
           {childrenArray.map((_, index) => (
             <BentoSkeleton
               key={index}
