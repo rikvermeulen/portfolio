@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { allProjects } from 'contentlayer/generated';
+import { allProjects } from '@/contentlayer/generated';
 
 import Bento from '@/components/Bento/Bento';
 import Container from '@/components/Container';
@@ -45,43 +45,41 @@ export default async function Project({ params }: ProjectProps) {
   }
 
   return (
-    <main className="mt-16 rounded-3xl ">
-      <article className="relative mx-auto max-w-screen-md px-6 py-24 md:pt-32">
-        <div className=" mb-8">
-          <h1 className="mb-2 text-4xl font-medium">{project.title}</h1>
-          {project.description && (
-            <p className="mt-0 text-xl text-slate-700 dark:text-slate-200">{project.description}</p>
-          )}
+    <main className="py-24 md:pt-32">
+      <article className="relative mx-auto max-w-4xl px-6">
+        <div className=" mb-8 border-b border-solid border-primary pb-3">
+          <h1 className="mb-2 text-[40px] font-bold">{project.title}</h1>
+          {project.description && <p className="mt-0 text-xl text-[#777]">{project.subtitle}</p>}
         </div>
-        <div className="grid grid-cols-7">
-          <div className="col-span-7 grid grid-cols-1 sm:grid-cols-3 md:col-span-2 md:grid-cols-1">
-            <div className="col-span-1 mb-6">
+        <div className="grid grid-cols-7 gap-10">
+          <div className="order-2 col-span-7 grid grid-cols-1 gap-6 sm:grid-cols-3 md:col-span-2 md:grid-cols-1">
+            <div className="col-span-1">
               <p className="mb-4 text-xs font-semibold uppercase text-dark_grey">My role</p>
-              <p className="text-base leading-relaxed">{project.role}</p>
+              <p className="text-base leading-loose">{project.role}</p>
             </div>
-            <div className="col-span-1 mb-6">
+            <div className="col-span-1">
               <p className="mb-4 text-xs font-semibold uppercase text-dark_grey">Tools</p>
-              <p className="text-base leading-relaxed">{project.tools}</p>
+              <p className="text-base leading-loose">{project.tools}</p>
             </div>
-            <div className="col-span-1 mb-6">
+            <div className="col-span-1">
               <p className="mb-4 text-xs font-semibold uppercase text-dark_grey">Timeline</p>
-              <p className="text-base leading-relaxed">{project.timeline}</p>
+              <p className="text-base leading-loose">{project.timeline}</p>
             </div>
           </div>
-          <div className="col-span-7 md:col-span-5">
+          <div className="order-1 col-span-7 md:order-3 md:col-span-5">
             <div className="mb-6">
               <p className="mb-4 text-xs font-semibold uppercase text-dark_grey">Description</p>
-              <p className="text-base leading-relaxed">{project.description}</p>
+              <p className="text-base leading-loose">{project.description}</p>
             </div>
             <div className="mb-6">
               <p className="mb-4 text-xs font-semibold uppercase text-dark_grey">Context</p>
-              <p className="text-base leading-relaxed">{project.context}</p>
+              <p className="text-base leading-loose">{project.context}</p>
             </div>
           </div>
         </div>
       </article>
-      <Container>
-        <section>
+      <section className="my-20">
+        <Container>
           <Grid>
             <Bento size="1x2" className="bento bg-gray-100">
               <p></p>
@@ -99,9 +97,9 @@ export default async function Project({ params }: ProjectProps) {
               <p></p>
             </Bento>
           </Grid>
-        </section>
-      </Container>
-      <section className="mx-auto max-w-screen-md px-6 py-24">
+        </Container>
+      </section>
+      <section className="mx-auto max-w-4xl px-6">
         <Mdx code={project.body.code} />
       </section>
     </main>
