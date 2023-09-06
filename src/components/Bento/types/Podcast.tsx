@@ -7,6 +7,7 @@ import AudioPlayer from '@/components/AudioPlayer';
 import Icon from '@/components/Icons/Icon';
 
 import cc from '@/lib/cc';
+import truncateText from '@/utils/truncateText';
 
 import Bento from '../Bento';
 
@@ -104,7 +105,7 @@ const Podcast: React.FC<PodcastProps> = ({ playlist = [], className }) => {
         </div>
         <div className="mt-6 flex flex-col text-sm text-white">
           <div className="flex items-center gap-2">
-            <p className="font-bold">{currentTrack?.name}</p>
+            <p className="font-bold">{truncateText(currentTrack?.name || '', 40)}</p>
             {currentTrack?.explicit && <Icon type="explicit" className="w-2.5" />}
           </div>
           <div className="relative -top-1 text-white/70">Podcast</div>
