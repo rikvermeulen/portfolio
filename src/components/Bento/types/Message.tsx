@@ -223,11 +223,11 @@ export default function Message() {
         {socials.map((social, index) => (
           <li
             key={index}
-            className={cc('mb-4 transition-transform duration-500 ease-in-out')}
+            className={cc('mb-4 transition-transform duration-[350ms] ease-in-out')}
             style={{
               transform: showMenu
                 ? `translateY(0)`
-                : `translateY(${-1 * (socials.length - 1 - index) * -20}px)`,
+                : `translateY(${-1 * (socials.length - 1 - index) * -40}px)`,
             }}
           >
             <a href={social.url} className="flex gap-4">

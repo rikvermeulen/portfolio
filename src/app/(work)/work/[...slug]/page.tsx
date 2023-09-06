@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import { allProjects } from '@/contentlayer/generated';
 
 import Bento from '@/components/Bento/Bento';
+import { ButtonSecondary } from '@/components/Button';
 import Container from '@/components/Container';
 import Grid from '@/components/Grid';
 import { Mdx } from '@/components/mdx-components';
@@ -74,7 +75,10 @@ export default async function Project({ params }: ProjectProps) {
               </div>
               <div className="mb-6">
                 <p className="mb-4 text-xs font-semibold uppercase text-dark_grey">Context</p>
-                <p className="text-base leading-loose">{project.context}</p>
+                <p className="mb-8 text-base leading-loose">{project.context}</p>
+                {project.website && (
+                  <ButtonSecondary label="View on Github" href={project.website} external />
+                )}
               </div>
             </div>
           </div>

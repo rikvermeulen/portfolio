@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Button from '@/components/Button';
+import { ButtonPrimary } from '@/components/Button';
 import Icon from '@/components/Icons/Icon';
 
 import cc from '@/lib/cc';
@@ -55,7 +55,7 @@ export default function Modal({
           ></input>
         </div>
         <div className="flex justify-between">
-          <Button
+          <ButtonPrimary
             className="border-[#4E5152] bg-[#0F1314] text-white backdrop-blur-xl hover:bg-[#090b0b]"
             label="Submit"
             onClick={handleSubmit}

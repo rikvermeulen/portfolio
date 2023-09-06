@@ -1,10 +1,10 @@
 'use client';
 
-import { createContext, ReactNode, useContext, useEffect, useRef } from 'react';
+import { createContext, ReactNode, useContext, useEffect } from 'react';
 
 interface SoundContextProps {
   playSound: (src: string) => void;
-  stopSound: () => void;
+  stopAllSounds: () => void;
 }
 
 const SoundContext = createContext<SoundContextProps | undefined>(undefined);
@@ -24,9 +24,9 @@ interface SoundProviderProps {
 const audioPool: { [key: string]: HTMLAudioElement } = {};
 
 export const SoundProvider: React.FC<SoundProviderProps> = ({ children }) => {
-  const currentSoundRef = useRef<HTMLAudioElement | null>(null);
+  const playingSounds: Set<HTMLAudioElement> = new Set();
 
-  const getAudio = (fileName: string): HTMLAudioElement => {
+  const getOrCreateAudio = (fileName: string): HTMLAudioElement => {
     if (!audioPool[fileName]) {
       audioPool[fileName] = new Audio(`/sounds/${fileName}.mp3`);
     }
@@ -34,26 +34,27 @@ export const SoundProvider: React.FC<SoundProviderProps> = ({ children }) => {
   };
 
   const playSound = (fileName: string) => {
-    if (currentSoundRef.current) {
-      currentSoundRef.current.pause();
-    }
-    const audio = getAudio(fileName);
-    currentSoundRef.current = audio;
+    const audio = getOrCreateAudio(fileName).cloneNode(true) as HTMLAudioElement;
+    audio.addEventListener('ended', () => {
+      playingSounds.delete(audio);
+    });
+
     audio.play();
+    playingSounds.add(audio);
   };
 
-  const stopSound = () => {
-    if (currentSoundRef.current) {
-      currentSoundRef.current.pause();
-      currentSoundRef.current = null;
-    }
+  const stopAllSounds = () => {
+    playingSounds.forEach((audio) => audio.pause());
+    playingSounds.clear();
   };
 
   useEffect(() => {
     return () => {
-      stopSound();
+      stopAllSounds();
     };
   }, []);
 
-  return <SoundContext.Provider value={{ playSound, stopSound }}>{children}</SoundContext.Provider>;
+  return (
+    <SoundContext.Provider value={{ playSound, stopAllSounds }}>{children}</SoundContext.Provider>
+  );
 };

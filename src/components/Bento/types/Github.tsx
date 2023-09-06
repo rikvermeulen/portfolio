@@ -1,7 +1,7 @@
 import Image from 'next/image';
 
 import Bento from '@/components/Bento/Bento';
-import Button from '@/components/Button';
+import { ButtonPrimary } from '@/components/Button';
 
 import { type ContributionDay, type MonthlyContributions } from '@/utils/contributions';
 
@@ -60,7 +60,11 @@ export default async function Github({
         </a>
       </header>
       <MonthlyContribution contributions={montly} />
-      <Button className="mt-2 self-start" label="Follow" href="https://github.com/rikvermeulen" />
+      <ButtonPrimary
+        className="mt-2 self-start"
+        label="Follow"
+        href="https://github.com/rikvermeulen"
+      />
     </Bento>
   );
 }

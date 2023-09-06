@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Image from 'next/image';
 import { PropsShows } from '@/types';
 
-import Button from '@/components/Button';
+import { ButtonPrimary } from '@/components/Button';
 import Icon from '@/components/Icons/Icon';
 import Modal from '@/components/shows/Modal';
 import WatchList from '@/components/shows/WatchList';
@@ -103,7 +103,7 @@ export default function Shows({ current, shows, movies }: PropsShows) {
         </div>
       </div>
       <footer>
-        <Button
+        <ButtonPrimary
           label="Your picks"
           className="border-[#4E5152] bg-[#1F2324] text-white backdrop-blur-xl hover:bg-[#2b3031]"
           onClick={toggleModal}
