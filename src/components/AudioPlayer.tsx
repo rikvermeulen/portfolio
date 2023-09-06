@@ -89,13 +89,6 @@ const AudioPlayer = ({
     [currentTrackIndex, playlistTracks, isPlaying, audioRef],
   );
 
-  const immediatePause = () => {
-    if (audioRef.current) {
-      audioRef.current.pause();
-      setIsPlaying(false);
-    }
-  };
-
   const playOrPause = () => {
     if (audioRef.current) {
       if (audioRef.current.paused) {
@@ -105,7 +98,6 @@ const AudioPlayer = ({
         setIsPlaying(true);
       } else {
         fadeOut();
-        // immediatePause();
       }
     }
   };
@@ -126,17 +118,23 @@ const AudioPlayer = ({
   useEffect(() => {
     if (!audioRef.current) return;
 
+    const audioElement = audioRef.current;
+
     const newPreviewUrl = previewUrl || '';
-    audioRef.current.src = newPreviewUrl;
-    audioRef.current.load();
+    audioElement.src = newPreviewUrl;
+    audioElement.load();
 
     if (isPlaying) {
-      audioRef.current.play().catch((error) => {
+      audioElement.play().catch((error) => {
         console.error('Error playing the audio:', error);
       });
     }
 
-    audioRef.current.addEventListener('timeupdate', handleTimeUpdate);
+    audioElement.addEventListener('timeupdate', handleTimeUpdate);
+
+    return () => {
+      audioElement.removeEventListener('timeupdate', handleTimeUpdate);
+    };
   }, [previewUrl, isPlaying, handleTimeUpdate]);
 
   useEffect(() => {

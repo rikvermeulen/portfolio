@@ -10,6 +10,8 @@ import { env } from '@/env.mjs';
 
 import Icon from '@/components/Icons/Icon';
 
+import { useSound } from '@/utils/sound';
+
 import Bento from '../Bento';
 
 mapboxgl.accessToken = env.NEXT_PUBLIC_MAPBOX_TOKEN;
@@ -20,6 +22,8 @@ function FindMe() {
 
   const latitude = 51.8738;
   const longitude = 5.07397;
+
+  const { playSound } = useSound();
 
   useEffect(() => {
     if (mapContainerRef.current) {
@@ -86,6 +90,7 @@ function FindMe() {
     if (mapRef.current) {
       const currentZoom = mapRef.current.getZoom();
       if (currentZoom >= 12) return;
+      playSound('tap');
       mapRef.current.flyTo({
         center: [longitude, latitude],
         zoom: currentZoom + 3,
@@ -98,6 +103,7 @@ function FindMe() {
   function handleZoomOut() {
     if (mapRef.current) {
       const currentZoom = mapRef.current.getZoom();
+      playSound('tap');
       mapRef.current.flyTo({
         center: [longitude, latitude],
         zoom: currentZoom - 3,
@@ -112,7 +118,7 @@ function FindMe() {
       <div ref={mapContainerRef} style={{ width: '100%', height: '100%' }} />
       <div className="absolute top-0 z-10">
         <Image
-          className=" cloud-one -translate-x-full -translate-y-32 transition-transform duration-[3s] ease-in-out"
+          className=" cloud-one -translate-x-full -translate-y-32 contrast-150 transition-transform ease-in-out"
           src="/images/cloud.png"
           width={300}
           height={300}
@@ -120,21 +126,31 @@ function FindMe() {
         />
 
         <Image
-          className="cloud-two -translate-x-full -translate-y-32 transition-transform duration-[4s] ease-in-out"
+          className="cloud-two -translate-x-full -translate-y-32 contrast-150 transition-transform ease-in-out"
           src="/images/cloud.png"
           width={300}
           height={300}
           alt="cloud"
         />
       </div>
-      <div className="group absolute bottom-5 right-5 z-50 flex gap-3 rounded-xl bg-white/70 px-2.5 py-1.5">
-        <button onClick={handleZoomOut} id="minus" aria-label="Minus - zoom out">
+      <div className="group absolute bottom-5 right-5 z-50 flex">
+        <button
+          onClick={handleZoomOut}
+          id="minus"
+          aria-label="Minus - zoom out"
+          className="rounded-s-xl bg-white/70 px-2 py-1.5 active:bg-slate-200/50"
+        >
           <Icon
             type="minus"
             className="w-3 opacity-60 transition-opacity duration-300 group-hover:opacity-100"
           />
         </button>
-        <button onClick={handleZoomIn} id="plus" aria-label="Plud - zoom in">
+        <button
+          onClick={handleZoomIn}
+          id="plus"
+          aria-label="Plud - zoom in"
+          className="rounded-e-xl bg-white/70 px-2 py-1.5 active:bg-slate-200/50"
+        >
           <Icon
             type="plus"
             className="w-3 opacity-60 transition-opacity duration-300 group-hover:opacity-100"

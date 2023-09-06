@@ -2,43 +2,18 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
+import { PropsShows } from '@/types';
 
-import Button from '@/components/Button';
+import { ButtonPrimary } from '@/components/Button';
 import Icon from '@/components/Icons/Icon';
 import Modal from '@/components/shows/Modal';
 import WatchList from '@/components/shows/WatchList';
 
+import { hasEnoughText, isValidEmail } from '@/utils/validation';
+
 import Bento from '../Bento';
 
 const imageURL = 'https://image.tmdb.org/t/p/original';
-
-type Episode = {
-  still_path: string;
-  name: string;
-  season_number: number;
-  episode_number: number;
-};
-
-type ShowOrMovie = {
-  backdrop_path: string;
-  name?: string;
-  title?: string;
-  overview: string;
-};
-
-type PropsShows = {
-  current: Episode;
-  movies: ShowOrMovie[];
-  shows: ShowOrMovie[];
-};
-
-type RecommendationModalProps = {
-  isVisible: boolean;
-  toggleModal: () => void;
-  formData: { email: string; recommendation: string };
-  setFormData: React.Dispatch<React.SetStateAction<any>>;
-  handleSubmit: () => void;
-};
 
 export default function Shows({ current, shows, movies }: PropsShows) {
   const [isModalVisible, setModalVisible] = useState(false);
@@ -55,6 +30,22 @@ export default function Shows({ current, shows, movies }: PropsShows) {
   };
 
   const handleSubmit = async () => {
+    let isValid = true;
+
+    if (!isValidEmail(formData.email)) {
+      alert('Invalid email format');
+      isValid = false;
+    }
+
+    if (!hasEnoughText(formData.recommendation)) {
+      alert('Recommendation must have at least 2 characters');
+      isValid = false;
+    }
+
+    if (!isValid) {
+      return;
+    }
+
     try {
       const res = await fetch(`/api/recommendation`, {
         method: 'POST',
@@ -106,13 +97,13 @@ export default function Shows({ current, shows, movies }: PropsShows) {
           </div>
           <Icon
             type="list"
-            className="cursor-pointer fill-white"
+            className="w-5 cursor-pointer fill-white"
             onClick={() => setListVisible(!isListVisible)}
           />
         </div>
       </div>
       <footer>
-        <Button
+        <ButtonPrimary
           label="Your picks"
           className="border-[#4E5152] bg-[#1F2324] text-white backdrop-blur-xl hover:bg-[#2b3031]"
           onClick={toggleModal}

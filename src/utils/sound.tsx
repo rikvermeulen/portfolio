@@ -1,10 +1,10 @@
 'use client';
 
-import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
+import { createContext, ReactNode, useContext, useEffect } from 'react';
 
 interface SoundContextProps {
   playSound: (src: string) => void;
-  stopSound: () => void;
+  stopAllSounds: () => void;
 }
 
 const SoundContext = createContext<SoundContextProps | undefined>(undefined);
@@ -21,25 +21,40 @@ interface SoundProviderProps {
   children: ReactNode;
 }
 
-export const SoundProvider: React.FC<SoundProviderProps> = ({ children }) => {
-  const [sound, setSound] = useState<HTMLAudioElement | null>(null);
+const audioPool: { [key: string]: HTMLAudioElement } = {};
 
-  const playSound = (fileName: string) => {
-    const path = `/sounds/${fileName}.mp3`;
-    const audio = new Audio(path);
-    setSound(audio);
-    audio.play();
+export const SoundProvider: React.FC<SoundProviderProps> = ({ children }) => {
+  const playingSounds: Set<HTMLAudioElement> = new Set();
+
+  const getOrCreateAudio = (fileName: string): HTMLAudioElement => {
+    if (!audioPool[fileName]) {
+      audioPool[fileName] = new Audio(`/sounds/${fileName}.mp3`);
+    }
+    return audioPool[fileName];
   };
 
-  const stopSound = () => {
-    if (sound) sound.pause();
+  const playSound = (fileName: string) => {
+    const audio = getOrCreateAudio(fileName).cloneNode(true) as HTMLAudioElement;
+    audio.addEventListener('ended', () => {
+      playingSounds.delete(audio);
+    });
+
+    audio.play();
+    playingSounds.add(audio);
+  };
+
+  const stopAllSounds = () => {
+    playingSounds.forEach((audio) => audio.pause());
+    playingSounds.clear();
   };
 
   useEffect(() => {
     return () => {
-      stopSound();
+      stopAllSounds();
     };
-  }, [sound]);
+  }, []);
 
-  return <SoundContext.Provider value={{ playSound, stopSound }}>{children}</SoundContext.Provider>;
+  return (
+    <SoundContext.Provider value={{ playSound, stopAllSounds }}>{children}</SoundContext.Provider>
+  );
 };

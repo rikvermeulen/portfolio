@@ -92,7 +92,7 @@ const Photos: React.FC<AlbumsProps> = ({ albums }) => {
         {mediaFiles.map(renderMedia)}
         <div className="z-20 flex items-center justify-center">
           <Pill
-            className=" absolute -bottom-16 transition-[bottom] duration-500 ease-in-out will-change-contents group-hover:bottom-5"
+            className=" absolute -bottom-16 transition-[bottom] duration-300 ease-in-out will-change-contents group-hover:bottom-5"
             items={albumItems}
             activeIndex={activeAlbumIndex}
           />
