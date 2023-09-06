@@ -1,6 +1,6 @@
 'use client';
 
-import { SetStateAction, useEffect, useMemo, useRef, useState } from 'react';
+import { Ref, SetStateAction, useEffect, useMemo, useRef, useState } from 'react';
 import Image from 'next/image';
 import { IMessage } from '@/types';
 
@@ -15,6 +15,14 @@ import { initialMessages, questionsAndActions, socials } from '@/content/message
 
 import Bento from '../Bento';
 
+const disableInputs = (inputRef: any, buttonRef: any, disabled: boolean) => {
+  if (inputRef.current && buttonRef.current) {
+    inputRef.current.disabled = disabled;
+    buttonRef.current.disabled = disabled;
+    inputRef.current.style.opacity = disabled ? '0.2' : '1';
+  }
+};
+
 export default function Message() {
   // State
   const [step, setStep] = useState<number>(0);
@@ -27,6 +35,8 @@ export default function Message() {
   const chatRef = useRef<HTMLDivElement>(null);
   const menuRef = useRef(null);
 
+  const inputRef = useRef<HTMLInputElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
   // Sounds
   const { playSound } = useSound();
 
@@ -34,19 +44,26 @@ export default function Message() {
 
   const initialChatLength = 2;
 
+  const toggleInputs = (disabled: boolean) => {
+    disableInputs(inputRef, buttonRef, disabled);
+  };
+
   const sendData = async (data: any) => {
     try {
       const res = await fetch(`/api/message`, { method: 'POST', body: JSON.stringify(data) });
       if (!res.ok) throw new Error();
 
       addAdminMessage('Thanks 🙏 I will contact you soon');
+      toggleInputs(true);
     } catch (error) {
       alert('An error occurred. Please try again later.');
     }
   };
 
   const addAdminMessage = (text: string) => {
+    toggleInputs(true);
     setChat((prevChat) => [...prevChat, { sender: 'admin', text }]);
+    toggleInputs(false);
   };
 
   useEffect(() => {
@@ -162,9 +179,11 @@ export default function Message() {
   };
 
   const addAdminMessageWithDelay = (message: string, delay: number) => {
+    toggleInputs(true);
     setTimeout(() => {
       playSound('receive');
       addAdminMessage(message);
+      toggleInputs(false);
     }, delay);
   };
 
@@ -259,6 +278,7 @@ export default function Message() {
           {step < questionsAndActions.length && (
             <div className="flex max-h-9 w-full rounded-full border border-solid border-[#EAEBED]">
               <input
+                ref={inputRef}
                 className="mx-3 w-full bg-transparent text-base outline-none sm:text-sm"
                 placeholder="Type your response here..."
                 value={message}
@@ -266,6 +286,7 @@ export default function Message() {
                 onFocus={handleInputFocus}
               />
               <button
+                ref={buttonRef}
                 className={`flex rounded-full p-1 transition-opacity duration-300 ${
                   !hasEnoughText(message) ? 'cursor-not-allowed opacity-50' : ''
                 }`}
