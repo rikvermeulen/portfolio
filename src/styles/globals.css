@@ -206,6 +206,7 @@
   animation:
     moveCloud linear 15s infinite,
     fadeInOut 15s infinite;
+  animation-delay: 8s;
 }
 
 @keyframes moveCloud {
