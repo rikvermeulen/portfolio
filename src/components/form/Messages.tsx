@@ -65,8 +65,8 @@ export const UserMessage = ({ message, index }: { message: IMessage; index: numb
       </div>
       <div
         className={cc(
-          isDelivered ? 'opacity-100' : 'opacity-0',
-          'mt-1 self-end text-xs text-gray-400 transition-opacity duration-200',
+          isDelivered ? 'opacity-100 scale-100' : 'opacity-0 scale-50',
+          'mt-1 self-end text-xs text-gray-400 transition-[opacity,transform] duration-200',
         )}
       >
         Delivered
