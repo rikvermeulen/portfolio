@@ -21,20 +21,20 @@ function FrozenRouter(props: PropsWithChildren<{}>) {
 export function Animate({ children }: PropsWithChildren) {
   const pathname = usePathname();
 
-  // const onTheRight = { y: '100%', background: '#000' };
-  // const inTheCenter = { y: 0, background: '#fff' };
-  // const onTheLeft = { y: '0', background: 'red', borderRadius: '40px', scale: 0.9 };
+  const onTheRight = { y: '100%', background: '#fff' };
+  const inTheCenter = { y: 0, background: '#fff' };
+  const onTheLeft = { y: '0', background: '#fff', scale: 0.9, opacity: 0.5 };
 
-  // const transition = { duration: 1.0, ease: 'easeInOut' };
+  const transition = { duration: 0.8, ease: 'easeInOut' };
 
   return (
     <AnimatePresence initial={false} mode="popLayout">
       <motion.div
         key={pathname}
-        // initial={onTheRight}
-        // animate={inTheCenter}
-        // exit={onTheLeft}
-        // transition={transition}
+        initial={onTheRight}
+        animate={inTheCenter}
+        exit={onTheLeft}
+        transition={transition}
       >
         <FrozenRouter>{children}</FrozenRouter>
       </motion.div>

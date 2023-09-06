@@ -97,7 +97,7 @@ export default function Shows({ current, shows, movies }: PropsShows) {
           </div>
           <Icon
             type="list"
-            className="cursor-pointer fill-white"
+            className="w-5 cursor-pointer fill-white"
             onClick={() => setListVisible(!isListVisible)}
           />
         </div>

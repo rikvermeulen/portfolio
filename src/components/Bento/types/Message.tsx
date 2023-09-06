@@ -205,7 +205,7 @@ export default function Message() {
             {message.sender === 'admin' ? (
               <AdminMessage key={index} message={message} isSameSender={isSameSender} />
             ) : (
-              <UserMessage key={index} message={message} />
+              <UserMessage key={index} message={message} index={index} />
             )}
           </div>
         );
