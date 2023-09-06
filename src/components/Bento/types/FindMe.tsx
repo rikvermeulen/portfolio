@@ -138,7 +138,7 @@ function FindMe() {
           onClick={handleZoomOut}
           id="minus"
           aria-label="Minus - zoom out"
-          className="rounded-s-lg bg-white/70 px-2 py-1.5 active:bg-slate-200/50"
+          className="rounded-s-xl bg-white/70 px-2 py-1.5 active:bg-slate-200/50"
         >
           <Icon
             type="minus"
@@ -149,7 +149,7 @@ function FindMe() {
           onClick={handleZoomIn}
           id="plus"
           aria-label="Plud - zoom in"
-          className="rounded-e-lg bg-white/70 px-2 py-1.5 active:bg-slate-200/50"
+          className="rounded-e-xl bg-white/70 px-2 py-1.5 active:bg-slate-200/50"
         >
           <Icon
             type="plus"
