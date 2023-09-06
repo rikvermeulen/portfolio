@@ -12,7 +12,7 @@ export const AdminMessage = ({
   message: IMessage;
   isSameSender: boolean;
 }) => (
-  <div className="flex gap-2">
+  <div className="flex w-full gap-2">
     {!isSameSender && (
       <Image
         src="/images/profile.png"
@@ -44,7 +44,7 @@ export const AdminMessage = ({
 
 export const UserMessage = ({ message }: { message: IMessage }) => {
   return (
-    <div className="flex flex-col">
+    <div className="flex w-full flex-col">
       <div className="relative w-fit max-w-xs self-end rounded-2xl bg-[#007AFF] px-3 py-2 text-white">
         <Icon type="tail" className="absolute -right-1 bottom-0 h-4 w-4 fill-[#007AFF]" />
         {message.text}

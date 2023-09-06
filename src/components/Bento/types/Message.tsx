@@ -205,7 +205,7 @@ export default function Message() {
       <div
         ref={chatRef}
         className="chat flex flex-col gap-4 px-5 pb-20 pt-5 transition-all"
-        style={{ overflowY: 'scroll', height: '100%' }}
+        style={{ overflowY: 'scroll', height: '100%', position: 'relative', zIndex: 1 }}
       >
         <p className="relative -top-3 flex w-full justify-center text-[10px] text-dark_grey">
           <span className="font-bold">Today: </span>
