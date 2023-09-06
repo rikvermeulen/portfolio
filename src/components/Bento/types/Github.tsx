@@ -64,6 +64,7 @@ export default async function Github({
         className="mt-2 self-start"
         label="Follow"
         href="https://github.com/rikvermeulen"
+        external
       />
     </Bento>
   );

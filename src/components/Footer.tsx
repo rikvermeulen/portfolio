@@ -1,4 +1,8 @@
+import Link from 'next/link';
+
 import Pill from '@/components/Pill';
+
+import Container from './Container';
 
 const items = [
   {
@@ -17,10 +21,18 @@ const items = [
 
 export default function Footer() {
   return (
-    <footer className="fixed bottom-5 z-50 w-full">
-      <div className="flex items-center justify-center">
+    <footer>
+      <div className="fixed bottom-5 z-50 flex w-full items-center justify-center">
         <Pill items={items} />
       </div>
+      <Container>
+        <div className="mb-8 flex justify-between font-medium text-black">
+          <p className="text-sm">Credits</p>
+          <Link className="cursor-pointer text-sm" href="/imprint">
+            Imprint & Privacy
+          </Link>
+        </div>
+      </Container>
     </footer>
   );
 }
