@@ -118,7 +118,7 @@ function FindMe() {
       <div ref={mapContainerRef} style={{ width: '100%', height: '100%' }} />
       <div className="absolute top-0 z-10">
         <Image
-          className=" cloud-one -translate-x-full -translate-y-32 contrast-150 transition-transform ease-in-out"
+          className=" cloud-one -translate-x-full -translate-y-32 contrast-125 transition-transform ease-in-out"
           src="/images/cloud.png"
           width={300}
           height={300}
@@ -126,7 +126,7 @@ function FindMe() {
         />
 
         <Image
-          className="cloud-two -translate-x-full -translate-y-32 contrast-150 transition-transform ease-in-out"
+          className="cloud-two -translate-x-full -translate-y-32 contrast-125 transition-transform ease-in-out"
           src="/images/cloud.png"
           width={300}
           height={300}

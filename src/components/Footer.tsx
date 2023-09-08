@@ -27,7 +27,7 @@ export default function Footer() {
       </div>
       <Container>
         <div className="mb-8 flex justify-between font-medium text-black">
-          <p className="text-sm">Credits</p>
+          <p className="text-sm">©2023 Rik Vermeulen</p>
           <Link className="cursor-pointer text-sm" href="/imprint">
             Imprint & Privacy
           </Link>
