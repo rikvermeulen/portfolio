@@ -3,7 +3,7 @@
 import { SetStateAction, useEffect, useMemo, useRef, useState } from 'react';
 import Image from 'next/image';
 import { IMessage } from '@/types';
-import { date } from 'zod';
+import { DateTime } from 'luxon';
 
 import { AdminMessage, UserMessage } from '@/components/form/Messages';
 import Icon from '@/components/Icons/Icon';
@@ -41,13 +41,13 @@ export default function Message() {
   // Sounds
   const { playSound } = useSound();
 
-  // const date = useFormattedDate();
-
   const initialChatLength = 2;
 
   const toggleInputs = (disabled: boolean) => {
     disableInputs(inputRef, buttonRef, disabled);
   };
+
+  const formattedCreationDate = DateTime.local().setLocale('en-US').toFormat('HH:mm');
 
   const sendData = async (data: any) => {
     try {
@@ -227,10 +227,10 @@ export default function Message() {
         className="chat flex flex-col gap-4 px-5 pb-20 pt-5 transition-all"
         style={{ overflowY: 'scroll', height: '100%', position: 'relative', zIndex: 1 }}
       >
-        {/* <p className="relative -top-3 flex w-full justify-center text-[10px] text-dark_grey">
+        <p className="relative -top-3 flex w-full justify-center text-[10px] text-dark_grey">
           <span className="font-bold">Today: </span>
-          &nbsp;{date}
-        </p> */}
+          &nbsp;{formattedCreationDate}
+        </p>
         {chatContent}
       </div>
       <ul
