@@ -78,15 +78,12 @@ function FindMe() {
 
       map.dragPan.disable();
 
-      map.on('load', function () {
-        map.resize();
-      });
-
       const handleResize = () => {
         if (mapRef.current) {
           mapRef.current.resize();
         }
       };
+
       window.addEventListener('resize', handleResize);
 
       return () => {
