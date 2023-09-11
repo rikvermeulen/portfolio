@@ -29,7 +29,7 @@ function FindMe() {
     if (mapContainerRef.current) {
       const map = new mapboxgl.Map({
         container: mapContainerRef.current,
-        style: 'mapbox://styles/rikvermeulen/cllbdz32d00tf01qp16b87izs?optimize=true',
+        style: 'mapbox://styles/rikvermeulen/cllbdz32d00tf01qp16b87izs',
         center: [longitude, latitude],
         zoom: 12,
         attributionControl: false,
