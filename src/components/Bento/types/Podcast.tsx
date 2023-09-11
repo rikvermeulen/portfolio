@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import Image from 'next/image';
 
 import AudioPlayer from '@/components/AudioPlayer';
@@ -26,7 +26,7 @@ export interface PodcastItem {
 const Podcast: React.FC<PodcastProps> = ({ playlist = [], className }) => {
   const [playlistTracks, setPlaylistTracks] = useState<PodcastItem[]>([]);
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
-  const [showPulse, setShowPulse] = useState(false);
+  const [pulsedButton, setPulsedButton] = useState<null | 'playPause' | 'previous' | 'next'>(null);
   const {
     audioRef,
     isPlaying,
@@ -43,11 +43,20 @@ const Podcast: React.FC<PodcastProps> = ({ playlist = [], className }) => {
     setCurrentTrackIndex,
   });
 
-  const handlePlayOrPause = () => {
+  const handlePlayOrPause = useCallback(() => {
     playOrPause();
-    setShowPulse(true);
-    setTimeout(() => setShowPulse(false), 600);
-  };
+    setPulsedButton('playPause');
+    setTimeout(() => setPulsedButton(null), 600);
+  }, [playOrPause, setPulsedButton]);
+
+  const handleChangeTrack = useCallback(
+    (direction: 'previous' | 'next') => {
+      changeTrack(direction);
+      setPulsedButton(direction);
+      setTimeout(() => setPulsedButton(null), 600);
+    },
+    [changeTrack, setPulsedButton],
+  );
 
   useEffect(() => {
     const tracksWithPreview = playlist.filter((track) => !!track.audio_preview_url);
@@ -58,7 +67,11 @@ const Podcast: React.FC<PodcastProps> = ({ playlist = [], className }) => {
     }
   }, [playlist]);
 
-  const currentTrack = playlistTracks[currentTrackIndex];
+  const currentTrack = useMemo(
+    () => playlistTracks[currentTrackIndex],
+    [playlistTracks, currentTrackIndex],
+  );
+
   const image = currentTrack?.images[1]?.url || '/images/noalbum.png';
 
   return (
@@ -112,17 +125,17 @@ const Podcast: React.FC<PodcastProps> = ({ playlist = [], className }) => {
         </div>
         <div className="m-auto mt-4 flex w-full max-w-[184px] items-center justify-between">
           <button
-            onClick={() => changeTrack('previous')}
-            className="w-5 fill-white"
+            onClick={() => handleChangeTrack('previous')}
+            className={cc(pulsedButton === 'previous' ? 'button' : '', 'fill-white relative')}
             name="Previous song"
             aria-label="Previous song"
           >
-            <Icon type="next" />
+            <Icon type="next" className={'relative -top-1'} />
           </button>
           <button
             onClick={handlePlayOrPause}
             className={cc(
-              showPulse ? 'button' : '',
+              pulsedButton === 'playPause' ? 'button' : '',
               'relative flex h-6 w-6 justify-center fill-white',
             )}
             name="Play / Pause"
@@ -144,13 +157,13 @@ const Podcast: React.FC<PodcastProps> = ({ playlist = [], className }) => {
             />
           </button>
           <button
-            onClick={() => changeTrack('next')}
-            className="w-5 -scale-x-100 fill-white"
+            onClick={() => handleChangeTrack('next')}
+            className={cc(pulsedButton === 'next' ? 'button' : '', '-scale-x-100 fill-white')}
             name="Next song"
             aria-label="Next song"
             title="Next song"
           >
-            <Icon type="next" />
+            <Icon type="next" className={'relative -top-1'} />
           </button>
         </div>
         <label className="mt-6 flex items-center justify-center gap-4" htmlFor="rangePodcast">
@@ -178,4 +191,4 @@ const Podcast: React.FC<PodcastProps> = ({ playlist = [], className }) => {
   );
 };
 
-export default Podcast;
+export default memo(Podcast);

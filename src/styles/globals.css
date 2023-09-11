@@ -175,13 +175,13 @@
   content: '';
   position: absolute;
   transform: scale(2);
-  top: 0;
   left: 0;
+  top: 0;
   right: 0;
   bottom: 0;
   border-radius: 50%;
   animation: pulse-bg 600ms ease-out;
-  pointer-events: none; /* Ensures this pseudo-element doesn't interfere with any interactions */
+  pointer-events: none;
 }
 
 @keyframes pulse-bg {
@@ -189,7 +189,7 @@
     background-color: transparent;
   }
   50% {
-    background-color: rgba(237, 237, 237, 0.1); /* Adjust color to your liking */
+    background-color: rgba(237, 237, 237, 0.1);
   }
   100% {
     background-color: transparent;
