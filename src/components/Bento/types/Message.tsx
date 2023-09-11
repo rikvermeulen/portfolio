@@ -3,13 +3,14 @@
 import { SetStateAction, useEffect, useMemo, useRef, useState } from 'react';
 import Image from 'next/image';
 import { IMessage } from '@/types';
+import { date } from 'zod';
 
 import { AdminMessage, UserMessage } from '@/components/form/Messages';
 import Icon from '@/components/Icons/Icon';
 
 import cc from '@/lib/cc';
 import { useSound } from '@/utils/sound';
-import useFormattedDate from '@/utils/useFormattedDate';
+// import useFormattedDate from '@/utils/useFormattedDate';
 import { hasEnoughText, isValidEmail, isValidPhoneNumber } from '@/utils/validation';
 import { initialMessages, questionsAndActions, socials } from '@/content/messages/content';
 
@@ -40,7 +41,7 @@ export default function Message() {
   // Sounds
   const { playSound } = useSound();
 
-  const date = useFormattedDate();
+  // const date = useFormattedDate();
 
   const initialChatLength = 2;
 
@@ -226,10 +227,10 @@ export default function Message() {
         className="chat flex flex-col gap-4 px-5 pb-20 pt-5 transition-all"
         style={{ overflowY: 'scroll', height: '100%', position: 'relative', zIndex: 1 }}
       >
-        <p className="relative -top-3 flex w-full justify-center text-[10px] text-dark_grey">
+        {/* <p className="relative -top-3 flex w-full justify-center text-[10px] text-dark_grey">
           <span className="font-bold">Today: </span>
           &nbsp;{date}
-        </p>
+        </p> */}
         {chatContent}
       </div>
       <ul
