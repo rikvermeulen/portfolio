@@ -46,10 +46,8 @@ const profiles: { [key in ProfileName]: Profile } = {
 
 export function getProfile(): { icon: string; label: string } {
   const now = DateTime.local();
-  const currentDay = now.toFormat('EEEE'); // Returns the full weekday name
+  const currentDay = now.toFormat('EEEE');
   const currentTime = now.hour * 60 + now.minute;
-
-  console.log(currentDay, currentTime);
 
   const profileOrder = [
     ProfileName.Personal,
@@ -86,5 +84,5 @@ export function getProfile(): { icon: string; label: string } {
     }
   }
 
-  return { icon: 'personal', label: 'Personal time' };
+  return { icon: '', label: '' };
 }
