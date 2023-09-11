@@ -92,6 +92,7 @@ export default function WatchList({
                 alt={show.name || show.title || 'media'}
                 width={70}
                 height={40}
+                loading="lazy"
               />
               <div className="flex flex-col justify-center">
                 <p className=" text-xs font-medium text-white">{show.name || show.title}</p>

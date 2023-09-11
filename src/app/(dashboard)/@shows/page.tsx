@@ -3,10 +3,11 @@ import BentoShow from '@/components/Bento/types/Shows';
 import { getFavoriteMovies, getFavoriteShow, getShowSeason } from '@/utils/tmdb';
 
 async function getData() {
-  const latestShow = await getShowSeason('2316', '7');
-
-  const shows = await getFavoriteShow();
-  const movies = await getFavoriteMovies();
+  const [latestShow, shows, movies] = await Promise.all([
+    getShowSeason('2316', '7'),
+    getFavoriteShow(),
+    getFavoriteMovies(),
+  ]);
 
   return {
     latestShow: latestShow.episodes[15],

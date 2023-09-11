@@ -86,6 +86,7 @@ export default function Shows({ current, shows, movies }: PropsShows) {
             alt="media"
             width={270}
             height={150}
+            loading="lazy"
           />
         )}
         <div className="mt-3 flex items-center justify-between">

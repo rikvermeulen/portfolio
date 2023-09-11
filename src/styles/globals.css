@@ -140,11 +140,11 @@
 }
 
 .pop-up {
-  animation: popUp 800ms forwards;
+  animation: popUp 600ms forwards ease-in-out;
 }
 
 .pop-down {
-  animation: popDown 800ms forwards;
+  animation: popDown 600ms forwards ease-in-out;
 }
 
 @keyframes popUp {
@@ -152,7 +152,7 @@
     transform: scale(1);
   }
   50% {
-    transform: scale(1.15);
+    transform: scale(1.13);
   }
   100% {
     transform: scale(1.1);
@@ -164,7 +164,7 @@
     transform: scale(1.1);
   }
   50% {
-    transform: scale(0.95);
+    transform: scale(0.97);
   }
   100% {
     transform: scale(1);
