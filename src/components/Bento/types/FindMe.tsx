@@ -1,6 +1,6 @@
 'use client';
 
-import { memo, useEffect, useRef } from 'react';
+import { memo, useCallback, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import mapboxgl from 'mapbox-gl';
 
@@ -29,10 +29,12 @@ function FindMe() {
     if (mapContainerRef.current) {
       const map = new mapboxgl.Map({
         container: mapContainerRef.current,
-        style: 'mapbox://styles/rikvermeulen/cllbdz32d00tf01qp16b87izs',
+        style: 'mapbox://styles/rikvermeulen/cllbdz32d00tf01qp16b87izs?optimize=true',
         center: [longitude, latitude],
         zoom: 12,
         attributionControl: false,
+        pitchWithRotate: false,
+        dragRotate: false,
       });
 
       mapRef.current = map;
@@ -80,13 +82,21 @@ function FindMe() {
         map.resize();
       });
 
+      const handleResize = () => {
+        if (mapRef.current) {
+          mapRef.current.resize();
+        }
+      };
+      window.addEventListener('resize', handleResize);
+
       return () => {
         map.remove();
+        window.removeEventListener('resize', handleResize);
       };
     }
   }, []);
 
-  function handleZoomIn() {
+  const handleZoomIn = useCallback(() => {
     if (mapRef.current) {
       const currentZoom = mapRef.current.getZoom();
       if (currentZoom >= 12) return;
@@ -98,9 +108,9 @@ function FindMe() {
         curve: 1,
       });
     }
-  }
+  }, [mapRef, playSound]);
 
-  function handleZoomOut() {
+  const handleZoomOut = useCallback(() => {
     if (mapRef.current) {
       const currentZoom = mapRef.current.getZoom();
       playSound('tap');
@@ -111,7 +121,7 @@ function FindMe() {
         curve: 1,
       });
     }
-  }
+  }, [mapRef, playSound]);
 
   return (
     <Bento size="1x1" className="bento relative z-0">

@@ -58,7 +58,7 @@ export default function Pill({ className, items, activeIndex }: PillProps) {
   return (
     <div
       className={cc(
-        'z-50 rounded-full border border-solid border-[#DEDEDE] bg-primary/60 p-1.5 drop-shadow-sm backdrop-blur-xl',
+        'z-40 rounded-full border border-solid border-[#DEDEDE] bg-primary/60 p-1.5 drop-shadow-sm backdrop-blur-xl',
         className,
       )}
     >

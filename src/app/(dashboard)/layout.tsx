@@ -29,7 +29,7 @@ export default function Layout({
   podcast: React.ReactNode;
   shows: React.ReactNode;
 }) {
-  const bento = [music, photos, map, github, contact, podcast, shows];
+  const bento = [music, photos, contact, map, github, podcast, shows];
 
   return (
     <main>

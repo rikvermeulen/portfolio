@@ -41,7 +41,8 @@
     "**/*.mjs",
     ".next/types/**/*.ts",
     ".contentlayer/generated",
-    "next.config.mjs"
+    "next.config.mjs",
+    "src/utils/BentoGrid.js"
   ],
   "exclude": ["node_modules"]
 }

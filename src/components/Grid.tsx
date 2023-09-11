@@ -1,11 +1,11 @@
 'use client';
 
 import { Children, isValidElement, useEffect, useRef, useState } from 'react';
-import BentoGrid from '@bentogrid/core';
 
 import { BentoSkeleton } from '@/components/BentoSkeleton';
 
 import cc from '@/lib/cc';
+import BentoGrid from '@/utils/BentoGrid';
 
 interface GridProps {
   children: React.ReactNode;
