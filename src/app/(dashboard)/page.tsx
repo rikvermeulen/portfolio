@@ -30,13 +30,23 @@ export default function Home() {
       </div>
       <div className="hidden pt-6 2xl:block">
         <p className="pt-2 text-dark_grey md:text-xl">
-          🐙 Coding:{' '}
-          <a href="https://github.com/rikvermeulen" target="_blank">
+          🐙 Coding:
+          <a
+            href="https://github.com/rikvermeulen"
+            target="_blank"
+            className="decoration-1 underline-offset-2 transition-colors hover:text-[#007AFF] hover:underline"
+          >
             @rikvermeulen
           </a>
         </p>
         <p className="pt-1 text-dark_grey md:text-xl">
-          💌 Hello? <a href="mailto:hello@rikvermeulen.com">hello@rikvermeulen.com</a>
+          💌 Hello?
+          <a
+            href="mailto:hello@rikvermeulen.com"
+            className="decoration-1 underline-offset-2 transition-colors hover:text-[#007AFF] hover:underline"
+          >
+            hello@rikvermeulen.com
+          </a>
         </p>
       </div>
     </Bento>
