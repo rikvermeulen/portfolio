@@ -79,9 +79,7 @@ function FindMe() {
       map.dragPan.disable();
 
       map.on('load', function () {
-        setTimeout(() => {
-          map.resize();
-        }, 200);
+        map.resize();
       });
 
       const handleResize = () => {
