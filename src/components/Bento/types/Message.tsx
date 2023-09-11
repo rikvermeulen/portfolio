@@ -1,6 +1,6 @@
 'use client';
 
-import { Ref, SetStateAction, useEffect, useMemo, useRef, useState } from 'react';
+import { SetStateAction, useEffect, useMemo, useRef, useState } from 'react';
 import Image from 'next/image';
 import { IMessage } from '@/types';
 
