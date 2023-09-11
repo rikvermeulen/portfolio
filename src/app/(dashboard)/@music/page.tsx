@@ -7,9 +7,8 @@ import { Spotify } from '@/utils/spotify';
 async function getData() {
   const spotify = new Spotify(env.SPOTIFY_CLIENT_ID, env.SPOTIFY_CLIENT_SECRET);
 
-  const playlist = await spotify.getTrack('0fYuugKPmiqUI38RCgKBEB');
-
-  return playlist?.tracks?.items;
+  const playlist = await spotify.getTrack('2e2ELvxFRAZZSZTncX7zJg');
+  https: return playlist?.tracks?.items;
 }
 
 export default async function Music() {
