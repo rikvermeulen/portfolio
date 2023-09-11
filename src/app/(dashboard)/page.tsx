@@ -30,7 +30,7 @@ export default function Home() {
       </div>
       <div className="hidden pt-6 2xl:block">
         <p className="pt-2 text-dark_grey md:text-xl">
-          🐙 Coding:
+          🐙 Coding:&nbsp;
           <a
             href="https://github.com/rikvermeulen"
             target="_blank"
@@ -40,7 +40,7 @@ export default function Home() {
           </a>
         </p>
         <p className="pt-1 text-dark_grey md:text-xl">
-          💌 Hello?
+          💌 Hello?&nbsp;
           <a
             href="mailto:hello@rikvermeulen.com"
             className="decoration-1 underline-offset-2 transition-colors hover:text-[#007AFF] hover:underline"
