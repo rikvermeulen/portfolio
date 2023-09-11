@@ -22,11 +22,11 @@ export default function Work() {
     <main className="h-screen">
       <Container>
         <section className="relative mx-auto max-w-[710px] pb-24 pt-16 md:pt-32 2xl:max-w-none">
-          <Grid breakpoints={BREAKPOINTS} className="xl:grid-cols-2">
+          <Grid breakpoints={BREAKPOINTS} className="xl:!grid-cols-2 2xl:!grid-cols-4">
             {allProjects.map((project) => (
               <Bento
-                size="2x2"
-                className="bento relative z-0 !row-span-1 bg-gray-100 p-5 md:!row-span-2"
+                size="1x1 md:2x2"
+                className="bento relative z-0 max-w-[710px] bg-gray-100 p-5"
                 key={project._id}
               >
                 <Link href={project.slug}>
@@ -66,6 +66,10 @@ export default function Work() {
               </Bento>
             ))}
           </Grid>
+          <div className="mt-4 text-center">
+            <h2 className="text-lg font-bold">More projects</h2>
+            <p className="text-sm "> Coming soon...</p>
+          </div>
         </section>
       </Container>
     </main>
