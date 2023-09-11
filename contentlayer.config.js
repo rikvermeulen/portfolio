@@ -46,7 +46,26 @@ export const Project = defineDocumentType(() => ({
   computedFields,
 }));
 
+export const Privacy = defineDocumentType(() => ({
+  name: 'Privacy',
+  filePathPattern: `privacy/**/*.mdx`,
+  contentType: 'mdx',
+  fields: {
+    name: {
+      type: 'string',
+      required: true,
+    },
+    address: {
+      type: 'string',
+    },
+    mail: {
+      type: 'string',
+    },
+  },
+  computedFields,
+}));
+
 export default makeSource({
   contentDirPath: './src/content',
-  documentTypes: [Project],
+  documentTypes: [Project, Privacy],
 });
