@@ -48,7 +48,7 @@ export default function Pill({ className, items, activeIndex }: PillProps) {
   const pathName = usePathname();
   const indicatorRef = useRef<HTMLLIElement>(null);
 
-  const linkRefs = useRef(items.map(() => createRef<HTMLAnchorElement>()));
+  const linkRefs = useRef(items.map(() => createRef<any>()));
 
   useLayoutEffect(() => {
     const activeLinkIndex = getActiveLinkIndex(items, activeIndex, pathName);
@@ -96,7 +96,7 @@ export default function Pill({ className, items, activeIndex }: PillProps) {
                   {name}
                 </Link>
               ) : (
-                <a
+                <button
                   ref={linkRefs.current[index]}
                   onClick={handleClick}
                   className="flex cursor-pointer items-center justify-center px-5"
@@ -120,7 +120,7 @@ export default function Pill({ className, items, activeIndex }: PillProps) {
                       )}
                     </>
                   )}
-                </a>
+                </button>
               )}
             </li>
           );
