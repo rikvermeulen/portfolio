@@ -26,7 +26,7 @@ export default function Work() {
             {allProjects.map((project) => (
               <Bento
                 size="1x1 md:2x2"
-                className="bento relative z-0 max-w-[710px] bg-gray-100 p-5"
+                className="bento relative z-0 max-w-[710px] bg-gray-100 p-5 transition-transform duration-300 hover:scale-[1.005]"
                 key={project._id}
               >
                 <Link href={project.slug}>

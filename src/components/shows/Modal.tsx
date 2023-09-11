@@ -24,19 +24,17 @@ export default function Modal({
     <div
       className={cc(
         isVisible ? 'opacity-100' : ' opacity-0 -z-10',
-        'absolute left-0 top-0 flex h-full w-full items-center justify-center bg-[#828282]/60 px-5 backdrop-blur-lg transition-[opacity,transform] ease-in-out duration-300 ',
+        'absolute left-0 top-0 flex flex-col h-full w-full items-center justify-center bg-[#828282]/60 px-5 backdrop-blur-lg transition-[opacity,transform] ease-in-out duration-300 ',
       )}
     >
-      <div className={cc(isVisible ? 'scale-100' : ' scale-0', 'rounded-lg bg-black/70 p-4')}>
-        <div className="flex justify-between">
-          <h2 className="mb-4 text-base font-bold text-white">Your suggestions 🍿</h2>
-          <Icon
-            type="close"
-            className="h-6 w-6 cursor-pointer rounded-full bg-[#4E5152] fill-white p-2 transition-colors duration-300 ease-in-out hover:bg-[#3d4040]"
-            onClick={toggleModal}
-          />
-        </div>
-        <div className="mb-4 rounded-lg bg-[#373b3c] px-3 py-2">
+      <div
+        className={cc(
+          isVisible ? 'scale-100' : ' scale-0',
+          'rounded-t-xl bg-black/70 p-4 border-b border-solid border-[#38393a]',
+        )}
+      >
+        <h2 className="mb-4 text-base font-bold text-white">Your suggestions 🍿</h2>
+        <div className="rounded-lg bg-[#373b3c] px-3 py-2">
           <input
             type="email"
             placeholder="Email"
@@ -54,12 +52,19 @@ export default function Modal({
             className="w-full resize-none rounded-none border-none bg-transparent px-1 pb-1 pt-2 text-base text-white outline-none sm:text-sm"
           ></input>
         </div>
-        <div className="flex justify-between">
-          <ButtonPrimary
-            className="border-[#4E5152] bg-[#0F1314] text-white backdrop-blur-xl hover:bg-[#090b0b]"
-            label="Submit"
-            onClick={handleSubmit}
-          />
+      </div>
+      <div className="flex w-full cursor-pointer  overflow-hidden rounded-b-xl bg-black/70 text-sm text-white">
+        <div
+          className="flex w-1/2 items-center justify-center border-r border-solid border-[#38393a] py-2.5 transition-colors hover:bg-black/20"
+          onClick={handleSubmit}
+        >
+          <p>Submit</p>
+        </div>
+        <div
+          className="flex w-1/2 items-center justify-center py-2.5 transition-colors hover:bg-black/20"
+          onClick={toggleModal}
+        >
+          <p>Close</p>
         </div>
       </div>
     </div>
