@@ -78,6 +78,12 @@ function FindMe() {
 
       map.dragPan.disable();
 
+      map.on('load', function () {
+        setTimeout(() => {
+          map.resize();
+        }, 200);
+      });
+
       const handleResize = () => {
         if (mapRef.current) {
           mapRef.current.resize();
