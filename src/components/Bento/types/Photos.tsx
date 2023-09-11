@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 
 import Pill from '@/components/Pill';
@@ -21,21 +21,27 @@ const Photos: React.FC<AlbumsProps> = ({ albums }) => {
 
   const { playSound } = useSound();
 
-  useEffect(() => {
-    let intervalId: NodeJS.Timeout;
+  const intervalId = useRef<NodeJS.Timeout | null>(null);
 
+  useEffect(() => {
     if (mediaFiles.length) {
-      intervalId = setInterval(() => {
+      intervalId.current = setInterval(() => {
         setActiveMediaIndex((prevIndex) => (prevIndex + 1) % mediaFiles.length);
       }, 3000);
     }
 
-    return () => clearInterval(intervalId);
+    return () => {
+      if (intervalId.current) clearInterval(intervalId.current);
+    };
   }, [mediaFiles]);
 
   const handleImageClick = () => {
+    if (intervalId.current) clearInterval(intervalId.current);
     setActiveMediaIndex((prevIndex) => (prevIndex + 1) % mediaFiles.length);
     playSound('tap');
+    intervalId.current = setInterval(() => {
+      setActiveMediaIndex((prevIndex) => (prevIndex + 1) % mediaFiles.length);
+    }, 3000);
   };
 
   const handleAlbumClick = useCallback((index: number) => {

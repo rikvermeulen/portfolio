@@ -51,6 +51,6 @@ export const socials = [
   {
     name: 'CV',
     icon: 'cv',
-    url: '/',
+    url: 'https://gytlzoopugyodvbaxhpy.supabase.co/storage/v1/object/public/documents/CV-EN.pdf?t=2023-09-11T12%3A31%3A27.674Z',
   },
 ];
