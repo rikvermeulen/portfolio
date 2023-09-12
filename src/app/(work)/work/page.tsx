@@ -21,7 +21,7 @@ export default function Work() {
   return (
     <main className="h-full">
       <Container>
-        <section className="relative mx-auto max-w-[710px] pb-24 pt-16 md:pt-32 2xl:max-w-none">
+        <section className="relative mx-auto max-w-[710px] py-24 md:pt-32 2xl:max-w-none">
           <Grid breakpoints={BREAKPOINTS} className="xl:!grid-cols-2 2xl:!grid-cols-4">
             {allProjects.map((project) => (
               <Bento
