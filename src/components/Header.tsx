@@ -24,7 +24,7 @@ export default function Header() {
     return () => clearInterval(interval);
   }, []);
 
-  const liveTime = useFormattedDate(currentDate);
+  const liveTime = useFormattedDate(currentDate, 'hh:mm a');
 
   return (
     <header className="absolute top-0 z-10 w-full">
