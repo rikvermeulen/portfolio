@@ -9,8 +9,8 @@ import { AdminMessage, UserMessage } from '@/components/form/Messages';
 import Icon from '@/components/Icons/Icon';
 
 import cc from '@/lib/cc';
+import FormattedDate from '@/utils/FormattedDate';
 import { useSound } from '@/utils/sound';
-import FormattedDate from '@/utils/useFormattedDate';
 import { hasEnoughText, isValidEmail, isValidPhoneNumber } from '@/utils/validation';
 import { initialMessages, questionsAndActions, socials } from '@/content/messages/content';
 

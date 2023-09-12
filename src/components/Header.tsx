@@ -7,8 +7,8 @@ import { DateTime } from 'luxon';
 
 import Container from '@/components/Container';
 
+import useFormattedDate from '@/utils/FormattedDate';
 import { getProfile } from '@/utils/getProfile';
-import useFormattedDate from '@/utils/useFormattedDate';
 
 import Icon from './Icons/Icon';
 import Tooltip from './Tooltip';
@@ -16,20 +16,15 @@ import Tooltip from './Tooltip';
 const { icon: profile, label } = getProfile();
 
 export default function Header() {
-  // const creationDate = useFormattedDate();
+  const [currentDate, setCurrentDate] = useState(DateTime.utc().toString());
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentDate(DateTime.utc().toString());
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
 
-  // const [formattedTime, setFormattedTime] = useState(() =>
-  //   creationDate ? DateTime.fromISO(creationDate).toFormat('HH:mm') : '',
-  // );
-
-  // useEffect(() => {
-  //   if (!creationDate) return;
-  //   const intervalId = setInterval(() => {
-  //     setFormattedTime(DateTime.fromISO(creationDate).toFormat('HH:mm'));
-  //   }, 1000);
-
-  //   return () => clearInterval(intervalId);
-  // }, []);
+  const liveTime = useFormattedDate(currentDate);
 
   return (
     <header className="absolute top-0 z-10 w-full">
@@ -45,7 +40,7 @@ export default function Header() {
             </Tooltip>
           )}
         </div>
-        {/* <p className="justify-self-end text-sm text-dark_grey">{formattedTime}</p> */}
+        <p className="justify-self-end text-sm text-dark_grey">{liveTime}</p>
       </Container>
     </header>
   );
