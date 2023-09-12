@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon';
 
-const useFormattedDate = () => {
+const getFormattedDate = () => {
   return DateTime.utc().toISO();
 };
 
-export default useFormattedDate;
+export default getFormattedDate;

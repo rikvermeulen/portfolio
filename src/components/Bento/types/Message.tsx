@@ -10,7 +10,7 @@ import Icon from '@/components/Icons/Icon';
 
 import cc from '@/lib/cc';
 import { useSound } from '@/utils/sound';
-import useFormattedDate from '@/utils/useFormattedDate';
+import getFormattedDate from '@/utils/useFormattedDate';
 import { hasEnoughText, isValidEmail, isValidPhoneNumber } from '@/utils/validation';
 import { initialMessages, questionsAndActions, socials } from '@/content/messages/content';
 
@@ -38,6 +38,7 @@ export default function Message() {
 
   const inputRef = useRef<HTMLInputElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
+
   // Sounds
   const { playSound } = useSound();
 
@@ -47,7 +48,7 @@ export default function Message() {
     disableInputs(inputRef, buttonRef, disabled);
   };
 
-  const creationDate = useFormattedDate();
+  const creationDate = getFormattedDate();
 
   const formattedCreationDate = creationDate
     ? DateTime.fromISO(creationDate).setLocale('en-US').toFormat('HH:mm')
