@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon';
 
 const useFormattedDate = () => {
-  return DateTime.local().toFormat('HH:mm');
+  return DateTime.utc().toISO();
 };
 
 export default useFormattedDate;

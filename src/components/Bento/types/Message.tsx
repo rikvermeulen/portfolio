@@ -10,7 +10,7 @@ import Icon from '@/components/Icons/Icon';
 
 import cc from '@/lib/cc';
 import { useSound } from '@/utils/sound';
-// import useFormattedDate from '@/utils/useFormattedDate';
+import useFormattedDate from '@/utils/useFormattedDate';
 import { hasEnoughText, isValidEmail, isValidPhoneNumber } from '@/utils/validation';
 import { initialMessages, questionsAndActions, socials } from '@/content/messages/content';
 
@@ -47,7 +47,11 @@ export default function Message() {
     disableInputs(inputRef, buttonRef, disabled);
   };
 
-  const formattedCreationDate = DateTime.local().setLocale('en-US').toFormat('HH:mm');
+  const creationDate = useFormattedDate();
+
+  const formattedCreationDate = creationDate
+    ? DateTime.fromISO(creationDate).setLocale('en-US').toLocaleString(DateTime.DATE_FULL)
+    : '';
 
   const sendData = async (data: any) => {
     try {
