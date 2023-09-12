@@ -1,9 +1,14 @@
+import { useEffect, useState } from 'react';
 import { DateTime } from 'luxon';
 
-const getFormattedDate = (date: string) => {
-  const localTime = DateTime.fromISO(date).setLocale('en-US').toFormat('h:mm');
+export default function FormattedDate(date: string) {
+  const [formattedDate, setFormattedDate] = useState('');
 
-  return localTime;
-};
+  useEffect(() => {
+    const localTime = DateTime.fromISO(date, { zone: 'utc' }).toLocal().toFormat('h:mm');
 
-export default getFormattedDate;
+    setFormattedDate(localTime);
+  }, [date]);
+
+  return formattedDate;
+}

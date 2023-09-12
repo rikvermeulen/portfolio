@@ -10,7 +10,7 @@ import Icon from '@/components/Icons/Icon';
 
 import cc from '@/lib/cc';
 import { useSound } from '@/utils/sound';
-import getFormattedDate from '@/utils/useFormattedDate';
+import FormattedDate from '@/utils/useFormattedDate';
 import { hasEnoughText, isValidEmail, isValidPhoneNumber } from '@/utils/validation';
 import { initialMessages, questionsAndActions, socials } from '@/content/messages/content';
 
@@ -49,7 +49,7 @@ export default function Message() {
   };
 
   const date = DateTime.utc().toString();
-  const formattedCreationDate = getFormattedDate(date);
+  const formattedCreationDate = FormattedDate(date);
 
   const sendData = async (data: any) => {
     try {
