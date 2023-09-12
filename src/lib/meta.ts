@@ -81,9 +81,23 @@ export default async function meta(): Promise<Metadata> {
     authors: [
       {
         name: 'Rik',
-        url: 'https://rikvermeulen.com',
+        url: 'www.rikvermeulen.com',
       },
     ],
+    icons: {
+      icon: [
+        {
+          media: '(prefers-color-scheme: light)',
+          url: '/images/favicons/icon-32x32.png',
+          href: '/images/favicons/icon-32x32.png',
+        },
+        {
+          media: '(prefers-color-scheme: dark)',
+          url: '/images/favicons/icon-32x32-light.png',
+          href: '/images/favicons/icon-32x32-light.png',
+        },
+      ],
+    },
     themeColor: 'black',
     colorScheme: 'dark',
     creator: 'Rik Vermeulen',
