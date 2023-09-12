@@ -130,7 +130,7 @@ const Podcast: React.FC<PodcastProps> = ({ playlist = [], className }) => {
             name="Previous song"
             aria-label="Previous song"
           >
-            <Icon type="next" className={'relative -top-1'} />
+            <Icon type="next" className={'relative -top-1 border-none outline-none'} />
           </button>
           <button
             onClick={handlePlayOrPause}
@@ -163,7 +163,7 @@ const Podcast: React.FC<PodcastProps> = ({ playlist = [], className }) => {
             aria-label="Next song"
             title="Next song"
           >
-            <Icon type="next" className={'relative -top-1'} />
+            <Icon type="next" className={'relative -top-1 border-none outline-none'} />
           </button>
         </div>
         <label className="mt-6 flex items-center justify-center gap-4" htmlFor="rangePodcast">

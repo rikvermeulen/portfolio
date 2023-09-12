@@ -119,11 +119,14 @@ const Music: React.FC<MusicProps> = ({ playlist = [], className }) => {
         <div className="m-auto mt-4 flex w-full max-w-[184px] items-center justify-between">
           <button
             onClick={() => handleChangeTrack('previous')}
-            className={cc(pulsedButton === 'previous' ? 'button' : '', 'fill-white relative')}
+            className={cc(
+              pulsedButton === 'previous' ? 'button' : '',
+              'fill-white relative outline-none border-none',
+            )}
             name="Previous song"
             aria-label="Previous song"
           >
-            <Icon type="next" className={'relative -top-1'} />
+            <Icon type="next" className={'relative -top-1 border-none outline-none'} />
           </button>
           <button
             onClick={handlePlayOrPause}
@@ -151,11 +154,14 @@ const Music: React.FC<MusicProps> = ({ playlist = [], className }) => {
           </button>
           <button
             onClick={() => handleChangeTrack('next')}
-            className={cc(pulsedButton === 'next' ? 'button' : '', '-scale-x-100 fill-white')}
+            className={cc(
+              pulsedButton === 'next' ? 'button' : '',
+              '-scale-x-100 fill-white border-none outline-none',
+            )}
             name="Next song"
             aria-label="Next song"
           >
-            <Icon type="next" className={'relative -top-1'} />
+            <Icon type="next" className={'relative -top-1 border-none outline-none'} />
           </button>
         </div>
         <label className="mt-6 flex items-center justify-center gap-4" htmlFor="rangeMusic">
