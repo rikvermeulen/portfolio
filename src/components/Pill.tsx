@@ -25,23 +25,26 @@ const updateIndicator = (
 };
 
 const getActiveLinkIndex = (
-  items: PillProps['items'],
+  items: { url?: string }[],
   activeIndex: number | undefined,
   pathName: string,
 ) => {
   if (activeIndex !== undefined) return activeIndex;
+
   const exactMatchIndex = items.findIndex((item) => pathName === item.url);
   if (exactMatchIndex !== -1) return exactMatchIndex;
 
-  const sortedItems = [...items].sort((a, b) => (b.url?.length || 0) - (a.url?.length || 0));
+  if (pathName === '/' && items[0].url === '/') return 0;
 
-  for (let i = 0; i < sortedItems.length; i++) {
-    if (pathName.startsWith(sortedItems[i].url || '')) {
-      return items.indexOf(sortedItems[i]);
-    }
-  }
-
-  return -1;
+  return (
+    items.reduce((bestMatch, item, index) => {
+      const currentUrl = item.url || '';
+      return pathName.startsWith(currentUrl) &&
+        currentUrl.length > (items[bestMatch]?.url?.length || 0)
+        ? index
+        : bestMatch;
+    }, -1) || undefined
+  );
 };
 
 export default function Pill({ className, items, activeIndex }: PillProps) {
@@ -50,10 +53,13 @@ export default function Pill({ className, items, activeIndex }: PillProps) {
 
   const linkRefs = useRef(items.map(() => createRef<any>()));
 
+  const activeLinkIndex = getActiveLinkIndex(items, activeIndex, pathName);
+
   useLayoutEffect(() => {
-    const activeLinkIndex = getActiveLinkIndex(items, activeIndex, pathName);
-    updateIndicator(linkRefs.current[activeLinkIndex]?.current, indicatorRef.current);
-  }, [items, pathName, activeIndex]);
+    if (activeLinkIndex !== undefined && linkRefs.current[activeLinkIndex]) {
+      updateIndicator(linkRefs.current[activeLinkIndex].current, indicatorRef.current);
+    }
+  }, [items, pathName, activeIndex, activeLinkIndex]);
 
   return (
     <div
@@ -69,8 +75,7 @@ export default function Pill({ className, items, activeIndex }: PillProps) {
         />
         {items.map((item, index) => {
           const { url, name, icon, onClick } = item;
-          const isActive =
-            activeIndex !== undefined ? index === activeIndex : pathName.startsWith(url || '');
+          const isActive = activeLinkIndex !== undefined ? index === activeLinkIndex : false;
 
           const handleClick = (e: { preventDefault: () => void }) => {
             if (isActive && url !== pathName && url !== '/') {
