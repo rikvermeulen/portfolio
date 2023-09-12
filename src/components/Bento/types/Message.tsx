@@ -48,11 +48,8 @@ export default function Message() {
     disableInputs(inputRef, buttonRef, disabled);
   };
 
-  const creationDate = getFormattedDate();
-
-  const formattedCreationDate = creationDate
-    ? DateTime.fromISO(creationDate).setLocale('en-US').toFormat('HH:mm')
-    : '';
+  const date = DateTime.utc().toString();
+  const formattedCreationDate = getFormattedDate(date);
 
   const sendData = async (data: any) => {
     try {
