@@ -18,7 +18,7 @@ type Profile = {
 const profiles: { [key in ProfileName]: Profile } = {
   [ProfileName.Working]: {
     icon: 'suitcase',
-    label: 'Working 💼',
+    label: 'Currently coding 💻',
     days: new Set(['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']),
     startTime: 9 * 60,
     endTime: 18 * 60,

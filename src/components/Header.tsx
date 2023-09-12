@@ -36,7 +36,9 @@ export default function Header() {
         <div className="justify-self-center">
           {profile && (
             <Tooltip content={label}>
-              <Icon type={profile} className="w-3" />
+              <div className="min-h-fit rounded-full bg-gray-100 p-2">
+                <Icon type={profile} className="h-3 w-3" />
+              </div>
             </Tooltip>
           )}
         </div>
