@@ -8,22 +8,28 @@ import { DateTime } from 'luxon';
 import Container from '@/components/Container';
 
 import { getProfile } from '@/utils/getProfile';
+import useFormattedDate from '@/utils/useFormattedDate';
 
 import Icon from './Icons/Icon';
 import Tooltip from './Tooltip';
 
 export default function Header() {
-  // const { icon: profile, label } = getProfile();
+  const { icon: profile, label } = getProfile();
 
-  // const [formattedTime, setFormattedTime] = useState(() => DateTime.local().toFormat('HH:mm'));
+  const creationDate = useFormattedDate();
 
-  // useEffect(() => {
-  //   const intervalId = setInterval(() => {
-  //     setFormattedTime(DateTime.local().toFormat('HH:mm'));
-  //   }, 1000);
+  const [formattedTime, setFormattedTime] = useState(() =>
+    creationDate ? DateTime.fromISO(creationDate).toFormat('HH:mm') : '',
+  );
 
-  //   return () => clearInterval(intervalId);
-  // }, []);
+  useEffect(() => {
+    if (!creationDate) return;
+    const intervalId = setInterval(() => {
+      setFormattedTime(DateTime.fromISO(creationDate).toFormat('HH:mm'));
+    }, 1000);
+
+    return () => clearInterval(intervalId);
+  }, []);
 
   return (
     <header className="absolute top-0 z-10 w-full">
@@ -33,13 +39,13 @@ export default function Header() {
           <p className="text-xs font-medium md:text-sm">Rik Vermeulen</p>
         </Link>
         <div className="justify-self-center">
-          {/* {profile && (
+          {profile && (
             <Tooltip content={label}>
               <Icon type={profile} className="w-3" />
             </Tooltip>
-          )} */}
+          )}
         </div>
-        {/* <p className="justify-self-end text-sm text-dark_grey">{formattedTime}</p> */}
+        <p className="justify-self-end text-sm text-dark_grey">{formattedTime}</p>
       </Container>
     </header>
   );
