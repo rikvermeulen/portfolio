@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon';
 
 const getFormattedDate = (date: string) => {
-  const localTime = DateTime.fromISO(date, { zone: 'utc' }).toLocal().toFormat('h:mm');
+  const localTime = DateTime.fromISO(date).setLocale('en-US').toFormat('h:mm');
 
   return localTime;
 };
