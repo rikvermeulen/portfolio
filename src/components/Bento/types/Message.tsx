@@ -50,7 +50,7 @@ export default function Message() {
   const creationDate = useFormattedDate();
 
   const formattedCreationDate = creationDate
-    ? DateTime.fromISO(creationDate).setLocale('en-US').toLocaleString(DateTime.DATE_FULL)
+    ? DateTime.fromISO(creationDate).setLocale('en-US').toFormat('HH:mm')
     : '';
 
   const sendData = async (data: any) => {
