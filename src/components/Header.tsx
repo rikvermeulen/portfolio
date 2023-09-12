@@ -13,7 +13,7 @@ import { getProfile } from '@/utils/getProfile';
 import Icon from './Icons/Icon';
 import Tooltip from './Tooltip';
 
-const { icon: profile, label } = getProfile();
+// const { icon: profile, label } = getProfile();
 
 export default function Header() {
   const [currentDate, setCurrentDate] = useState(DateTime.utc().toString());
@@ -34,13 +34,13 @@ export default function Header() {
           <p className="text-xs font-medium md:text-sm">Rik Vermeulen</p>
         </Link>
         <div className="justify-self-center">
-          {profile && (
+          {/* {profile && (
             <Tooltip content={label}>
               <div className="min-h-fit rounded-full bg-gray-100 p-2">
                 <Icon type={profile} className="h-3 w-3" />
               </div>
             </Tooltip>
-          )}
+          )} */}
         </div>
         <p className="justify-self-end text-sm text-dark_grey">{liveTime}</p>
       </Container>

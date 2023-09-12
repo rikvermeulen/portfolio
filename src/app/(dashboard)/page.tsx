@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 
 export default function Home() {
   return (
-    <Bento size="1x1 md:2x1 2xl:2x2" className="" resize>
+    <Bento size="1x1 md:2x1 2xl:2x2" className="">
       <Image
         src={'/images/me.jpg'}
         alt="Portrait of Rik Vermeulen"
