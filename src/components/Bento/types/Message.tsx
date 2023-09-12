@@ -252,7 +252,11 @@ export default function Message() {
                 : `translateY(${-1 * (socials.length - 1 - index) * -40}px)`,
             }}
           >
-            <a href={social.url} className="flex gap-4" target="_blank">
+            <a
+              href={social.url}
+              className="flex gap-4 transition-transform hover:scale-105"
+              target="_blank"
+            >
               <Image
                 src={`/images/icons/${social.icon}.png`}
                 className="rounded-full border border-solid border-[#EAEBED]"
