@@ -8,14 +8,14 @@ import { DateTime } from 'luxon';
 import Container from '@/components/Container';
 
 import useFormattedDate from '@/utils/FormattedDate';
-import { getProfile } from '@/utils/getProfile';
+import useProfile from '@/utils/getProfile';
 
 import Icon from './Icons/Icon';
 import Tooltip from './Tooltip';
 
-const { icon: profile, label } = getProfile();
-
 export default function Header() {
+  const { icon: profile, label } = useProfile();
+
   const [currentDate, setCurrentDate] = useState(DateTime.utc().toString());
   useEffect(() => {
     const interval = setInterval(() => {

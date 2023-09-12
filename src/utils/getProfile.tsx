@@ -1,4 +1,8 @@
+'use client';
+
 import { DateTime } from 'luxon';
+
+import { FormattedTime } from './FormattedDate';
 
 enum ProfileName {
   Working = 'Working',
@@ -44,9 +48,11 @@ const profiles: { [key in ProfileName]: Profile } = {
   },
 };
 
-export function getProfile(): { icon: string; label: string } {
+export default function useProfile(): { icon: string; label: string } {
   const time = DateTime.utc().toString();
-  const now = DateTime.fromISO(time, { zone: 'utc' }).toLocal();
+  const now = FormattedTime(time);
+
+  if (!now) return { icon: '', label: '' };
 
   const currentDay = now.toFormat('EEEE');
   const currentTime = now.hour * 60 + now.minute;

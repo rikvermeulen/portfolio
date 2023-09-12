@@ -12,3 +12,15 @@ export default function FormattedDate(date: string) {
 
   return formattedDate;
 }
+
+export function FormattedTime(date: string) {
+  const [formattedTime, setFormattedTime] = useState<DateTime>();
+
+  useEffect(() => {
+    const localTime = DateTime.fromISO(date, { zone: 'utc' }).toLocal();
+
+    setFormattedTime(localTime);
+  }, [date]);
+
+  return formattedTime;
+}
