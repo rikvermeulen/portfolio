@@ -13,9 +13,9 @@ import useFormattedDate from '@/utils/useFormattedDate';
 import Icon from './Icons/Icon';
 import Tooltip from './Tooltip';
 
-export default function Header() {
-  // const { icon: profile, label } = getProfile();
+const { icon: profile, label } = getProfile();
 
+export default function Header() {
   // const creationDate = useFormattedDate();
 
   // const [formattedTime, setFormattedTime] = useState(() =>
@@ -38,14 +38,14 @@ export default function Header() {
           <Image src={'/images/logo.png'} alt="logo" width="20" height="20" />
           <p className="text-xs font-medium md:text-sm">Rik Vermeulen</p>
         </Link>
-        {/* <div className="justify-self-center">
+        <div className="justify-self-center">
           {profile && (
             <Tooltip content={label}>
               <Icon type={profile} className="w-3" />
             </Tooltip>
           )}
         </div>
-        <p className="justify-self-end text-sm text-dark_grey">{formattedTime}</p> */}
+        {/* <p className="justify-self-end text-sm text-dark_grey">{formattedTime}</p> */}
       </Container>
     </header>
   );
