@@ -4,13 +4,13 @@ import { getFavoriteMovies, getFavoriteShow, getShowSeason } from '@/utils/tmdb'
 
 async function getData() {
   const [latestShow, shows, movies] = await Promise.all([
-    getShowSeason('2316', '7'),
+    getShowSeason('114461', '1'),
     getFavoriteShow(),
     getFavoriteMovies(),
   ]);
 
   return {
-    latestShow: latestShow.episodes[15],
+    latestShow: latestShow.episodes[4],
     shows: shows.results,
     movies: movies.results,
   };
