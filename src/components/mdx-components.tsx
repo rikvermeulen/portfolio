@@ -11,8 +11,8 @@ import {
   CustomH6,
 } from '@/components/Mdx/CustomHeading';
 
-import CustomImage from './Mdx/CustomImage';
-import { CustomLI, CustomOL, CustomP } from './Mdx/CustomRichText';
+import CustomImage from '@/components/Mdx/CustomImage';
+import { CustomLI, CustomOL, CustomP } from '@/components/Mdx/CustomRichText';
 
 const components = {
   h1: CustomH1,
