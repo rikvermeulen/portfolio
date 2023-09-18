@@ -1,7 +1,5 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-
 import cc from '@/lib/cc';
 
 export default function Bento({

@@ -1,8 +1,5 @@
 import React from 'react';
 
-import { ButtonPrimary } from '@/components/Button';
-import Icon from '@/components/Icons/Icon';
-
 import cc from '@/lib/cc';
 
 type RecommendationModalProps = {

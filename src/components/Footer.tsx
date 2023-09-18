@@ -1,29 +1,15 @@
 import Link from 'next/link';
 
+import Container from '@/components/Container';
 import Pill from '@/components/Pill';
 
-import Container from './Container';
-
-const items = [
-  {
-    name: 'About',
-    url: '/',
-  },
-  {
-    name: 'Work',
-    url: '/work',
-  },
-  {
-    name: 'Archive',
-    url: '/archive',
-  },
-];
+import { MainNavigation } from '@/content/navigation/content';
 
 export default function Footer() {
   return (
     <footer className="relative z-50">
       <div className="fixed bottom-5 -z-10 flex w-full items-center justify-center">
-        <Pill items={items} />
+        <Pill items={MainNavigation} />
       </div>
       <Container className="z-50">
         <div className="mb-8 hidden justify-between font-medium text-black lg:flex">

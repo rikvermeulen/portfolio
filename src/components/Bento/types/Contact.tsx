@@ -5,14 +5,14 @@ import Image from 'next/image';
 import { IMessage } from '@/types';
 import { DateTime } from 'luxon';
 
-import { AdminMessage, UserMessage } from '@/components/form/Messages';
+import { AdminMessage, UserMessage } from '@/components/Form/Messages';
 import Icon from '@/components/Icons/Icon';
 
 import cc from '@/lib/cc';
 import FormattedDate from '@/utils/FormattedDate';
 import { useSound } from '@/utils/sound';
 import { hasEnoughText, isValidEmail, isValidPhoneNumber } from '@/utils/validation';
-import { initialMessages, questionsAndActions, socials } from '@/content/messages/content';
+import { initialMessages, questionsAndActions, socials } from '@/content/contact/content';
 
 import Bento from '../Bento';
 
@@ -24,7 +24,7 @@ const disableInputs = (inputRef: any, buttonRef: any, disabled: boolean) => {
   }
 };
 
-export default function Message() {
+export default function Contact() {
   // State
   const [step, setStep] = useState<number>(0);
   const [message, setMessage] = useState<string>('');

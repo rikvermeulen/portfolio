@@ -1,6 +1,5 @@
 'use client';
 
-import Image from 'next/image';
 import { useMDXComponent } from 'next-contentlayer/hooks';
 
 import {
@@ -10,10 +9,10 @@ import {
   CustomH4,
   CustomH5,
   CustomH6,
-} from '@/components/mdx/CustomHeading';
+} from '@/components/Mdx/CustomHeading';
 
-import CustomImage from './mdx/CustomImage';
-import { CustomLI, CustomOL, CustomP } from './mdx/CustomRichText';
+import CustomImage from './Mdx/CustomImage';
+import { CustomLI, CustomOL, CustomP } from './Mdx/CustomRichText';
 
 const components = {
   h1: CustomH1,
