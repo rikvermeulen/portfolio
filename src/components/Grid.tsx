@@ -5,7 +5,7 @@ import { Children, isValidElement, useEffect, useRef, useState } from 'react';
 import { BentoSkeleton } from '@/components/BentoSkeleton';
 
 import cc from '@/lib/cc';
-import BentoGrid from '@/utils/BentoGrid';
+import BentoGrid, { Breakpoint } from '@/utils/BentoGrid';
 
 interface GridProps {
   children: React.ReactNode;
@@ -13,7 +13,7 @@ interface GridProps {
   className?: string;
 }
 
-const BREAKPOINTS = {
+const BREAKPOINTS: Record<number, Breakpoint> = {
   768: { columns: 2, cellGap: 16 },
   1280: { columns: 3, cellGap: 16 },
   1536: { columns: 4, cellGap: 16 },
