@@ -7,8 +7,8 @@ import { PropsShows } from '@/types';
 import Bento from '@/components/Bento/Bento';
 import { ButtonPrimary } from '@/components/Button';
 import Icon from '@/components/Icons/Icon';
-import Modal from '@/components/Shows/Modal';
-import WatchList from '@/components/Shows/WatchList';
+import Modal from '@/components/Show/Modal';
+import WatchList from '@/components/Show/WatchList';
 
 import { hasEnoughText, isValidEmail } from '@/utils/validation';
 

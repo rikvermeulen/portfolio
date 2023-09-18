@@ -7,7 +7,7 @@ import { DateTime } from 'luxon';
 
 import { initialMessages, questionsAndActions, socials } from '@/types/const';
 
-import { AdminMessage, UserMessage } from '@/components/Form/Messages';
+import { AdminMessage, UserMessage } from '@/components/Contact/Messages';
 import Icon from '@/components/Icons/Icon';
 
 import cc from '@/lib/cc';
@@ -15,7 +15,7 @@ import FormattedDate from '@/utils/FormattedDate';
 import { useSound } from '@/utils/sound';
 import { hasEnoughText, isValidEmail, isValidPhoneNumber } from '@/utils/validation';
 
-import Bento from '../Bento';
+import Bento from '@/components/Bento/Bento';
 
 const disableInputs = (inputRef: any, buttonRef: any, disabled: boolean) => {
   if (inputRef.current && buttonRef.current) {

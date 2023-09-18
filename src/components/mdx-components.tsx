@@ -9,10 +9,10 @@ import {
   CustomH4,
   CustomH5,
   CustomH6,
-} from '@/components/Mdx/CustomHeading';
+} from '@/components/Md/CustomHeading';
 
-import CustomImage from '@/components/Mdx/CustomImage';
-import { CustomLI, CustomOL, CustomP } from '@/components/Mdx/CustomRichText';
+import CustomImage from '@/components/Md/CustomImage';
+import { CustomLI, CustomOL, CustomP } from '@/components/Md/CustomRichText';
 
 const components = {
   h1: CustomH1,
