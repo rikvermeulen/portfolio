@@ -11,7 +11,7 @@ import WatchList from '@/components/shows/WatchList';
 
 import { hasEnoughText, isValidEmail } from '@/utils/validation';
 
-import Bento from '../Bento';
+import Bento, { ActivateButton } from '../Bento';
 
 const imageURL = 'https://image.tmdb.org/t/p/original';
 
@@ -64,59 +64,59 @@ export default function Shows({ current, shows, movies }: PropsShows) {
   };
 
   return (
-    <Bento
-      size="1x1"
-      className="bento relative z-0 flex flex-col justify-between bg-gradient-to-b from-[#2B3833] to-[#0F1314] p-5"
-    >
-      <header className="flex justify-between">
-        <p className="text-lg font-bold text-white">Watching now</p>
-        <Image
-          src="/images/icons/shows.png"
-          className={`p-1.5 drop-shadow-md transition-transform duration-300 hover:scale-105`}
-          alt="media"
-          width={32}
-          height={32}
-        />
-      </header>
-      <div className="px-4">
-        {current.still_path && (
+    <Bento size="1x1" className="bento bg-gradient-to-b from-[#2B3833] to-[#0F1314] p-5" hasScreens>
+      <div className="relative z-0 flex h-full w-max flex-col justify-between">
+        <header className="flex justify-between">
+          <p className="text-lg font-bold text-white">Watching now</p>
           <Image
-            src={`${imageURL}${current.still_path}`}
-            className={`rounded-xl`}
+            src="/images/icons/shows.png"
+            className={`p-1.5 drop-shadow-md transition-transform duration-300 hover:scale-105`}
             alt="media"
-            width={270}
-            height={150}
-            loading="lazy"
+            width={32}
+            height={32}
           />
-        )}
-        <div className="mt-3 flex items-center justify-between">
-          <div className="text-sm text-white">
-            <p className="font-bold">{current?.name}</p>
-            <p className="relative -top-1 text-white/70">
-              Last seen - {`S${current?.season_number}, E${current.episode_number}`}
-            </p>
+        </header>
+        <div className="px-4">
+          {current.still_path && (
+            <Image
+              src={`${imageURL}${current.still_path}`}
+              className={`rounded-xl`}
+              alt="media"
+              width={270}
+              height={150}
+              loading="lazy"
+            />
+          )}
+          <div className="mt-3 flex items-center justify-between">
+            <div className="text-sm text-white">
+              <p className="font-bold">{current?.name}</p>
+              <p className="relative -top-1 text-white/70">
+                Last seen - {`S${current?.season_number}, E${current.episode_number}`}
+              </p>
+            </div>
+            <Icon
+              type="list"
+              className="w-5 cursor-pointer fill-white"
+              onClick={() => setListVisible(!isListVisible)}
+            />
           </div>
-          <Icon
-            type="list"
-            className="w-5 cursor-pointer fill-white"
-            onClick={() => setListVisible(!isListVisible)}
-          />
         </div>
-      </div>
-      <footer>
-        <ButtonPrimary
-          label="Your picks"
-          className="border-[#4E5152] bg-[#1F2324] text-white backdrop-blur-xl hover:bg-[#2b3031]"
-          onClick={toggleModal}
+        <footer>
+          <ButtonPrimary
+            label="Your picks"
+            className="border-[#4E5152] bg-[#1F2324] text-white backdrop-blur-xl hover:bg-[#2b3031]"
+            onClick={toggleModal}
+          />
+          <ActivateButton screenIndex={1}>test</ActivateButton>
+        </footer>
+        <Modal
+          isVisible={isModalVisible}
+          toggleModal={toggleModal}
+          formData={formData}
+          setFormData={setFormData}
+          handleSubmit={handleSubmit}
         />
-      </footer>
-      <Modal
-        isVisible={isModalVisible}
-        toggleModal={toggleModal}
-        formData={formData}
-        setFormData={setFormData}
-        handleSubmit={handleSubmit}
-      />
+      </div>
       <WatchList
         isListVisible={isListVisible}
         toggleListVisibility={() => setListVisible(!isListVisible)}

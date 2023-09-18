@@ -42,8 +42,8 @@ export default function WatchList({
   return (
     <div
       className={cc(
-        isListVisible ? 'translate-x-0' : 'translate-x-96 ',
-        'absolute bg-gradient-to-b from-[#2B3833] to-[#0F1314] duration-300 transition-transform left-0 top-0 w-full h-full px-5',
+        // isListVisible ? 'translate-x-0' : 'translate-x-96 ',
+        'bg-gradient-to-b from-[#2B3833] to-[#0F1314] duration-300 transition-transform left-0 top-0 w-full h-full px-5',
       )}
     >
       <header>
