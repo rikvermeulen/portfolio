@@ -5,6 +5,8 @@ import Image from 'next/image';
 import { IMessage } from '@/types';
 import { DateTime } from 'luxon';
 
+import { initialMessages, questionsAndActions, socials } from '@/types/const';
+
 import { AdminMessage, UserMessage } from '@/components/Form/Messages';
 import Icon from '@/components/Icons/Icon';
 
@@ -12,7 +14,6 @@ import cc from '@/lib/cc';
 import FormattedDate from '@/utils/FormattedDate';
 import { useSound } from '@/utils/sound';
 import { hasEnoughText, isValidEmail, isValidPhoneNumber } from '@/utils/validation';
-import { initialMessages, questionsAndActions, socials } from '@/content/contact/content';
 
 import Bento from '../Bento';
 

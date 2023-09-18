@@ -55,3 +55,19 @@ export type PropsShows = {
   movies: ShowOrMovie[];
   shows: ShowOrMovie[];
 };
+
+//profiles:
+export enum ProfileName {
+  Working = 'Working',
+  Sleeping = 'Sleeping',
+  NotWorking = 'Not Working',
+  Personal = 'Personal',
+}
+
+export type Profile = {
+  icon: string;
+  label: string;
+  days: Set<string>;
+  startTime?: number;
+  endTime?: number;
+};

@@ -4,14 +4,13 @@ import { useState } from 'react';
 import Image from 'next/image';
 import { PropsShows } from '@/types';
 
+import Bento from '@/components/Bento/Bento';
 import { ButtonPrimary } from '@/components/Button';
 import Icon from '@/components/Icons/Icon';
 import Modal from '@/components/Shows/Modal';
 import WatchList from '@/components/Shows/WatchList';
 
 import { hasEnoughText, isValidEmail } from '@/utils/validation';
-
-import Bento from '../Bento';
 
 const imageURL = 'https://image.tmdb.org/t/p/original';
 

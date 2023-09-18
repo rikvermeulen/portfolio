@@ -2,50 +2,17 @@
 
 import { DateTime } from 'luxon';
 
+import { profiles } from '@/types/const';
+import { ProfileName } from '@/types/index';
+
 import { FormattedTime } from './FormattedDate';
 
-enum ProfileName {
-  Working = 'Working',
-  Sleeping = 'Sleeping',
-  NotWorking = 'Not Working',
-  Personal = 'Personal',
-}
-
-type Profile = {
-  icon: string;
-  label: string;
-  days: Set<string>;
-  startTime?: number;
-  endTime?: number;
-};
-
-const profiles: { [key in ProfileName]: Profile } = {
-  [ProfileName.Working]: {
-    icon: 'suitcase',
-    label: 'Currently coding 💻',
-    days: new Set(['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']),
-    startTime: 9 * 60,
-    endTime: 18 * 60,
-  },
-  [ProfileName.Sleeping]: {
-    icon: 'moon',
-    label: 'Sleeping 😴',
-    days: new Set(['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']),
-    startTime: 22 * 60,
-    endTime: 7 * 60,
-  },
-  [ProfileName.NotWorking]: {
-    icon: 'controller',
-    label: 'Weekend 😊',
-    days: new Set(['Saturday', 'Sunday']),
-  },
-  [ProfileName.Personal]: {
-    icon: 'person',
-    label: 'Time off 🏖️',
-    days: new Set(['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']),
-    startTime: 18 * 60,
-    endTime: 22 * 60,
-  },
+const isTimeWithinRange = (currentTime: number, startTime: number, endTime: number) => {
+  if (startTime <= endTime) {
+    return currentTime >= startTime && currentTime < endTime;
+  } else {
+    return currentTime >= startTime || currentTime < endTime;
+  }
 };
 
 export default function useProfile(): { icon: string; label: string } {
@@ -68,20 +35,11 @@ export default function useProfile(): { icon: string; label: string } {
     const profile = profiles[profileName];
     if (profile.days.has(currentDay)) {
       if (profile.startTime !== undefined && profile.endTime !== undefined) {
-        if (profile.startTime <= profile.endTime) {
-          if (currentTime >= profile.startTime && currentTime < profile.endTime) {
-            return {
-              icon: profile.icon,
-              label: profile.label,
-            };
-          }
-        } else {
-          if (currentTime >= profile.startTime || currentTime < profile.endTime) {
-            return {
-              icon: profile.icon,
-              label: profile.label,
-            };
-          }
+        if (isTimeWithinRange(currentTime, profile.startTime, profile.endTime)) {
+          return {
+            icon: profile.icon,
+            label: profile.label,
+          };
         }
       } else {
         return {

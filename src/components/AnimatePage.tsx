@@ -18,14 +18,25 @@ function FrozenRouter(props: PropsWithChildren<{}>) {
   );
 }
 
-export function Animate({ children }: PropsWithChildren) {
+type AnimationValues = {
+  onTheRight?: object;
+  inTheCenter?: object;
+  onTheLeft?: object;
+  transition?: object;
+};
+
+export function AnimatePage({
+  children,
+  animationValues = {
+    onTheRight: {},
+    inTheCenter: {},
+    onTheLeft: {},
+    transition: {},
+  },
+}: PropsWithChildren<{ animationValues?: AnimationValues }>) {
   const pathname = usePathname();
 
-  const onTheRight = { y: '100%', background: '#fff' };
-  const inTheCenter = { y: 0, background: '#fff' };
-  const onTheLeft = { y: '0', background: '#fff', scale: 0.9, opacity: 0.5 };
-
-  const transition = { duration: 0.8, ease: 'easeInOut' };
+  const { onTheRight, inTheCenter, onTheLeft, transition } = animationValues;
 
   return (
     <AnimatePresence initial={false} mode="popLayout">

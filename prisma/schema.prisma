@@ -6,17 +6,3 @@ datasource db {
   provider = "postgresql"
   url      = env("NEXT_PUBLIC_SUPABASE_PRISMA")
 }
-
-model Show {
-  id              Int        @id @default(autoincrement())
-  tmdb_id         Int        @unique
-  title           String
-  image_url       String
-  current_episode Int?
-  status          ShowStatus
-}
-
-enum ShowStatus {
-  WATCHED
-  WATCHING
-}

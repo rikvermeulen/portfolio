@@ -44,7 +44,7 @@ export default async function Project({ params }: ProjectProps) {
   }
 
   return (
-    <main className="py-24 md:pt-32">
+    <main className="bg-white py-24 md:pt-32">
       <Container>
         <article className="relative mx-auto max-w-4xl">
           <div className=" mb-8 border-b border-solid border-primary pb-3">

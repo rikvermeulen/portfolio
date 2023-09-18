@@ -1,9 +1,9 @@
 import Link from 'next/link';
 
+import { MainNavigation } from '@/types/const';
+
 import Container from '@/components/Container';
 import Pill from '@/components/Pill';
-
-import { MainNavigation } from '@/content/navigation/content';
 
 export default function Footer() {
   return (

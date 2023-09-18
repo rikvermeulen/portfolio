@@ -6,12 +6,11 @@ import Link from 'next/link';
 import { DateTime } from 'luxon';
 
 import Container from '@/components/Container';
+import Icon from '@/components/Icons/Icon';
+import Tooltip from '@/components/Tooltip';
 
 import useFormattedDate from '@/utils/FormattedDate';
 import useProfile from '@/utils/getProfile';
-
-import Icon from './Icons/Icon';
-import Tooltip from './Tooltip';
 
 export default function Header() {
   const { icon: profile, label } = useProfile();

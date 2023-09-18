@@ -1,5 +1,36 @@
-import { IMessage, IQuestionAction } from '@/types/index';
+import { IMessage, IQuestionAction, Profile, ProfileName } from '@/types/index';
 
+//profiles
+export const profiles: { [key in ProfileName]: Profile } = {
+  [ProfileName.Working]: {
+    icon: 'suitcase',
+    label: 'Currently coding 💻',
+    days: new Set(['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']),
+    startTime: 9 * 60,
+    endTime: 18 * 60,
+  },
+  [ProfileName.Sleeping]: {
+    icon: 'moon',
+    label: 'Sleeping 😴',
+    days: new Set(['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']),
+    startTime: 22 * 60,
+    endTime: 7 * 60,
+  },
+  [ProfileName.NotWorking]: {
+    icon: 'controller',
+    label: 'Weekend 😊',
+    days: new Set(['Saturday', 'Sunday']),
+  },
+  [ProfileName.Personal]: {
+    icon: 'person',
+    label: 'Time off 🏖️',
+    days: new Set(['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']),
+    startTime: 18 * 60,
+    endTime: 22 * 60,
+  },
+};
+
+//Contact module
 export const initialMessages: IMessage[] = [
   {
     sender: 'admin',
@@ -52,5 +83,21 @@ export const socials = [
     name: 'CV',
     icon: 'cv',
     url: 'https://gytlzoopugyodvbaxhpy.supabase.co/storage/v1/object/public/documents/CV-EN.pdf?t=2023-09-11T12%3A31%3A27.674Z',
+  },
+];
+
+//main navigation links
+export const MainNavigation = [
+  {
+    name: 'About',
+    url: '/',
+  },
+  {
+    name: 'Work',
+    url: '/work',
+  },
+  {
+    name: 'Archive',
+    url: '/archive',
   },
 ];
