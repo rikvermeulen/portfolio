@@ -1,9 +1,9 @@
 'use client';
 
 import { PropsWithChildren, useContext, useRef } from 'react';
-import { LayoutRouterContext } from 'next/dist/shared/lib/app-router-context';
 import { usePathname } from 'next/navigation';
 import { AnimatePresence, motion } from 'framer-motion';
+import { LayoutRouterContext } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 
 export function useLayoutRouterContext() {
   return useContext(LayoutRouterContext);
