@@ -1,8 +1,9 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { createMiddlewareClient } from '@supabase/auth-helpers-nextjs';
+import { NextResponse } from 'next/server';
 import { TwitterApi } from 'twitter-api-v2';
 
 import { env } from '@/env.mjs';
+
+import { supabase } from '@/lib/db';
 
 const userClient = new TwitterApi({
   appKey: env.TWITTER_CONSUMER_KEY,
@@ -11,14 +12,12 @@ const userClient = new TwitterApi({
   accessSecret: env.TWITTER_ACCESS_TOKEN_SECRET,
 });
 
-export async function POST(req: NextRequest, res: NextResponse) {
-  const supabase = createMiddlewareClient({ req, res });
-
+export async function GET() {
   const readOnlyClient = userClient.readWrite;
 
   const user = await readOnlyClient.v2.me({
     expansions: ['pinned_tweet_id'],
-    'tweet.fields': ['created_at', 'attachments', 'author_id', 'text'],
+    'tweet.fields': ['created_at', 'attachments', 'author_id', 'text', 'public_metrics'],
     'user.fields': ['name', 'profile_image_url'],
   });
 
@@ -34,12 +33,12 @@ export async function POST(req: NextRequest, res: NextResponse) {
     await supabase.from('twitter_data').delete().match({ id: existingTweets[0].id });
   }
 
-  await supabase.from('twitter_data').insert({
+  const res = await supabase.from('twitter_data').insert({
     id: t?.id,
     twitterUserId: u.id,
-    userName: u.name,
-    userProfileImageUrl: u.profile_image_url,
-    pinnedTweetId: t?.id,
+    userName: u.username,
+    profile_image_url: u.profile_image_url,
+    pinned_tweet_id: u.pinned_tweet_id,
     tweetCreatedAt: t?.created_at,
     tweetText: t?.text,
     tweetRetweetCount: t?.public_metrics?.retweet_count,
@@ -47,6 +46,10 @@ export async function POST(req: NextRequest, res: NextResponse) {
     tweetLikeCount: t?.public_metrics?.like_count,
     tweetAttachments: t?.attachments,
   });
+
+  if (res.status !== 200) {
+    console.log(res);
+  }
 
   return NextResponse.json({ ok: true });
 }
