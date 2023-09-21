@@ -8,6 +8,11 @@ export default {
       fontFamily: {
         sans: ['var(--font-sans)', ...defaultTheme.fontFamily.sans],
       },
+      fontSize: {
+        '2xs': '0.625rem',
+        '3xs': '0.5rem',
+        '4xs': '0.375rem',
+      },
       colors: {
         primary: '#E2E2E2',
         dark_grey: '#707070',

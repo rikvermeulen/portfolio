@@ -41,7 +41,12 @@ export default async function Github({
   montly: MonthlyContributions;
 }) {
   return (
-    <Bento size="1x1" className="bento flex flex-col justify-between p-5">
+    <Bento
+      size="1x1"
+      className="bento flex flex-col justify-between p-5"
+      icon="github"
+      href="https://github.com/rikvermeulen"
+    >
       <header className="flex items-start justify-between">
         <div>
           <h3 className="text-lg font-bold">Github</h3>
@@ -49,15 +54,6 @@ export default async function Github({
             {total} contributions in the last {MONTH_RANGE} months
           </p>
         </div>
-        <a href="https://github.com/rikvermeulen" target="_blank">
-          <Image
-            src={'/images/icons/github.png'}
-            alt="github"
-            width="32"
-            height="32"
-            className="cursor-pointer rounded-md drop-shadow-md transition-transform duration-300 hover:scale-105"
-          />
-        </a>
       </header>
       <MonthlyContribution contributions={montly} />
       <ButtonPrimary
