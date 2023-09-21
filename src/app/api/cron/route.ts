@@ -11,7 +11,7 @@ const userClient = new TwitterApi({
   accessSecret: env.TWITTER_ACCESS_TOKEN_SECRET,
 });
 
-export async function GET(req: NextRequest, res: NextResponse) {
+export async function POST(req: NextRequest, res: NextResponse) {
   const supabase = createMiddlewareClient({ req, res });
 
   const readOnlyClient = userClient.readWrite;
