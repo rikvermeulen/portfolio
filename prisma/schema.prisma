@@ -6,3 +6,17 @@ datasource db {
   provider = "postgresql"
   url      = env("NEXT_PUBLIC_SUPABASE_PRISMA")
 }
+
+model twitter_data {
+  id                String   @id @default(uuid()) @map("id")
+  twitterUserId     String
+  userName          String
+  userProfileImageUrl String @map("profile_image_url")
+  pinnedTweetId     String?  @map("pinned_tweet_id")
+  tweetCreatedAt    DateTime?
+  tweetText         String?
+  tweetRetweetCount Int?
+  tweetReplyCount   Int?
+  tweetLikeCount    Int?
+  tweetAttachments  Json?
+}

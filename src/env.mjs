@@ -19,6 +19,11 @@ export const env = createEnv({
     TMDB_CLIENT_KEY: z.string().min(1),
     TMDB_CLIENT_SECRET: z.string().min(1),
     NEXT_PUBLIC_SUPABASE_PRISMA: z.string().min(1),
+    TWITTER_CONSUMER_KEY: z.string().min(1),
+    TWITTER_CONSUMER_SECRET: z.string().min(1),
+    TWITTER_ACCESS_TOKEN: z.string().min(1),
+    TWITTER_ACCESS_TOKEN_SECRET: z.string().min(1),
+    GOOLGE_BOOKS_API_KEY: z.string().min(1),
   },
   client: {
     NEXT_PUBLIC_APP_URL: z.string().min(1),
@@ -38,5 +43,10 @@ export const env = createEnv({
     TMDB_CLIENT_KEY: process.env.TMDB_CLIENT_KEY,
     TMDB_CLIENT_SECRET: process.env.TMDB_CLIENT_SECRET,
     NEXT_PUBLIC_SUPABASE_PRISMA: process.env.NEXT_PUBLIC_SUPABASE_PRISMA,
+    TWITTER_CONSUMER_KEY: process.env.TWITTER_CONSUMER_KEY,
+    TWITTER_CONSUMER_SECRET: process.env.TWITTER_CONSUMER_SECRET,
+    TWITTER_ACCESS_TOKEN: process.env.TWITTER_ACCESS_TOKEN,
+    TWITTER_ACCESS_TOKEN_SECRET: process.env.TWITTER_ACCESS_TOKEN_SECRET,
+    GOOLGE_BOOKS_API_KEY: process.env.GOOLGE_BOOKS_API_KEY,
   },
 });
