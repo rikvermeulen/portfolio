@@ -1,6 +1,5 @@
-import { cookies } from 'next/headers';
-import { NextResponse } from 'next/server';
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
+import { NextRequest, NextResponse } from 'next/server';
+import { createMiddlewareClient } from '@supabase/auth-helpers-nextjs';
 import { TwitterApi } from 'twitter-api-v2';
 
 import { env } from '@/env.mjs';
@@ -12,8 +11,8 @@ const userClient = new TwitterApi({
   accessSecret: env.TWITTER_ACCESS_TOKEN_SECRET,
 });
 
-export async function GET() {
-  const supabase = createServerComponentClient({ cookies });
+export default async function handler(req: NextRequest, res: NextResponse) {
+  const supabase = createMiddlewareClient({ req, res });
 
   const readOnlyClient = userClient.readWrite;
 
