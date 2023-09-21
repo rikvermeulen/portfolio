@@ -56,30 +56,38 @@ export class Spotify {
   }
 
   public async getTrack(playlist_id: string) {
-    if (Spotify.cache[playlist_id]) {
-      return Spotify.cache[playlist_id];
+    try {
+      if (Spotify.cache[playlist_id]) {
+        return Spotify.cache[playlist_id];
+      }
+
+      if (Date.now() >= this.nextRefresh) await this.refresh();
+      const data = await this.makeRequest(`playlists/${playlist_id}`);
+
+      Spotify.cache[playlist_id] = data;
+
+      return data;
+    } catch (error) {
+      throw new Error(`Failed to get track for playlist ID ${playlist_id}: ${error}`);
     }
-
-    if (Date.now() >= this.nextRefresh) await this.refresh();
-    const data = await this.makeRequest(`playlists/${playlist_id}`);
-
-    Spotify.cache[playlist_id] = data;
-
-    return data;
   }
 
   public async getSingleEpisode(episode_id: string, market?: string) {
-    const cacheKey = `${episode_id}:${market || 'default'}`;
+    try {
+      const cacheKey = `${episode_id}:${market || 'default'}`;
 
-    if (Spotify.cache[cacheKey]) {
-      return Spotify.cache[cacheKey];
+      if (Spotify.cache[cacheKey]) {
+        return Spotify.cache[cacheKey];
+      }
+
+      if (Date.now() >= this.nextRefresh) await this.refresh();
+      const data = await this.makeRequest(`shows/${episode_id}/episodes?market=${market}`);
+
+      Spotify.cache[cacheKey] = data;
+
+      return data;
+    } catch (error) {
+      throw new Error(`Failed to get episode for episode ID ${episode_id}: ${error}`);
     }
-
-    if (Date.now() >= this.nextRefresh) await this.refresh();
-    const data = await this.makeRequest(`shows/${episode_id}/episodes?market=${market}`);
-
-    Spotify.cache[cacheKey] = data;
-
-    return data;
   }
 }
