@@ -7,6 +7,7 @@ import { DateTime } from 'luxon';
 
 import { initialMessages, questionsAndActions, socials } from '@/types/const';
 
+import Bento from '@/components/Bento/Bento';
 import { AdminMessage, UserMessage } from '@/components/Contact/Messages';
 import Icon from '@/components/Icons/Icon';
 
@@ -14,8 +15,6 @@ import cc from '@/lib/cc';
 import FormattedDate from '@/utils/FormattedDate';
 import { useSound } from '@/utils/sound';
 import { hasEnoughText, isValidEmail, isValidPhoneNumber } from '@/utils/validation';
-
-import Bento from '@/components/Bento/Bento';
 
 const disableInputs = (inputRef: any, buttonRef: any, disabled: boolean) => {
   if (inputRef.current && buttonRef.current) {
@@ -54,7 +53,7 @@ export default function Contact() {
 
   const sendData = async (data: any) => {
     try {
-      const res = await fetch(`/api/message`, { method: 'POST', body: JSON.stringify(data) });
+      const res = await fetch(`/api/contact`, { method: 'POST', body: JSON.stringify(data) });
       if (!res.ok) throw new Error();
 
       addAdminMessage('Thanks 🙏 I will contact you soon');
@@ -259,7 +258,7 @@ export default function Contact() {
               target="_blank"
             >
               <Image
-                src={`/images/icons/${social.icon}.png`}
+                src={`/images/icons/socials/${social.icon}.png`}
                 className="rounded-full border border-solid border-[#EAEBED]"
                 alt={social.name}
                 priority

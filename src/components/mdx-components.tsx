@@ -10,7 +10,6 @@ import {
   CustomH5,
   CustomH6,
 } from '@/components/Md/CustomHeading';
-
 import CustomImage from '@/components/Md/CustomImage';
 import { CustomLI, CustomOL, CustomP } from '@/components/Md/CustomRichText';
 

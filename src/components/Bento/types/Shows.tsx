@@ -46,7 +46,7 @@ export default function Shows({ current, shows, movies }: PropsShows) {
     }
 
     try {
-      const res = await fetch(`/api/recommendation`, {
+      const res = await fetch(`/api/recommend`, {
         method: 'POST',
         body: JSON.stringify(formData),
       });
