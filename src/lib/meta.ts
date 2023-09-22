@@ -16,7 +16,7 @@ export default async function meta(): Promise<Metadata> {
     title: 'Rik Vermeulen - Creative Developer',
     description:
       'Discover the creative works and projects of Rik Vermeulen, a creative developer based in the Netherlands.',
-    url: 'www.rikvermeulen.com',
+    url: 'https://www.rikvermeulen.com',
     siteName: 'Portfolio - Rik Vermeulen',
     images: [
       {
@@ -81,7 +81,7 @@ export default async function meta(): Promise<Metadata> {
     authors: [
       {
         name: 'Rik',
-        url: 'www.rikvermeulen.com',
+        url: 'https://www.rikvermeulen.com',
       },
     ],
     icons: {

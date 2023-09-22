@@ -5,6 +5,17 @@ import { LayoutRouterContext } from 'next/dist/shared/lib/app-router-context.sha
 import { usePathname } from 'next/navigation';
 import { AnimatePresence, motion } from 'framer-motion';
 
+interface AnimationValues {
+  onTheRight?: object;
+  inTheCenter?: object;
+  onTheLeft?: object;
+  transition?: object;
+}
+
+interface AnimatePageProps {
+  animationValues?: AnimationValues;
+}
+
 export function useLayoutRouterContext() {
   return useContext(LayoutRouterContext);
 }
@@ -18,13 +29,6 @@ function FrozenRouter(props: PropsWithChildren<{}>) {
   );
 }
 
-type AnimationValues = {
-  onTheRight?: object;
-  inTheCenter?: object;
-  onTheLeft?: object;
-  transition?: object;
-};
-
 export function AnimatePage({
   children,
   animationValues = {
@@ -33,7 +37,7 @@ export function AnimatePage({
     onTheLeft: {},
     transition: {},
   },
-}: PropsWithChildren<{ animationValues?: AnimationValues }>) {
+}: PropsWithChildren<AnimatePageProps>) {
   const pathname = usePathname();
 
   const { onTheRight, inTheCenter, onTheLeft, transition } = animationValues;

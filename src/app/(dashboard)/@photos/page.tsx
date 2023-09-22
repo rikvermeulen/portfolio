@@ -1,10 +1,11 @@
 import Photos from '@/components/Bento/types/Photos';
 
-import { supabase } from '@/lib/db';
+import { getSupabaseClient } from '@/lib/db';
 
 const albums = [{ name: 'apps' }, { name: 'map' }, { name: 'heart' }, { name: 'dog' }];
 
 async function getData(albumName: string) {
+  const supabase = getSupabaseClient();
   const { data, error } = await supabase.storage.from('photos').list(albumName);
 
   if (error) {

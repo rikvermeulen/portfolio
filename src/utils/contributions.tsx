@@ -1,27 +1,17 @@
 import axios from 'axios';
 
-type ContributionOptions = {
-  from?: string;
-  to?: string;
+import {
+  TContributionDay,
+  TContributionLevelName,
+  TContributionOptions,
+  TMonthlyContributions,
+} from '@/types/types';
+
+export type TWeek = {
+  contributionDays: TContributionDay[];
 };
 
-export type ContributionDay = {
-  contributionCount: number;
-  contributionLevel: ContributionLevelName;
-  date: string;
-  color: string;
-  border: string;
-};
-
-const CONTRIBUTION_LEVELS = {
-  NONE: 0,
-  FIRST_QUARTILE: 1,
-  SECOND_QUARTILE: 2,
-  THIRD_QUARTILE: 3,
-  FOURTH_QUARTILE: 4,
-};
-
-const CUSTOM_COLORS: Record<ContributionLevelName, string> = {
+export const CUSTOM_COLORS: Record<TContributionLevelName, string> = {
   NONE: '#e2e4e7',
   FIRST_QUARTILE: '#94e0a2',
   SECOND_QUARTILE: '#3fbc60',
@@ -29,47 +19,42 @@ const CUSTOM_COLORS: Record<ContributionLevelName, string> = {
   FOURTH_QUARTILE: '#1f6a37',
 };
 
-type ContributionLevelName = keyof typeof CONTRIBUTION_LEVELS;
-
-export type MonthlyContributions = {
-  [key: string]: ContributionDay[];
-};
-
 const GITHUB_API_URL = 'https://api.github.com/graphql';
 
-export const getContributionCalendar = async (
-  userName: string,
-  token: string,
-  contributionOptions: ContributionOptions = {},
-) => {
-  if (!userName || !token) {
-    throw new Error('Missing required arguments: userName and token');
-  }
-
-  const { from, to } = contributionOptions;
-
-  const query = `
-    query($userName:String! $from:DateTime $to:DateTime) {
-      user(login: $userName){
-        contributionsCollection(from: $from, to: $to) {
-          contributionCalendar {
-            totalContributions
-            weeks {
-              contributionDays {
-                color
-                contributionCount
-                contributionLevel
-                date
-              }
+const QUERY = `
+  query($userName:String! $from:DateTime $to:DateTime) {
+    user(login: $userName){
+      contributionsCollection(from: $from, to: $to) {
+        contributionCalendar {
+          totalContributions
+          weeks {
+            contributionDays {
+              color
+              contributionCount
+              contributionLevel
+              date
             }
           }
         }
       }
     }
-  `;
+  }
+`;
 
+class GitHubApiError extends Error {}
+
+export const getContributionCalendar = async (
+  userName: string,
+  token: string,
+  contributionOptions: TContributionOptions = {},
+) => {
+  if (!userName || !token) {
+    throw new GitHubApiError('Missing required arguments: userName and token');
+  }
+
+  const { from, to } = contributionOptions;
   const variables = JSON.stringify({ userName, from, to });
-  const json = { query, variables };
+  const json = { query: QUERY, variables };
 
   try {
     const response = await axios.post(GITHUB_API_URL, json, {
@@ -81,19 +66,19 @@ export const getContributionCalendar = async (
 
     if (
       !contributionCalendar ||
-      !Object.hasOwn(contributionCalendar, 'weeks') ||
-      !Object.hasOwn(contributionCalendar, 'totalContributions')
+      !('weeks' in contributionCalendar) ||
+      !('totalContributions' in contributionCalendar)
     ) {
-      throw new Error('Could not get contributions data');
+      throw new GitHubApiError('Could not get contributions data');
     }
 
     const { weeks, totalContributions } = contributionCalendar;
 
-    const monthlyContributions = await groupContributionsByMonth(
-      weeks.map((week: { contributionDays: ContributionDay[] }) =>
-        week.contributionDays.map((day) => ({
+    const monthlyContributions = groupContributionsByMonth(
+      weeks.flatMap((week: TWeek) =>
+        week.contributionDays.map((day: TContributionDay) => ({
           ...day,
-          border: CUSTOM_COLORS[day.contributionLevel],
+          border: CUSTOM_COLORS[day.contributionLevel as TContributionLevelName],
         })),
       ),
     );
@@ -108,30 +93,17 @@ export const getContributionCalendar = async (
   }
 };
 
-const groupContributionsByMonth = async (
-  contributions: ContributionDay[][],
-): Promise<MonthlyContributions> => {
-  const monthlyContributions: MonthlyContributions = {};
-
-  contributions.forEach((week) => {
-    week.forEach((day) => {
-      const month = new Date(day.date).toLocaleString('en-US', { month: 'long' }); // "May"
-
-      if (!monthlyContributions[month]) {
-        monthlyContributions[month] = [];
-      }
-
-      monthlyContributions[month].push(day);
-    });
-  });
-
-  return monthlyContributions;
+const groupContributionsByMonth = (contributions: TContributionDay[]): TMonthlyContributions => {
+  return contributions.reduce<TMonthlyContributions>((acc, day) => {
+    const month = new Date(day.date).toLocaleString('en-US', { month: 'long' });
+    acc[month] = acc[month] || [];
+    acc[month].push(day);
+    return acc;
+  }, {});
 };
 
-const trimFirstAndLastMonths = (monthlyContributions: MonthlyContributions) => {
+const trimFirstAndLastMonths = (monthlyContributions: TMonthlyContributions) => {
   const keys = Object.keys(monthlyContributions);
-  delete monthlyContributions[keys[0]];
-  delete monthlyContributions[keys[keys.length - 1]];
-
-  return monthlyContributions;
+  const { [keys[0]]: _, [keys[keys.length - 1]]: __, ...rest } = monthlyContributions;
+  return rest;
 };

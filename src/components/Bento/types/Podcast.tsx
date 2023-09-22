@@ -1,29 +1,18 @@
 'use client';
 
-import { memo, useCallback, useEffect, useMemo, useState } from 'react';
+import { FC, memo, useCallback, useEffect, useMemo, useState } from 'react';
 import Image from 'next/image';
 
+import type { PodcastItem, PodcastProps } from '@/types/types';
+
 import AudioPlayer from '@/components/AudioPlayer';
+import Bento from '@/components/Bento/Bento';
 import Icon from '@/components/Icons/Icon';
 
 import cc from '@/lib/cc';
 import truncateText from '@/utils/truncateText';
 
-import Bento from '../Bento';
-
-interface PodcastProps {
-  playlist: PodcastItem[];
-  className?: string;
-}
-
-export interface PodcastItem {
-  audio_preview_url: string;
-  images: [{ url: string }, { url: string }];
-  name: string;
-  explicit: boolean;
-}
-
-const Podcast: React.FC<PodcastProps> = ({ playlist = [], className }) => {
+const Podcast: FC<PodcastProps> = ({ playlist = [], className }) => {
   const [playlistTracks, setPlaylistTracks] = useState<PodcastItem[]>([]);
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
   const [pulsedButton, setPulsedButton] = useState<null | 'playPause' | 'previous' | 'next'>(null);

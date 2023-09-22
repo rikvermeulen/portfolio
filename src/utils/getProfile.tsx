@@ -3,7 +3,7 @@
 import { DateTime } from 'luxon';
 
 import { profiles } from '@/types/const';
-import { ProfileName } from '@/types/index';
+import { EProfileName } from '@/types/types';
 
 import { FormattedTime } from './FormattedDate';
 
@@ -25,10 +25,10 @@ export default function useProfile(): { icon: string; label: string } {
   const currentTime = now.hour * 60 + now.minute;
 
   const profileOrder = [
-    ProfileName.Personal,
-    ProfileName.Working,
-    ProfileName.Sleeping,
-    ProfileName.NotWorking,
+    EProfileName.Personal,
+    EProfileName.Working,
+    EProfileName.Sleeping,
+    EProfileName.NotWorking,
   ];
 
   for (let profileName of profileOrder) {

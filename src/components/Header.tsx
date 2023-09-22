@@ -41,7 +41,7 @@ export default function Header() {
             </Tooltip>
           )}
         </div>
-        <p className="justify-self-end text-sm text-dark_grey">{liveTime}</p>
+        <p className="justify-self-end text-sm font-medium text-black">{liveTime}</p>
       </Container>
     </header>
   );

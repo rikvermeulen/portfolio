@@ -3,7 +3,7 @@
 import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import Image from 'next/image';
 
-import { PlaylistItem } from '@/types/index';
+import { IPlaylistItem } from '@/types/types';
 
 import AudioPlayer from '@/components/AudioPlayer';
 import Icon from '@/components/Icons/Icon';
@@ -13,12 +13,12 @@ import cc from '@/lib/cc';
 import Bento from '../Bento';
 
 interface MusicProps {
-  playlist: PlaylistItem[];
+  playlist: IPlaylistItem[];
   className?: string;
 }
 
 const Music: React.FC<MusicProps> = ({ playlist = [], className }) => {
-  const [playlistTracks, setPlaylistTracks] = useState<PlaylistItem[]>([]);
+  const [playlistTracks, setPlaylistTracks] = useState<IPlaylistItem[]>([]);
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
   const [pulsedButton, setPulsedButton] = useState<null | 'playPause' | 'previous' | 'next'>(null);
   const {

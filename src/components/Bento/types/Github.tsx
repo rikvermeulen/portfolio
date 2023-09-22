@@ -1,14 +1,12 @@
-import Image from 'next/image';
+import type { TContributionDay, TMonthlyContributions } from '@/types/types';
 
 import Bento from '@/components/Bento/Bento';
 import { ButtonPrimary } from '@/components/Button';
 
-import { type ContributionDay, type MonthlyContributions } from '@/utils/contributions';
-
 const MONTH_RANGE = 5;
 
 interface MonthlyContributionProps {
-  contributions: MonthlyContributions;
+  contributions: TMonthlyContributions;
 }
 
 const MonthlyContribution = ({ contributions }: MonthlyContributionProps) => (
@@ -17,7 +15,7 @@ const MonthlyContribution = ({ contributions }: MonthlyContributionProps) => (
       <div key={month}>
         <p className="text-[10px] text-dark_grey">{month}</p>
         <div className="mt-2 grid grid-cols-4 gap-2">
-          {contributions[month].map((contribution: ContributionDay, i: number) => (
+          {contributions[month].map((contribution: TContributionDay, i: number) => (
             <div
               className={`h-2.5 w-2.5 rounded-sm drop-shadow-sm`}
               key={i}
@@ -38,7 +36,7 @@ export default async function Github({
   montly,
 }: {
   total: number;
-  montly: MonthlyContributions;
+  montly: TMonthlyContributions;
 }) {
   return (
     <Bento

@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
-import { IMessage } from '@/types';
+
+import { IMessage } from '@/types/types';
 
 import Icon from '@/components/Icons/Icon';
 

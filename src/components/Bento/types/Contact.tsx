@@ -2,10 +2,10 @@
 
 import { SetStateAction, useEffect, useMemo, useRef, useState } from 'react';
 import Image from 'next/image';
-import { IMessage } from '@/types';
 import { DateTime } from 'luxon';
 
 import { initialMessages, questionsAndActions, socials } from '@/types/const';
+import { IMessage } from '@/types/types';
 
 import Bento from '@/components/Bento/Bento';
 import { AdminMessage, UserMessage } from '@/components/Contact/Messages';

@@ -1,27 +1,27 @@
-import { IMessage, IQuestionAction, Profile, ProfileName } from '@/types/index';
+import { EProfileName, IMessage, IQuestionAction, TProfile } from '@/types/types';
 
 //profiles
-export const profiles: { [key in ProfileName]: Profile } = {
-  [ProfileName.Working]: {
+export const profiles: { [key in EProfileName]: TProfile } = {
+  [EProfileName.Working]: {
     icon: 'suitcase',
     label: 'Currently coding 💻',
     days: new Set(['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']),
     startTime: 9 * 60,
     endTime: 18 * 60,
   },
-  [ProfileName.Sleeping]: {
+  [EProfileName.Sleeping]: {
     icon: 'moon',
     label: 'Sleeping 😴',
     days: new Set(['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']),
     startTime: 22 * 60,
     endTime: 7 * 60,
   },
-  [ProfileName.NotWorking]: {
+  [EProfileName.NotWorking]: {
     icon: 'controller',
     label: 'Weekend 😊',
     days: new Set(['Saturday', 'Sunday']),
   },
-  [ProfileName.Personal]: {
+  [EProfileName.Personal]: {
     icon: 'person',
     label: 'Time off 🏖️',
     days: new Set(['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']),
@@ -101,3 +101,12 @@ export const MainNavigation = [
     url: '/archive',
   },
 ];
+
+//github
+export const CONTRIBUTION_LEVELS = {
+  NONE: 0,
+  FIRST_QUARTILE: 1,
+  SECOND_QUARTILE: 2,
+  THIRD_QUARTILE: 3,
+  FOURTH_QUARTILE: 4,
+};

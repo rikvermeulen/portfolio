@@ -4,7 +4,7 @@ import { allProjects } from '@/contentlayer/generated';
 
 import { ButtonPrimary } from '@/components/Button';
 import Container from '@/components/Container';
-import { Mdx } from '@/components/mdx-components';
+import { Mdx } from '@/components/Md/mdx-components';
 
 export async function generateMetadata({ params }: ProjectProps): Promise<Metadata> {
   const project = await getProjectFromParams(params);
