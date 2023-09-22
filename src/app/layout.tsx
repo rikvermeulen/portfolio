@@ -11,7 +11,7 @@ import { TailwindIndicator } from '@/components/TailwindIndicator';
 
 import { fontSans } from '@/lib/fonts';
 import meta from '@/lib/meta';
-import { SoundProvider } from '@/utils/sound';
+import { SoundProvider } from '@/utils/useSound';
 
 export async function generateMetadata(): Promise<Metadata> {
   const metadata = await meta();

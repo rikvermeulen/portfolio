@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { ReactElement } from 'react';
 import { NextResponse } from 'next/server';
 import { Resend } from 'resend';
 
@@ -19,7 +19,7 @@ export async function POST(request: Request) {
       react: RecommendationTemplate({
         email: email,
         recommendation: recommendation,
-      }) as React.ReactElement,
+      }) as ReactElement,
     });
 
     return NextResponse.json(data);

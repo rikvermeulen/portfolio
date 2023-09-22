@@ -69,7 +69,13 @@ const Music: React.FC<MusicProps> = ({ playlist = [], className }) => {
   const image = currentTrack?.album?.images[1]?.url || '/images/noalbum.png';
 
   return (
-    <Bento size="1x1" className={cc(className, isPlaying && '', 'bento relative z-0 !border-none')}>
+    <Bento
+      size="1x1"
+      className={cc(
+        className,
+        'bento relative z-0 !border-none bg-gradient-to-b from-[#E96575] to-[#ff333a]',
+      )}
+    >
       <div className="absolute right-0 z-20 p-5">
         <a href="https://music.apple.com/nl/playlist/r-b/pl.u-38oWX9ECd2XAl3" target="_blank">
           <Image

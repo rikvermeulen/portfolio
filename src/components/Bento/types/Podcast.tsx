@@ -64,7 +64,13 @@ const Podcast: FC<PodcastProps> = ({ playlist = [], className }) => {
   const image = currentTrack?.images[1]?.url || '/images/noalbum.png';
 
   return (
-    <Bento size="1x1" className={cc(className, isPlaying && '', 'bento relative z-0 !border-none')}>
+    <Bento
+      size="1x1"
+      className={cc(
+        className,
+        'bento relative z-0 !border-none bg-gradient-to-b from-[#BC6AEB] to-[#6E2AAD]',
+      )}
+    >
       <div className="absolute right-0 z-20 p-5">
         <a href="https://open.spotify.com/show/02fM1JHpt9HmHGp482K71b" target="_blank">
           <Image

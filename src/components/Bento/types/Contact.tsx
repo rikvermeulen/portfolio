@@ -1,11 +1,10 @@
 'use client';
 
-import { SetStateAction, useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import Image from 'next/image';
 import { DateTime } from 'luxon';
 
-import { initialMessages, questionsAndActions, socials } from '@/types/const';
-import { IMessage } from '@/types/types';
+import { questionsAndActions, socials } from '@/types/const';
 
 import Bento from '@/components/Bento/Bento';
 import { AdminMessage, UserMessage } from '@/components/Contact/Messages';
@@ -13,24 +12,11 @@ import Icon from '@/components/Icons/Icon';
 
 import cc from '@/lib/cc';
 import FormattedDate from '@/utils/FormattedDate';
-import { useSound } from '@/utils/sound';
-import { hasEnoughText, isValidEmail, isValidPhoneNumber } from '@/utils/validation';
-
-const disableInputs = (inputRef: any, buttonRef: any, disabled: boolean) => {
-  if (inputRef.current && buttonRef.current) {
-    inputRef.current.disabled = disabled;
-    buttonRef.current.disabled = disabled;
-    inputRef.current.style.opacity = disabled ? '0.2' : '1';
-  }
-};
+import useChat from '@/utils/useChat';
+import { hasEnoughText } from '@/utils/validation';
 
 export default function Contact() {
-  // State
-  const [step, setStep] = useState<number>(0);
-  const [message, setMessage] = useState<string>('');
   const [showMenu, setShowMenu] = useState<boolean>(false);
-  const [chat, setChat] = useState<IMessage[]>(initialMessages);
-  const [userData, setUserData] = useState({ name: '', reason: '', phone: '', email: '' });
 
   // Refs
   const chatRef = useRef<HTMLDivElement>(null);
@@ -39,35 +25,15 @@ export default function Contact() {
   const inputRef = useRef<HTMLInputElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
 
-  // Sounds
-  const { playSound } = useSound();
+  const { step, message, chat, handleSendClick, handleInputChange, handleInputFocus } = useChat(
+    inputRef,
+    buttonRef,
+  );
 
   const initialChatLength = 2;
 
-  const toggleInputs = (disabled: boolean) => {
-    disableInputs(inputRef, buttonRef, disabled);
-  };
-
   const date = DateTime.utc().toString();
   const formattedCreationDate = FormattedDate(date);
-
-  const sendData = async (data: any) => {
-    try {
-      const res = await fetch(`/api/contact`, { method: 'POST', body: JSON.stringify(data) });
-      if (!res.ok) throw new Error();
-
-      addAdminMessage('Thanks 🙏 I will contact you soon');
-      toggleInputs(true);
-    } catch (error) {
-      alert('An error occurred. Please try again later.');
-    }
-  };
-
-  const addAdminMessage = (text: string) => {
-    toggleInputs(true);
-    setChat((prevChat) => [...prevChat, { sender: 'admin', text }]);
-    toggleInputs(false);
-  };
 
   useEffect(() => {
     if (chatRef.current) {
@@ -76,24 +42,6 @@ export default function Contact() {
       chatEl.scrollTop = chatEl.scrollHeight;
     }
   }, [chat]);
-
-  const handleInputChange = (e: { target: { value: SetStateAction<string> } }) => {
-    setMessage(e.target.value);
-  };
-
-  const handleInputFocus = () => {
-    if (step === 0 && chat.length === 2) {
-      const firstQuestion = questionsAndActions[0].question;
-      playSound('receive');
-      setChat([
-        ...chat,
-        {
-          sender: 'admin',
-          text: typeof firstQuestion === 'string' ? firstQuestion : firstQuestion[0],
-        },
-      ]);
-    }
-  };
 
   const handleClickOutside = (event: MouseEvent) => {
     if (event.button !== 0) return;
@@ -113,81 +61,6 @@ export default function Contact() {
       setShowMenu(true);
       document.addEventListener('mousedown', handleClickOutside);
     }
-  };
-
-  const handleSendClick = async (e: { preventDefault: () => void }) => {
-    e.preventDefault();
-
-    playSound('send');
-    addUserMessageToChat();
-
-    if (isInvalidInput()) {
-      sendErrorMessage();
-    } else {
-      processUserInputAndMoveToNextStep();
-    }
-
-    setMessage('');
-  };
-
-  const addUserMessageToChat = () => {
-    setChat((prevChat) => [...prevChat, { sender: 'user', text: message }]);
-  };
-
-  const isInvalidInput = () => {
-    return (
-      (step === 2 && !isValidPhoneNumber(message)) ||
-      (step === 3 && !isValidEmail(message)) ||
-      !hasEnoughText(message)
-    );
-  };
-
-  const sendErrorMessage = () => {
-    const errorMessage = getErrorMessage();
-
-    setTimeout(() => {
-      playSound('receive');
-      addAdminMessage(errorMessage);
-    }, 1000);
-  };
-
-  const getErrorMessage = () => {
-    if (step === 2) return 'Please provide a valid phone number.';
-    if (step === 3) return 'Please provide a valid email address.';
-    return 'Your message is too short. Please provide more details.';
-  };
-
-  const processUserInputAndMoveToNextStep = () => {
-    const { action } = questionsAndActions[step];
-    const newUserData = action(message, userData);
-
-    setUserData(newUserData);
-
-    if (step < questionsAndActions.length - 1) {
-      setStep((prevStep) => prevStep + 1);
-      sendNextQuestion();
-    } else {
-      sendData(newUserData);
-    }
-  };
-
-  const sendNextQuestion = () => {
-    const nextQuestion = questionsAndActions[step + 1].question;
-
-    if (Array.isArray(nextQuestion)) {
-      nextQuestion.forEach((q, i) => addAdminMessageWithDelay(q, (i + 1) * 1000));
-    } else {
-      addAdminMessageWithDelay(nextQuestion, 1000);
-    }
-  };
-
-  const addAdminMessageWithDelay = (message: string, delay: number) => {
-    toggleInputs(true);
-    setTimeout(() => {
-      playSound('receive');
-      addAdminMessage(message);
-      toggleInputs(false);
-    }, delay);
   };
 
   const chatContent = useMemo(
