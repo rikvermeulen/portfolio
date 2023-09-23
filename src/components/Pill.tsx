@@ -1,8 +1,10 @@
 'use client';
 
-import { createRef, useLayoutEffect, useRef } from 'react';
+import { createRef, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+
+import { Indicator } from '@/components/Indicator';
 
 import cc from '@/lib/cc';
 
@@ -14,63 +16,52 @@ type PillProps = {
   activeIndex?: number;
 };
 
-const updateIndicator = (
-  activeLinkElement: HTMLAnchorElement | null,
-  indicatorElement: HTMLLIElement | null,
-) => {
-  if (activeLinkElement && indicatorElement) {
-    indicatorElement.style.transform = `translateX(${Math.max(activeLinkElement.offsetLeft, 0)}px)`;
-    indicatorElement.style.width = `${activeLinkElement.offsetWidth}px`;
-  }
-};
-
 const getActiveLinkIndex = (
-  items: PillProps['items'],
+  items: { url?: string }[],
   activeIndex: number | undefined,
   pathName: string,
 ) => {
   if (activeIndex !== undefined) return activeIndex;
+
   const exactMatchIndex = items.findIndex((item) => pathName === item.url);
   if (exactMatchIndex !== -1) return exactMatchIndex;
 
-  const sortedItems = [...items].sort((a, b) => (b.url?.length || 0) - (a.url?.length || 0));
+  if (pathName === '/' && items[0].url === '/') return 0;
 
-  for (let i = 0; i < sortedItems.length; i++) {
-    if (pathName.startsWith(sortedItems[i].url || '')) {
-      return items.indexOf(sortedItems[i]);
-    }
-  }
-
-  return -1;
+  return (
+    items.reduce((bestMatch, item, index) => {
+      const currentUrl = item.url || '';
+      return pathName.startsWith(currentUrl) &&
+        currentUrl.length > (items[bestMatch]?.url?.length || 0)
+        ? index
+        : bestMatch;
+    }, -1) || undefined
+  );
 };
 
 export default function Pill({ className, items, activeIndex }: PillProps) {
   const pathName = usePathname();
-  const indicatorRef = useRef<HTMLLIElement>(null);
 
-  const linkRefs = useRef(items.map(() => createRef<HTMLAnchorElement>()));
+  const linkRefs = useRef(items.map(() => createRef<any>()));
 
-  useLayoutEffect(() => {
-    const activeLinkIndex = getActiveLinkIndex(items, activeIndex, pathName);
-    updateIndicator(linkRefs.current[activeLinkIndex]?.current, indicatorRef.current);
-  }, [items, pathName, activeIndex]);
+  const activeLinkIndex = getActiveLinkIndex(items, activeIndex, pathName) || 0;
 
   return (
     <div
       className={cc(
-        'z-50 rounded-full border border-solid border-[#DEDEDE] bg-primary/60 p-1.5 drop-shadow-sm backdrop-blur-xl',
         className,
+        'rounded-full border border-solid border-[#DEDEDE] bg-primary/60 p-1.5 drop-shadow-sm backdrop-blur-xl',
       )}
     >
       <ul className="relative flex flex-row gap-4">
-        <li
-          ref={indicatorRef}
-          className="absolute -z-10 h-full w-24 rounded-full bg-white transition-transform duration-300 ease-in-out sm:w-32"
+        <Indicator
+          activeIndex={activeLinkIndex}
+          itemRefs={linkRefs.current}
+          className="h-full w-fit bg-white"
         />
         {items.map((item, index) => {
           const { url, name, icon, onClick } = item;
-          const isActive =
-            activeIndex !== undefined ? index === activeIndex : pathName.startsWith(url || '');
+          const isActive = activeLinkIndex !== undefined ? index === activeLinkIndex : false;
 
           const handleClick = (e: { preventDefault: () => void }) => {
             if (isActive && url !== pathName && url !== '/') {
@@ -96,7 +87,7 @@ export default function Pill({ className, items, activeIndex }: PillProps) {
                   {name}
                 </Link>
               ) : (
-                <a
+                <button
                   ref={linkRefs.current[index]}
                   onClick={handleClick}
                   className="flex cursor-pointer items-center justify-center px-5"
@@ -120,7 +111,7 @@ export default function Pill({ className, items, activeIndex }: PillProps) {
                       )}
                     </>
                   )}
-                </a>
+                </button>
               )}
             </li>
           );

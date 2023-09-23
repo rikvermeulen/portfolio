@@ -2,20 +2,20 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
-import { PropsShows } from '@/types';
 
+import { TPropsShows } from '@/types/types';
+
+import Bento from '@/components/Bento/Bento';
 import { ButtonPrimary } from '@/components/Button';
 import Icon from '@/components/Icons/Icon';
-import Modal from '@/components/shows/Modal';
-import WatchList from '@/components/shows/WatchList';
+import Modal from '@/components/Show/Modal';
+import WatchList from '@/components/Show/WatchList';
 
 import { hasEnoughText, isValidEmail } from '@/utils/validation';
 
-import Bento from '../Bento';
-
 const imageURL = 'https://image.tmdb.org/t/p/original';
 
-export default function Shows({ current, shows, movies }: PropsShows) {
+export default function Shows({ current, shows, movies }: TPropsShows) {
   const [isModalVisible, setModalVisible] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
@@ -47,7 +47,7 @@ export default function Shows({ current, shows, movies }: PropsShows) {
     }
 
     try {
-      const res = await fetch(`/api/recommendation`, {
+      const res = await fetch(`/api/recommend`, {
         method: 'POST',
         body: JSON.stringify(formData),
       });
@@ -67,32 +67,28 @@ export default function Shows({ current, shows, movies }: PropsShows) {
     <Bento
       size="1x1"
       className="bento relative z-0 flex flex-col justify-between bg-gradient-to-b from-[#2B3833] to-[#0F1314] p-5"
+      icon="shows"
+      href={`https://www.themoviedb.org/tv/${current?.show_id}`}
     >
       <header className="flex justify-between">
         <p className="text-lg font-bold text-white">Watching now</p>
-        <Image
-          src="/images/icons/shows.png"
-          className={`p-1.5 drop-shadow-md transition-transform duration-300 hover:scale-105`}
-          alt="media"
-          width={32}
-          height={32}
-        />
       </header>
       <div className="px-4">
-        {current.still_path && (
+        {current?.still_path && (
           <Image
-            src={`${imageURL}${current.still_path}`}
+            src={`${imageURL}${current?.still_path}`}
             className={`rounded-xl`}
             alt="media"
             width={270}
             height={150}
+            loading="lazy"
           />
         )}
         <div className="mt-3 flex items-center justify-between">
           <div className="text-sm text-white">
             <p className="font-bold">{current?.name}</p>
             <p className="relative -top-1 text-white/70">
-              Last seen - {`S${current?.season_number}, E${current.episode_number}`}
+              Last seen - {`S${current?.season_number}, E${current?.episode_number}`}
             </p>
           </div>
           <Icon

@@ -2,11 +2,9 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { allProjects } from '@/contentlayer/generated';
 
-import Bento from '@/components/Bento/Bento';
-import { ButtonSecondary } from '@/components/Button';
+import { ButtonPrimary } from '@/components/Button';
 import Container from '@/components/Container';
-import Grid from '@/components/Grid';
-import { Mdx } from '@/components/mdx-components';
+import { Mdx } from '@/components/Md/mdx-components';
 
 export async function generateMetadata({ params }: ProjectProps): Promise<Metadata> {
   const project = await getProjectFromParams(params);
@@ -46,7 +44,7 @@ export default async function Project({ params }: ProjectProps) {
   }
 
   return (
-    <main className="py-24 md:pt-32">
+    <main className="bg-white py-24 md:pt-32">
       <Container>
         <article className="relative mx-auto max-w-4xl">
           <div className=" mb-8 border-b border-solid border-primary pb-3">
@@ -77,34 +75,13 @@ export default async function Project({ params }: ProjectProps) {
                 <p className="mb-4 text-xs font-semibold uppercase text-dark_grey">Context</p>
                 <p className="mb-8 text-base leading-loose">{project.context}</p>
                 {project.website && (
-                  <ButtonSecondary label="View on Github" href={project.website} external />
+                  <ButtonPrimary label="View on Github" href={project.website} external />
                 )}
               </div>
             </div>
           </div>
         </article>
       </Container>
-      {/* <section className="my-20">
-        <Container>
-          <Grid>
-            <Bento size="1x2" className="bento bg-gray-100">
-              <p></p>
-            </Bento>
-            <Bento size="1x1" className="bento bg-gray-100">
-              <p></p>
-            </Bento>
-            <Bento size="2x1" className="bento bg-gray-100">
-              <p></p>
-            </Bento>
-            <Bento size="2x1" className="bento bg-gray-100">
-              <p></p>
-            </Bento>
-            <Bento size="1x1" className="bento bg-gray-100">
-              <p></p>
-            </Bento>
-          </Grid>
-        </Container>
-      </section> */}
       <Container>
         <section className="mx-auto max-w-4xl">
           <Mdx code={project.body.code} />

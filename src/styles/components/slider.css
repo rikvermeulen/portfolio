@@ -1,0 +1,20 @@
+.slider {
+  --background-size: 0%;
+  background: linear-gradient(
+    to right,
+    #ffffff 0%,
+    #ffffff var(--background-size),
+    rgba(255, 255, 255, 0.5) var(--background-size)
+  );
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  box-shadow: none;
+  appearance: none;
+  width: 20px;
+  height: 4px;
+  background: #ffffff;
+  cursor: pointer;
+  border-radius: 25%;
+}

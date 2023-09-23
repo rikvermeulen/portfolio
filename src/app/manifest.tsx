@@ -7,7 +7,7 @@ export default function manifest(): MetadataRoute.Manifest {
 
   return {
     name: 'Portfolio Rik Vermeulen',
-    short_name: 'Portfolio RV',
+    short_name: 'Portfolio R.V',
     description: 'Portfolio Rik Vermeulen',
     start_url: '/',
     scope: '/',
@@ -17,13 +17,13 @@ export default function manifest(): MetadataRoute.Manifest {
     categories: ['education', 'personalization', 'productivity', 'utilities'],
     icons: [
       {
-        src: `${host}/favicons/icon-32x32.png`,
+        src: `${host}/images/favicons/icon-32x32.png`,
         sizes: '32x32',
         type: 'image/x-icon',
         purpose: 'maskable',
       },
       {
-        src: `${host}/favicons/icon-192x192.png`,
+        src: `${host}/images/favicons/icon-192x192.png`,
         sizes: '192x192',
         type: 'image/png',
         purpose: 'any',

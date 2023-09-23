@@ -1,5 +1,5 @@
-import Message from '@/components/Bento/types/Message';
+import ContactForm from '@/components/Bento/types/Contact';
 
 export default async function Contact() {
-  return <Message />;
+  return <ContactForm />;
 }

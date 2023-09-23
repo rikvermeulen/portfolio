@@ -1,32 +1,21 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { FC, memo, useCallback, useEffect, useMemo, useState } from 'react';
 import Image from 'next/image';
 
-import AudioPlayer from '@/components/AudioPlayer';
+import type { PodcastItem, PodcastProps } from '@/types/types';
+
+import Bento from '@/components/Bento/Bento';
 import Icon from '@/components/Icons/Icon';
 
+import AudioPlayer from '@/hooks/useAudioPlayer';
 import cc from '@/lib/cc';
 import truncateText from '@/utils/truncateText';
 
-import Bento from '../Bento';
-
-interface PodcastProps {
-  playlist: PodcastItem[];
-  className?: string;
-}
-
-export interface PodcastItem {
-  audio_preview_url: string;
-  images: [{ url: string }, { url: string }];
-  name: string;
-  explicit: boolean;
-}
-
-const Podcast: React.FC<PodcastProps> = ({ playlist = [], className }) => {
+const Podcast: FC<PodcastProps> = ({ playlist = [], className }) => {
   const [playlistTracks, setPlaylistTracks] = useState<PodcastItem[]>([]);
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
-  const [showPulse, setShowPulse] = useState(false);
+  const [pulsedButton, setPulsedButton] = useState<null | 'playPause' | 'previous' | 'next'>(null);
   const {
     audioRef,
     isPlaying,
@@ -43,11 +32,20 @@ const Podcast: React.FC<PodcastProps> = ({ playlist = [], className }) => {
     setCurrentTrackIndex,
   });
 
-  const handlePlayOrPause = () => {
+  const handlePlayOrPause = useCallback(() => {
     playOrPause();
-    setShowPulse(true);
-    setTimeout(() => setShowPulse(false), 600);
-  };
+    setPulsedButton('playPause');
+    setTimeout(() => setPulsedButton(null), 600);
+  }, [playOrPause, setPulsedButton]);
+
+  const handleChangeTrack = useCallback(
+    (direction: 'previous' | 'next') => {
+      changeTrack(direction);
+      setPulsedButton(direction);
+      setTimeout(() => setPulsedButton(null), 600);
+    },
+    [changeTrack, setPulsedButton],
+  );
 
   useEffect(() => {
     const tracksWithPreview = playlist.filter((track) => !!track.audio_preview_url);
@@ -58,18 +56,28 @@ const Podcast: React.FC<PodcastProps> = ({ playlist = [], className }) => {
     }
   }, [playlist]);
 
-  const currentTrack = playlistTracks[currentTrackIndex];
+  const currentTrack = useMemo(
+    () => playlistTracks[currentTrackIndex],
+    [playlistTracks, currentTrackIndex],
+  );
+
   const image = currentTrack?.images[1]?.url || '/images/noalbum.png';
 
   return (
-    <Bento size="1x1" className={cc(className, isPlaying && '', 'bento relative z-0 !border-none')}>
+    <Bento
+      size="1x1"
+      className={cc(
+        className,
+        'bento relative z-0 !border-none bg-gradient-to-b from-[#BC6AEB] to-[#6E2AAD]',
+      )}
+    >
       <div className="absolute right-0 z-20 p-5">
-        <a href="https://open.spotify.com/show/5IQCDDwWlDkZDRahQYwZon" target="_blank">
+        <a href="https://open.spotify.com/show/02fM1JHpt9HmHGp482K71b" target="_blank">
           <Image
             src="/images/icons/podcast.png"
             className={cc(
-              isPlaying && ' bg-gradient-to-b from-[#BC6AEB] to-[#6E2AAD] ',
-              'rounded-md p-1.5 drop-shadow-md transition-transform duration-300 ease-in-out hover:scale-105',
+              isPlaying && ' bg-gradient-to-b from-[#BC6AEB] to-[#6E2AAD] drop-shadow-md',
+              'rounded-md p-1.5 transition-transform duration-300 ease-in-out hover:scale-105',
             )}
             alt="media"
             width={32}
@@ -112,17 +120,17 @@ const Podcast: React.FC<PodcastProps> = ({ playlist = [], className }) => {
         </div>
         <div className="m-auto mt-4 flex w-full max-w-[184px] items-center justify-between">
           <button
-            onClick={() => changeTrack('previous')}
-            className="w-5 fill-white"
+            onClick={() => handleChangeTrack('previous')}
+            className={cc(pulsedButton === 'previous' ? 'button' : '', 'fill-white relative')}
             name="Previous song"
             aria-label="Previous song"
           >
-            <Icon type="next" />
+            <Icon type="next" className={'relative -top-1 border-none outline-none'} />
           </button>
           <button
             onClick={handlePlayOrPause}
             className={cc(
-              showPulse ? 'button' : '',
+              pulsedButton === 'playPause' ? 'button' : '',
               'relative flex h-6 w-6 justify-center fill-white',
             )}
             name="Play / Pause"
@@ -144,17 +152,18 @@ const Podcast: React.FC<PodcastProps> = ({ playlist = [], className }) => {
             />
           </button>
           <button
-            onClick={() => changeTrack('next')}
-            className="w-5 -scale-x-100 fill-white"
+            onClick={() => handleChangeTrack('next')}
+            className={cc(pulsedButton === 'next' ? 'button' : '', '-scale-x-100 fill-white')}
             name="Next song"
             aria-label="Next song"
             title="Next song"
           >
-            <Icon type="next" />
+            <Icon type="next" className={'relative -top-1 border-none outline-none'} />
           </button>
         </div>
         <label className="mt-6 flex items-center justify-center gap-4" htmlFor="rangePodcast">
           <Icon type="mute" className="w-1.5 fill-white" />
+          <span className="sr-only">Volume control for the podcast player</span>
           <input
             type="range"
             min="0"
@@ -163,8 +172,9 @@ const Podcast: React.FC<PodcastProps> = ({ playlist = [], className }) => {
             defaultValue="0.5"
             id="rangePodcast"
             name="rangePodcast"
+            aria-describedby="rangePodcast"
             onChange={handleVolumeChange}
-            className="slider"
+            className="slider h-1 w-[70%] scale-100 appearance-none rounded-full opacity-80 outline-none transition-[opacity,width,background,opacity] duration-200 ease-linear active:w-9/12 active:scale-y-[1.4] active:opacity-100"
             style={{ '--background-size': '50%' } as React.CSSProperties}
           />
           <Icon type="sound" className="w-3 fill-white" />
@@ -178,4 +188,4 @@ const Podcast: React.FC<PodcastProps> = ({ playlist = [], className }) => {
   );
 };
 
-export default Podcast;
+export default memo(Podcast);

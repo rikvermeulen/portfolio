@@ -1,58 +1,50 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { DateTime } from 'luxon';
 
 import Container from '@/components/Container';
+import Icon from '@/components/Icons/Icon';
+import Tooltip from '@/components/Tooltip';
 
-import cc from '@/lib/cc';
 import { useMusic } from '@/utils/contextMusic';
-import useFormattedDate from '@/utils/useFormattedDate';
-
-import Icon from './Icons/Icon';
+import useFormattedDate from '@/utils/FormattedDate';
+import useProfile from '@/utils/getProfile';
 
 export default function Header() {
-  const time = useFormattedDate();
-
   const { musicData } = useMusic();
+  console.log(musicData);
+  const { icon: profile, label } = useProfile();
+
+  const [currentDate, setCurrentDate] = useState(DateTime.utc().toString());
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentDate(DateTime.utc().toString());
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const liveTime = useFormattedDate(currentDate, 'hh:mm a');
 
   return (
     <header className="absolute top-0 z-10 w-full">
-      <Container className="flex place-items-start items-center justify-between py-4 md:py-7">
-        <Link href="/" className="flex items-center gap-2 text-black">
+      <Container className="grid grid-cols-3 items-center py-4 md:py-7">
+        <Link href="/" className="flex items-center gap-2 justify-self-start text-black">
           <Image src={'/images/logo.png'} alt="logo" width="20" height="20" />
-          <p className="text-xs font-medium sm:text-sm">Rik Vermeulen</p>
+          <p className="hidden text-xs font-normal sm:block md:text-sm">Rik Vermeulen</p>
         </Link>
-        <div className="flex items-center justify-center gap-1 rounded-full border border-solid border-[#DEDEDE] bg-primary/60 p-1 text-black  backdrop-blur-lg duration-300 xl:shadow-sm">
-          <p className="pl-3 text-xs">{time + ' PM' || '00:00'}</p>
-          <div
-            className={cc(
-              musicData.isPlaying ? '' : 'hidden',
-              'group rounded-full p-2 transition-colors hover:bg-white bg-transparent hover:shadow-2xl',
-            )}
-          >
-            <Icon
-              type="wave"
-              className={cc(
-                musicData.isPlaying ? 'scale-100' : 'scale-0',
-                'h-auto w-3 fill-black hover:fill-white transition-[transform,width] duration-300 delay-300',
-              )}
-            />
-          </div>
-          <div className="group rounded-full p-2 transition-colors hover:bg-white hover:shadow-2xl">
-            <Icon
-              type="settings"
-              className="h-auto w-3 cursor-pointer fill-black transition-transform hover:fill-white group-hover:scale-110 group-hover:fill-black"
-            />
-          </div>
-          <Image
-            src={'/images/me.jpg'}
-            className=" rounded-full shadow-md"
-            alt="profile"
-            width="32"
-            height="32"
-          />
+        <div className="justify-self-center">
+          {profile && (
+            <Tooltip content={label}>
+              <div className="min-h-fit rounded-full bg-gray-100 p-2">
+                <Icon type={profile} className="h-3 w-3" />
+              </div>
+            </Tooltip>
+          )}
         </div>
+        <p className="justify-self-end text-sm font-normal text-black">{liveTime}</p>
       </Container>
     </header>
   );

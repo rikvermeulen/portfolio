@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { FC } from 'react';
 
 interface MessageTemplateProps {
   name: string;
@@ -12,28 +12,40 @@ interface RecommendationTemplateProps {
   recommendation: string;
 }
 
-export const MessageTemplate: React.FC<Readonly<MessageTemplateProps>> = ({
+export const MessageTemplate: FC<Readonly<MessageTemplateProps>> = ({
   name,
   reason,
   phone,
   email,
 }) => (
-  <div>
-    <h1>Contact form submision: rikvermeulen.com</h1>
-    <p>name: {name}</p>
-    <p>email: {email}</p>
-    <p>phone: {phone}</p>
-    <p>reason: {reason}</p>
+  <div className="mx-auto max-w-3xl bg-gray-100 p-6">
+    <div className="mt-4 space-y-2">
+      <p className="text-sm font-medium">Name:</p>
+      <p className="rounded-md bg-white p-2">{name}</p>
+
+      <p className="text-sm font-medium">Email:</p>
+      <p className="rounded-md bg-white p-2">{email}</p>
+
+      <p className="text-sm font-medium">Phone:</p>
+      <p className="rounded-md bg-white p-2">{phone}</p>
+
+      <p className="text-sm font-medium">Reason:</p>
+      <p className="rounded-md bg-white p-2">{reason}</p>
+    </div>
   </div>
 );
 
-export const RecommendationTemplate: React.FC<Readonly<RecommendationTemplateProps>> = ({
+export const RecommendationTemplate: FC<Readonly<RecommendationTemplateProps>> = ({
   email,
   recommendation,
 }) => (
-  <div>
-    <h1>Contact form submision: rikvermeulen.com</h1>
-    <p>email: {email}</p>
-    <p>Recommendation: {recommendation}</p>
+  <div className="mx-auto max-w-3xl bg-gray-100 p-6">
+    <div className="mt-4 space-y-2">
+      <p className="text-sm font-medium">Email:</p>
+      <p className="rounded-md bg-white p-2">{email}</p>
+
+      <p className="text-sm font-medium">Recommendation:</p>
+      <p className="rounded-md bg-white p-2">{recommendation}</p>
+    </div>
   </div>
 );
