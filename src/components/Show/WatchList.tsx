@@ -45,19 +45,20 @@ const FilterButtons = ({
   }, [filter]);
 
   return (
-    <div className="relative my-2 flex gap-2 text-xs font-medium text-white">
+    <ul className="relative my-2 flex gap-2 text-xs font-medium text-white">
       <Indicator activeIndex={activeIndex} itemRefs={buttonRefs.current} className="bg-blue-600" />
       {['Shows', 'Movies'].map((term, index) => (
-        <button
-          key={term}
-          ref={buttonRefs.current[index] as RefObject<HTMLButtonElement>}
-          onClick={() => setFilter(term)}
-          className="rounded-full px-3 py-1"
-        >
-          {term === 'Shows' ? 'Series' : 'Movies'}
-        </button>
+        <li key={term}>
+          <button
+            ref={buttonRefs.current[index] as RefObject<HTMLButtonElement>}
+            onClick={() => setFilter(term)}
+            className="rounded-full px-3 py-1"
+          >
+            {term === 'Shows' ? 'Series' : 'Movies'}
+          </button>
+        </li>
       ))}
-    </div>
+    </ul>
   );
 };
 

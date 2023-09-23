@@ -68,14 +68,15 @@ export default function Shows({ current, shows, movies }: TPropsShows) {
       size="1x1"
       className="bento relative z-0 flex flex-col justify-between bg-gradient-to-b from-[#2B3833] to-[#0F1314] p-5"
       icon="shows"
+      href={`https://www.themoviedb.org/tv/${current?.show_id}`}
     >
       <header className="flex justify-between">
         <p className="text-lg font-bold text-white">Watching now</p>
       </header>
       <div className="px-4">
-        {current.still_path && (
+        {current?.still_path && (
           <Image
-            src={`${imageURL}${current.still_path}`}
+            src={`${imageURL}${current?.still_path}`}
             className={`rounded-xl`}
             alt="media"
             width={270}
@@ -87,7 +88,7 @@ export default function Shows({ current, shows, movies }: TPropsShows) {
           <div className="text-sm text-white">
             <p className="font-bold">{current?.name}</p>
             <p className="relative -top-1 text-white/70">
-              Last seen - {`S${current?.season_number}, E${current.episode_number}`}
+              Last seen - {`S${current?.season_number}, E${current?.episode_number}`}
             </p>
           </div>
           <Icon

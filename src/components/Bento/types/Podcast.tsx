@@ -163,6 +163,7 @@ const Podcast: FC<PodcastProps> = ({ playlist = [], className }) => {
         </div>
         <label className="mt-6 flex items-center justify-center gap-4" htmlFor="rangePodcast">
           <Icon type="mute" className="w-1.5 fill-white" />
+          <span className="sr-only">Volume control for the podcast player</span>
           <input
             type="range"
             min="0"
@@ -171,6 +172,7 @@ const Podcast: FC<PodcastProps> = ({ playlist = [], className }) => {
             defaultValue="0.5"
             id="rangePodcast"
             name="rangePodcast"
+            aria-describedby="rangePodcast"
             onChange={handleVolumeChange}
             className="slider h-1 w-[70%] scale-100 appearance-none rounded-full opacity-80 outline-none transition-[opacity,width,background,opacity] duration-200 ease-linear active:w-9/12 active:scale-y-[1.4] active:opacity-100"
             style={{ '--background-size': '50%' } as React.CSSProperties}

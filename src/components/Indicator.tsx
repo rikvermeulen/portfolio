@@ -9,7 +9,7 @@ type IndicatorProps = {
 };
 
 export const Indicator: FC<IndicatorProps> = ({ activeIndex, itemRefs, className }) => {
-  const indicatorRef = useRef<HTMLDivElement>(null);
+  const indicatorRef = useRef<HTMLLIElement>(null);
 
   useEffect(() => {
     const activeItemRef = itemRefs[activeIndex];
@@ -25,7 +25,7 @@ export const Indicator: FC<IndicatorProps> = ({ activeIndex, itemRefs, className
   }, [activeIndex, itemRefs]);
 
   return (
-    <div
+    <li
       ref={indicatorRef}
       className={cc(
         className,

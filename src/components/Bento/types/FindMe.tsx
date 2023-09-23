@@ -69,6 +69,7 @@ function FindMe() {
 
       new mapboxgl.Marker(markerElement).setLngLat([longitude, latitude]).addTo(map);
 
+      markerElement.setAttribute('role', 'img');
       markerElement.setAttribute('aria-label', 'My location');
 
       map.scrollZoom.disable();

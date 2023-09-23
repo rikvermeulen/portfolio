@@ -70,6 +70,7 @@ export type TEpisode = {
   name: string;
   season_number: number;
   episode_number: number;
+  show_id: string;
 };
 
 export type TShowOrMovie = {
