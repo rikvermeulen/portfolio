@@ -1,29 +1,18 @@
 'use client';
 
-import { memo, useCallback, useEffect, useMemo, useState } from 'react';
+import { FC, memo, useCallback, useEffect, useMemo, useState } from 'react';
 import Image from 'next/image';
 
-import AudioPlayer from '@/components/AudioPlayer';
+import type { PodcastItem, PodcastProps } from '@/types/types';
+
+import Bento from '@/components/Bento/Bento';
 import Icon from '@/components/Icons/Icon';
 
+import AudioPlayer from '@/hooks/useAudioPlayer';
 import cc from '@/lib/cc';
 import truncateText from '@/utils/truncateText';
 
-import Bento from '../Bento';
-
-interface PodcastProps {
-  playlist: PodcastItem[];
-  className?: string;
-}
-
-export interface PodcastItem {
-  audio_preview_url: string;
-  images: [{ url: string }, { url: string }];
-  name: string;
-  explicit: boolean;
-}
-
-const Podcast: React.FC<PodcastProps> = ({ playlist = [], className }) => {
+const Podcast: FC<PodcastProps> = ({ playlist = [], className }) => {
   const [playlistTracks, setPlaylistTracks] = useState<PodcastItem[]>([]);
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
   const [pulsedButton, setPulsedButton] = useState<null | 'playPause' | 'previous' | 'next'>(null);
@@ -75,14 +64,20 @@ const Podcast: React.FC<PodcastProps> = ({ playlist = [], className }) => {
   const image = currentTrack?.images[1]?.url || '/images/noalbum.png';
 
   return (
-    <Bento size="1x1" className={cc(className, isPlaying && '', 'bento relative z-0 !border-none')}>
+    <Bento
+      size="1x1"
+      className={cc(
+        className,
+        'bento relative z-0 !border-none bg-gradient-to-b from-[#BC6AEB] to-[#6E2AAD]',
+      )}
+    >
       <div className="absolute right-0 z-20 p-5">
         <a href="https://open.spotify.com/show/02fM1JHpt9HmHGp482K71b" target="_blank">
           <Image
             src="/images/icons/podcast.png"
             className={cc(
-              isPlaying && ' bg-gradient-to-b from-[#BC6AEB] to-[#6E2AAD] ',
-              'rounded-md p-1.5 drop-shadow-md transition-transform duration-300 ease-in-out hover:scale-105',
+              isPlaying && ' bg-gradient-to-b from-[#BC6AEB] to-[#6E2AAD] drop-shadow-md',
+              'rounded-md p-1.5 transition-transform duration-300 ease-in-out hover:scale-105',
             )}
             alt="media"
             width={32}
@@ -177,7 +172,7 @@ const Podcast: React.FC<PodcastProps> = ({ playlist = [], className }) => {
             id="rangePodcast"
             name="rangePodcast"
             onChange={handleVolumeChange}
-            className="slider"
+            className="slider h-1 w-[70%] scale-100 appearance-none rounded-full opacity-80 outline-none transition-[opacity,width,background,opacity] duration-200 ease-linear active:w-9/12 active:scale-y-[1.4] active:opacity-100"
             style={{ '--background-size': '50%' } as React.CSSProperties}
           />
           <Icon type="sound" className="w-3 fill-white" />

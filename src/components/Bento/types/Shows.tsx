@@ -2,7 +2,8 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
-import { PropsShows } from '@/types';
+
+import { TPropsShows } from '@/types/types';
 
 import Bento from '@/components/Bento/Bento';
 import { ButtonPrimary } from '@/components/Button';
@@ -14,7 +15,7 @@ import { hasEnoughText, isValidEmail } from '@/utils/validation';
 
 const imageURL = 'https://image.tmdb.org/t/p/original';
 
-export default function Shows({ current, shows, movies }: PropsShows) {
+export default function Shows({ current, shows, movies }: TPropsShows) {
   const [isModalVisible, setModalVisible] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
@@ -46,7 +47,7 @@ export default function Shows({ current, shows, movies }: PropsShows) {
     }
 
     try {
-      const res = await fetch(`/api/recommendation`, {
+      const res = await fetch(`/api/recommend`, {
         method: 'POST',
         body: JSON.stringify(formData),
       });

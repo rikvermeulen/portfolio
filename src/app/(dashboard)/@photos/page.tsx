@@ -1,6 +1,8 @@
 import Photos from '@/components/Bento/types/Photos';
 
-import { supabase } from '@/lib/db';
+import { getSupabaseClient } from '@/lib/db';
+
+const supabase = getSupabaseClient();
 
 const albums = [{ name: 'apps' }, { name: 'map' }, { name: 'heart' }, { name: 'dog' }];
 
@@ -22,7 +24,7 @@ async function getData(albumName: string) {
   return Promise.all(data.map(fetchPublicUrl));
 }
 
-export default async function Photoss() {
+export default async function PhotosPage() {
   const albumPromises = albums.map(async (album) => {
     const data = await getData(album.name);
     return { name: album.name, data };

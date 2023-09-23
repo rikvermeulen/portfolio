@@ -3,22 +3,21 @@
 import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import Image from 'next/image';
 
-import { PlaylistItem } from '@/types/index';
+import { IPlaylistItem } from '@/types/types';
 
-import AudioPlayer from '@/components/AudioPlayer';
+import Bento from '@/components/Bento/Bento';
 import Icon from '@/components/Icons/Icon';
 
+import AudioPlayer from '@/hooks/useAudioPlayer';
 import cc from '@/lib/cc';
 
-import Bento from '../Bento';
-
 interface MusicProps {
-  playlist: PlaylistItem[];
+  playlist: IPlaylistItem[];
   className?: string;
 }
 
 const Music: React.FC<MusicProps> = ({ playlist = [], className }) => {
-  const [playlistTracks, setPlaylistTracks] = useState<PlaylistItem[]>([]);
+  const [playlistTracks, setPlaylistTracks] = useState<IPlaylistItem[]>([]);
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
   const [pulsedButton, setPulsedButton] = useState<null | 'playPause' | 'previous' | 'next'>(null);
   const {
@@ -69,14 +68,20 @@ const Music: React.FC<MusicProps> = ({ playlist = [], className }) => {
   const image = currentTrack?.album?.images[1]?.url || '/images/noalbum.png';
 
   return (
-    <Bento size="1x1" className={cc(className, isPlaying && '', 'bento relative z-0 !border-none')}>
+    <Bento
+      size="1x1"
+      className={cc(
+        className,
+        'bento relative z-0 !border-none bg-gradient-to-b from-[#E96575] to-[#ff333a]',
+      )}
+    >
       <div className="absolute right-0 z-20 p-5">
         <a href="https://music.apple.com/nl/playlist/r-b/pl.u-38oWX9ECd2XAl3" target="_blank">
           <Image
             src="/images/icons/music.png"
             className={`${
-              isPlaying && 'rounded-md bg-gradient-to-b from-[#EA6776] to-[#E63E44]'
-            } drop-shadow-md transition-transform duration-300 ease-in-out hover:scale-105`}
+              isPlaying && 'rounded-md bg-gradient-to-b from-[#EA6776] to-[#E63E44] drop-shadow-md'
+            } transition-transform duration-300 ease-in-out hover:scale-105`}
             alt="media"
             width={32}
             height={32}
@@ -177,7 +182,7 @@ const Music: React.FC<MusicProps> = ({ playlist = [], className }) => {
             name="rangeMusic"
             aria-describedby="rangeMusic"
             onChange={handleVolumeChange}
-            className="slider"
+            className="slider h-1 w-[70%] scale-100 appearance-none rounded-full opacity-80 outline-none transition-[opacity,width,background,opacity] duration-200 ease-linear active:w-9/12 active:scale-y-[1.4] active:opacity-100"
             style={{ '--background-size': '50%' } as React.CSSProperties}
           />
           <Icon type="sound" className="w-3.5 fill-white" />

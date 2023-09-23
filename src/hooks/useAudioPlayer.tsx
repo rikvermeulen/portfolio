@@ -1,13 +1,13 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-import { PlaylistItem } from '@/types/index';
+import { IPlaylistItem } from '@/types/types';
 
 export interface PodcastItem {
   audio_preview_url: string;
 }
 interface UseAudioPlayerProps {
   initialUrl: string;
-  playlistTracks?: PlaylistItem[] | PodcastItem[];
+  playlistTracks?: IPlaylistItem[] | PodcastItem[];
   currentTrackIndex?: number;
   setCurrentTrackIndex?: (index: number) => void;
 }
@@ -71,7 +71,7 @@ const AudioPlayer = ({
         (currentTrackIndex + modifier + playlistTracks.length) % playlistTracks.length;
       setCurrentTrackIndex(newIndex);
       if ('track' in playlistTracks[newIndex]) {
-        const track = playlistTracks[newIndex] as PlaylistItem;
+        const track = playlistTracks[newIndex] as IPlaylistItem;
         setPreviewUrl(track.track?.preview_url);
       } else if ('audio_preview_url' in playlistTracks[newIndex]) {
         const podcast = playlistTracks[newIndex] as PodcastItem;

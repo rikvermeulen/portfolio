@@ -3,11 +3,10 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 
+import Bento from '@/components/Bento/Bento';
 import Pill from '@/components/Pill';
 
-import { useSound } from '@/utils/sound';
-
-import Bento from '../Bento';
+import { useSound } from '@/hooks/useSound';
 
 interface AlbumsProps {
   albums: Record<string, string[]>;

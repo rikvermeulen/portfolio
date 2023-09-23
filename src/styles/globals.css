@@ -2,15 +2,40 @@
 @tailwind components;
 @tailwind utilities;
 
+/* base css */
+@import './base/animation.css';
+
+/* component css */
+@import './components/books.css';
+@import './components/slider.css';
+
 @layer base {
   :root {
     --muted: 210 40% 96.1%;
     --muted-foreground: 215.4 16.3% 46.9%;
+    --elastic-out: linear(0, 0.2178 2.1%, 1.1144 8.49%, 1.0056 72.24%, 0.9981 86.66%, 1);
   }
+}
+button {
+  transition: scale 0.5s var(--elastic-out);
+}
+
+button:active {
+  scale: 0.8;
+  transition: scale 0.5s ease;
 }
 
 .gap-row {
   row-gap: 1rem !important;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 .bento {
@@ -22,153 +47,8 @@
   overflow: hidden;
 }
 
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(50px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.animate-message {
-  animation: fadeInUp 0.4s;
-}
-
-.slider {
-  --background-size: 0%;
-  -webkit-appearance: none;
-  appearance: none;
-  opacity: 0.8;
-  width: 70%;
-  height: 5px;
-  border-radius: 9999px;
-  background: linear-gradient(
-    to right,
-    #ffffff 0%,
-    #ffffff var(--background-size),
-    rgba(255, 255, 255, 0.5) var(--background-size)
-  );
-  transform: scale(1);
-  outline: none;
-  transition:
-    background 0.2s ease,
-    opacity 0.2s ease,
-    width 0.2s ease;
-  transform: 0.2s ease;
-}
-
-.slider:active {
-  transform: scaleY(1.4);
-  width: 74%;
-  opacity: 1;
-}
-
-.slider::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  box-shadow: none;
-  appearance: none;
-  width: 20px;
-  height: 5px;
-  background: #ffffff;
-  cursor: pointer;
-  border-radius: 25%;
-}
-
 .mapboxgl-ctrl-bottom-left {
   display: none !important;
-}
-
-@keyframes ping {
-  75%,
-  100% {
-    transform: scale(3);
-    opacity: 0;
-  }
-}
-.ping {
-  animation: ping 3s cubic-bezier(0, 0, 0.2, 1) infinite;
-}
-
-.shake:hover {
-  animation: wave-animation 3s infinite;
-}
-
-@keyframes wave-animation {
-  0% {
-    transform: rotate(0deg);
-  }
-  10% {
-    transform: rotate(14deg);
-  }
-  20% {
-    transform: rotate(-8deg);
-  }
-  30% {
-    transform: rotate(14deg);
-  }
-  40% {
-    transform: rotate(-4deg);
-  }
-  50% {
-    transform: rotate(10deg);
-  }
-  60% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(0deg);
-  }
-}
-
-.popin {
-  animation: popIn 500ms ease-in;
-}
-
-@keyframes popIn {
-  0% {
-    transform: scale(0);
-  }
-  50% {
-    transform: scale(1.1);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-
-.pop-up {
-  animation: popUp 600ms forwards ease-in-out;
-}
-
-.pop-down {
-  animation: popDown 600ms forwards ease-in-out;
-}
-
-@keyframes popUp {
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.13);
-  }
-  100% {
-    transform: scale(1.1);
-  }
-}
-
-@keyframes popDown {
-  0% {
-    transform: scale(1.1);
-  }
-  50% {
-    transform: scale(0.97);
-  }
-  100% {
-    transform: scale(1);
-  }
 }
 
 .button::before {
@@ -193,41 +73,5 @@
   }
   100% {
     background-color: transparent;
-  }
-}
-
-.cloud-one {
-  animation:
-    moveCloud linear 15s infinite,
-    fadeInOut 15s infinite;
-}
-
-.cloud-two {
-  animation:
-    moveCloud linear 15s infinite,
-    fadeInOut 15s infinite;
-  animation-delay: 8s;
-}
-
-@keyframes moveCloud {
-  100% {
-    transform: translateX(120%);
-  }
-}
-
-@keyframes pulse-waves {
-  0% {
-    transform: scaleY(1);
-    transform-origin: 50% 50%;
-  }
-
-  50% {
-    transform: scaleY(0.7);
-    transform-origin: 50% 50%;
-  }
-
-  100% {
-    transform: scaleY(1);
-    transform-origin: 50% 50%;
   }
 }

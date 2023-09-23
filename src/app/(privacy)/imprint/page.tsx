@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation';
 import { allPrivacies } from '@/contentlayer/generated';
 
 import Container from '@/components/Container';
-import { Mdx } from '@/components/mdx-components';
+import { Mdx } from '@/components/Md/mdx-components';
 
 async function getImprint() {
   const post = allPrivacies.find((post) => post.slugAsParams === 'imprint');

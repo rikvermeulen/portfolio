@@ -1,3 +1,4 @@
+import Books from '@/components/Bento/types/Books';
 import Message from '@/components/Bento/types/Contact';
 import FindMe from '@/components/Bento/types/FindMe';
 import Github from '@/components/Bento/types/Github';
@@ -10,4 +11,5 @@ export const BentoTypes = {
   FindMe,
   Github,
   Message,
+  Books,
 };

@@ -8,11 +8,10 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 
 import { env } from '@/env.mjs';
 
+import Bento from '@/components/Bento/Bento';
 import Icon from '@/components/Icons/Icon';
 
-import { useSound } from '@/utils/sound';
-
-import Bento from '../Bento';
+import { useSound } from '@/hooks/useSound';
 
 mapboxgl.accessToken = env.NEXT_PUBLIC_MAPBOX_TOKEN;
 
@@ -31,7 +30,7 @@ function FindMe() {
         container: mapContainerRef.current,
         style: 'mapbox://styles/rikvermeulen/cllbdz32d00tf01qp16b87izs',
         center: [longitude, latitude],
-        zoom: 12,
+        zoom: 13,
         attributionControl: false,
         pitchWithRotate: false,
         dragRotate: false,
@@ -100,7 +99,7 @@ function FindMe() {
   const handleZoomIn = useCallback(() => {
     if (mapRef.current) {
       const currentZoom = mapRef.current.getZoom();
-      if (currentZoom >= 12) return;
+      if (currentZoom >= 13) return;
       playSound('tap');
       mapRef.current.flyTo({
         center: [longitude, latitude],
@@ -169,7 +168,7 @@ function FindMe() {
         </button>
       </div>
       <div className="absolute bottom-5 left-5 z-10 rounded-[8px] bg-white/70 px-2 py-1.5 shadow-[0px_0px_0px_1px_rgba(0,0,0,0.06)] backdrop-blur-[20px]">
-        <p className="text-[12px] text-dark_grey">Heukelum, The Netherlands 🏡</p>
+        <p className="text-xs text-dark_grey">Heukelum, The Netherlands 🏡</p>
       </div>
     </Bento>
   );

@@ -1,8 +1,10 @@
 'use client';
 
-import { createRef, useLayoutEffect, useRef } from 'react';
+import { createRef, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+
+import { Indicator } from '@/components/Indicator';
 
 import cc from '@/lib/cc';
 
@@ -12,16 +14,6 @@ type PillProps = {
   className?: string;
   items: { name: string; url?: string; icon?: string; onClick?: () => void }[];
   activeIndex?: number;
-};
-
-const updateIndicator = (
-  activeLinkElement: HTMLAnchorElement | null,
-  indicatorElement: HTMLLIElement | null,
-) => {
-  if (activeLinkElement && indicatorElement) {
-    indicatorElement.style.transform = `translateX(${Math.max(activeLinkElement.offsetLeft, 0)}px)`;
-    indicatorElement.style.width = `${activeLinkElement.offsetWidth}px`;
-  }
 };
 
 const getActiveLinkIndex = (
@@ -49,29 +41,23 @@ const getActiveLinkIndex = (
 
 export default function Pill({ className, items, activeIndex }: PillProps) {
   const pathName = usePathname();
-  const indicatorRef = useRef<HTMLLIElement>(null);
 
   const linkRefs = useRef(items.map(() => createRef<any>()));
 
-  const activeLinkIndex = getActiveLinkIndex(items, activeIndex, pathName);
-
-  useLayoutEffect(() => {
-    if (activeLinkIndex !== undefined && linkRefs.current[activeLinkIndex]) {
-      updateIndicator(linkRefs.current[activeLinkIndex].current, indicatorRef.current);
-    }
-  }, [items, pathName, activeIndex, activeLinkIndex]);
+  const activeLinkIndex = getActiveLinkIndex(items, activeIndex, pathName) || 0;
 
   return (
     <div
       className={cc(
-        'z-40 rounded-full border border-solid border-[#DEDEDE] bg-primary/60 p-1.5 drop-shadow-sm backdrop-blur-xl',
         className,
+        'rounded-full border border-solid border-[#DEDEDE] bg-primary/60 p-1.5 drop-shadow-sm backdrop-blur-xl',
       )}
     >
       <ul className="relative flex flex-row gap-4">
-        <li
-          ref={indicatorRef}
-          className="absolute -z-10 h-full w-24 rounded-full bg-white transition-transform duration-300 ease-in-out sm:w-32"
+        <Indicator
+          activeIndex={activeLinkIndex}
+          itemRefs={linkRefs.current}
+          className="h-full bg-white"
         />
         {items.map((item, index) => {
           const { url, name, icon, onClick } = item;
