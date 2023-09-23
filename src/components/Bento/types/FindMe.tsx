@@ -169,7 +169,7 @@ function FindMe() {
         </button>
       </div>
       <div className="absolute bottom-5 left-5 z-10 rounded-[8px] bg-white/70 px-2 py-1.5 shadow-[0px_0px_0px_1px_rgba(0,0,0,0.06)] backdrop-blur-[20px]">
-        <p className="text-[12px] text-dark_grey">Heukelum, The Netherlands 🏡</p>
+        <p className="text-xs text-dark_grey">Heukelum, The Netherlands 🏡</p>
       </div>
     </Bento>
   );

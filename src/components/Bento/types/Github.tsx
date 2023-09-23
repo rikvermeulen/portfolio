@@ -13,7 +13,7 @@ const MonthlyContribution = ({ contributions }: MonthlyContributionProps) => (
   <div className="grid grid-cols-4 gap-2">
     {Object.keys(contributions).map((month) => (
       <div key={month}>
-        <p className="text-[10px] text-dark_grey">{month}</p>
+        <p className="text-2xs text-dark_grey">{month}</p>
         <div className="mt-2 grid grid-cols-4 gap-2">
           {contributions[month].map((contribution: TContributionDay, i: number) => (
             <div

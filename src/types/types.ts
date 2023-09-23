@@ -85,6 +85,16 @@ export type TPropsShows = {
   shows: TShowOrMovie[];
 };
 
+export type TMovieListProps = {
+  isListVisible: boolean;
+  toggleListVisibility: () => void;
+  filter: string;
+  setFilter: (filterType: string) => void;
+  searchTerm: string;
+  setSearchTerm: (term: string) => void;
+  movies: TShowOrMovie[];
+  shows: TShowOrMovie[];
+};
 // ---------------------
 // Profile Types
 // ---------------------

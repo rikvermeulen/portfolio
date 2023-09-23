@@ -99,10 +99,10 @@ export default function Contact() {
       <header className="h-11 w-full border-b border-solid border-[#ECECEC] bg-[#EBECEB]/40 backdrop-blur-xl"></header>
       <div
         ref={chatRef}
-        className="chat flex flex-col gap-4 px-5 pb-20 pt-5 transition-all"
+        className="chat no-scrollbar flex flex-col gap-4 px-5 pb-20 pt-5 transition-all"
         style={{ overflowY: 'scroll', height: '100%', position: 'relative', zIndex: 1 }}
       >
-        <p className="relative -top-3 flex w-full justify-center text-[10px] text-dark_grey">
+        <p className="relative -top-3 flex w-full justify-center text-2xs text-dark_grey">
           <span className="font-bold">Today: </span>
           &nbsp;{formattedCreationDate}
         </p>

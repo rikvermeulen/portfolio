@@ -45,7 +45,7 @@ export default function Work() {
                         <Image
                           src={`/images/projects/${project.title}/logo.png`}
                           className={`rounded-md drop-shadow-md transition-transform duration-300 ease-in-out hover:scale-105`}
-                          alt="media"
+                          alt={project.title}
                           width={32}
                           height={32}
                         />
