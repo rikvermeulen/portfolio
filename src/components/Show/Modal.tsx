@@ -51,15 +51,15 @@ export default function Modal({
         <div className="flex w-full cursor-pointer  overflow-hidden rounded-b-xl bg-black/70 text-sm text-white">
           <div
             className="flex w-1/2 items-center justify-center border-r border-solid border-[#38393a] py-2.5 transition-colors hover:bg-black/20"
-            onClick={handleSubmit}
-          >
-            <p>Submit</p>
-          </div>
-          <div
-            className="flex w-1/2 items-center justify-center py-2.5 transition-colors hover:bg-black/20"
             onClick={toggleModal}
           >
             <p>Close</p>
+          </div>
+          <div
+            className="flex w-1/2 items-center justify-center py-2.5 transition-colors hover:bg-black/20"
+            onClick={handleSubmit}
+          >
+            <p>Submit</p>
           </div>
         </div>
       </div>

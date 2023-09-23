@@ -76,8 +76,8 @@ const Podcast: FC<PodcastProps> = ({ playlist = [], className }) => {
           <Image
             src="/images/icons/podcast.png"
             className={cc(
-              isPlaying && ' bg-gradient-to-b from-[#BC6AEB] to-[#6E2AAD] ',
-              'rounded-md p-1.5 drop-shadow-md transition-transform duration-300 ease-in-out hover:scale-105',
+              isPlaying && ' bg-gradient-to-b from-[#BC6AEB] to-[#6E2AAD] drop-shadow-md',
+              'rounded-md p-1.5 transition-transform duration-300 ease-in-out hover:scale-105',
             )}
             alt="media"
             width={32}
