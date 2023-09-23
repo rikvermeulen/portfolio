@@ -127,7 +127,7 @@ export default function Contact() {
           >
             <a
               href={social.url}
-              className="flex gap-4 transition-transform hover:scale-105"
+              className="flex origin-center gap-4 transition-transform hover:scale-105"
               target="_blank"
             >
               <Image
