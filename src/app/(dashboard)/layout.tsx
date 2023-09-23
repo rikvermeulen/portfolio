@@ -14,7 +14,6 @@ export default function Layout({
   podcast,
   shows,
   books,
-  twitter,
 }: {
   children: ReactNode;
   music: ReactNode;
@@ -25,7 +24,6 @@ export default function Layout({
   podcast: ReactNode;
   shows: ReactNode;
   books: ReactNode;
-  twitter: ReactNode;
 }) {
   const bento = [music, photos, contact, map, github, podcast, shows, books];
 
