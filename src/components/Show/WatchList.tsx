@@ -4,11 +4,10 @@ import Image from 'next/image';
 import { TMovieListProps } from '@/types/types';
 
 import Icon from '@/components/Icons/Icon';
+import { Indicator } from '@/components/Indicator';
 
 import cc from '@/lib/cc';
 import truncateText from '@/utils/truncateText';
-
-import { Indicator } from '../Indicator';
 
 const imageURL = 'https://image.tmdb.org/t/p/original';
 

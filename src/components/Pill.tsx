@@ -1,13 +1,14 @@
 'use client';
 
-import { createRef, useLayoutEffect, useRef } from 'react';
+import { createRef, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+
+import { Indicator } from '@/components/Indicator';
 
 import cc from '@/lib/cc';
 
 import Icon from './Icons/Icon';
-import { Indicator } from './Indicator';
 
 type PillProps = {
   className?: string;
@@ -48,8 +49,8 @@ export default function Pill({ className, items, activeIndex }: PillProps) {
   return (
     <div
       className={cc(
-        'z-40 rounded-full border border-solid border-[#DEDEDE] bg-primary/60 p-1.5 drop-shadow-sm backdrop-blur-xl',
         className,
+        'rounded-full border border-solid border-[#DEDEDE] bg-primary/60 p-1.5 drop-shadow-sm backdrop-blur-xl',
       )}
     >
       <ul className="relative flex flex-row gap-4">

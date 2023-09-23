@@ -7,9 +7,9 @@ import Pill from '@/components/Pill';
 
 export default function Footer() {
   return (
-    <footer className="relative z-50">
-      <div className="fixed bottom-5 -z-10 flex w-full items-center justify-center">
-        <Pill items={MainMenu} />
+    <footer className="relative z-50 w-full">
+      <div className="relative z-10 mx-auto flex w-fit items-center justify-center">
+        <Pill items={MainMenu} className="fixed bottom-5" />
       </div>
       <Container className="z-50">
         <div className="mb-8 hidden justify-between font-medium text-black lg:flex">
