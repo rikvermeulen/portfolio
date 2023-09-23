@@ -183,7 +183,7 @@ const Music: React.FC<MusicProps> = ({ playlist = [], className }) => {
             name="rangeMusic"
             aria-describedby="rangeMusic"
             onChange={handleVolumeChange}
-            className="slider"
+            className="slider h-1 w-[70%] scale-100 appearance-none rounded-full opacity-80 outline-none transition-[opacity,width,background,opacity] duration-200 ease-linear active:w-9/12 active:scale-y-[1.4] active:opacity-100"
             style={{ '--background-size': '50%' } as React.CSSProperties}
           />
           <Icon type="sound" className="w-3.5 fill-white" />

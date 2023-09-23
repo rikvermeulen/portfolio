@@ -7,7 +7,7 @@ export default function manifest(): MetadataRoute.Manifest {
 
   return {
     name: 'Portfolio Rik Vermeulen',
-    short_name: 'Portfolio RV',
+    short_name: 'Portfolio R.V',
     description: 'Portfolio Rik Vermeulen',
     start_url: '/',
     scope: '/',
