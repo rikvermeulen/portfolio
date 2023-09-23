@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-import { MainNavigation } from '@/types/const';
+import { MainMenu } from '@/types/const';
 
 import Container from '@/components/Container';
 import Pill from '@/components/Pill';
@@ -9,7 +9,7 @@ export default function Footer() {
   return (
     <footer className="relative z-50">
       <div className="fixed bottom-5 -z-10 flex w-full items-center justify-center">
-        <Pill items={MainNavigation} />
+        <Pill items={MainMenu} />
       </div>
       <Container className="z-50">
         <div className="mb-8 hidden justify-between font-medium text-black lg:flex">

@@ -5,7 +5,7 @@ import Image from 'next/image';
 
 import Pill from '@/components/Pill';
 
-import { useSound } from '@/utils/useSound';
+import { useSound } from '@/hooks/useSound';
 
 import Bento from '../Bento';
 

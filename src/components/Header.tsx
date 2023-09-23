@@ -30,7 +30,7 @@ export default function Header() {
       <Container className="grid grid-cols-3 items-center py-4 md:py-7">
         <Link href="/" className="flex items-center gap-2 justify-self-start text-black">
           <Image src={'/images/logo.png'} alt="logo" width="20" height="20" />
-          <p className="text-xs font-medium md:text-sm">Rik Vermeulen</p>
+          <p className="hidden text-xs font-medium sm:block md:text-sm">Rik Vermeulen</p>
         </Link>
         <div className="justify-self-center">
           {profile && (

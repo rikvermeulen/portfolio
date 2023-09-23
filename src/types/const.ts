@@ -87,7 +87,7 @@ export const socials = [
 ];
 
 //main navigation links
-export const MainNavigation = [
+export const MainMenu = [
   {
     name: 'About',
     url: '/',

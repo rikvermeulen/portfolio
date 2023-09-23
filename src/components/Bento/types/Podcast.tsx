@@ -5,10 +5,10 @@ import Image from 'next/image';
 
 import type { PodcastItem, PodcastProps } from '@/types/types';
 
-import AudioPlayer from '@/components/AudioPlayer';
 import Bento from '@/components/Bento/Bento';
 import Icon from '@/components/Icons/Icon';
 
+import AudioPlayer from '@/hooks/useAudioPlayer';
 import cc from '@/lib/cc';
 import truncateText from '@/utils/truncateText';
 

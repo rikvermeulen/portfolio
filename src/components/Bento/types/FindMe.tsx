@@ -10,7 +10,7 @@ import { env } from '@/env.mjs';
 
 import Icon from '@/components/Icons/Icon';
 
-import { useSound } from '@/utils/useSound';
+import { useSound } from '@/hooks/useSound';
 
 import Bento from '../Bento';
 

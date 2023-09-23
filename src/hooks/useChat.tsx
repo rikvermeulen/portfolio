@@ -125,12 +125,10 @@ const useChat = (
   return {
     step,
     message,
-    setMessage,
     chat,
     handleSendClick,
     handleInputChange,
     handleInputFocus,
-    toggleInputs,
   };
 };
 

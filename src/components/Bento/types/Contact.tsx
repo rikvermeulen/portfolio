@@ -10,9 +10,9 @@ import Bento from '@/components/Bento/Bento';
 import { AdminMessage, UserMessage } from '@/components/Contact/Messages';
 import Icon from '@/components/Icons/Icon';
 
+import useChat from '@/hooks/useChat';
 import cc from '@/lib/cc';
 import FormattedDate from '@/utils/FormattedDate';
-import useChat from '@/utils/useChat';
 import { hasEnoughText } from '@/utils/validation';
 
 export default function Contact() {

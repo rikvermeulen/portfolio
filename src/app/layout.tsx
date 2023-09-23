@@ -9,9 +9,9 @@ import Footer from '@/components/Footer';
 import Header from '@/components/Header';
 import { TailwindIndicator } from '@/components/TailwindIndicator';
 
+import { SoundProvider } from '@/hooks/useSound';
 import { fontSans } from '@/lib/fonts';
 import meta from '@/lib/meta';
-import { SoundProvider } from '@/utils/useSound';
 
 export async function generateMetadata(): Promise<Metadata> {
   const metadata = await meta();

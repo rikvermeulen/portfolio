@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, ReactNode, useContext, useEffect } from 'react';
+import { createContext, ReactNode, useCallback, useContext, useEffect, useMemo } from 'react';
 
 interface SoundContextProps {
   playSound: (src: string) => void;
@@ -24,7 +24,7 @@ interface SoundProviderProps {
 const audioPool: { [key: string]: HTMLAudioElement } = {};
 
 export const SoundProvider: React.FC<SoundProviderProps> = ({ children }) => {
-  const playingSounds: Set<HTMLAudioElement> = new Set();
+  const playingSounds = useMemo(() => new Set<HTMLAudioElement>(), []);
 
   const getOrCreateAudio = (fileName: string): HTMLAudioElement => {
     if (!audioPool[fileName]) {
@@ -43,16 +43,16 @@ export const SoundProvider: React.FC<SoundProviderProps> = ({ children }) => {
     playingSounds.add(audio);
   };
 
-  const stopAllSounds = () => {
+  const stopAllSounds = useCallback(() => {
     playingSounds.forEach((audio) => audio.pause());
     playingSounds.clear();
-  };
+  }, [playingSounds]);
 
   useEffect(() => {
     return () => {
       stopAllSounds();
     };
-  }, []);
+  }, [stopAllSounds]);
 
   return (
     <SoundContext.Provider value={{ playSound, stopAllSounds }}>{children}</SoundContext.Provider>
