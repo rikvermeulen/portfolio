@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { createRef, RefObject, useEffect, useMemo, useRef, useState } from 'react';
 import Image from 'next/image';
 
 import { TMovieListProps } from '@/types/types';
@@ -7,6 +7,8 @@ import Icon from '@/components/Icons/Icon';
 
 import cc from '@/lib/cc';
 import truncateText from '@/utils/truncateText';
+
+import { Indicator } from '../Indicator';
 
 const imageURL = 'https://image.tmdb.org/t/p/original';
 
@@ -35,22 +37,30 @@ const FilterButtons = ({
 }: {
   filter: string;
   setFilter: (term: string) => void;
-}) => (
-  <div className="flex gap-2 py-2 text-xs font-medium text-white">
-    <button
-      onClick={() => setFilter('Shows')}
-      className={`rounded-full px-3 py-1 ${filter === 'Shows' ? 'bg-blue-600' : ''}`}
-    >
-      Series
-    </button>
-    <button
-      onClick={() => setFilter('Movies')}
-      className={`rounded-full px-3 py-1 ${filter === 'Movies' ? 'bg-blue-600' : ''}`}
-    >
-      Movies
-    </button>
-  </div>
-);
+}) => {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const buttonRefs = useRef(['Shows', 'Movies'].map(() => createRef<any>()));
+
+  useEffect(() => {
+    setActiveIndex(filter === 'Shows' ? 0 : 1);
+  }, [filter]);
+
+  return (
+    <div className="relative my-2 flex gap-2 text-xs font-medium text-white">
+      <Indicator activeIndex={activeIndex} itemRefs={buttonRefs.current} className="bg-blue-600" />
+      {['Shows', 'Movies'].map((term, index) => (
+        <button
+          key={term}
+          ref={buttonRefs.current[index] as RefObject<HTMLButtonElement>}
+          onClick={() => setFilter(term)}
+          className="rounded-full px-3 py-1"
+        >
+          {term === 'Shows' ? 'Series' : 'Movies'}
+        </button>
+      ))}
+    </div>
+  );
+};
 
 export default function WatchList({
   isListVisible,
