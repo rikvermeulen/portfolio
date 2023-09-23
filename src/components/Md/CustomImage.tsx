@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 
-import cc from '@/lib/cc';
+import Icon from '@/components/Icons/Icon';
 
-import Icon from '../Icons/Icon';
+import cc from '@/lib/cc';
 
 type CustomImageProps = {
   src: string;

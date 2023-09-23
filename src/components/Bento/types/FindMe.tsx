@@ -8,11 +8,10 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 
 import { env } from '@/env.mjs';
 
+import Bento from '@/components/Bento/Bento';
 import Icon from '@/components/Icons/Icon';
 
 import { useSound } from '@/hooks/useSound';
-
-import Bento from '../Bento';
 
 mapboxgl.accessToken = env.NEXT_PUBLIC_MAPBOX_TOKEN;
 
@@ -31,7 +30,7 @@ function FindMe() {
         container: mapContainerRef.current,
         style: 'mapbox://styles/rikvermeulen/cllbdz32d00tf01qp16b87izs',
         center: [longitude, latitude],
-        zoom: 12,
+        zoom: 13,
         attributionControl: false,
         pitchWithRotate: false,
         dragRotate: false,
@@ -100,7 +99,7 @@ function FindMe() {
   const handleZoomIn = useCallback(() => {
     if (mapRef.current) {
       const currentZoom = mapRef.current.getZoom();
-      if (currentZoom >= 12) return;
+      if (currentZoom >= 13) return;
       playSound('tap');
       mapRef.current.flyTo({
         center: [longitude, latitude],

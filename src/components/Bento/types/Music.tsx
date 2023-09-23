@@ -5,12 +5,11 @@ import Image from 'next/image';
 
 import { IPlaylistItem } from '@/types/types';
 
+import Bento from '@/components/Bento/Bento';
 import Icon from '@/components/Icons/Icon';
 
 import AudioPlayer from '@/hooks/useAudioPlayer';
 import cc from '@/lib/cc';
-
-import Bento from '../Bento';
 
 interface MusicProps {
   playlist: IPlaylistItem[];
