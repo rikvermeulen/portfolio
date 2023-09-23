@@ -1,4 +1,4 @@
-import { FC, RefObject, useLayoutEffect, useRef } from 'react';
+import { FC, RefObject, useEffect, useRef } from 'react';
 
 import cc from '@/lib/cc';
 
@@ -11,7 +11,7 @@ type IndicatorProps = {
 export const Indicator: FC<IndicatorProps> = ({ activeIndex, itemRefs, className }) => {
   const indicatorRef = useRef<HTMLDivElement>(null);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     const activeItemRef = itemRefs[activeIndex];
     if (activeItemRef && activeItemRef.current && indicatorRef.current) {
       const activeLinkElement = activeItemRef.current;
