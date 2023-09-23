@@ -57,7 +57,7 @@ export default function Pill({ className, items, activeIndex }: PillProps) {
         <Indicator
           activeIndex={activeLinkIndex}
           itemRefs={linkRefs.current}
-          className="h-full bg-white"
+          className="h-full w-fit bg-white"
         />
         {items.map((item, index) => {
           const { url, name, icon, onClick } = item;
