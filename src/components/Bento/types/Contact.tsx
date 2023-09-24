@@ -12,7 +12,7 @@ import Icon from '@/components/Icons/Icon';
 
 import useChat from '@/hooks/useChat';
 import cc from '@/lib/cc';
-import { FormattedDate } from '@/utils/FormattedDate';
+import FormattedDate from '@/utils/FormattedDate';
 import { hasEnoughText } from '@/utils/validation';
 
 export default function Contact() {
