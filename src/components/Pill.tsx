@@ -2,7 +2,7 @@
 
 import { createRef, useRef } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 
 import { Indicator } from '@/components/Indicator';
 
@@ -44,6 +44,8 @@ export default function Pill({ className, items, activeIndex }: PillProps) {
 
   const linkRefs = useRef(items.map(() => createRef<any>()));
 
+  const router = useRouter();
+
   const activeLinkIndex = getActiveLinkIndex(items, activeIndex, pathName) || 0;
 
   return (
@@ -66,7 +68,7 @@ export default function Pill({ className, items, activeIndex }: PillProps) {
           const handleClick = (e: { preventDefault: () => void }) => {
             if (isActive && url !== pathName && url !== '/') {
               e.preventDefault();
-              window.location.href = url || '';
+              router.push(url || '/');
             } else if (onClick) {
               onClick();
             }
