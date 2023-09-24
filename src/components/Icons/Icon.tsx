@@ -5,6 +5,7 @@ import Arrow from './types/Arrow';
 import { Chevron } from './types/Chevron';
 import { Close } from './types/Close';
 import Controller from './types/Controller';
+import DarkMode from './types/DarkMode';
 import { Dog, DogFill } from './types/Dog';
 import Explicit from './types/Explicit';
 import { Heart, HeartFill } from './types/Heart';
@@ -62,6 +63,7 @@ const icons: Icons = {
   moon: Moon,
   controller: Controller,
   tooltip: Tooltip,
+  darkmode: DarkMode,
 };
 
 interface IconProps {

@@ -14,6 +14,7 @@
     --muted: 210 40% 96.1%;
     --muted-foreground: 215.4 16.3% 46.9%;
     --elastic-out: linear(0, 0.2178 2.1%, 1.1144 8.49%, 1.0056 72.24%, 0.9981 86.66%, 1);
+    --dark-mode: 0;
   }
 }
 button {
@@ -74,4 +75,11 @@ button:active {
   100% {
     background-color: transparent;
   }
+}
+
+.color-mode {
+  aspect-ratio: 1;
+  filter: invert(var(--dark-mode));
+  transform: rotate(calc(var(--dark-mode) * 180deg));
+  transition: all 0.6s ease;
 }

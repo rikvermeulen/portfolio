@@ -1,16 +1,18 @@
 'use client';
 
-import { createContext, ReactNode, useContext, useState } from 'react';
+import { createContext, ReactNode, useCallback, useContext, useMemo, useState } from 'react';
+
+interface MusicData {
+  isPlaying: boolean;
+  currentTrack: string;
+  albumName: string;
+  artist: string;
+  albumImage: string;
+}
 
 interface MusicContextProps {
-  musicData: {
-    isPlaying: boolean;
-    currentTrack: string;
-    albumName: string;
-    artist: string;
-    albumImage: string;
-  };
-  setMusicData: (data: any) => void;
+  musicData: MusicData;
+  setMusicData: (data: Partial<MusicData>) => void;
   playOrPause: () => void;
 }
 
@@ -29,7 +31,7 @@ interface MusicProviderProps {
 }
 
 export const MusicProvider: React.FC<MusicProviderProps> = ({ children }) => {
-  const [musicData, setMusicData] = useState({
+  const [musicData, setMusicDataState] = useState<MusicData>({
     isPlaying: false,
     currentTrack: '',
     albumName: '',
@@ -37,13 +39,18 @@ export const MusicProvider: React.FC<MusicProviderProps> = ({ children }) => {
     albumImage: '',
   });
 
-  const playOrPause = () => {
-    setMusicData((prevData) => ({ ...prevData, isPlaying: !prevData.isPlaying }));
-  };
+  const setMusicData = useCallback((data: Partial<MusicData>) => {
+    setMusicDataState((prevData) => ({ ...prevData, ...data }));
+  }, []);
 
-  return (
-    <MusicContext.Provider value={{ musicData, playOrPause, setMusicData }}>
-      {children}
-    </MusicContext.Provider>
+  const playOrPause = useCallback(() => {
+    setMusicData({ isPlaying: !musicData.isPlaying });
+  }, [musicData.isPlaying, setMusicData]); // dependencies updated
+
+  const value = useMemo(
+    () => ({ musicData, playOrPause, setMusicData }),
+    [musicData, playOrPause, setMusicData],
   );
+
+  return <MusicContext.Provider value={value}>{children}</MusicContext.Provider>;
 };
