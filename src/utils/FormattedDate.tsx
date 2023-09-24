@@ -1,25 +1,19 @@
-import { useEffect, useState } from 'react';
+import { useMemo } from 'react';
 import { DateTime } from 'luxon';
 
-export default function FormattedDate(date: string, format: string = 'h:mm') {
-  const [formattedDate, setFormattedDate] = useState('');
-
-  useEffect(() => {
+export function FormattedDate(date: string, format: string = 'h:mm') {
+  const formattedDate = useMemo(() => {
     const localTime = DateTime.fromISO(date, { zone: 'utc' }).toLocal().toFormat(format);
-
-    setFormattedDate(localTime);
-  }, [date]);
+    return localTime;
+  }, [date, format]);
 
   return formattedDate;
 }
 
 export function FormattedTime(date: string) {
-  const [formattedTime, setFormattedTime] = useState<DateTime>();
-
-  useEffect(() => {
+  const formattedTime = useMemo(() => {
     const localTime = DateTime.fromISO(date, { zone: 'utc' }).toLocal();
-
-    setFormattedTime(localTime);
+    return localTime;
   }, [date]);
 
   return formattedTime;

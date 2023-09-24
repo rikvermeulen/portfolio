@@ -9,7 +9,7 @@ import Container from '@/components/Container';
 import Icon from '@/components/Icons/Icon';
 import Tooltip from '@/components/Tooltip';
 
-import useFormattedDate from '@/utils/FormattedDate';
+import { FormattedDate } from '@/utils/FormattedDate';
 import useProfile from '@/utils/getProfile';
 
 export default function Header() {
@@ -23,7 +23,7 @@ export default function Header() {
     return () => clearInterval(interval);
   }, []);
 
-  const liveTime = useFormattedDate(currentDate, 'hh:mm a');
+  const liveTime = FormattedDate(currentDate, 'hh:mm a');
 
   return (
     <header className="absolute top-0 z-10 w-full">
