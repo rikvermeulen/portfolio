@@ -78,6 +78,7 @@ export default function Pill({ className, items, activeIndex }: PillProps) {
             <li key={index} className="flex text-base text-white">
               {url ? (
                 <Link
+                  scroll={false}
                   href={url}
                   ref={linkRefs.current[index]}
                   onClick={handleClick}

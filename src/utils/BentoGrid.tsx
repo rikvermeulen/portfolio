@@ -74,8 +74,10 @@ class BentoGrid {
     this.gridItems = [];
     this.fillers = [];
 
-    this.initializeGrid();
-    this.handleResponsiveBehavior();
+    window.requestAnimationFrame(() => {
+      this.initializeGrid();
+      this.handleResponsiveBehavior();
+    });
   }
 
   private initializeGrid() {
@@ -521,6 +523,16 @@ class BentoGrid {
     }
 
     this.resizeObserver.observe(this.gridContainer);
+  }
+
+  cleanup() {
+    if (this.resizeObserver) {
+      if (this.config.breakpointReference === 'window') {
+        this.resizeObserver.unobserve();
+      } else {
+        this.resizeObserver.disconnect();
+      }
+    }
   }
 
   /**

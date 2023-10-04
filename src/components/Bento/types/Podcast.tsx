@@ -5,6 +5,7 @@ import Image from 'next/image';
 
 import type { PodcastItem, PodcastProps } from '@/types/types';
 
+import AudioControls from '@/components/AudioControls';
 import Bento from '@/components/Bento/Bento';
 import Icon from '@/components/Icons/Icon';
 
@@ -118,49 +119,12 @@ const Podcast: FC<PodcastProps> = ({ playlist = [], className }) => {
           </div>
           <div className="relative -top-1 text-white/70">Podcast</div>
         </div>
-        <div className="m-auto mt-4 flex w-full max-w-[184px] items-center justify-between">
-          <button
-            onClick={() => handleChangeTrack('previous')}
-            className={cc(pulsedButton === 'previous' ? 'button' : '', 'fill-white relative')}
-            name="Previous song"
-            aria-label="Previous song"
-          >
-            <Icon type="next" className={'relative -top-1 border-none outline-none'} />
-          </button>
-          <button
-            onClick={handlePlayOrPause}
-            className={cc(
-              pulsedButton === 'playPause' ? 'button' : '',
-              'relative flex h-6 w-6 justify-center fill-white',
-            )}
-            name="Play / Pause"
-            aria-label="Play / Pause"
-          >
-            <Icon
-              type="pause"
-              className={cc(
-                isPlaying ? 'opacity-100 scale-100' : 'opacity-0 scale-0',
-                'h-full transition-[opacity,transform] duration-300 active:scale-90',
-              )}
-            />
-            <Icon
-              type="play"
-              className={cc(
-                !isPlaying ? 'opacity-100 scale-100' : 'opacity-0 scale-0',
-                'transition-[opacity,transform] duration-300 absolute active:scale-90 h-full',
-              )}
-            />
-          </button>
-          <button
-            onClick={() => handleChangeTrack('next')}
-            className={cc(pulsedButton === 'next' ? 'button' : '', '-scale-x-100 fill-white')}
-            name="Next song"
-            aria-label="Next song"
-            title="Next song"
-          >
-            <Icon type="next" className={'relative -top-1 border-none outline-none'} />
-          </button>
-        </div>
+        <AudioControls
+          isPlaying={isPlaying}
+          pulsedButton={pulsedButton}
+          handlePlayOrPause={handlePlayOrPause}
+          handleChangeTrack={handleChangeTrack}
+        />
         <label className="mt-6 flex items-center justify-center gap-4" htmlFor="rangePodcast">
           <Icon type="mute" className="w-1.5 fill-white" />
           <span className="sr-only">Volume control for the podcast player</span>

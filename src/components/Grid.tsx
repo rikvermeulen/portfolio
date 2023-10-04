@@ -22,6 +22,7 @@ const BREAKPOINTS: Record<number, Breakpoint> = {
 export default function Grid({ className = '', children, breakpoints = BREAKPOINTS }: GridProps) {
   const gridRef = useRef<HTMLDivElement>(null);
   const [isLoaded, setIsLoaded] = useState(false);
+  const bentoGridRef = useRef<BentoGrid | null>(null); // Store BentoGrid instance
 
   const childrenArray = Children.toArray(children);
 
@@ -30,7 +31,7 @@ export default function Grid({ className = '', children, breakpoints = BREAKPOIN
 
     const currentGrid = gridRef.current;
 
-    new BentoGrid({
+    bentoGridRef.current = new BentoGrid({
       target: currentGrid,
       columns: 1,
       breakpointReference: 'window',
@@ -38,6 +39,12 @@ export default function Grid({ className = '', children, breakpoints = BREAKPOIN
     });
 
     setIsLoaded(true);
+
+    return () => {
+      if (bentoGridRef.current) {
+        bentoGridRef.current.cleanup();
+      }
+    };
   }, [breakpoints]);
 
   return (

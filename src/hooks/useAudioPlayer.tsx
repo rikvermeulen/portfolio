@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { IPlaylistItem } from '@/types/types';
 
@@ -14,7 +14,7 @@ interface UseAudioPlayerProps {
   setCurrentTrackIndex?: (index: number) => void;
 }
 
-const AudioPlayer = ({
+const useAudioPlayer = ({
   initialUrl,
   playlistTracks = [],
   currentTrackIndex = 0,
@@ -55,16 +55,13 @@ const AudioPlayer = ({
     fade();
   }, [audioRef]);
 
-  const handleVolumeChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      const size = (e.target.valueAsNumber / Number(e.target.max)) * 100;
-      e.target.style.setProperty('--background-size', `${size}%`);
-      if (audioRef.current) {
-        audioRef.current.volume = e.target.valueAsNumber;
-      }
-    },
-    [audioRef],
-  );
+  const handleVolumeChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const size = (e.target.valueAsNumber / Number(e.target.max)) * 100;
+    e.target.style.setProperty('--background-size', `${size}%`);
+    if (audioRef.current) {
+      audioRef.current.volume = e.target.valueAsNumber;
+    }
+  }, []);
 
   const changeTrack = useCallback(
     (direction: 'next' | 'previous') => {
@@ -89,7 +86,7 @@ const AudioPlayer = ({
     [currentTrackIndex, playlistTracks, isPlaying, audioRef],
   );
 
-  const playOrPause = () => {
+  const playOrPause = useCallback(() => {
     if (audioRef.current) {
       if (audioRef.current.paused) {
         audioRef.current.play().catch((error) => {
@@ -100,7 +97,7 @@ const AudioPlayer = ({
         fadeOut();
       }
     }
-  };
+  }, [audioRef, fadeOut]);
 
   const handleTimeUpdate = useCallback(() => {
     if (audioRef.current && audioRef.current.currentTime >= 26) {
@@ -151,17 +148,28 @@ const AudioPlayer = ({
     });
   }, [isPlaying, currentTrackIndex, playlistTracks, setMusicData]);
 
-  return {
-    audioRef,
-    isPlaying,
-    setIsPlaying,
-    previewUrl,
-    setPreviewUrl,
-    playOrPause,
-    handleVolumeChange,
-    changeTrack,
-    handleTimeUpdate,
-  };
+  return useMemo(
+    () => ({
+      audioRef,
+      isPlaying,
+      setIsPlaying,
+      previewUrl,
+      setPreviewUrl,
+      playOrPause,
+      handleVolumeChange,
+      changeTrack,
+      handleTimeUpdate,
+    }),
+    [
+      audioRef,
+      isPlaying,
+      previewUrl,
+      playOrPause,
+      handleVolumeChange,
+      changeTrack,
+      handleTimeUpdate,
+    ],
+  );
 };
 
-export default AudioPlayer;
+export default useAudioPlayer;

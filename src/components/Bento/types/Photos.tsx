@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Image from 'next/image';
 
 import Bento from '@/components/Bento/Bento';
@@ -49,16 +49,20 @@ const Photos: React.FC<AlbumsProps> = ({ albums }) => {
     setActiveMediaIndex(0);
   }, []);
 
-  const albumItems = albumNames.map((albumName, index) => ({
-    name: albumName,
-    icon: albumName,
-    onClick: () => handleAlbumClick(index),
-  }));
+  const albumItems = useMemo(
+    () =>
+      albumNames.map((albumName, index) => ({
+        name: albumName,
+        icon: albumName,
+        onClick: () => handleAlbumClick(index),
+      })),
+    [albumNames, handleAlbumClick],
+  );
 
   const renderMedia = (media: string, index: number) => (
     <div
       key={media}
-      className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
+      className={`absolute inset-0 transition-opacity duration-500 ease-in-out ${
         activeMediaIndex === index ? 'opacity-100' : 'opacity-0'
       }`}
       onClick={handleImageClick}
