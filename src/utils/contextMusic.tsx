@@ -4,6 +4,8 @@ import { createContext, ReactNode, useCallback, useContext, useMemo, useState } 
 
 interface MusicData {
   isPlaying: boolean;
+  handlePlayOrPause: () => void;
+  handleChangeTrack: (direction: 'next' | 'previous') => void;
   currentTrack: string;
   albumName: string;
   artist: string;
@@ -33,6 +35,8 @@ interface MusicProviderProps {
 export const MusicProvider: React.FC<MusicProviderProps> = ({ children }) => {
   const [musicData, setMusicDataState] = useState<MusicData>({
     isPlaying: false,
+    handlePlayOrPause: () => {},
+    handleChangeTrack: () => 'next',
     currentTrack: '',
     albumName: '',
     artist: '',
@@ -45,7 +49,7 @@ export const MusicProvider: React.FC<MusicProviderProps> = ({ children }) => {
 
   const playOrPause = useCallback(() => {
     setMusicData({ isPlaying: !musicData.isPlaying });
-  }, [musicData.isPlaying, setMusicData]); // dependencies updated
+  }, [musicData.isPlaying, setMusicData]);
 
   const value = useMemo(
     () => ({ musicData, playOrPause, setMusicData }),

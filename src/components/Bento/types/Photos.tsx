@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Image from 'next/image';
 
 import Bento from '@/components/Bento/Bento';
@@ -12,7 +12,7 @@ interface AlbumsProps {
   albums: Record<string, string[]>;
 }
 
-const Photos: React.FC<AlbumsProps> = ({ albums }) => {
+const Photos: FC<AlbumsProps> = ({ albums }) => {
   const [activeAlbumIndex, setActiveAlbumIndex] = useState(0);
   const [activeMediaIndex, setActiveMediaIndex] = useState(0);
   const albumNames = Object.keys(albums);

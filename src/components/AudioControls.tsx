@@ -9,6 +9,7 @@ interface AudioControlsProps {
   pulsedButton: null | 'playPause' | 'previous' | 'next';
   handlePlayOrPause: () => void;
   handleChangeTrack: (direction: 'previous' | 'next') => void;
+  className?: string;
 }
 
 const AudioControls: FC<AudioControlsProps> = ({
@@ -16,9 +17,15 @@ const AudioControls: FC<AudioControlsProps> = ({
   pulsedButton,
   handlePlayOrPause,
   handleChangeTrack,
+  className,
 }) => {
   return (
-    <div className="m-auto mt-4 flex w-full max-w-[184px] items-center justify-between">
+    <div
+      className={cc(
+        className,
+        'mx-auto mt-4 flex w-full max-w-[184px] items-center justify-between',
+      )}
+    >
       <button
         onClick={() => handleChangeTrack('previous')}
         className={cc(

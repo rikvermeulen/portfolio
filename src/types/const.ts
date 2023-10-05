@@ -4,7 +4,7 @@ import { EProfileName, IMessage, IQuestionAction, TProfile } from '@/types/types
 export const profiles: { [key in EProfileName]: TProfile } = {
   [EProfileName.Working]: {
     icon: 'suitcase',
-    label: 'Currently coding 💻',
+    label: 'Coding 💻',
     days: new Set(['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']),
     startTime: 9 * 60,
     endTime: 18 * 60,
@@ -23,7 +23,7 @@ export const profiles: { [key in EProfileName]: TProfile } = {
   },
   [EProfileName.Personal]: {
     icon: 'person',
-    label: 'Time off 🏖️',
+    label: 'Me Time 🪩',
     days: new Set(['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']),
     startTime: 18 * 60,
     endTime: 22 * 60,

@@ -1,18 +1,8 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { ChangeEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-import { IPlaylistItem } from '@/types/types';
+import { UseAudioPlayerProps } from '@/types/types';
 
 import { useMusic } from '@/utils/contextMusic';
-
-export interface PodcastItem {
-  audio_preview_url: string;
-}
-interface UseAudioPlayerProps {
-  initialUrl: string;
-  playlistTracks?: IPlaylistItem[] | PodcastItem[];
-  currentTrackIndex?: number;
-  setCurrentTrackIndex?: (index: number) => void;
-}
 
 const useAudioPlayer = ({
   initialUrl,
@@ -26,36 +16,34 @@ const useAudioPlayer = ({
   const [isPlaying, setIsPlaying] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(initialUrl);
 
-  const fadeOut = useCallback(() => {
-    if (!audioRef.current) return;
+  const fadeAudioOut = useCallback(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
 
     const fadeDuration = 400;
     const intervals = fadeDuration / 10;
-    const originalVolume = audioRef.current.volume;
+    const originalVolume = audio.volume;
     const step = originalVolume / intervals;
-
     let fadeCounter = 0;
 
     const fade = () => {
-      if (!audioRef.current) return;
+      if (!audio) return;
 
-      const newVolume = audioRef.current.volume - step;
-      audioRef.current.volume = Math.max(newVolume, 0);
+      audio.volume = Math.max(audio.volume - step, 0);
       fadeCounter++;
 
       if (fadeCounter < intervals) {
         setTimeout(fade, 10);
       } else {
-        audioRef.current.pause();
-        audioRef.current.volume = originalVolume;
+        audio.pause();
+        audio.volume = originalVolume;
         setIsPlaying(false);
       }
     };
-
     fade();
-  }, [audioRef]);
+  }, []);
 
-  const handleVolumeChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleVolumeChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     const size = (e.target.valueAsNumber / Number(e.target.max)) * 100;
     e.target.style.setProperty('--background-size', `${size}%`);
     if (audioRef.current) {
@@ -67,37 +55,32 @@ const useAudioPlayer = ({
     (direction: 'next' | 'previous') => {
       if (!setCurrentTrackIndex) return;
 
-      const modifier = direction === 'next' ? 1 : -1;
       const newIndex =
-        (currentTrackIndex + modifier + playlistTracks.length) % playlistTracks.length;
+        (currentTrackIndex + (direction === 'next' ? 1 : -1) + playlistTracks.length) %
+        playlistTracks.length;
       setCurrentTrackIndex(newIndex);
-      if ('track' in playlistTracks[newIndex]) {
-        const track = playlistTracks[newIndex] as IPlaylistItem;
-        setPreviewUrl(track.track?.preview_url);
-      } else if ('audio_preview_url' in playlistTracks[newIndex]) {
-        const podcast = playlistTracks[newIndex] as PodcastItem;
-        setPreviewUrl(podcast.audio_preview_url);
-      }
+
+      const newTrack = playlistTracks[newIndex];
+      setPreviewUrl('track' in newTrack ? newTrack.track?.preview_url : newTrack.audio_preview_url);
 
       if (isPlaying && audioRef.current) {
         audioRef.current.play();
       }
     },
-    [currentTrackIndex, playlistTracks, isPlaying, audioRef],
+    [currentTrackIndex, isPlaying, playlistTracks, setCurrentTrackIndex],
   );
 
   const playOrPause = useCallback(() => {
-    if (audioRef.current) {
-      if (audioRef.current.paused) {
-        audioRef.current.play().catch((error) => {
-          console.error('Error playing the audio:', error);
-        });
-        setIsPlaying(true);
-      } else {
-        fadeOut();
-      }
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    if (audio.paused) {
+      audio.play().catch(console.error);
+      setIsPlaying(true);
+    } else {
+      fadeAudioOut();
     }
-  }, [audioRef, fadeOut]);
+  }, [fadeAudioOut]);
 
   const handleTimeUpdate = useCallback(() => {
     if (audioRef.current && audioRef.current.currentTime >= 26) {
@@ -108,45 +91,61 @@ const useAudioPlayer = ({
   const endPreview = useCallback(() => {
     if (!audioRef.current) return;
 
-    fadeOut();
+    fadeAudioOut();
     audioRef.current.currentTime = 0;
-  }, [audioRef, fadeOut]);
+  }, [audioRef, fadeAudioOut]);
 
   useEffect(() => {
-    if (!audioRef.current) return;
+    const audio = audioRef.current;
+    if (!audio) return;
 
-    const audioElement = audioRef.current;
-
-    const newPreviewUrl = previewUrl || '';
-    audioElement.src = newPreviewUrl;
-    audioElement.load();
+    audio.src = previewUrl || '';
+    audio.load();
 
     if (isPlaying) {
-      audioElement.play().catch((error) => {
-        console.error('Error playing the audio:', error);
-      });
+      audio.play().catch(console.error);
     }
 
-    audioElement.addEventListener('timeupdate', handleTimeUpdate);
-
-    return () => {
-      audioElement.removeEventListener('timeupdate', handleTimeUpdate);
+    const handleTimeUpdate = () => {
+      if (audio.currentTime >= 26) fadeAudioOut();
     };
-  }, [previewUrl, isPlaying, handleTimeUpdate]);
+
+    audio.addEventListener('timeupdate', handleTimeUpdate);
+    return () => audio.removeEventListener('timeupdate', handleTimeUpdate);
+  }, [previewUrl, isPlaying, fadeAudioOut]);
 
   useEffect(() => {
     const currentTrack = playlistTracks[currentTrackIndex];
 
     if (!currentTrack) return;
 
-    setMusicData({
+    const isTrack = 'track' in currentTrack;
+
+    const trackStatus = {
       isPlaying,
-      currentTrack: 'track' in currentTrack ? currentTrack?.track?.name : '',
-      albumName: 'track' in currentTrack ? currentTrack?.track?.album?.name : '',
-      artist: 'track' in currentTrack ? currentTrack?.track?.artists[0]?.name : '',
-      albumImage: 'track' in currentTrack ? currentTrack?.track?.album?.images[0]?.url : '',
-    });
-  }, [isPlaying, currentTrackIndex, playlistTracks, setMusicData]);
+      handlePlayOrPause: playOrPause,
+      handleChangeTrack: changeTrack,
+    };
+
+    if (isTrack) {
+      const { name, album, artists } = currentTrack?.track;
+      setMusicData({
+        ...trackStatus,
+        currentTrack: name,
+        albumName: album?.name,
+        artist: artists[0]?.name,
+        albumImage: album?.images[0]?.url,
+      });
+    } else {
+      setMusicData({
+        ...trackStatus,
+        currentTrack: currentTrack.name,
+        albumName: currentTrack.name,
+        artist: 'Podcast',
+        albumImage: currentTrack.images[0]?.url,
+      });
+    }
+  }, [isPlaying, currentTrackIndex, playlistTracks, setMusicData, playOrPause, changeTrack]);
 
   return useMemo(
     () => ({

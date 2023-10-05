@@ -45,6 +45,13 @@ export interface IPlaylistItem {
   track: ITrack;
 }
 
+export interface UseAudioPlayerProps {
+  initialUrl: string;
+  playlistTracks?: IPlaylistItem[] | PodcastItem[];
+  currentTrackIndex?: number;
+  setCurrentTrackIndex?: (index: number) => void;
+}
+
 // ---------------------
 // Podcast Types
 // ---------------------

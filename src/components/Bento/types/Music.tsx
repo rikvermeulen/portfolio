@@ -1,6 +1,6 @@
 'use client';
 
-import { memo, useCallback, useEffect, useMemo, useState } from 'react';
+import { FC, memo, useCallback, useEffect, useMemo, useState } from 'react';
 import Image from 'next/image';
 
 import { IPlaylistItem } from '@/types/types';
@@ -17,10 +17,11 @@ interface MusicProps {
   className?: string;
 }
 
-const Music: React.FC<MusicProps> = ({ playlist = [], className }) => {
+const Music: FC<MusicProps> = ({ playlist = [], className }) => {
   const [playlistTracks, setPlaylistTracks] = useState<IPlaylistItem[]>([]);
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
   const [pulsedButton, setPulsedButton] = useState<null | 'playPause' | 'previous' | 'next'>(null);
+
   const {
     audioRef,
     isPlaying,
@@ -53,11 +54,12 @@ const Music: React.FC<MusicProps> = ({ playlist = [], className }) => {
   );
 
   useEffect(() => {
-    const tracksWithPreview = playlist.filter((track) => !!track.track.preview_url);
+    const tracksWithPreview = playlist.filter((track) => track.track.preview_url);
     setPlaylistTracks(tracksWithPreview);
-    const initialPreviewUrl = tracksWithPreview[0]?.track?.preview_url;
-    if (initialPreviewUrl) {
-      setPreviewUrl(initialPreviewUrl);
+
+    const [firstTrackWithPreview] = tracksWithPreview;
+    if (firstTrackWithPreview) {
+      setPreviewUrl(firstTrackWithPreview.track.preview_url);
     }
   }, [playlist, setPreviewUrl]);
 
@@ -66,7 +68,9 @@ const Music: React.FC<MusicProps> = ({ playlist = [], className }) => {
     [playlistTracks, currentTrackIndex],
   );
 
-  const image = currentTrack?.album?.images[1]?.url || '/images/noalbum.png';
+  const { name, explicit, album, artists } = currentTrack || {};
+
+  const image = album?.images[1]?.url || '/images/noalbum.png';
 
   return (
     <Bento
@@ -105,7 +109,7 @@ const Music: React.FC<MusicProps> = ({ playlist = [], className }) => {
             <Image
               src={image}
               priority
-              alt={currentTrack?.album.name || 'No album'}
+              alt={album?.name || 'No album'}
               width={144}
               height={144}
               className={cc(
@@ -117,10 +121,12 @@ const Music: React.FC<MusicProps> = ({ playlist = [], className }) => {
         </div>
         <div className="mt-3 flex flex-col text-sm text-white">
           <div className="flex items-center gap-2">
-            <p className="font-bold">{currentTrack?.name}</p>
-            {currentTrack?.explicit && <Icon type="explicit" className="w-2.5" />}
+            <p className="font-bold">{name}</p>
+            {explicit && <Icon type="explicit" className="w-2.5" />}
           </div>
-          <div className="relative -top-1 text-white/70">{currentTrack?.artists[0].name}</div>
+          {artists && artists[0] && (
+            <div className="relative -top-1 text-white/70">{artists[0].name}</div>
+          )}
         </div>
         <AudioControls
           isPlaying={isPlaying}
