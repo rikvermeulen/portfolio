@@ -1,6 +1,6 @@
-import { defineDocumentType, makeSource } from 'contentlayer/source-files';
+import { defineDocumentType, makeSource } from 'contentlayer-temp/source-files';
 
-/** @type {import('contentlayer/source-files').ComputedFields} */
+/** @type {import('contentlayer-temp/source-files').ComputedFields} */
 const computedFields = {
   slug: {
     type: 'string',

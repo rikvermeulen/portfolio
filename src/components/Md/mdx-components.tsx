@@ -1,6 +1,6 @@
 'use client';
 
-import { useMDXComponent } from 'next-contentlayer/hooks';
+import { useMDXComponent } from 'next-contentlayer-temp/hooks';
 
 import {
   CustomH1,

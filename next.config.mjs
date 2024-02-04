@@ -1,6 +1,6 @@
 import './src/env.mjs';
 
-import { withContentlayer } from 'next-contentlayer';
+import { withContentlayer } from 'next-contentlayer-temp';
 
 /** @type {import('next').NextConfig} */
 const config = {
