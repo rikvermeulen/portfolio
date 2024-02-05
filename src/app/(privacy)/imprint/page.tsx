@@ -14,7 +14,7 @@ async function getImprint() {
   return post;
 }
 
-export default async function Imprint({}) {
+const Imprint = async () => {
   const imprint = await getImprint();
 
   if (!imprint) {
@@ -38,4 +38,6 @@ export default async function Imprint({}) {
       </Container>
     </main>
   );
-}
+};
+
+export default Imprint;

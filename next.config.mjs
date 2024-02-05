@@ -1,5 +1,6 @@
 import './src/env.mjs';
 
+import million from 'million/compiler';
 import { withContentlayer } from 'next-contentlayer-temp';
 
 /** @type {import('next').NextConfig} */
@@ -35,4 +36,10 @@ const config = {
     ],
   },
 };
-export default withContentlayer(config);
+
+const millionConfig = {
+  auto: true,
+  mute: true,
+};
+
+export default million.next(withContentlayer(config), millionConfig);

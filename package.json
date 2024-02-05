@@ -5,7 +5,7 @@
   "contributors": [],
   "license": "MIT",
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=20.0.0"
   },
   "repository": {
     "type": "git",
@@ -33,13 +33,13 @@
     "i": "^0.3.7",
     "luxon": "^3.4.4",
     "mapbox-gl": "^3.1.2",
+    "million": "2.6.4",
     "next": "^14.1.0",
-    "next-contentlayer-temp": "^0.4.3",
+    "next-contentlayer-temp": "^0.4.4",
     "npm": "^10.4.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "resend": "^3.1.0",
-    "twitter-api-v2": "^1.16.0",
     "zod": "^3.22.4"
   },
   "devDependencies": {
@@ -52,7 +52,7 @@
     "@types/mapbox-gl": "^2.7.20",
     "@types/node": "20.11.16",
     "@types/prettier": "^2.7.3",
-    "@types/react": "18.2.52",
+    "@types/react": "18.2.53",
     "@types/react-dom": "18.2.18",
     "@typescript-eslint/eslint-plugin": "^6.20.0",
     "@typescript-eslint/parser": "^6.20.0",
