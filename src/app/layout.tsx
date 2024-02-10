@@ -1,6 +1,6 @@
 import '@/styles/globals.css';
 
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 
 import type { IRootLayoutProps } from '@/types/types';
 
@@ -17,6 +17,10 @@ export async function generateMetadata(): Promise<Metadata> {
   const metadata = await meta();
   return metadata;
 }
+
+export const viewport: Viewport = {
+  themeColor: 'black',
+};
 
 export default function RootLayout({ children }: IRootLayoutProps) {
   return (

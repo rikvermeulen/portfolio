@@ -99,7 +99,6 @@ export default async function meta(): Promise<Metadata> {
       ],
     },
     themeColor: 'black',
-    colorScheme: 'dark',
     creator: 'Rik Vermeulen',
     publisher: 'Rik Vermeulen',
     formatDetection: {
