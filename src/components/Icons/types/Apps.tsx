@@ -1,13 +1,13 @@
 export function Apps({ className, ...props }: { className?: string }) {
   return (
     <svg
-      version="1.1"
-      xmlns="http://www.w3.org/2000/svg"
-      width="38.5156"
       height="37.0898"
+      version="1.1"
+      width="38.5156"
+      xmlns="http://www.w3.org/2000/svg"
       {...props}
-      className={className}
       viewBox="0 0 38.5156 37.0898"
+      className={className}
     >
       <g>
         <rect height="37.0898" opacity="0" width="38.5156" x="0" y="0" />
@@ -23,13 +23,13 @@ export function Apps({ className, ...props }: { className?: string }) {
 export function AppsFill({ className, ...props }: { className?: string }) {
   return (
     <svg
-      version="1.1"
-      xmlns="http://www.w3.org/2000/svg"
-      width="38.5156"
       height="37.0898"
+      version="1.1"
+      width="38.5156"
+      xmlns="http://www.w3.org/2000/svg"
       {...props}
-      className={className}
       viewBox="0 0 38.5156 37.0898"
+      className={className}
     >
       <g>
         <rect height="37.0898" opacity="0" width="38.5156" x="0" y="0" />

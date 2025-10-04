@@ -1,15 +1,15 @@
-import type { Metadata } from 'next';
-import Image from 'next/image';
-import Link from 'next/link';
-import { allProjects } from '@/contentlayer/generated';
+import Bento from "@/components/Bento/Bento";
+import Container from "@/components/Container";
+import Grid from "@/components/Grid";
+import { allProjects } from "@/contentlayer/generated";
+import Image from "next/image";
+import Link from "next/link";
 
-import Bento from '@/components/Bento/Bento';
-import Container from '@/components/Container';
-import Grid from '@/components/Grid';
+import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: 'Work',
-  description: 'Welcome to my portfolio',
+  title: "Work",
+  description: "Welcome to my portfolio",
 };
 
 const BREAKPOINTS = {
@@ -22,32 +22,35 @@ export default function Work() {
     <main className="h-full">
       <Container>
         <section className="relative mx-auto max-w-[710px] py-24 md:pt-32 2xl:max-w-none">
-          <Grid breakpoints={BREAKPOINTS} className="xl:!grid-cols-2 2xl:!grid-cols-4">
+          <Grid
+            breakpoints={BREAKPOINTS}
+            className="xl:!grid-cols-2 2xl:!grid-cols-4"
+          >
             {allProjects.map((project) => (
               <Bento
+                key={project._id}
                 size="1x1 md:2x2"
                 className="bento relative z-0 max-w-[710px] bg-gray-100 p-5 transition-transform duration-300 hover:scale-[1.005]"
-                key={project._id}
               >
                 <Link href={project.slug}>
                   <div className="absolute inset-0 -z-10">
                     <Image
-                      src={`/images/projects/${project.title}/cover.png`}
-                      className={`h-full w-full object-cover`}
                       alt="media"
-                      width={710}
                       height={710}
+                      src={`/images/projects/${project.title}/cover.png`}
+                      width={710}
+                      className="h-full w-full object-cover"
                     />
                   </div>
                   <div className="flex h-full flex-col justify-between">
                     <div className="text-white">
                       <div className="flex items-center gap-3 font-bold">
                         <Image
-                          src={`/images/projects/${project.title}/logo.png`}
-                          className={`rounded-md drop-shadow-md transition-transform duration-300 ease-in-out hover:scale-105`}
                           alt={project.title}
-                          width={32}
                           height={32}
+                          src={`/images/projects/${project.title}/logo.png`}
+                          width={32}
+                          className="rounded-md drop-shadow-md transition-transform duration-300 ease-in-out hover:scale-105"
                         />
                         <h2 className="text-xl mix-blend-difference md:text-2xl">
                           {project.title}
@@ -58,8 +61,8 @@ export default function Work() {
                       </p>
                     </div>
                     <div className="text-white mix-blend-difference">
-                      <p className="font-bold ">My role</p>
-                      <p className="text-sm ">{project.role}</p>
+                      <p className="font-bold">My role</p>
+                      <p className="text-sm">{project.role}</p>
                     </div>
                   </div>
                 </Link>
@@ -68,7 +71,7 @@ export default function Work() {
           </Grid>
           <div className="mt-4 text-center">
             <h2 className="text-lg font-bold">More projects</h2>
-            <p className="text-sm "> Coming soon...</p>
+            <p className="text-sm"> Coming soon...</p>
           </div>
         </section>
       </Container>

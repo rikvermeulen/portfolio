@@ -1,13 +1,13 @@
 export function Chevron({ className, ...props }: { className?: string }) {
   return (
     <svg
-      version="1.1"
-      xmlns="http://www.w3.org/2000/svg"
-      width="19.1016"
       height="33.9258"
+      version="1.1"
+      width="19.1016"
+      xmlns="http://www.w3.org/2000/svg"
       {...props}
-      className={className}
       viewBox="0 0 19.1016 33.9258"
+      className={className}
     >
       <g>
         <rect height="33.9258" opacity="0" width="19.1016" x="0" y="0" />

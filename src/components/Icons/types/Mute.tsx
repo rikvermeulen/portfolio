@@ -2,12 +2,12 @@ export default function Mute({ className, ...props }: { className?: string }) {
   return (
     <svg
       {...props}
-      className={className}
-      version="1.1"
-      xmlns="http://www.w3.org/2000/svg"
-      width="11.6309"
       height="17.2363"
+      version="1.1"
       viewBox="0 0 11.6309 17.2363"
+      width="11.6309"
+      xmlns="http://www.w3.org/2000/svg"
+      className={className}
     >
       <g>
         <rect height="17.2363" opacity="0" width="11.6309" x="0" y="0" />

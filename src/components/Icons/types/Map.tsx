@@ -1,13 +1,13 @@
 export function Map({ className, ...props }: { className?: string }) {
   return (
     <svg
-      version="1.1"
-      xmlns="http://www.w3.org/2000/svg"
-      width="40.625"
       height="38.5352"
+      version="1.1"
+      width="40.625"
+      xmlns="http://www.w3.org/2000/svg"
       {...props}
-      className={className}
       viewBox="0 0 40.625 38.5352"
+      className={className}
     >
       <g>
         <rect height="38.5352" opacity="0" width="40.625" x="0" y="0" />
@@ -20,13 +20,13 @@ export function Map({ className, ...props }: { className?: string }) {
 export function MapFill({ className, ...props }: { className?: string }) {
   return (
     <svg
-      version="1.1"
-      xmlns="http://www.w3.org/2000/svg"
-      width="40.625"
       height="38.3008"
+      version="1.1"
+      width="40.625"
+      xmlns="http://www.w3.org/2000/svg"
       {...props}
-      className={className}
       viewBox="0 0 40.625 38.3008"
+      className={className}
     >
       <g>
         <rect height="38.3008" opacity="0" width="40.625" x="0" y="0" />

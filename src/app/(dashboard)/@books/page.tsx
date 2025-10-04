@@ -1,6 +1,5 @@
-import { env } from '@/env.mjs';
-
-import Book from '@/components/Bento/types/Books';
+import Book from "@/components/Bento/types/Books.tsx";
+import { env } from "@/env.ts";
 
 async function getData(book_id: string) {
   try {
@@ -8,19 +7,21 @@ async function getData(book_id: string) {
       `https://www.googleapis.com/books/v1/volumes/${encodeURIComponent(book_id)}?key=${
         env.GOOLGE_BOOKS_API_KEY
       }`,
-      { cache: 'force-cache' },
+      { cache: "force-cache" },
     );
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error('Failed to fetch book data:', error);
+    console.error("Failed to fetch book data:", error);
   }
 }
 
 export default async function Books() {
-  const data = await getData('Fse0EAAAQBAJ');
+  const data = await getData("Fse0EAAAQBAJ");
 
-  if (!data) return <></>;
+  if (!data) {
+    return <></>;
+  }
 
   return <Book book={data} />;
 }

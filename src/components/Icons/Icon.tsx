@@ -1,35 +1,33 @@
-import { FC, ReactElement } from 'react';
+import type { FC, ReactElement } from "react";
 
-import { Apps, AppsFill } from './types/Apps';
-import Arrow from './types/Arrow';
-import { Chevron } from './types/Chevron';
-import { Close } from './types/Close';
-import Controller from './types/Controller';
-import { Dog, DogFill } from './types/Dog';
-import Explicit from './types/Explicit';
-import { Heart, HeartFill } from './types/Heart';
-import List from './types/List';
-import Loop from './types/Loop';
-import { Map, MapFill } from './types/Map';
-import Minus from './types/Minus';
-import Moon from './types/Moon';
-import Mouse from './types/Mouse';
-import Mute from './types/Mute';
-import Next from './types/Next';
-import Pause from './types/Pause';
-import Person from './types/Person';
-import Play from './types/Play';
-import Plus from './types/Plus';
-import Settings from './types/Settings';
-import Sound from './types/Sound';
-import Suitcase from './types/Suitcase';
-import Tail from './types/Tail';
-import Tooltip from './types/Tooltip';
-import Wave from './types/Wave';
+import { Apps, AppsFill } from "./types/Apps.tsx";
+import Arrow from "./types/Arrow.tsx";
+import { Chevron } from "./types/Chevron.tsx";
+import { Close } from "./types/Close.tsx";
+import Controller from "./types/Controller.tsx";
+import { Dog, DogFill } from "./types/Dog.tsx";
+import Explicit from "./types/Explicit.tsx";
+import { Heart, HeartFill } from "./types/Heart.tsx";
+import List from "./types/List.tsx";
+import Loop from "./types/Loop.tsx";
+import { Map, MapFill } from "./types/Map.tsx";
+import Minus from "./types/Minus.tsx";
+import Moon from "./types/Moon.tsx";
+import Mouse from "./types/Mouse.tsx";
+import Mute from "./types/Mute.tsx";
+import Next from "./types/Next.tsx";
+import Pause from "./types/Pause.tsx";
+import Person from "./types/Person.tsx";
+import Play from "./types/Play.tsx";
+import Plus from "./types/Plus.tsx";
+import Settings from "./types/Settings.tsx";
+import Sound from "./types/Sound.tsx";
+import Suitcase from "./types/Suitcase.tsx";
+import Tail from "./types/Tail.tsx";
+import Tooltip from "./types/Tooltip.tsx";
+import Wave from "./types/Wave.tsx";
 
-interface Icons {
-  [index: string]: FC<any>;
-}
+type Icons = Record<string, FC<{ className?: string }>>;
 
 const icons: Icons = {
   mouse: Mouse,
@@ -66,12 +64,14 @@ const icons: Icons = {
 
 interface IconProps {
   type: keyof typeof icons;
-  [x: string]: any;
+  [x: string]: unknown;
 }
 
 const Icon: FC<IconProps> = ({ type, ...rest }): ReactElement | null => {
   const IconComp = icons[type];
-  if (!IconComp) return null;
+  if (!IconComp) {
+    return null;
+  }
   return <IconComp {...rest} />;
 };
 

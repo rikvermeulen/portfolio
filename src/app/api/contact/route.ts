@@ -1,10 +1,9 @@
-import { ReactElement } from 'react';
-import { NextResponse } from 'next/server';
-import { Resend } from 'resend';
+import { MessageTemplate } from "@/components/EmailTemplate.tsx";
+import { env } from "@/env.ts";
+import { Resend } from "resend";
+import { NextResponse } from "next/server";
 
-import { env } from '@/env.mjs';
-
-import { MessageTemplate } from '@/components/EmailTemplate';
+import type { ReactElement } from "react";
 
 const resend = new Resend(env.RESEND_API_KEY);
 
@@ -13,9 +12,9 @@ export async function POST(request: Request) {
 
   try {
     const data = await resend.emails.send({
-      from: 'Rik Vermeulen <info@rikvermeulen.com>',
-      to: ['rik.vermeulen.1997@live.nl'],
-      subject: 'Contact form submission: rikvermeulen.com',
+      from: "Rik Vermeulen <info@rikvermeulen.com>",
+      to: ["rik.vermeulen.1997@live.nl"],
+      subject: "Contact form submission: rikvermeulen.com",
       react: MessageTemplate({
         name: name,
         reason: reason,

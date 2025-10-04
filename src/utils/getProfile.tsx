@@ -1,13 +1,16 @@
-'use client';
+"use client";
 
-import { DateTime } from 'luxon';
+import { profiles } from "@/types/const.ts";
+import { EProfileName } from "@/types/types.ts";
+import { DateTime } from "luxon";
 
-import { profiles } from '@/types/const';
-import { EProfileName } from '@/types/types';
+import { FormattedTime } from "./FormattedDate.tsx";
 
-import { FormattedTime } from './FormattedDate';
-
-const isTimeWithinRange = (currentTime: number, startTime: number, endTime: number) => {
+const isTimeWithinRange = (
+  currentTime: number,
+  startTime: number,
+  endTime: number,
+) => {
   if (startTime <= endTime) {
     return currentTime >= startTime && currentTime < endTime;
   } else {
@@ -15,13 +18,15 @@ const isTimeWithinRange = (currentTime: number, startTime: number, endTime: numb
   }
 };
 
-export default function useProfile(): { icon: string; label: string } {
+export default function getProfile(): { icon: string; label: string } {
   const time = DateTime.utc().toString();
   const now = FormattedTime(time);
 
-  if (!now) return { icon: '', label: '' };
+  if (!now) {
+    return { icon: "", label: "" };
+  }
 
-  const currentDay = now.toFormat('EEEE');
+  const currentDay = now.toFormat("EEEE");
   const currentTime = now.hour * 60 + now.minute;
 
   const profileOrder = [
@@ -31,11 +36,13 @@ export default function useProfile(): { icon: string; label: string } {
     EProfileName.NotWorking,
   ];
 
-  for (let profileName of profileOrder) {
+  for (const profileName of profileOrder) {
     const profile = profiles[profileName];
     if (profile.days.has(currentDay)) {
       if (profile.startTime !== undefined && profile.endTime !== undefined) {
-        if (isTimeWithinRange(currentTime, profile.startTime, profile.endTime)) {
+        if (
+          isTimeWithinRange(currentTime, profile.startTime, profile.endTime)
+        ) {
           return {
             icon: profile.icon,
             label: profile.label,
@@ -50,5 +57,5 @@ export default function useProfile(): { icon: string; label: string } {
     }
   }
 
-  return { icon: '', label: '' };
+  return { icon: "", label: "" };
 }

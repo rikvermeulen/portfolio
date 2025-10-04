@@ -1,17 +1,15 @@
-'use client';
+"use client";
 
-import { memo, useCallback, useEffect, useRef } from 'react';
-import Image from 'next/image';
-import mapboxgl from 'mapbox-gl';
+import mapboxgl from "mapbox-gl";
+import { memo, useCallback, useEffect, useRef } from "react";
+import Image from "next/image";
 
-import 'mapbox-gl/dist/mapbox-gl.css';
+import "mapbox-gl/dist/mapbox-gl.css";
 
-import { env } from '@/env.mjs';
-
-import Bento from '@/components/Bento/Bento';
-import Icon from '@/components/Icons/Icon';
-
-import { useSound } from '@/hooks/useSound';
+import Bento from "@/components/Bento/Bento.tsx";
+import Icon from "@/components/Icons/Icon.tsx";
+import { env } from "@/env.ts";
+import { useSound } from "@/hooks/useSound.tsx";
 
 mapboxgl.accessToken = env.NEXT_PUBLIC_MAPBOX_TOKEN;
 
@@ -26,73 +24,97 @@ function FindMe() {
 
   useEffect(() => {
     if (mapContainerRef.current) {
-      const map = new mapboxgl.Map({
-        container: mapContainerRef.current,
-        style: 'mapbox://styles/rikvermeulen/cllbdz32d00tf01qp16b87izs',
-        center: [longitude, latitude],
-        zoom: 13,
-        attributionControl: false,
-        pitchWithRotate: false,
-        dragRotate: false,
-      });
+      let handleResize: (() => void) | null = null;
 
-      mapRef.current = map;
+      try {
+        const map = new mapboxgl.Map({
+          container: mapContainerRef.current,
+          style: "mapbox://styles/rikvermeulen/cllbdz32d00tf01qp16b87izs",
+          center: [longitude, latitude],
+          zoom: 13,
+          attributionControl: false,
+          pitchWithRotate: false,
+          dragRotate: false,
+        });
 
-      const markerElement = document.createElement('div');
-      const pingSpan = document.createElement('span');
-      const innerSpan = document.createElement('span');
+        mapRef.current = map;
 
-      pingSpan.classList.add(
-        'ping',
-        'absolute',
-        'inline-flex',
-        'h-6',
-        'w-6',
-        'rounded-full',
-        'bg-[#007AFF]',
-        'opacity-75',
-      );
-      innerSpan.classList.add(
-        'relative',
-        'inline-flex',
-        'bg-[#007AFF]',
-        'border-[3px]',
-        'border-solid',
-        'border-white',
-        'h-6',
-        'w-6',
-        'rounded-full',
-      );
+        const markerElement = document.createElement("div");
+        const pingSpan = document.createElement("span");
+        const innerSpan = document.createElement("span");
 
-      markerElement.appendChild(pingSpan);
-      markerElement.appendChild(innerSpan);
+        pingSpan.classList.add(
+          "ping",
+          "absolute",
+          "inline-flex",
+          "h-6",
+          "w-6",
+          "rounded-full",
+          "bg-[#007AFF]",
+          "opacity-75",
+        );
+        innerSpan.classList.add(
+          "relative",
+          "inline-flex",
+          "bg-[#007AFF]",
+          "border-[3px]",
+          "border-solid",
+          "border-white",
+          "h-6",
+          "w-6",
+          "rounded-full",
+        );
 
-      new mapboxgl.Marker(markerElement).setLngLat([longitude, latitude]).addTo(map);
+        markerElement.appendChild(pingSpan);
+        markerElement.appendChild(innerSpan);
 
-      markerElement.setAttribute('role', 'img');
-      markerElement.setAttribute('aria-label', 'My location');
+        new mapboxgl.Marker(markerElement)
+          .setLngLat([longitude, latitude])
+          .addTo(mapRef.current);
 
-      map.scrollZoom.disable();
-      map.doubleClickZoom.disable();
-      map.boxZoom.disable();
+        markerElement.setAttribute("role", "img");
+        markerElement.setAttribute("aria-label", "My location");
 
-      map.dragPan.disable();
+        mapRef.current.scrollZoom.disable();
+        mapRef.current.doubleClickZoom.disable();
+        mapRef.current.boxZoom.disable();
 
-      map.on('load', function () {
-        map.resize();
-      });
+        mapRef.current.dragPan.disable();
 
-      const handleResize = () => {
-        if (mapRef.current) {
-          mapRef.current.resize();
-        }
-      };
+        mapRef.current.on("load", function () {
+          console.info("Map loaded successfully");
+          if (mapRef.current) {
+            mapRef.current.resize();
+          }
+        });
 
-      window.addEventListener('resize', handleResize);
+        mapRef.current.on("error", function (e) {
+          console.error("Map error:", e);
+        });
+
+        handleResize = () => {
+          if (mapRef.current) {
+            mapRef.current.resize();
+          }
+        };
+
+        window.addEventListener("resize", handleResize);
+      } catch (error) {
+        console.error("Error creating or setting up map:", error);
+      }
 
       return () => {
-        map.remove();
-        window.removeEventListener('resize', handleResize);
+        try {
+          if (mapRef.current) {
+            mapRef.current.remove();
+            mapRef.current = null;
+          }
+        } catch (error) {
+          console.error("Error removing map:", error);
+        }
+        if (handleResize) {
+          window.removeEventListener("resize", handleResize);
+        }
       };
     }
   }, []);
@@ -100,8 +122,10 @@ function FindMe() {
   const handleZoomIn = useCallback(() => {
     if (mapRef.current) {
       const currentZoom = mapRef.current.getZoom();
-      if (currentZoom >= 13) return;
-      playSound('tap');
+      if (currentZoom >= 13) {
+        return;
+      }
+      playSound("tap");
       mapRef.current.flyTo({
         center: [longitude, latitude],
         zoom: currentZoom + 3,
@@ -114,7 +138,7 @@ function FindMe() {
   const handleZoomOut = useCallback(() => {
     if (mapRef.current) {
       const currentZoom = mapRef.current.getZoom();
-      playSound('tap');
+      playSound("tap");
       mapRef.current.flyTo({
         center: [longitude, latitude],
         zoom: currentZoom - 3,
@@ -126,29 +150,29 @@ function FindMe() {
 
   return (
     <Bento size="1x1" className="bento relative z-0">
-      <div ref={mapContainerRef} style={{ width: '100%', height: '100%' }} />
+      <div ref={mapContainerRef} style={{ width: "100%", height: "100%" }} />
       <div className="absolute top-0 z-10">
         <Image
-          className=" cloud-one -translate-x-full -translate-y-32 contrast-125 transition-transform ease-in-out"
+          alt="cloud"
+          height={300}
           src="/images/cloud.png"
           width={300}
-          height={300}
-          alt="cloud"
+          className="cloud-one -translate-x-full -translate-y-32 contrast-125 transition-transform ease-in-out"
         />
 
         <Image
-          className="cloud-two -translate-x-full -translate-y-32 contrast-125 transition-transform ease-in-out"
+          alt="cloud"
+          height={300}
           src="/images/cloud.png"
           width={300}
-          height={300}
-          alt="cloud"
+          className="cloud-two -translate-x-full -translate-y-32 contrast-125 transition-transform ease-in-out"
         />
       </div>
       <div className="group absolute bottom-5 right-5 z-50 flex">
         <button
-          onClick={handleZoomOut}
           id="minus"
           aria-label="Minus - zoom out"
+          onClick={handleZoomOut}
           className="rounded-s-xl bg-white/70 px-2 py-1.5 active:bg-slate-200/50"
         >
           <Icon
@@ -157,9 +181,9 @@ function FindMe() {
           />
         </button>
         <button
-          onClick={handleZoomIn}
           id="plus"
           aria-label="Plud - zoom in"
+          onClick={handleZoomIn}
           className="rounded-e-xl bg-white/70 px-2 py-1.5 active:bg-slate-200/50"
         >
           <Icon

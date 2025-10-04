@@ -1,14 +1,19 @@
-import { FC, RefObject, useEffect, useRef } from 'react';
+import cc from "@/lib/cc.ts";
+import { useEffect, useRef } from "react";
 
-import cc from '@/lib/cc';
+import type { FC, RefObject } from "react";
 
-type IndicatorProps = {
+interface IndicatorProps {
   activeIndex: number;
-  itemRefs: RefObject<HTMLDivElement>[];
+  itemRefs: RefObject<HTMLElement | null>[];
   className?: string;
-};
+}
 
-export const Indicator: FC<IndicatorProps> = ({ activeIndex, itemRefs, className }) => {
+export const Indicator: FC<IndicatorProps> = ({
+  activeIndex,
+  itemRefs,
+  className,
+}) => {
   const indicatorRef = useRef<HTMLLIElement>(null);
 
   useEffect(() => {
@@ -29,7 +34,7 @@ export const Indicator: FC<IndicatorProps> = ({ activeIndex, itemRefs, className
       ref={indicatorRef}
       className={cc(
         className,
-        'absolute -z-10 h-full rounded-full transition-transform duration-300 ease-in-out',
+        "absolute -z-10 h-full rounded-full transition-transform duration-300 ease-in-out",
       )}
     />
   );

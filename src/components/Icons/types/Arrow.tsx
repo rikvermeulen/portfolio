@@ -2,10 +2,10 @@ export default function Arrow({ className, ...props }: { className?: string }) {
   return (
     <svg
       {...props}
-      className={className}
       version="1.1"
-      xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 19.9219 19.9316"
+      xmlns="http://www.w3.org/2000/svg"
+      className={className}
     >
       <g>
         <rect height="19.9316" opacity="0" width="19.9219" x="0" y="0" />

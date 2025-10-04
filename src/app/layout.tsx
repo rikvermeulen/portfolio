@@ -1,17 +1,15 @@
-import '@/styles/globals.css';
+import "@/styles/globals.css";
 
-import type { Metadata, Viewport } from 'next';
+import { Analytics } from "@/components/Analytics";
+import Footer from "@/components/Footer";
+import Header from "@/components/Header";
+import { TailwindIndicator } from "@/components/TailwindIndicator";
+import { SoundProvider } from "@/hooks/useSound";
+import { fontSans } from "@/lib/fonts";
+import meta from "@/lib/meta";
 
-import type { IRootLayoutProps } from '@/types/types';
-
-import { Analytics } from '@/components/Analytics';
-import Footer from '@/components/Footer';
-import Header from '@/components/Header';
-import { TailwindIndicator } from '@/components/TailwindIndicator';
-
-import { SoundProvider } from '@/hooks/useSound';
-import { fontSans } from '@/lib/fonts';
-import meta from '@/lib/meta';
+import type { IRootLayoutProps } from "@/types/types";
+import type { Metadata, Viewport } from "next";
 
 export async function generateMetadata(): Promise<Metadata> {
   const metadata = await meta();
@@ -19,7 +17,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export const viewport: Viewport = {
-  themeColor: 'black',
+  themeColor: "black",
 };
 
 export default function RootLayout({ children }: IRootLayoutProps) {

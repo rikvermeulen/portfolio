@@ -1,11 +1,16 @@
-export default function Suitcase({ className, ...props }: { className?: string }) {
+export default function Suitcase({
+  className,
+  ...props
+}: {
+  className?: string;
+}) {
   return (
     <svg
-      version="1.1"
-      xmlns="http://www.w3.org/2000/svg"
-      width="45.2148"
       height="37.8711"
+      version="1.1"
       viewBox="0 0 45.2148 37.8711"
+      width="45.2148"
+      xmlns="http://www.w3.org/2000/svg"
       className={className}
       {...props}
     >

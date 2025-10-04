@@ -1,11 +1,11 @@
 export default function Moon({ className, ...props }: { className?: string }) {
   return (
     <svg
-      version="1.1"
-      xmlns="http://www.w3.org/2000/svg"
-      width="38.5352"
       height="38.7695"
+      version="1.1"
       viewBox="0 0 38.5352 38.7695"
+      width="38.5352"
+      xmlns="http://www.w3.org/2000/svg"
       className={className}
       {...props}
     >

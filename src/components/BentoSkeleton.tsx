@@ -1,19 +1,24 @@
-import { Skeleton } from '@/components/Skeleton';
+import { Skeleton } from "@/components/Skeleton.tsx";
+import cc from "@/lib/cc.tsx";
 
-import cc from '@/lib/cc';
-
-export function BentoSkeleton({ className, size }: { className?: string; size?: string }) {
-  let sizeClass = '';
+export function BentoSkeleton({
+  className,
+  size,
+}: {
+  className?: string;
+  size?: string;
+}) {
+  let sizeClass = "";
 
   switch (size) {
-    case '1x1':
-      sizeClass = '';
+    case "1x1":
+      sizeClass = "";
       break;
-    case '2x1':
-      sizeClass = '';
+    case "2x1":
+      sizeClass = "";
       break;
-    case '2x2':
-      sizeClass = 'md:col-span-2 md:row-span-2';
+    case "2x2":
+      sizeClass = "md:col-span-2 md:row-span-2";
       break;
   }
 
@@ -21,7 +26,7 @@ export function BentoSkeleton({ className, size }: { className?: string; size?: 
     <div
       className={cc(
         sizeClass ? sizeClass : className,
-        'bento relative min-h-[348px] h-full animate-pulse p-5',
+        "bento relative h-full min-h-[348px] animate-pulse p-5",
       )}
     >
       <div className="flex h-full flex-col justify-between">

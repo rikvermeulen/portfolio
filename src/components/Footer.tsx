@@ -1,9 +1,7 @@
-import Link from 'next/link';
-
-import { MainMenu } from '@/types/const';
-
-import Container from '@/components/Container';
-import Pill from '@/components/Pill';
+import Container from "@/components/Container.tsx";
+import Pill from "@/components/Pill.tsx";
+import { MainMenu } from "@/types/const.ts";
+import Link from "next/link";
 
 export default function Footer() {
   return (
@@ -14,7 +12,7 @@ export default function Footer() {
       <Container className="z-50">
         <div className="mb-8 hidden justify-between font-normal text-black lg:flex">
           <p className="text-sm">©2023 Rik Vermeulen</p>
-          <Link className="cursor-pointer text-sm" href="/imprint">
+          <Link href="/imprint" className="cursor-pointer text-sm">
             Imprint & Privacy
           </Link>
         </div>

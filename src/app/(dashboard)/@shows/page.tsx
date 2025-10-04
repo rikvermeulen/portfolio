@@ -1,12 +1,15 @@
-import BentoShow from '@/components/Bento/types/Shows';
+import BentoShow from "@/components/Bento/types/Shows";
+import {
+  getFavoriteMovies,
+  getFavoriteShow,
+  getShowSeason,
+} from "@/utils/tmdb";
 
-import { getFavoriteMovies, getFavoriteShow, getShowSeason } from '@/utils/tmdb';
-
-const showID = '114461';
+const showID = "114461";
 
 async function getData() {
   const [latestShow, shows, movies] = await Promise.all([
-    getShowSeason(showID, '1'),
+    getShowSeason(showID, "1"),
     getFavoriteShow(),
     getFavoriteMovies(),
   ]);
@@ -23,5 +26,11 @@ async function getData() {
 export default async function Shows() {
   const data = await getData();
 
-  return <BentoShow current={data.latestShow} shows={data.shows} movies={data.movies} />;
+  return (
+    <BentoShow
+      current={data.latestShow}
+      movies={data.movies}
+      shows={data.shows}
+    />
+  );
 }

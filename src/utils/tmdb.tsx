@@ -1,68 +1,77 @@
-import { cache } from 'react';
-import axios from 'axios';
+import { env } from "@/env.ts";
+import axios from "axios";
+import { cache } from "react";
 
-import { env } from '@/env.mjs';
+const BASE_URL = "https://api.themoviedb.org/3";
 
-const BASE_URL = 'https://api.themoviedb.org/3';
-
-export const searchShows = cache(async (query: any) => {
+export const searchShows = cache(async (query: string) => {
   try {
     const response = await axios.get(
       `${BASE_URL}/search/tv?api_key=${env.TMDB_CLIENT_KEY}&query=${query}`,
     );
     return response.data.results;
   } catch (error) {
-    console.error('Error fetching shows:', error);
+    console.error("Error fetching shows:", error);
     return [];
   }
 });
 
 export const getShowDetails = cache(async (tvId: string) => {
   try {
-    const response = await axios.get(`${BASE_URL}/tv/${tvId}?api_key=${env.TMDB_CLIENT_KEY}`);
-    return response.data;
-  } catch (error) {
-    console.error('Error fetching show details:', error);
-    return null;
-  }
-});
-
-export const getShowSeason = cache(async (tvId: string, seasonNumber: string) => {
-  try {
     const response = await axios.get(
-      `${BASE_URL}/tv/${tvId}/season/${seasonNumber}?api_key=${env.TMDB_CLIENT_KEY}`,
+      `${BASE_URL}/tv/${tvId}?api_key=${env.TMDB_CLIENT_KEY}`,
     );
     return response.data;
   } catch (error) {
-    console.error('Error fetching show season:', error);
+    console.error("Error fetching show details:", error);
     return null;
   }
 });
 
+export const getShowSeason = cache(
+  async (tvId: string, seasonNumber: string) => {
+    try {
+      const response = await axios.get(
+        `${BASE_URL}/tv/${tvId}/season/${seasonNumber}?api_key=${env.TMDB_CLIENT_KEY}`,
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching show season:", error);
+      return null;
+    }
+  },
+);
+
 export const getFavoriteShow = cache(async () => {
   try {
-    const response = await axios.get(`${BASE_URL}/account/9670374/favorite/tv`, {
-      headers: {
-        Authorization: `Bearer ${env.TMDB_CLIENT_SECRET}`,
+    const response = await axios.get(
+      `${BASE_URL}/account/9670374/favorite/tv`,
+      {
+        headers: {
+          Authorization: `Bearer ${env.TMDB_CLIENT_SECRET}`,
+        },
       },
-    });
+    );
     return response.data;
   } catch (error) {
-    console.error('Error fetching show details:', error);
+    console.error("Error fetching show details:", error);
     return null;
   }
 });
 
 export const getFavoriteMovies = cache(async () => {
   try {
-    const response = await axios.get(`${BASE_URL}/account/9670374/favorite/movies`, {
-      headers: {
-        Authorization: `Bearer ${env.TMDB_CLIENT_SECRET}`,
+    const response = await axios.get(
+      `${BASE_URL}/account/9670374/favorite/movies`,
+      {
+        headers: {
+          Authorization: `Bearer ${env.TMDB_CLIENT_SECRET}`,
+        },
       },
-    });
+    );
     return response.data;
   } catch (error) {
-    console.error('Error fetching show details:', error);
+    console.error("Error fetching show details:", error);
     return null;
   }
 });

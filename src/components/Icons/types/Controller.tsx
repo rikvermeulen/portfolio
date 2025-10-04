@@ -1,13 +1,18 @@
-export default function Controller({ className, ...props }: { className?: string }) {
+export default function Controller({
+  className,
+  ...props
+}: {
+  className?: string;
+}) {
   return (
     <svg
       version="1.1"
+      viewBox="0 0 56.3867 35.4102"
       xmlns="http://www.w3.org/2000/svg"
       className={className}
-      viewBox="0 0 56.3867 35.4102"
       {...props}
-      width="56.3867"
       height="35.4102"
+      width="56.3867"
     >
       <g>
         <rect height="35.4102" opacity="0" width="56.3867" x="0" y="0" />

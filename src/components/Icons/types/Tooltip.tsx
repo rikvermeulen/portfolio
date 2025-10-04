@@ -1,10 +1,15 @@
-export default function Tooltip({ className, ...props }: { className?: string }) {
+export default function Tooltip({
+  className,
+  ...props
+}: {
+  className?: string;
+}) {
   return (
     <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="76.772"
       height="29.1"
       viewBox="0 0 76.772 29.1"
+      width="76.772"
+      xmlns="http://www.w3.org/2000/svg"
       className={className}
       {...props}
     >

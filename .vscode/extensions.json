@@ -1,9 +1,0 @@
-{
-  "recommendations": [
-    "mikestead.dotenv",
-    "esbenp.prettier-vscode",
-    "heybourn.headwind",
-    "dbaeumer.vscode-eslint",
-    "bradlc.vscode-tailwindcss"
-  ]
-}

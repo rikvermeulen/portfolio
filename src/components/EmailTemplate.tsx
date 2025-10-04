@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import type { FC } from "react";
 
 interface MessageTemplateProps {
   name: string;
@@ -35,10 +35,9 @@ export const MessageTemplate: FC<Readonly<MessageTemplateProps>> = ({
   </div>
 );
 
-export const RecommendationTemplate: FC<Readonly<RecommendationTemplateProps>> = ({
-  email,
-  recommendation,
-}) => (
+export const RecommendationTemplate: FC<
+  Readonly<RecommendationTemplateProps>
+> = ({ email, recommendation }) => (
   <div className="mx-auto max-w-3xl bg-gray-100 p-6">
     <div className="mt-4 space-y-2">
       <p className="text-sm font-medium">Email:</p>

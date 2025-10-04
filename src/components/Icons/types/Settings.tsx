@@ -1,11 +1,16 @@
-export default function Settings({ className, ...props }: { className?: string }) {
+export default function Settings({
+  className,
+  ...props
+}: {
+  className?: string;
+}) {
   return (
     <svg
-      version="1.1"
-      xmlns="http://www.w3.org/2000/svg"
-      width="37.2461"
       height="36.9336"
+      version="1.1"
       viewBox="0 0 37.2461 36.9336"
+      width="37.2461"
+      xmlns="http://www.w3.org/2000/svg"
       className={className}
       {...props}
     >

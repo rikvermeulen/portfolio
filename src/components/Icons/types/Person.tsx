@@ -1,11 +1,16 @@
-export default function Person({ className, ...props }: { className?: string }) {
+export default function Person({
+  className,
+  ...props
+}: {
+  className?: string;
+}) {
   return (
     <svg
-      version="1.1"
-      xmlns="http://www.w3.org/2000/svg"
-      width="32.8711"
       height="35.1367"
+      version="1.1"
       viewBox="0 0 32.8711 35.1367"
+      width="32.8711"
+      xmlns="http://www.w3.org/2000/svg"
       className={className}
       {...props}
     >

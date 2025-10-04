@@ -2,7 +2,7 @@
 // Global Types
 // ---------------------
 
-import { CONTRIBUTION_LEVELS } from '@/types/const';
+import type { CONTRIBUTION_LEVELS } from "@/types/const";
 
 export interface IRootLayoutProps {
   children: React.ReactNode;
@@ -13,7 +13,7 @@ export interface IRootLayoutProps {
 // ---------------------
 
 export interface IMessage {
-  sender: 'admin' | 'user';
+  sender: "admin" | "user";
   text: string;
 }
 
@@ -22,6 +22,7 @@ export interface IUserData {
   reason: string;
   phone: string;
   email: string;
+  [key: string]: string | number | boolean;
 }
 
 export interface IQuestionAction {
@@ -65,28 +66,28 @@ export interface PodcastItem {
 // Show Types
 // ---------------------
 
-export type TEpisode = {
+export interface TEpisode {
   still_path: string;
   name: string;
   season_number: number;
   episode_number: number;
   show_id: string;
-};
+}
 
-export type TShowOrMovie = {
+export interface TShowOrMovie {
   backdrop_path: string;
   name?: string;
   title?: string;
   overview: string;
-};
+}
 
-export type TPropsShows = {
+export interface TPropsShows {
   current: TEpisode;
   movies: TShowOrMovie[];
   shows: TShowOrMovie[];
-};
+}
 
-export type TMovieListProps = {
+export interface TMovieListProps {
   isListVisible: boolean;
   toggleListVisibility: () => void;
   filter: string;
@@ -95,45 +96,43 @@ export type TMovieListProps = {
   setSearchTerm: (term: string) => void;
   movies: TShowOrMovie[];
   shows: TShowOrMovie[];
-};
+}
 // ---------------------
 // Profile Types
 // ---------------------
 
 export enum EProfileName {
-  Working = 'Working',
-  Sleeping = 'Sleeping',
-  NotWorking = 'Not Working',
-  Personal = 'Personal',
+  Working = "Working",
+  Sleeping = "Sleeping",
+  NotWorking = "Not Working",
+  Personal = "Personal",
 }
 
-export type TProfile = {
+export interface TProfile {
   icon: string;
   label: string;
   days: Set<string>;
   startTime?: number;
   endTime?: number;
-};
+}
 
 // ---------------------
 // GitHub Types
 // ---------------------
 
-export type TContributionOptions = {
+export interface TContributionOptions {
   from?: string;
   to?: string;
-};
+}
 
-export type TContributionDay = {
+export interface TContributionDay {
   contributionCount: number;
   contributionLevel: TContributionLevelName;
   date: string;
   color: string;
   border: string;
-};
+}
 
 export type TContributionLevelName = keyof typeof CONTRIBUTION_LEVELS;
 
-export type TMonthlyContributions = {
-  [key: string]: TContributionDay[];
-};
+export type TMonthlyContributions = Record<string, TContributionDay[]>;

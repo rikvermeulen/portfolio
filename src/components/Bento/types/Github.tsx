@@ -1,7 +1,7 @@
-import type { TContributionDay, TMonthlyContributions } from '@/types/types';
+import Bento from "@/components/Bento/Bento";
+import { ButtonPrimary } from "@/components/Button";
 
-import Bento from '@/components/Bento/Bento';
-import { ButtonPrimary } from '@/components/Button';
+import type { TContributionDay, TMonthlyContributions } from "@/types/types";
 
 const MONTH_RANGE = 5;
 
@@ -15,16 +15,18 @@ const MonthlyContribution = ({ contributions }: MonthlyContributionProps) => (
       <div key={month}>
         <p className="text-2xs text-dark_grey">{month}</p>
         <div className="mt-2 grid grid-cols-4 gap-2">
-          {contributions[month].map((contribution: TContributionDay, i: number) => (
-            <div
-              className={`h-2.5 w-2.5 rounded-sm drop-shadow-sm`}
-              key={i}
-              style={{
-                backgroundColor: contribution.color,
-                border: `1px solid ${contribution.border}`,
-              }}
-            ></div>
-          ))}
+          {contributions[month].map(
+            (contribution: TContributionDay, i: number) => (
+              <div
+                key={i}
+                style={{
+                  backgroundColor: contribution.color,
+                  border: `1px solid ${contribution.border}`,
+                }}
+                className="h-2.5 w-2.5 rounded-sm drop-shadow-sm"
+              ></div>
+            ),
+          )}
         </div>
       </div>
     ))}
@@ -40,10 +42,10 @@ export default async function Github({
 }) {
   return (
     <Bento
+      href="https://github.com/rikvermeulen"
+      icon="github"
       size="1x1"
       className="bento flex flex-col justify-between p-5"
-      icon="github"
-      href="https://github.com/rikvermeulen"
     >
       <header className="flex items-start justify-between">
         <div>
@@ -55,10 +57,10 @@ export default async function Github({
       </header>
       <MonthlyContribution contributions={montly} />
       <ButtonPrimary
-        className="mt-2 self-start"
-        label="Follow"
-        href="https://github.com/rikvermeulen"
         external
+        href="https://github.com/rikvermeulen"
+        label="Follow"
+        className="mt-2 self-start"
       />
     </Bento>
   );

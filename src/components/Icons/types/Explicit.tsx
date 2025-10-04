@@ -1,8 +1,13 @@
-export default function Explicit({ className, ...props }: { className?: string }) {
+export default function Explicit({
+  className,
+  ...props
+}: {
+  className?: string;
+}) {
   return (
     <svg
-      xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 9.925 10.129"
+      xmlns="http://www.w3.org/2000/svg"
       {...props}
       className={className}
     >

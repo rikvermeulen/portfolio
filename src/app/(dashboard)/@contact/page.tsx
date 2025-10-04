@@ -1,5 +1,5 @@
-import ContactForm from '@/components/Bento/types/Contact';
+import ContactForm from "@/components/Bento/types/Contact.tsx";
 
-export default async function Contact() {
+export default function Contact() {
   return <ContactForm />;
 }

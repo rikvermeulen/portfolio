@@ -1,13 +1,13 @@
 export default function Minus({ className, ...props }: { className?: string }) {
   return (
     <svg
-      version="1.1"
-      xmlns="http://www.w3.org/2000/svg"
-      width="32.2266"
       height="3.53516"
+      version="1.1"
+      width="32.2266"
+      xmlns="http://www.w3.org/2000/svg"
       {...props}
-      className={className}
       viewBox="0 0 32.2266 3.53516"
+      className={className}
     >
       <g>
         <rect height="3.53516" opacity="0" width="32.2266" x="0" y="0" />

@@ -1,13 +1,13 @@
 export function Dog({ className, ...props }: { className?: string }) {
   return (
     <svg
-      version="1.1"
-      xmlns="http://www.w3.org/2000/svg"
-      width="54.1406"
       height="45.2148"
+      version="1.1"
+      width="54.1406"
+      xmlns="http://www.w3.org/2000/svg"
       {...props}
-      className={className}
       viewBox="0 0 54.1406 45.2148"
+      className={className}
     >
       <g>
         <rect height="45.2148" opacity="0" width="54.1406" x="0" y="0" />
@@ -20,13 +20,13 @@ export function Dog({ className, ...props }: { className?: string }) {
 export function DogFill({ className, ...props }: { className?: string }) {
   return (
     <svg
-      version="1.1"
-      xmlns="http://www.w3.org/2000/svg"
-      width="52.9297"
       height="44.7852"
+      version="1.1"
+      width="52.9297"
+      xmlns="http://www.w3.org/2000/svg"
       {...props}
-      className={className}
       viewBox="0 0 52.9297 44.7852"
+      className={className}
     >
       <g>
         <rect height="44.7852" opacity="0" width="52.9297" x="0" y="0" />

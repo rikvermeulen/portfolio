@@ -1,10 +1,10 @@
 export default function Loop({ className, ...props }: { className?: string }) {
   return (
     <svg
-      version="1.1"
-      xmlns="http://www.w3.org/2000/svg"
-      width="38.1641"
       height="38.5352"
+      version="1.1"
+      width="38.1641"
+      xmlns="http://www.w3.org/2000/svg"
       className={className}
       {...props}
       viewBox="0 0 38.1641 38.5352"

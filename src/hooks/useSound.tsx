@@ -1,6 +1,14 @@
-'use client';
+"use client";
 
-import { createContext, ReactNode, useCallback, useContext, useEffect, useMemo } from 'react';
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+} from "react";
+
+import type { ReactNode } from "react";
 
 interface SoundContextProps {
   playSound: (src: string) => void;
@@ -11,9 +19,13 @@ const SoundContext = createContext<SoundContextProps | undefined>(undefined);
 
 export const useSound = (): SoundContextProps => {
   const context = useContext(SoundContext);
+
+  // Always return the context, even if it's undefined
+  // The SoundProvider should always be available in the app
   if (!context) {
-    throw new Error('useSound must be used within a SoundProvider');
+    throw new Error("useSound must be used within a SoundProvider");
   }
+
   return context;
 };
 
@@ -21,40 +33,71 @@ interface SoundProviderProps {
   children: ReactNode;
 }
 
-const audioPool: { [key: string]: HTMLAudioElement } = {};
-
 export const SoundProvider: React.FC<SoundProviderProps> = ({ children }) => {
-  const playingSounds = useMemo(() => new Set<HTMLAudioElement>(), []);
+  const playingSounds = useRef(new Set<HTMLAudioElement>());
+  const audioPool = useRef<Record<string, HTMLAudioElement>>({});
 
   const getOrCreateAudio = (fileName: string): HTMLAudioElement => {
-    if (!audioPool[fileName]) {
-      audioPool[fileName] = new Audio(`/sounds/${fileName}.mp3`);
+    if (!audioPool.current[fileName]) {
+      audioPool.current[fileName] = new Audio(`/sounds/${fileName}.mp3`);
     }
-    return audioPool[fileName];
+    return audioPool.current[fileName];
   };
 
   const playSound = (fileName: string) => {
-    const audio = getOrCreateAudio(fileName).cloneNode(true) as HTMLAudioElement;
-    audio.addEventListener('ended', () => {
-      playingSounds.delete(audio);
-    });
+    try {
+      const audio = getOrCreateAudio(fileName).cloneNode(
+        true,
+      ) as HTMLAudioElement;
 
-    audio.play();
-    playingSounds.add(audio);
+      audio.addEventListener("ended", () => {
+        playingSounds.current.delete(audio);
+      });
+
+      audio.play().catch((error) => {
+        console.warn("Error playing audio:", error);
+        playingSounds.current.delete(audio);
+      });
+
+      playingSounds.current.add(audio);
+    } catch (error) {
+      console.warn("Error creating or playing audio:", error);
+    }
   };
 
   const stopAllSounds = useCallback(() => {
-    playingSounds.forEach((audio) => audio.pause());
-    playingSounds.clear();
-  }, [playingSounds]);
+    playingSounds.current.forEach((audio) => {
+      try {
+        if (audio && typeof audio.pause === "function") {
+          audio.pause();
+        }
+      } catch (error) {
+        console.warn("Error pausing audio:", error);
+      }
+    });
+    playingSounds.current.clear();
+  }, []);
 
   useEffect(() => {
     return () => {
       stopAllSounds();
+      // Clean up audio pool
+      Object.values(audioPool.current).forEach((audio) => {
+        try {
+          if (audio && typeof audio.pause === "function") {
+            audio.pause();
+          }
+        } catch (error) {
+          console.warn("Error cleaning up audio pool:", error);
+        }
+      });
+      audioPool.current = {};
     };
   }, [stopAllSounds]);
 
   return (
-    <SoundContext.Provider value={{ playSound, stopAllSounds }}>{children}</SoundContext.Provider>
+    <SoundContext.Provider value={{ playSound, stopAllSounds }}>
+      {children}
+    </SoundContext.Provider>
   );
 };

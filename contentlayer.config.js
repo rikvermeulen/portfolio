@@ -1,71 +1,71 @@
-import { defineDocumentType, makeSource } from 'contentlayer-temp/source-files';
+import { defineDocumentType, makeSource } from "contentlayer2/source-files";
 
-/** @type {import('contentlayer-temp/source-files').ComputedFields} */
+/** @type {import('contentlayer2/source-files').ComputedFields} */
 const computedFields = {
   slug: {
-    type: 'string',
+    type: "string",
     resolve: (doc) => `/${doc._raw.flattenedPath}`,
   },
   slugAsParams: {
-    type: 'string',
-    resolve: (doc) => doc._raw.flattenedPath.split('/').slice(1).join('/'),
+    type: "string",
+    resolve: (doc) => doc._raw.flattenedPath.split("/").slice(1).join("/"),
   },
 };
 
 export const Project = defineDocumentType(() => ({
-  name: 'Project',
+  name: "Project",
   filePathPattern: `work/**/*.mdx`,
-  contentType: 'mdx',
+  contentType: "mdx",
   fields: {
     title: {
-      type: 'string',
+      type: "string",
       required: true,
     },
     subtitle: {
-      type: 'string',
+      type: "string",
     },
     context: {
-      type: 'string',
+      type: "string",
     },
     description: {
-      type: 'string',
+      type: "string",
     },
     timeline: {
-      type: 'string',
+      type: "string",
     },
     role: {
-      type: 'string',
+      type: "string",
     },
     tools: {
-      type: 'string',
+      type: "string",
     },
     website: {
-      type: 'string',
+      type: "string",
     },
   },
   computedFields,
 }));
 
 export const Privacy = defineDocumentType(() => ({
-  name: 'Privacy',
+  name: "Privacy",
   filePathPattern: `privacy/**/*.mdx`,
-  contentType: 'mdx',
+  contentType: "mdx",
   fields: {
     name: {
-      type: 'string',
+      type: "string",
       required: true,
     },
     address: {
-      type: 'string',
+      type: "string",
     },
     mail: {
-      type: 'string',
+      type: "string",
     },
   },
   computedFields,
 }));
 
 export default makeSource({
-  contentDirPath: './src/content',
+  contentDirPath: "./src/content",
   documentTypes: [Project, Privacy],
 });

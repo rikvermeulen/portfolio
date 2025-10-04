@@ -4,7 +4,8 @@ export const isValidEmail = (email: string) => {
 };
 
 export const isValidPhoneNumber = (phone: string) => {
-  const re = /^(\+?\d{1,3}[-.\s]?)?\(?[\d\s]{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,4}$/;
+  const re =
+    /^(\+?\d{1,3}[-.\s]?)?\(?[\d\s]{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,4}$/;
   return re.test(phone);
 };
 

@@ -2,24 +2,24 @@ export default function List({ className, ...props }: { className?: string }) {
   return (
     <svg
       id="rectangle.stack.fill"
-      xmlns="http://www.w3.org/2000/svg"
-      width="23.604"
       height="24.736"
       viewBox="0 0 23.604 24.736"
+      width="23.604"
+      xmlns="http://www.w3.org/2000/svg"
       className={className}
       {...props}
     >
       <rect
         id="Rectangle_245"
         data-name="Rectangle 245"
-        width="23.604"
         height="24.736"
         opacity="0"
+        width="23.604"
       />
       <path
         id="Path_13"
-        data-name="Path 13"
         d="M7.012,11.231h9.58a1.242,1.242,0,0,0,1.377-1.348V2.9a1.249,1.249,0,0,0-1.377-1.357H7.012A1.249,1.249,0,0,0,5.635,2.9V9.883A1.242,1.242,0,0,0,7.012,11.231Z"
+        data-name="Path 13"
       />
       <path
         id="Path_14"

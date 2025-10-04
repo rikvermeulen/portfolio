@@ -1,19 +1,16 @@
-'use client';
+"use client";
 
-import { useEffect, useMemo, useRef, useState } from 'react';
-import Image from 'next/image';
-import { DateTime } from 'luxon';
-
-import { questionsAndActions, socials } from '@/types/const';
-
-import Bento from '@/components/Bento/Bento';
-import { AdminMessage, UserMessage } from '@/components/Contact/Messages';
-import Icon from '@/components/Icons/Icon';
-
-import useChat from '@/hooks/useChat';
-import cc from '@/lib/cc';
-import FormattedDate from '@/utils/FormattedDate';
-import { hasEnoughText } from '@/utils/validation';
+import Bento from "@/components/Bento/Bento.tsx";
+import { AdminMessage, UserMessage } from "@/components/Contact/Messages.tsx";
+import Icon from "@/components/Icons/Icon.tsx";
+import useChat from "@/hooks/useChat.tsx";
+import cc from "@/lib/cc.ts";
+import { questionsAndActions, socials } from "@/types/const.ts";
+import FormattedDate from "@/utils/FormattedDate.tsx";
+import { hasEnoughText } from "@/utils/validation.tsx";
+import { DateTime } from "luxon";
+import { useEffect, useMemo, useRef, useState } from "react";
+import Image from "next/image";
 
 export default function Contact() {
   const [showMenu, setShowMenu] = useState<boolean>(false);
@@ -25,10 +22,14 @@ export default function Contact() {
   const inputRef = useRef<HTMLInputElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
 
-  const { step, message, chat, handleSendClick, handleInputChange, handleInputFocus } = useChat(
-    inputRef,
-    buttonRef,
-  );
+  const {
+    step,
+    message,
+    chat,
+    handleSendClick,
+    handleInputChange,
+    handleInputFocus,
+  } = useChat(inputRef, buttonRef);
 
   const initialChatLength = 2;
 
@@ -38,15 +39,20 @@ export default function Contact() {
   useEffect(() => {
     if (chatRef.current) {
       const chatEl = chatRef.current;
-      chatEl.style.scrollBehavior = 'smooth';
+      chatEl.style.scrollBehavior = "smooth";
       chatEl.scrollTop = chatEl.scrollHeight;
     }
   }, [chat]);
 
   const handleClickOutside = (event: MouseEvent) => {
-    if (event.button !== 0) return;
+    if (event.button !== 0) {
+      return;
+    }
 
-    if (menuRef.current && !(menuRef.current as HTMLElement).contains(event.target as Node)) {
+    if (
+      menuRef.current &&
+      !(menuRef.current as HTMLElement).contains(event.target as Node)
+    ) {
       setShowMenu(false);
     }
   };
@@ -56,32 +62,33 @@ export default function Contact() {
 
     if (showMenu) {
       setShowMenu(false);
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     } else {
       setShowMenu(true);
-      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener("mousedown", handleClickOutside);
     }
   };
 
   const chatContent = useMemo(
     () =>
       chat.map((message, index) => {
-        const isSameSender = index > 0 && chat[index - 1].sender === message.sender;
+        const isSameSender =
+          index > 0 && chat[index - 1]?.sender === message.sender;
 
         const messageClass =
           index === chat.length - 1 && index >= initialChatLength
-            ? 'animate-message'
-            : 'static-message';
+            ? "animate-message"
+            : "static-message";
 
         return (
           <div
-            key={index}
-            className={`${message.sender !== 'admin' ? 'self-end' : ''} ${messageClass}`}
+            key={`message-${message.sender}-${message.text.slice(0, 5)}-${Math.random()}`}
+            className={`${message.sender !== "admin" ? "self-end" : ""} ${messageClass}`}
           >
-            {message.sender === 'admin' ? (
-              <AdminMessage key={index} message={message} isSameSender={isSameSender} />
+            {message.sender === "admin" ? (
+              <AdminMessage isSameSender={isSameSender} message={message} />
             ) : (
-              <UserMessage key={index} message={message} index={index} />
+              <UserMessage index={index} message={message} />
             )}
           </div>
         );
@@ -93,14 +100,19 @@ export default function Contact() {
     <Bento size="2x1" className="bento relative flex max-h-[346px] flex-col">
       <div
         className={`absolute z-0 h-full w-full bg-white/70 backdrop-blur-md transition-opacity duration-300 ${
-          showMenu ? 'z-30 opacity-100' : 'opacity-0'
+          showMenu ? "z-30 opacity-100" : "opacity-0"
         }`}
       ></div>
       <header className="h-11 w-full border-b border-solid border-[#ECECEC] bg-[#EBECEB]/40 backdrop-blur-xl"></header>
       <div
         ref={chatRef}
+        style={{
+          overflowY: "scroll",
+          height: "100%",
+          position: "relative",
+          zIndex: 1,
+        }}
         className="chat no-scrollbar flex flex-col gap-4 px-5 pb-20 pt-5 transition-all"
-        style={{ overflowY: 'scroll', height: '100%', position: 'relative', zIndex: 1 }}
       >
         <p className="relative -top-3 flex w-full justify-center text-2xs text-dark_grey">
           <span className="font-bold">Today: </span>
@@ -109,34 +121,38 @@ export default function Contact() {
         {chatContent}
       </div>
       <ul
-        className={cc(
-          showMenu ? 'opacity-100 scale-100' : 'opacity-0 scale-50 pointer-events-none',
-          'absolute bottom-4 left-5 z-40 duration-300 ease-in-out transition-[transform,opacity] origin-bottom-left',
-        )}
         ref={menuRef}
+        className={cc(
+          showMenu
+            ? "scale-100 opacity-100"
+            : "pointer-events-none scale-50 opacity-0",
+          "absolute bottom-4 left-5 z-40 origin-bottom-left transition-[transform,opacity] duration-300 ease-in-out",
+        )}
       >
         {socials.map((social, index) => (
           <li
-            key={index}
-            className={cc('mb-4 transition-transform duration-[350ms] ease-in-out')}
+            key={`social-${social.name}`}
             style={{
               transform: showMenu
                 ? `translateY(0)`
                 : `translateY(${-1 * (socials.length - 1 - index) * -40}px)`,
             }}
+            className={cc(
+              "mb-4 transition-transform duration-[350ms] ease-in-out",
+            )}
           >
             <a
               href={social.url}
-              className="flex origin-center gap-4 transition-transform hover:scale-105"
               target="_blank"
+              className="flex origin-center gap-4 transition-transform hover:scale-105"
             >
               <Image
-                src={`/images/icons/socials/${social.icon}.png`}
-                className="rounded-full border border-solid border-[#EAEBED]"
                 alt={social.name}
-                priority
-                width={24}
                 height={24}
+                priority
+                src={`/images/icons/socials/${social.icon}.png`}
+                width={24}
+                className="rounded-full border border-solid border-[#EAEBED]"
               />
               <p>{social.name}</p>
             </a>
@@ -145,12 +161,12 @@ export default function Contact() {
       </ul>
       <div className="absolute bottom-0 z-20 flex w-full gap-3 bg-white/70 px-5 pb-5 pt-2 backdrop-blur-xl">
         <button
-          className={cc(
-            'flex h-9 w-9 items-center justify-center rounded-full bg-[#EAEBED] fill-[#848484] p-3 transition-[background,transform] duration-300 hover:bg-[#dadbdd] active:scale-90',
-          )}
-          onClick={handlMenuClick}
           id="socials"
           aria-label="Socials menu"
+          onClick={handlMenuClick}
+          className={cc(
+            "flex h-9 w-9 items-center justify-center rounded-full bg-[#EAEBED] fill-[#848484] p-3 transition-[background,transform] duration-300 hover:bg-[#dadbdd] active:scale-90",
+          )}
         >
           <Icon type="plus" className="w-3" />
         </button>
@@ -159,21 +175,21 @@ export default function Contact() {
             <div className="flex max-h-9 w-full rounded-full border border-solid border-[#EAEBED]">
               <input
                 ref={inputRef}
-                className="mx-3 w-full bg-transparent text-base outline-none sm:text-sm"
-                placeholder="Type your response here..."
-                value={message}
                 onChange={handleInputChange}
                 onFocus={handleInputFocus}
+                placeholder="Type your response here..."
+                value={message}
+                className="mx-3 w-full bg-transparent text-base outline-none sm:text-sm"
               />
               <button
                 ref={buttonRef}
-                className={`flex rounded-full p-1 transition-opacity duration-300 ${
-                  !hasEnoughText(message) ? 'cursor-not-allowed opacity-50' : ''
-                }`}
-                type="submit"
                 aria-label="Send Message"
-                onClick={handleSendClick}
                 disabled={!hasEnoughText(message)}
+                onClick={handleSendClick}
+                type="submit"
+                className={`flex rounded-full p-1 transition-opacity duration-300 ${
+                  !hasEnoughText(message) ? "cursor-not-allowed opacity-50" : ""
+                }`}
               >
                 <Icon type="arrow" className="w-[26px]" />
               </button>

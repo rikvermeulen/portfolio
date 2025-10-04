@@ -2,12 +2,12 @@ export default function Sound({ className, ...props }: { className?: string }) {
   return (
     <svg
       {...props}
-      className={className}
-      version="1.1"
-      xmlns="http://www.w3.org/2000/svg"
-      width="21.7969"
       height="17.2363"
+      version="1.1"
       viewBox="0 0 21.7969 17.2363"
+      width="21.7969"
+      xmlns="http://www.w3.org/2000/svg"
+      className={className}
     >
       <g>
         <rect height="17.2363" opacity="0" width="21.7969" x="0" y="0" />

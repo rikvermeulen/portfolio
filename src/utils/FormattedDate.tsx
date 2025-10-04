@@ -1,11 +1,13 @@
-import { useEffect, useState } from 'react';
-import { DateTime } from 'luxon';
+import { DateTime } from "luxon";
+import { useEffect, useState } from "react";
 
-export default function FormattedDate(date: string, format: string = 'h:mm') {
-  const [formattedDate, setFormattedDate] = useState('');
+export default function FormattedDate(date: string, format: string = "h:mm") {
+  const [formattedDate, setFormattedDate] = useState("");
 
   useEffect(() => {
-    const localTime = DateTime.fromISO(date, { zone: 'utc' }).toLocal().toFormat(format);
+    const localTime = DateTime.fromISO(date, { zone: "utc" })
+      .toLocal()
+      .toFormat(format);
 
     setFormattedDate(localTime);
   }, [date]);
@@ -17,7 +19,7 @@ export function FormattedTime(date: string) {
   const [formattedTime, setFormattedTime] = useState<DateTime>();
 
   useEffect(() => {
-    const localTime = DateTime.fromISO(date, { zone: 'utc' }).toLocal();
+    const localTime = DateTime.fromISO(date, { zone: "utc" }).toLocal();
 
     setFormattedTime(localTime);
   }, [date]);

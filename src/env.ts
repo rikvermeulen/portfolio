@@ -1,5 +1,5 @@
-import { createEnv } from '@t3-oss/env-nextjs';
-import { z } from 'zod';
+import { createEnv } from "@t3-oss/env-nextjs";
+import { z } from "zod";
 
 /**
  * @t3-oss/env-nextjs will validate your environment variables
@@ -8,8 +8,6 @@ import { z } from 'zod';
 
 export const env = createEnv({
   server: {
-    NEXT_PUBLIC_SUPABASE_URL: z.string().min(1),
-    NEXT_PUBLIC_SUPABASE_ANON_KEY: z.string().min(1),
     GITHUB_CLIENT_TOKEN: z.string().min(1),
     GITHUB_CLIENT_USERNAME: z.string().min(1),
     RESEND_API_KEY: z.string().min(1),
@@ -18,7 +16,6 @@ export const env = createEnv({
     SPOTIFY_CLIENT_ACCESS_TOKEN: z.string().min(1),
     TMDB_CLIENT_KEY: z.string().min(1),
     TMDB_CLIENT_SECRET: z.string().min(1),
-    NEXT_PUBLIC_SUPABASE_PRISMA: z.string().min(1),
     TWITTER_CONSUMER_KEY: z.string().min(1),
     TWITTER_CONSUMER_SECRET: z.string().min(1),
     TWITTER_ACCESS_TOKEN: z.string().min(1),
@@ -28,9 +25,13 @@ export const env = createEnv({
   client: {
     NEXT_PUBLIC_APP_URL: z.string().min(1),
     NEXT_PUBLIC_MAPBOX_TOKEN: z.string().min(1),
+    NEXT_PUBLIC_SUPABASE_URL: z.string().min(1),
+    NEXT_PUBLIC_SUPABASE_ANON_KEY: z.string().min(1),
+    NEXT_PUBLIC_SUPABASE_PRISMA: z.string().min(1),
   },
   runtimeEnv: {
-    NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
+    NEXT_PUBLIC_APP_URL:
+      process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
     NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
     NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
     GITHUB_CLIENT_TOKEN: process.env.GITHUB_CLIENT_TOKEN,

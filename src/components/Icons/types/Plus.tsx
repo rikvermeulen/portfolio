@@ -2,11 +2,11 @@ export default function Plus({ className, ...props }: { className?: string }) {
   return (
     <svg
       {...props}
-      version="1.1"
-      xmlns="http://www.w3.org/2000/svg"
-      width="16.1133"
       height="16.123"
+      version="1.1"
       viewBox="0 0 16.123 16.123"
+      width="16.1133"
+      xmlns="http://www.w3.org/2000/svg"
       className={className}
     >
       <g>

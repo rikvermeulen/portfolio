@@ -1,13 +1,13 @@
 export function Heart({ className, ...props }: { className?: string }) {
   return (
     <svg
-      version="1.1"
-      xmlns="http://www.w3.org/2000/svg"
-      width="38.7891"
       height="37.0508"
+      version="1.1"
+      width="38.7891"
+      xmlns="http://www.w3.org/2000/svg"
       {...props}
-      className={className}
       viewBox="0 0 38.7891 37.0508"
+      className={className}
     >
       <g>
         <rect height="37.0508" opacity="0" width="38.7891" x="0" y="0" />
@@ -20,13 +20,13 @@ export function Heart({ className, ...props }: { className?: string }) {
 export function HeartFill({ className, ...props }: { className?: string }) {
   return (
     <svg
-      version="1.1"
-      xmlns="http://www.w3.org/2000/svg"
-      width="38.7891"
       height="37.0508"
+      version="1.1"
+      width="38.7891"
+      xmlns="http://www.w3.org/2000/svg"
       {...props}
-      className={className}
       viewBox="0 0 38.7891 37.0508"
+      className={className}
     >
       <g>
         <rect height="37.0508" opacity="0" width="38.7891" x="0" y="0" />

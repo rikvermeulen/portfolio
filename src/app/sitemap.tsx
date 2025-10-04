@@ -1,16 +1,25 @@
-import type { MetadataRoute } from 'next';
-import { allProjects } from '@/contentlayer/generated';
+import { env } from "@/env.ts";
 
-import { env } from '@/env.mjs';
+import type { MetadataRoute } from "next";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const host = env.NEXT_PUBLIC_APP_URL;
 
   const routes: string[] = [];
 
-  await allProjects.forEach((project) => {
-    routes.push(`work/${project.slugAsParams}`);
-  });
+  try {
+    // @ts-ignore - Contentlayer generated file may not have proper types
+    const { allProjects } = await import("@/.contentlayer/generated/index.mjs");
+    if (allProjects && Array.isArray(allProjects)) {
+      allProjects.forEach((project: { slugAsParams: string }) => {
+        routes.push(`work/${project.slugAsParams}`);
+      });
+    }
+  } catch {
+    console.warn(
+      "Contentlayer generated file not found, skipping project routes",
+    );
+  }
 
   return [
     {

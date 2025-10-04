@@ -2,8 +2,8 @@ export default function Play({ className, ...props }: { className?: string }) {
   return (
     <svg
       version="1.1"
-      xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 29.5312 33.1055"
+      xmlns="http://www.w3.org/2000/svg"
       {...props}
       className={className}
     >

@@ -1,13 +1,13 @@
 export function Close({ className, ...props }: { className?: string }) {
   return (
     <svg
-      version="1.1"
-      xmlns="http://www.w3.org/2000/svg"
-      width="30.9717"
       height="30.9913"
+      version="1.1"
+      width="30.9717"
+      xmlns="http://www.w3.org/2000/svg"
       {...props}
-      className={className}
       viewBox="0 0 30.9717 30.9913"
+      className={className}
     >
       <g>
         <rect height="30.9913" opacity="0" width="30.9717" x="0" y="0" />
