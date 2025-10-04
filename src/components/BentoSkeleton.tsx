@@ -1,5 +1,5 @@
 import { Skeleton } from "@/components/Skeleton.tsx";
-import cc from "@/lib/cc.tsx";
+import cc from "@/lib/cc.ts";
 
 export function BentoSkeleton({
   className,

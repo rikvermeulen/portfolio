@@ -24,12 +24,12 @@ const AudioControls: FC<AudioControlsProps> = ({
         onClick={() => handleChangeTrack("previous")}
         className={cc(
           pulsedButton === "previous" ? "button" : "",
-          "relative border-none fill-white outline-none",
+          "relative border-none fill-white outline-hidden",
         )}
       >
         <Icon
           type="next"
-          className="relative -top-1 border-none outline-none"
+          className="relative -top-1 border-none outline-hidden"
         />
       </button>
       <button
@@ -62,12 +62,12 @@ const AudioControls: FC<AudioControlsProps> = ({
         onClick={() => handleChangeTrack("next")}
         className={cc(
           pulsedButton === "next" ? "button" : "",
-          "-scale-x-100 border-none fill-white outline-none",
+          "-scale-x-100 border-none fill-white outline-hidden",
         )}
       >
         <Icon
           type="next"
-          className="relative -top-1 border-none outline-none"
+          className="relative -top-1 border-none outline-hidden"
         />
       </button>
     </div>

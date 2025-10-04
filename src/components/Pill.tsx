@@ -58,7 +58,7 @@ export default function Pill({ className, items, activeIndex }: PillProps) {
     <div
       className={cc(
         className,
-        "rounded-full border border-solid border-[#DEDEDE] bg-primary/60 p-1.5 drop-shadow-sm backdrop-blur-xl",
+        "rounded-full border border-solid border-[#DEDEDE] bg-primary/60 p-1.5 drop-shadow-xs backdrop-blur-xl",
       )}
     >
       <ul className="relative flex flex-row gap-4">
@@ -90,7 +90,7 @@ export default function Pill({ className, items, activeIndex }: PillProps) {
                   onClick={handleClick}
                   scroll={false}
                   className={cc(
-                    isActive ? "text-black" : "text-[#707070]",
+                    isActive ? "text-black" : "text-dark_grey",
                     "px-6 py-3 transition-colors duration-300 hover:text-black sm:px-9",
                   )}
                 >
@@ -110,7 +110,7 @@ export default function Pill({ className, items, activeIndex }: PillProps) {
                         className={cc(
                           isActive &&
                             "opacity-0 transition-opacity delay-200 duration-200 ease-in-out",
-                          "w-5 fill-[#707070]",
+                          "w-5 fill-dark_grey",
                         )}
                       />
                       {isActive && (

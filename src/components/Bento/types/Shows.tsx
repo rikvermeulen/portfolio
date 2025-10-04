@@ -68,7 +68,7 @@ export default function Shows({ current, shows, movies }: TPropsShows) {
       href={`https://www.themoviedb.org/tv/${current?.show_id}`}
       icon="shows"
       size="1x1"
-      className="bento relative z-0 flex flex-col justify-between bg-gradient-to-b from-[#2B3833] to-[#0F1314] p-5"
+      className="bento relative z-0 flex flex-col justify-between bg-linear-to-b from-[#2B3833] to-[#0F1314] p-5"
     >
       <header className="flex justify-between">
         <p className="text-lg font-bold text-white">Watching now</p>

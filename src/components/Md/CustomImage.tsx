@@ -73,7 +73,7 @@ export default function CustomImage({
           </button>
           <div
             ref={modalRef}
-            className="flex h-full w-full items-center justify-center rounded p-4"
+            className="flex h-full w-full items-center justify-center rounded-sm p-4"
           >
             <Image
               alt={alt}

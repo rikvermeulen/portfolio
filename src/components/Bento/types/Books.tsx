@@ -44,7 +44,7 @@ function Books({ book: { volumeInfo } }: BookProps) {
       href={infoLink}
       icon="books"
       size="1x1"
-      className="bento relative z-0 bg-gradient-to-b from-[#ffa602] to-[#f9691e] p-5"
+      className="bento relative z-0 bg-linear-to-b from-[#ffa602] to-[#f9691e] p-5"
     >
       <div className="flex h-full flex-col justify-between">
         <h2 className="text-lg font-bold text-white">Reading now</h2>
@@ -54,7 +54,7 @@ function Books({ book: { volumeInfo } }: BookProps) {
             onClick={handleBookClick}
             className="book relative mx-auto w-32 cursor-pointer shadow-lg"
           >
-            <div className="cover absolute -top-1 h-48 w-[8.5rem] origin-top-left rounded-r bg-[#23593c] shadow-sm">
+            <div className="cover absolute -top-1 h-48 w-34 origin-top-left rounded-r bg-[#23593c] shadow-xs">
               <Image
                 alt="Book cover"
                 height={184}
@@ -64,7 +64,7 @@ function Books({ book: { volumeInfo } }: BookProps) {
               />
               <div className="link absolute left-0 top-0 h-full w-full rounded-r"></div>
             </div>
-            <div className="page absolute flex h-full w-full origin-top-left flex-col justify-between overflow-hidden p-3 text-xs leading-tight text-black shadow-sm">
+            <div className="page absolute flex h-full w-full origin-top-left flex-col justify-between overflow-hidden p-3 text-xs leading-tight text-black shadow-xs">
               <Image
                 alt="Book cover"
                 height={192}
@@ -78,14 +78,14 @@ function Books({ book: { volumeInfo } }: BookProps) {
               <p className="text-justify font-serif text-4xs">{lorem}</p>
               <p className="mt-1 text-center text-4xs text-black/60">156</p>
             </div>
-            <div className="page absolute flex h-full w-full origin-top-left flex-col justify-between overflow-hidden p-3 text-xs leading-tight text-black shadow-sm">
+            <div className="page absolute flex h-full w-full origin-top-left flex-col justify-between overflow-hidden p-3 text-xs leading-tight text-black shadow-xs">
               <div className="max-h-36 overflow-hidden">
                 <p className="text-justify font-serif text-4xs">{lorem}</p>
                 <p className="mt-2 text-justify font-serif text-4xs">{lorem}</p>
               </div>
               <p className="mt-1 text-center text-4xs text-black/60">157</p>
             </div>
-            <div className="absolute inset-0 -top-1 -z-10 h-[12rem] w-[8.5rem] origin-top-left rounded-r bg-[#23593c] shadow-sm">
+            <div className="absolute inset-0 -top-1 -z-10 h-48 w-34 origin-top-left rounded-r bg-[#23593c] shadow-xs">
               <div className="link absolute left-0 top-0 h-full w-full rounded-r"></div>
             </div>
           </div>

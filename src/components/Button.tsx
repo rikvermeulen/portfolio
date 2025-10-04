@@ -24,7 +24,7 @@ export function ButtonPrimary({
       onClick={onClick}
       target={external ? "_blank" : ""}
       className={cc(
-        "rounded-full border border-solid border-[#D5D8DA] bg-[#F6F8FA]/60 px-4 py-2 text-xs font-bold drop-shadow-sm backdrop-blur-md transition-colors duration-200 ease-in-out hover:bg-[#f3f4f6]/70",
+        "rounded-full border border-solid border-[#D5D8DA] bg-[#F6F8FA]/60 px-4 py-2 text-xs font-bold drop-shadow-xs backdrop-blur-md transition-colors duration-200 ease-in-out hover:bg-[#f3f4f6]/70",
         className,
       )}
     >

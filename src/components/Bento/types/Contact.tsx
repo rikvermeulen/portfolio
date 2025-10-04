@@ -138,7 +138,7 @@ export default function Contact() {
                 : `translateY(${-1 * (socials.length - 1 - index) * -40}px)`,
             }}
             className={cc(
-              "mb-4 transition-transform duration-[350ms] ease-in-out",
+              "mb-4 transition-transform duration-350 ease-in-out",
             )}
           >
             <a
@@ -179,7 +179,7 @@ export default function Contact() {
                 onFocus={handleInputFocus}
                 placeholder="Type your response here..."
                 value={message}
-                className="mx-3 w-full bg-transparent text-base outline-none sm:text-sm"
+                className="mx-3 w-full bg-transparent text-base outline-hidden sm:text-sm"
               />
               <button
                 ref={buttonRef}

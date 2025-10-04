@@ -48,7 +48,7 @@ export default function Modal({
               placeholder="Email"
               type="email"
               value={formData.email}
-              className="w-full rounded-none border-b-[0.2px] border-solid border-[#4E5152] bg-transparent px-1 pb-2 pt-1 text-base text-white outline-none sm:text-sm"
+              className="w-full rounded-none border-b-[0.2px] border-solid border-[#4E5152] bg-transparent px-1 pb-2 pt-1 text-base text-white outline-hidden sm:text-sm"
             />
             <input
               onChange={(e) =>
@@ -62,7 +62,7 @@ export default function Modal({
               placeholder="Your recommendation"
               type="text"
               value={formData.recommendation}
-              className="w-full resize-none rounded-none border-none bg-transparent px-1 pb-1 pt-2 text-base text-white outline-none sm:text-sm"
+              className="w-full resize-none rounded-none border-none bg-transparent px-1 pb-1 pt-2 text-base text-white outline-hidden sm:text-sm"
             ></input>
           </div>
         </div>

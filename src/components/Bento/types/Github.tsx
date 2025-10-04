@@ -23,7 +23,7 @@ const MonthlyContribution = ({ contributions }: MonthlyContributionProps) => (
                   backgroundColor: contribution.color,
                   border: `1px solid ${contribution.border}`,
                 }}
-                className="h-2.5 w-2.5 rounded-sm drop-shadow-sm"
+                className="h-2.5 w-2.5 rounded-xs drop-shadow-xs"
               ></div>
             ),
           )}

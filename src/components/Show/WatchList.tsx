@@ -25,7 +25,7 @@ const SearchBar = ({
       placeholder="Search..."
       type="text"
       value={searchTerm}
-      className="bg-transparent p-0 text-sm text-white outline-none"
+      className="bg-transparent p-0 text-sm text-white outline-hidden"
     />
   </div>
 );
@@ -93,7 +93,7 @@ export default function WatchList({
     <div
       className={cc(
         isListVisible ? "translate-x-0" : "translate-x-96",
-        "absolute left-0 top-0 z-50 h-full w-full bg-gradient-to-b from-[#2B3833] to-[#0F1314] px-5 transition-transform duration-300",
+        "absolute left-0 top-0 z-50 h-full w-full bg-linear-to-b from-[#2B3833] to-[#0F1314] px-5 transition-transform duration-300",
       )}
     >
       <header className="mt-5 flex items-center justify-between">
@@ -132,7 +132,7 @@ export default function WatchList({
               loading="lazy"
               src={`${imageURL}${show.backdrop_path}`}
               width={70}
-              className="rounded"
+              className="rounded-sm"
             />
             <div className="flex flex-col justify-center">
               <p className="text-xs font-medium text-white">

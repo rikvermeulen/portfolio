@@ -86,7 +86,7 @@ const Music: React.FC<MusicProps> = ({
       size="1x1"
       className={cc(
         className,
-        "bento relative z-0 !border-none bg-gradient-to-b from-[#E96575] to-[#ff333a]",
+        "bento relative z-0 border-none! bg-linear-to-b from-[#E96575] to-[#ff333a]",
       )}
     >
       <div className="absolute right-0 z-20 p-5">
@@ -101,7 +101,7 @@ const Music: React.FC<MusicProps> = ({
             width={32}
             className={`${
               isPlaying &&
-              "rounded-md bg-gradient-to-b from-[#EA6776] to-[#E63E44] drop-shadow-md"
+              "rounded-md bg-linear-to-b from-[#EA6776] to-[#E63E44] drop-shadow-md"
             } transition-transform duration-300 ease-in-out hover:scale-105`}
           />
         </a>
@@ -166,7 +166,7 @@ const Music: React.FC<MusicProps> = ({
             step="0.01"
             style={{ "--background-size": "50%" } as React.CSSProperties}
             type="range"
-            className="slider h-1 w-[70%] scale-100 appearance-none rounded-full opacity-80 outline-none transition-[opacity,width,background,opacity] duration-200 ease-linear active:w-9/12 active:scale-y-[1.4] active:opacity-100"
+            className="slider h-1 w-[70%] scale-100 appearance-none rounded-full opacity-80 outline-hidden transition-[opacity,width,background,opacity] duration-200 ease-linear active:w-9/12 active:scale-y-[1.4] active:opacity-100"
           />
           <Icon type="sound" className="w-3.5 fill-white" />
         </label>
