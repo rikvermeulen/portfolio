@@ -11,7 +11,7 @@ export default function Archive() {
   return (
     <main className="h-screen">
       <Container>
-        <section className="relative pb-24 pt-16 md:pt-32">
+        <section className="relative pt-16 pb-24 md:pt-32">
           <h1 className="font-bold md:text-3xl">Almost There! 🚧</h1>
           <p className="max-w-xl pt-2 text-dark_grey md:text-lg">
             My portfolio is in the final stages of polishing. Like a perfectly

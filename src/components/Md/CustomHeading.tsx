@@ -18,7 +18,7 @@ function CustomHeading({
       id={id}
       className={cc(
         className,
-        "group mb-4 mt-8 whitespace-pre-wrap text-black",
+        "group mt-8 mb-4 whitespace-pre-wrap text-black",
       )}
       {...otherProps}
     >

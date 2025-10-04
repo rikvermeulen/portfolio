@@ -35,7 +35,7 @@ export const AdminMessage = ({
         {!isSameSender && (
           <Icon
             type="tail"
-            className="absolute -left-1 bottom-0.5 h-4 w-4 -scale-x-100 fill-[#E9E9EB]"
+            className="absolute bottom-0.5 -left-1 h-4 w-4 -scale-x-100 fill-[#E9E9EB]"
           />
         )}
         {message.text}

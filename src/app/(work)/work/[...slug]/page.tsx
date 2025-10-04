@@ -58,19 +58,19 @@ export default async function Project(props: ProjectProps) {
           <div className="grid grid-cols-7 gap-10">
             <div className="order-2 col-span-7 grid grid-cols-1 gap-6 sm:grid-cols-3 md:col-span-2 md:grid-cols-1">
               <div className="col-span-1">
-                <p className="mb-4 text-xs font-semibold uppercase text-dark_grey">
+                <p className="mb-4 text-xs font-semibold text-dark_grey uppercase">
                   My role
                 </p>
                 <p className="text-base leading-loose">{project.role}</p>
               </div>
               <div className="col-span-1">
-                <p className="mb-4 text-xs font-semibold uppercase text-dark_grey">
+                <p className="mb-4 text-xs font-semibold text-dark_grey uppercase">
                   Tools
                 </p>
                 <p className="text-base leading-loose">{project.tools}</p>
               </div>
               <div className="col-span-1">
-                <p className="mb-4 text-xs font-semibold uppercase text-dark_grey">
+                <p className="mb-4 text-xs font-semibold text-dark_grey uppercase">
                   Timeline
                 </p>
                 <p className="text-base leading-loose">{project.timeline}</p>
@@ -78,13 +78,13 @@ export default async function Project(props: ProjectProps) {
             </div>
             <div className="order-1 col-span-7 md:order-3 md:col-span-5">
               <div className="mb-6">
-                <p className="mb-4 text-xs font-semibold uppercase text-dark_grey">
+                <p className="mb-4 text-xs font-semibold text-dark_grey uppercase">
                   Description
                 </p>
                 <p className="text-base leading-loose">{project.description}</p>
               </div>
               <div className="mb-6">
-                <p className="mb-4 text-xs font-semibold uppercase text-dark_grey">
+                <p className="mb-4 text-xs font-semibold text-dark_grey uppercase">
                   Context
                 </p>
                 <p className="mb-8 text-base leading-loose">

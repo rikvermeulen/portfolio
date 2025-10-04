@@ -93,7 +93,7 @@ export default function WatchList({
     <div
       className={cc(
         isListVisible ? "translate-x-0" : "translate-x-96",
-        "absolute left-0 top-0 z-50 h-full w-full bg-linear-to-b from-[#2B3833] to-[#0F1314] px-5 transition-transform duration-300",
+        "absolute top-0 left-0 z-50 h-full w-full bg-linear-to-b from-[#2B3833] to-[#0F1314] px-5 transition-transform duration-300",
       )}
     >
       <header className="mt-5 flex items-center justify-between">

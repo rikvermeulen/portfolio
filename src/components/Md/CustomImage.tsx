@@ -67,7 +67,7 @@ export default function CustomImage({
         >
           <button
             onClick={() => setShowModal(false)}
-            className="absolute right-0 top-0 z-50 m-4"
+            className="absolute top-0 right-0 z-50 m-4"
           >
             <Icon type="close" className="h-4 w-4 fill-white" />
           </button>

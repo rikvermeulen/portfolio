@@ -168,7 +168,7 @@ function FindMe() {
           className="cloud-two -translate-x-full -translate-y-32 contrast-125 transition-transform ease-in-out"
         />
       </div>
-      <div className="group absolute bottom-5 right-5 z-50 flex">
+      <div className="group absolute right-5 bottom-5 z-50 flex">
         <button
           id="minus"
           aria-label="Minus - zoom out"

@@ -31,7 +31,7 @@ export default function Bento({
           className={cc(
             href &&
               "cursor-pointer transition-transform duration-300 hover:scale-105",
-            "absolute right-5 top-5 z-20",
+            "absolute top-5 right-5 z-20",
           )}
         >
           <a {...(href ? { href, target: "_blank" } : {})}>

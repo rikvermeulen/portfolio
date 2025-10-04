@@ -112,7 +112,7 @@ export default function Contact() {
           position: "relative",
           zIndex: 1,
         }}
-        className="chat no-scrollbar flex flex-col gap-4 px-5 pb-20 pt-5 transition-all"
+        className="chat no-scrollbar flex flex-col gap-4 px-5 pt-5 pb-20 transition-all"
       >
         <p className="relative -top-3 flex w-full justify-center text-2xs text-dark_grey">
           <span className="font-bold">Today: </span>
@@ -137,9 +137,7 @@ export default function Contact() {
                 ? `translateY(0)`
                 : `translateY(${-1 * (socials.length - 1 - index) * -40}px)`,
             }}
-            className={cc(
-              "mb-4 transition-transform duration-350 ease-in-out",
-            )}
+            className={cc("mb-4 transition-transform duration-350 ease-in-out")}
           >
             <a
               href={social.url}
@@ -159,7 +157,7 @@ export default function Contact() {
           </li>
         ))}
       </ul>
-      <div className="absolute bottom-0 z-20 flex w-full gap-3 bg-white/70 px-5 pb-5 pt-2 backdrop-blur-xl">
+      <div className="absolute bottom-0 z-20 flex w-full gap-3 bg-white/70 px-5 pt-2 pb-5 backdrop-blur-xl">
         <button
           id="socials"
           aria-label="Socials menu"

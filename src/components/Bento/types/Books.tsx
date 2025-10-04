@@ -62,7 +62,7 @@ function Books({ book: { volumeInfo } }: BookProps) {
                 width={128}
                 className="h-full w-full overflow-hidden object-cover"
               />
-              <div className="link absolute left-0 top-0 h-full w-full rounded-r"></div>
+              <div className="link absolute top-0 left-0 h-full w-full rounded-r"></div>
             </div>
             <div className="page absolute flex h-full w-full origin-top-left flex-col justify-between overflow-hidden p-3 text-xs leading-tight text-black shadow-xs">
               <Image
@@ -86,7 +86,7 @@ function Books({ book: { volumeInfo } }: BookProps) {
               <p className="mt-1 text-center text-4xs text-black/60">157</p>
             </div>
             <div className="absolute inset-0 -top-1 -z-10 h-48 w-34 origin-top-left rounded-r bg-[#23593c] shadow-xs">
-              <div className="link absolute left-0 top-0 h-full w-full rounded-r"></div>
+              <div className="link absolute top-0 left-0 h-full w-full rounded-r"></div>
             </div>
           </div>
         </div>
