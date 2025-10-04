@@ -11,5 +11,12 @@
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.formatOnSave": true,
   "prettier.ignorePath": ".gitignore",
-  "prettier.documentSelectors": ["**/*.{cjs,mjs,ts,tsx,md,mdx,json,yaml,yml}"]
+  "prettier.documentSelectors": [
+    "**/*.{cjs,mjs,ts,tsx,md,mdx,json,yaml,yml}"
+  ],
+  "workbench.colorCustomizations": {
+    "activityBar.background": "#042A65",
+    "titleBar.activeBackground": "#063B8D",
+    "titleBar.activeForeground": "#FBFCFF"
+  }
 }
