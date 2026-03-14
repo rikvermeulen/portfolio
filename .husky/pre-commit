@@ -1,0 +1,9 @@
+# Set the filenames of all staged files in one variable.
+stagedFiles=$(git diff --diff-filter=d --cached --name-only);
+
+npm run lint
+npm run lint:styles
+npm run type-check
+
+# Add only the staged files that may have been changed by the linter fixes.
+git add $stagedFiles

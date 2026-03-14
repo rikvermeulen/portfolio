@@ -1,0 +1,17 @@
+import { {{name}} } from "./{{name}}";
+
+describe("{{name}} Utility", () => {
+  it("should process the input correctly", () => {
+    // Arrange
+    const input = "testInput";
+    const expected = { data: "testInput" };
+
+    // Act
+    const result = {{name}}(input);
+
+    // Assert
+    expect(result).toEqual(expected);
+  });
+
+  // TODO: Add more tests to cover different scenarios and edge cases.
+});

@@ -1,0 +1,48 @@
+{
+  "compilerOptions": {
+    /* Base Options: */
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "target": "ESNext",
+    "allowJs": true,
+    "resolveJsonModule": true,
+    "moduleDetection": "force",
+    "isolatedModules": true,
+    /* Strictness */
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "checkJs": true,
+    "allowImportingTsExtensions": true,
+    /* Bundled projects */
+    "lib": ["dom", "dom.iterable", "ESNext"],
+    "noEmit": true,
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "jsx": "react-jsx",
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "incremental": true,
+    /* Path Aliases */
+    "baseUrl": ".",
+    "paths": {
+      "@config/*": ["config/*"],
+      "@env": ["src/env.ts"],
+      "@/*": ["src/*"]
+    }
+  },
+  "include": [
+    "eslint.config.js",
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.cjs",
+    "**/*.js",
+    "**/*.jsx",
+    ".next/types/**/*.ts",
+    ".next/dev/types/**/*.ts"
+  ],
+  "exclude": ["node_modules", "coverage", ".next"]
+}

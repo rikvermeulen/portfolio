@@ -1,0 +1,64 @@
+/* eslint-disable no-process-env */
+
+// Note :relative import paths needed because this is included in next.config.ts
+import type {
+  CspConfig,
+  SecurityHeadersConfig,
+} from "../src/utils/getSecurityHeaders/types.ts";
+
+import {
+  NONE,
+  SELF,
+  UNSAFE_EVAL,
+  UNSAFE_INLINE,
+} from "../src/utils/getSecurityHeaders/constants.ts";
+import { getSecurityHeaders } from "../src/utils/getSecurityHeaders/getSecurityHeaders.ts";
+
+const getScriptSrc = () => {
+  // In next 15 we need to allow unsafe-eval in develompent to make sure HMR works:
+  // https://community.vercel.com/t/create-a-note-in-csp-documentation-regarding-unsafe-eval-locally/3066
+  // https://chris.lu/web_development/tutorials/next-js-static-first-mdx-starterkit/content-security-policy
+  if (process.env.NODE_ENV === "development") {
+    return [SELF, UNSAFE_INLINE, UNSAFE_EVAL];
+  }
+
+  return [SELF, UNSAFE_INLINE];
+};
+
+const cspConfig: CspConfig = {
+  "connect-src": [SELF],
+  "default-src": [SELF],
+  "font-src": [SELF],
+  "form-action": [SELF],
+  "frame-ancestors": [NONE],
+  "frame-src": [],
+  "img-src": [SELF, "data:"],
+  "manifest-src": [SELF],
+  "media-src": [SELF],
+  "object-src": [NONE],
+  "script-src": getScriptSrc(),
+  "style-src": [SELF, UNSAFE_INLINE],
+  "worker-src": [SELF],
+};
+
+const securityHeadersConfig: SecurityHeadersConfig = {
+  cspConfig,
+  contentTypeOptions: "nosniff",
+  permissionsPolicy: {
+    geolocation: "()",
+    microphone: "()",
+    camera: "()",
+    usb: "()",
+    fullscreen: "()",
+  },
+  frameOptions: "DENY",
+  xssProtection: "1; mode=block",
+  referrerPolicy: "no-referrer",
+};
+
+const nextSecurityHeaders = getSecurityHeaders(
+  securityHeadersConfig,
+  "nextConfig",
+) as { key: string; value: string }[];
+
+export { nextSecurityHeaders };
