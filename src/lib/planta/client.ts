@@ -77,6 +77,7 @@ export class PlantaClient {
     while (true) {
       pageCount += 1;
 
+      /* istanbul ignore next — safety guard against infinite pagination (50+ pages) */
       if (pageCount > MAX_PLANT_PAGES) {
         break;
       }
@@ -88,6 +89,7 @@ export class PlantaClient {
 
       if (maxPlants !== null) {
         const remaining = maxPlants - plants.length;
+        /* istanbul ignore else — remaining is always >0; reachedMaxPlants exits the loop before it can reach ≤0 */
         if (remaining > 0) {
           plants.push(...pagePlants.slice(0, remaining));
         }
@@ -171,6 +173,7 @@ export class PlantaClient {
   }
 
   private async refreshTokens(): Promise<void> {
+    /* istanbul ignore next — callers always check tokens?.refreshToken before calling */
     if (!this.tokens?.refreshToken) {
       throw new PlantaUnauthorizedError("Planta refresh token is missing.");
     }

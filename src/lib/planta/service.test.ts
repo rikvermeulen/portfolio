@@ -1,5 +1,10 @@
 import { PlantaError, PlantaUnauthorizedError } from "./client.ts";
-import { getPlantaPlantsResult, toPlantaErrorMessage } from "./service.ts";
+import {
+  fetchPlantaPlantsData,
+  getPlantaPlantsResult,
+  toPlantaErrorMessage,
+  toPlantaStatusCode,
+} from "./service.ts";
 
 jest.mock("./client.ts", () => {
   return {
@@ -73,5 +78,53 @@ describe("Planta service", () => {
     expect(
       toPlantaErrorMessage(new PlantaError("Planta request timed out.")),
     ).toBe("Planta request timed out.");
+  });
+
+  it("returns the fallback string for a plain Error (not a PlantaError)", () => {
+    expect(toPlantaErrorMessage(new Error("network failure"))).toBe(
+      "Unable to load Planta plants right now.",
+    );
+  });
+
+  it("returns the fallback string for non-Error values", () => {
+    expect(toPlantaErrorMessage("some string")).toBe(
+      "Unable to load Planta plants right now.",
+    );
+    expect(toPlantaErrorMessage(42)).toBe(
+      "Unable to load Planta plants right now.",
+    );
+  });
+
+  it("returns 401 for PlantaUnauthorizedError", () => {
+    expect(toPlantaStatusCode(new PlantaUnauthorizedError("auth"))).toBe(401);
+  });
+
+  it("returns 500 for a generic PlantaError", () => {
+    expect(toPlantaStatusCode(new PlantaError("boom"))).toBe(500);
+  });
+
+  it("fetchPlantaPlantsData returns rawPlants and plantCards", async () => {
+    createPlantaClientFromEnv.mockReturnValue({
+      getPlants: jest.fn().mockResolvedValue({
+        plants: [{ id: "direct-plant", names: { custom: "DirectPlant" } }],
+      }),
+    });
+
+    const data = await fetchPlantaPlantsData();
+
+    expect(data.rawPlants[0]?.id).toBe("direct-plant");
+    expect(data.plantCards[0]?.name).toBe("DirectPlant");
+  });
+
+  it("returns a 500 result when a non-unauthorized error is thrown", async () => {
+    createPlantaClientFromEnv.mockReturnValue({
+      getPlants: jest.fn().mockRejectedValue(new PlantaError("timeout")),
+    });
+
+    await expect(getPlantaPlantsResult()).resolves.toMatchObject({
+      ok: false,
+      statusCode: 500,
+      errorMessage: "timeout",
+    });
   });
 });

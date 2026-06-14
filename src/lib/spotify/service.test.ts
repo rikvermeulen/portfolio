@@ -1,0 +1,159 @@
+import { getSpotifyMusicResult } from "./service.ts";
+
+jest.mock("./client.ts", () => ({
+  fetchRecentlyPlayed: jest.fn(),
+}));
+
+const mockEnv = {
+  SPOTIFY_CLIENT_ID: "client-id",
+  SPOTIFY_CLIENT_SECRET: "client-secret",
+  SPOTIFY_REFRESH_TOKEN: undefined as string | undefined,
+};
+
+jest.mock("@env", () => ({
+  get env() {
+    return mockEnv;
+  },
+}));
+
+const { fetchRecentlyPlayed } = jest.requireMock("./client.ts") as {
+  fetchRecentlyPlayed: jest.Mock;
+};
+
+const makeItem = (id: string, name = "Track") => ({
+  track: {
+    id,
+    name,
+    explicit: false,
+    artists: [{ name: "Artist" }],
+    album: {
+      name: "Album",
+      images: [
+        { url: "https://img.example.com/1.jpg" },
+        { url: "https://img.example.com/2.jpg" },
+      ],
+    },
+  },
+  played_at: "2026-01-01T00:00:00Z",
+});
+
+describe("getSpotifyMusicResult", () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+    mockEnv.SPOTIFY_REFRESH_TOKEN = "refresh-token";
+  });
+
+  it("returns ok:false when SPOTIFY_REFRESH_TOKEN is not set", async () => {
+    mockEnv.SPOTIFY_REFRESH_TOKEN = undefined;
+
+    await expect(getSpotifyMusicResult()).resolves.toEqual({
+      ok: false,
+      errorMessage: "Spotify is not configured",
+    });
+    expect(fetchRecentlyPlayed).not.toHaveBeenCalled();
+  });
+
+  it("returns mapped tracks on success", async () => {
+    fetchRecentlyPlayed.mockResolvedValue({
+      items: [makeItem("track-1", "Night Owl")],
+    });
+
+    const result = await getSpotifyMusicResult();
+
+    expect(result.ok).toBe(true);
+    if (result.ok) {
+      expect(result.data.tracks[0]?.id).toBe("track-1");
+      expect(result.data.tracks[0]?.name).toBe("Night Owl");
+      expect(result.data.tracks[0]?.albumArtUrl).toBe(
+        "https://img.example.com/2.jpg",
+      );
+    }
+  });
+
+  it("falls back to first image when second image is absent", async () => {
+    fetchRecentlyPlayed.mockResolvedValue({
+      items: [
+        {
+          ...makeItem("t1"),
+          track: {
+            ...makeItem("t1").track,
+            album: {
+              name: "Album",
+              images: [{ url: "https://img.example.com/only.jpg" }],
+            },
+          },
+        },
+      ],
+    });
+
+    const result = await getSpotifyMusicResult();
+    if (result.ok) {
+      expect(result.data.tracks[0]?.albumArtUrl).toBe(
+        "https://img.example.com/only.jpg",
+      );
+    }
+  });
+
+  it("deduplicates tracks with the same id", async () => {
+    fetchRecentlyPlayed.mockResolvedValue({
+      items: [makeItem("dupe-id"), makeItem("dupe-id"), makeItem("other-id")],
+    });
+
+    const result = await getSpotifyMusicResult();
+
+    expect(result.ok).toBe(true);
+    if (result.ok) {
+      expect(result.data.tracks).toHaveLength(2);
+    }
+  });
+
+  it("uses Unknown artist when artists array is empty", async () => {
+    fetchRecentlyPlayed.mockResolvedValue({
+      items: [
+        { ...makeItem("t1"), track: { ...makeItem("t1").track, artists: [] } },
+      ],
+    });
+
+    const result = await getSpotifyMusicResult();
+    if (result.ok) {
+      expect(result.data.tracks[0]?.artist).toBe("Unknown artist");
+    }
+  });
+
+  it("returns ok:false when the result has no tracks after dedup", async () => {
+    fetchRecentlyPlayed.mockResolvedValue({ items: [] });
+
+    await expect(getSpotifyMusicResult()).resolves.toMatchObject({
+      ok: false,
+      errorMessage: "No recent tracks found",
+    });
+  });
+
+  it("sets albumArtUrl to null when images array is empty", async () => {
+    fetchRecentlyPlayed.mockResolvedValue({
+      items: [
+        {
+          ...makeItem("t1"),
+          track: {
+            ...makeItem("t1").track,
+            album: { name: "Album", images: [] },
+          },
+        },
+      ],
+    });
+
+    const result = await getSpotifyMusicResult();
+    if (result.ok) {
+      expect(result.data.tracks[0]?.albumArtUrl).toBeNull();
+    }
+  });
+
+  it("returns ok:false when fetchRecentlyPlayed throws", async () => {
+    fetchRecentlyPlayed.mockRejectedValue(new Error("network error"));
+
+    await expect(getSpotifyMusicResult()).resolves.toMatchObject({
+      ok: false,
+      errorMessage: "Could not load your music right now",
+    });
+  });
+});

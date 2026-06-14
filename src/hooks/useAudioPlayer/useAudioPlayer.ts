@@ -47,6 +47,7 @@ export function useAudioPlayer({
 
   function fadeOut(): void {
     const audio = audioRef.current;
+    /* istanbul ignore next — playOrPause pre-checks null before calling fadeOut */
     if (!audio) {
       return;
     }

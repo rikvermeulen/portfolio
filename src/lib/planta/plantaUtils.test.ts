@@ -48,4 +48,29 @@ describe("planta utils", () => {
     expect(getDaysUntilIsoDate("2026-03-24T00:00:00.000Z", nowMs)).toBe(2);
     expect(getDaysUntilIsoDate("not-a-date", nowMs)).toBeNull();
   });
+
+  it("decodeJwtPayload returns null for a token with no payload segment", () => {
+    expect(decodeJwtPayload("onlyone")).toBeNull();
+  });
+
+  it("decodeJwtPayload returns null when the payload is not valid JSON", () => {
+    // Encode something that isn't JSON
+    const header = toBase64Url("{}");
+    const badPayload = toBase64Url("not-json!!!");
+    expect(decodeJwtPayload(`${header}.${badPayload}.`)).toBeNull();
+  });
+
+  it("getTokenExpiryMs returns null when the token has no exp claim", () => {
+    const token = createUnsignedJwt({ sub: "user-1" });
+    expect(getTokenExpiryMs(token)).toBeNull();
+  });
+
+  it("isAccessTokenValid returns false for an undefined token", () => {
+    expect(isAccessTokenValid(undefined)).toBe(false);
+  });
+
+  it("isAccessTokenValid returns false when the token carries no exp claim", () => {
+    const token = createUnsignedJwt({ sub: "user-1" });
+    expect(isAccessTokenValid(token, 1_000_000, 30_000)).toBe(false);
+  });
 });

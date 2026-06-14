@@ -1,6 +1,6 @@
 import { FIND_ME_LOCATION } from "@/constants/findMe.ts";
 
-import { getFindMeConditionsResult } from "./service.ts";
+import { fetchFindMeConditions, getFindMeConditionsResult } from "./service.ts";
 
 const createJsonResponse = (payload: unknown, status = 200): Response =>
   new Response(JSON.stringify(payload), {
@@ -80,5 +80,47 @@ describe("FindMe conditions service", () => {
       ok: false,
       error: "Unable to load weather and air quality right now.",
     });
+  });
+
+  it("aborts the fetch and returns an error when the timeout fires", async () => {
+    jest.spyOn(globalThis, "fetch").mockImplementation((_url, opts) => {
+      return new Promise<Response>((_resolve, reject) => {
+        (opts as RequestInit).signal?.addEventListener("abort", () => {
+          const err = new Error("The operation was aborted.");
+          err.name = "AbortError";
+          reject(err);
+        });
+      });
+    });
+
+    const resultPromise = getFindMeConditionsResult();
+    jest.advanceTimersByTime(6000);
+
+    const result = await resultPromise;
+    expect(result.ok).toBe(false);
+  });
+
+  it("fetchFindMeConditions resolves with location and weather data", async () => {
+    jest
+      .spyOn(globalThis, "fetch")
+      .mockResolvedValueOnce(
+        createJsonResponse({
+          current: {
+            is_day: 1,
+            temperature_2m: 22,
+            time: "2026-06-12T12:30",
+            weather_code: 0,
+          },
+        }),
+      )
+      .mockResolvedValueOnce(
+        createJsonResponse({
+          current: { european_aqi: 10, time: "2026-06-12T12:30" },
+        }),
+      );
+
+    const result = await fetchFindMeConditions();
+    expect(result.ok).toBe(true);
+    expect(result.location).toBe(FIND_ME_LOCATION);
   });
 });

@@ -147,6 +147,7 @@ export function computeDisplacement(
   const gy =
     roundedRectSDF(px, py + eps, halfW, halfH, radius) -
     roundedRectSDF(px, py - eps, halfW, halfH, radius);
+  /* istanbul ignore next — zero-gradient only occurs at the symmetric center, where profile===0 causes an early return */
   const len = Math.hypot(gx, gy) || 1;
 
   // Bend inward (negative gradient = toward center). The map encodes only the
@@ -198,6 +199,7 @@ export function paintDisplacementMap(
   const maxBend = 1;
 
   const setPixel = (x: number, y: number, dx: number, dy: number): void => {
+    /* istanbul ignore next — defensive guard, loop bounds ensure coords are always valid */
     if (x < 0 || x >= w || y < 0 || y >= h) {
       return;
     }

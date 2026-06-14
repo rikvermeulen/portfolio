@@ -1,4 +1,12 @@
-import { computeDisplacement, GLASS_DEFAULTS } from "./displacementMap.ts";
+/**
+ * @jest-environment jsdom
+ */
+
+import {
+  computeDisplacement,
+  GLASS_DEFAULTS,
+  paintDisplacementMap,
+} from "./displacementMap.ts";
 
 const HALF_W = 70;
 const HALF_H = 40;
@@ -87,5 +95,73 @@ describe("computeDisplacement", () => {
     expect(dy).toBeLessThan(0);
     expect(Math.abs(dx)).toBeGreaterThan(0.05);
     expect(Math.abs(dy)).toBeGreaterThan(0.05);
+  });
+});
+
+describe("paintDisplacementMap", () => {
+  function createCanvas(
+    mockCtx?: Partial<CanvasRenderingContext2D>,
+  ): HTMLCanvasElement {
+    const canvas = document.createElement("canvas");
+
+    const pixelData = new Uint8ClampedArray(200 * 100 * 4).fill(0);
+    const imageData = { data: pixelData, width: 200, height: 100 } as ImageData;
+
+    const defaultCtx: Partial<CanvasRenderingContext2D> = {
+      createImageData: jest.fn().mockReturnValue(imageData),
+      putImageData: jest.fn(),
+      getImageData: jest.fn().mockReturnValue(imageData),
+    };
+
+    jest.spyOn(canvas, "getContext").mockReturnValue({
+      ...defaultCtx,
+      ...mockCtx,
+    } as CanvasRenderingContext2D);
+
+    jest
+      .spyOn(canvas, "toDataURL")
+      .mockReturnValue("data:image/png;base64,fake");
+
+    return canvas;
+  }
+
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
+  it("returns a data URL when the canvas 2D context is available", () => {
+    const canvas = createCanvas();
+    const result = paintDisplacementMap(canvas, 20, 10, GLASS_DEFAULTS);
+    expect(result).toMatch(/^data:image\/png/);
+  });
+
+  it("sizes the canvas to the given width and height", () => {
+    const canvas = createCanvas();
+    paintDisplacementMap(canvas, 30, 20, GLASS_DEFAULTS);
+    expect(canvas.width).toBe(30);
+    expect(canvas.height).toBe(20);
+  });
+
+  it("clamps dimensions to at least 1x1", () => {
+    const canvas = createCanvas();
+    paintDisplacementMap(canvas, 0, 0, GLASS_DEFAULTS);
+    expect(canvas.width).toBe(1);
+    expect(canvas.height).toBe(1);
+  });
+
+  it("returns null when getContext returns null", () => {
+    const canvas = document.createElement("canvas");
+    jest.spyOn(canvas, "getContext").mockReturnValue(null);
+    const result = paintDisplacementMap(canvas, 20, 10, GLASS_DEFAULTS);
+    expect(result).toBeNull();
+  });
+
+  it("calls putImageData after computing the displacement map", () => {
+    const canvas = createCanvas();
+    const ctx = canvas.getContext(
+      "2d",
+    ) as jest.Mocked<CanvasRenderingContext2D>;
+    paintDisplacementMap(canvas, 20, 10, GLASS_DEFAULTS);
+    expect(ctx.putImageData).toHaveBeenCalledTimes(1);
   });
 });
