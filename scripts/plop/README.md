@@ -11,6 +11,12 @@ This project uses Plop.js for code generation. It helps maintain consistency acr
 ### 1. Components (`plop component`)
 - Creates React components with TypeScript support
 - Creates component in `src/components/<ComponentName>`
+- Generates the standard component folder files:
+  - `<ComponentName>.tsx`
+  - `<ComponentName>.types.ts`
+  - `<ComponentName>.mock.ts`
+  - `<ComponentName>.stories.tsx`
+  - `index.ts`
 
 Example:
 ```bash
@@ -18,13 +24,14 @@ npm run plop component
 ```
 
 ### 2. Modules (`plop module`)
-- Creates full module structure with animation support
-- Includes GSAP animation setup
+- Creates the standard module folder structure
 - Creates module in `src/modules/<ModuleName>`
-- Generates three files:
+- Generates:
   - `<ModuleName>.tsx`: Main component
-  - `animation.ts`: GSAP animations
-  - `fragment.ts`: GraphQL fragment
+  - `<ModuleName>.types.ts`: Public module props and types
+  - `<ModuleName>.mock.ts`: Story/test fixtures
+  - `<ModuleName>.stories.tsx`: Storybook stories
+  - `index.ts`: Public module entry point
 
 Example:
 ```bash

@@ -25,18 +25,23 @@ export const moduleGenerator = (plop) => {
         },
         {
           type: "add",
-          path: "src/modules/{{name}}/animations.ts",
-          templateFile: "scripts/plop/templates/modules/animations.ts.hbs",
+          path: "src/modules/{{name}}/{{name}}.types.ts",
+          templateFile: "scripts/plop/templates/modules/types.ts.hbs",
         },
         {
           type: "add",
-          path: "src/modules/{{name}}/fragments.ts",
-          templateFile: "scripts/plop/templates/modules/fragments.ts.hbs",
+          path: "src/modules/{{name}}/{{name}}.mock.ts",
+          templateFile: "scripts/plop/templates/modules/mock.ts.hbs",
         },
         {
           type: "add",
           path: "src/modules/{{name}}/{{name}}.stories.tsx",
           templateFile: "scripts/plop/templates/modules/stories.tsx.hbs",
+        },
+        {
+          type: "add",
+          path: "src/modules/{{name}}/index.ts",
+          templateFile: "scripts/plop/templates/modules/index.ts.hbs",
         },
       ];
     },

@@ -1,12 +1,16 @@
-"use client";
+import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 
 import {{name}} from "./{{name}}.tsx";
+import { mock{{name}}Props } from "./{{name}}.mock.ts";
 
-export default {
-  title: "Module/{{name}}",
+const meta = {
+  title: "Modules/{{name}}",
   component: {{name}},
-};
+} satisfies Meta<typeof {{name}}>;
 
-export function {{name}}Default() {
-   return <></>;
-}
+export default meta;
+type Story = StoryObj<typeof meta>;
+
+export const Default: Story = {
+  args: mock{{name}}Props,
+};

@@ -1,0 +1,35 @@
+---
+description: Never run database migration commands; user applies migrations manually
+alwaysApply: true
+---
+
+# No migration commands
+
+**Never run migration scripts or Payload migrate CLI commands.** The user always
+applies migrations manually.
+
+## Forbidden (do not run, suggest, or execute)
+
+- `npm run migrate`
+- `npm run migrate:create`
+- `npm run migrate:status`
+- `npm run migrate:fresh`
+- `npm run migrate:reset`
+- `pnpm payload migrate` and any `payload migrate:*` variant
+- Any shell command whose primary purpose is creating, applying, rolling back,
+  or inspecting Payload/DB migrations
+
+## Allowed
+
+- Change Payload schemas, collections, globals, and fields in code
+- Run `npm run generate:types` after schema changes when needed
+- Tell the user which migration command **they** should run, and when (for
+  example after committing schema changes)
+
+## When schema changes need a migration
+
+1. Implement the schema change in code
+2. Run type generation if appropriate (`npm run generate:types`)
+3. **Stop** — do not run migrate commands
+4. Tell the user to run the needed migration workflow manually (for example
+   `npm run migrate:create -- --name <description>` then `npm run migrate`)

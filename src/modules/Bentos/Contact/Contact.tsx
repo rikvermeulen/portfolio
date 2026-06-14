@@ -1,0 +1,176 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
+
+import type { ContactProps } from "./Contact.types.ts";
+
+import Bento, { bentoBoxSizes } from "@/components/Bento/index.ts";
+import Glass from "@/components/Glass/index.ts";
+import Icon from "@/components/Icon/index.ts";
+import { Link } from "@/components/index.ts";
+import useOutsideClick from "@/hooks/useOutsideClick/useOutsideClick.ts";
+import classnames from "@/utils/classnames/classnames.ts";
+
+import { socials } from "./Contact.const.ts";
+import { hasEnoughText } from "./Contact.validation.ts";
+import { ChatMessage } from "./Messages.tsx";
+import useChat from "./useChat.ts";
+
+const TODAY = new Intl.DateTimeFormat("en-US", {
+  weekday: "long",
+  month: "long",
+  day: "numeric",
+}).format(new Date());
+
+const GLASS = {
+  intensity: 2,
+  radius: 18,
+  tint: "adaptive" as const,
+  className: "bg-black/10",
+};
+
+const Contact = ({ className }: ContactProps) => {
+  const [showMenu, setShowMenu] = useState(false);
+  const chatRef = useRef<HTMLDivElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  const {
+    chat,
+    inputValue,
+    isDisabled,
+    isDone,
+    setInputValue,
+    handleSubmit,
+    handleFocus,
+  } = useChat();
+
+  const canSend = hasEnoughText(inputValue) && !isDisabled;
+
+  useOutsideClick(menuRef, () => setShowMenu(false), showMenu);
+
+  useEffect(() => {
+    chatRef.current?.scrollTo({
+      top: chatRef.current.scrollHeight,
+      behavior: "smooth",
+    });
+  }, [chat]);
+
+  return (
+    <Bento
+      sizes={bentoBoxSizes.contact}
+      className={classnames(
+        "relative flex flex-col border border-[#EAEBED] bg-white",
+        className,
+      )}
+    >
+      <header className="h-11 shrink-0 border-b border-[#ECECEC] bg-[#EBECEB]/40 backdrop-blur-xl" />
+
+      <div
+        ref={chatRef}
+        className="no-scrollbar flex flex-1 flex-col gap-4 overflow-y-auto px-5 pt-5 pb-20"
+      >
+        <p className="relative -top-3 text-center text-[0.625rem] text-dark-grey">
+          <span className="font-medium">Today: </span>
+          {TODAY}
+        </p>
+
+        {chat.map((message, index) => (
+          <div
+            key={message.id}
+            className={message.sender === "user" ? "self-end" : undefined}
+          >
+            <ChatMessage
+              isGrouped={
+                index > 0 && chat[index - 1]?.sender === message.sender
+              }
+              message={message}
+            />
+          </div>
+        ))}
+      </div>
+
+      <footer className="absolute bottom-5 z-20 flex w-full items-center gap-2 px-5">
+        <div
+          ref={menuRef}
+          data-open={showMenu || undefined}
+          className="group relative size-9 shrink-0"
+        >
+          <div className="absolute bottom-0 left-0 z-50 flex h-9 w-9 flex-col-reverse overflow-hidden rounded-[1.125rem] transition-[height,width,border-radius] duration-300 ease-in-out group-data-open:h-43 group-data-open:w-52 group-data-open:rounded-2xl group-data-open:shadow-lg">
+            <Glass
+              {...GLASS}
+              className="bg-black/10 group-data-open:backdrop-blur-sm!"
+            />
+            <button
+              aria-expanded={showMenu}
+              aria-label={showMenu ? "Close social links" : "Open social links"}
+              onClick={() => setShowMenu((open) => !open)}
+              type="button"
+              className="relative z-10 flex h-9 w-full shrink-0 items-center justify-center overflow-hidden transition-[height] duration-300 outline-none group-data-open:h-0"
+            >
+              <Icon
+                iconClassName="size-3 transition-[opacity,transform] duration-100 group-data-open:scale-0 group-data-open:opacity-0"
+                name="plus"
+              />
+            </button>
+            <ul
+              aria-label="Social links"
+              role="menu"
+              className="relative z-10 py-1.5 opacity-0 transition-opacity duration-200 group-data-open:pointer-events-auto group-data-open:opacity-100"
+            >
+              {socials.map(({ name, icon, url }) => (
+                <li key={name} role="menuitem">
+                  <Link
+                    href={url}
+                    className="flex items-center gap-3 px-3 py-2"
+                  >
+                    <Image
+                      alt={name}
+                      height={24}
+                      src={`/images/icons/socials/${icon}.png`}
+                      width={24}
+                      className="rounded-xl"
+                    />
+                    <span className="text-sm font-medium">{name}</span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+
+        {!isDone && (
+          <form
+            aria-label="Contact form"
+            onSubmit={handleSubmit}
+            className="relative flex h-9 flex-1 items-center overflow-hidden rounded-full"
+          >
+            <Glass {...GLASS} />
+            <input
+              aria-label="Message input"
+              disabled={isDisabled}
+              onChange={(e) => setInputValue(e.target.value)}
+              onFocus={handleFocus}
+              placeholder="Type your response here…"
+              value={inputValue}
+              className="relative z-10 mx-3 w-full bg-transparent text-sm outline-none disabled:opacity-30"
+            />
+            <button
+              aria-label="Send message"
+              disabled={!canSend}
+              type="submit"
+              className={classnames(
+                "relative z-10 shrink-0 rounded-full p-1 transition-opacity",
+                !canSend && "cursor-not-allowed opacity-50",
+              )}
+            >
+              <Icon name="arrow" className="w-6.5" />
+            </button>
+          </form>
+        )}
+      </footer>
+    </Bento>
+  );
+};
+
+export default Contact;

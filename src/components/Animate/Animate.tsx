@@ -1,3 +1,4 @@
+/* eslint-disable @eslint-react/component-hook-factories */
 "use client";
 
 import {
@@ -9,22 +10,10 @@ import {
   useRef,
 } from "react";
 
+import type { AnimatedComponents, AnimateProps } from "./Animate.types.ts";
 import type { JSX } from "react";
 
 import { useAnimationContext } from "@/contexts/AnimationContext/AnimationContext.tsx";
-
-type AnimateProps = {
-  timelineRef?: React.RefObject<gsap.core.Timeline | null>;
-  timelineTiming?: string | number;
-  animation?: {
-    from: gsap.TweenVars;
-    to: gsap.TweenVars;
-  };
-  animateOnMount?: boolean;
-  whileHover?: gsap.TweenVars;
-  whileTap?: gsap.TweenVars;
-  children?: React.ReactNode;
-} & React.HTMLAttributes<HTMLElement>;
 
 // Helper function to combine multiple refs
 function useCombinedRefs<T>(
@@ -214,8 +203,4 @@ export const Animate = new Proxy(
       return componentCache.get(tag);
     },
   },
-) as {
-  [Tag in keyof JSX.IntrinsicElements]: React.FC<
-    AnimateProps & JSX.IntrinsicElements[Tag]
-  >;
-};
+) as AnimatedComponents;

@@ -1,0 +1,25 @@
+---
+description: Keep locale dictionaries split by feature namespace
+globs: src/i18n/**/*.ts
+alwaysApply: false
+---
+
+# I18n Dictionaries
+
+- Keep locale dictionaries modular by feature namespace instead of growing
+  `en.ts` and `nl.ts` into monoliths.
+- Store locale-specific translation slices under per-locale folders like
+  `src/i18n/dictionaries/en/` and `src/i18n/dictionaries/nl/`.
+- Treat `src/i18n/dictionaries/en.ts` and `src/i18n/dictionaries/nl.ts` as
+  composition files that assemble the locale from namespaced imports.
+- Use the same export name per namespace in each locale file, for example
+  `src/i18n/dictionaries/en/auth.ts` and `src/i18n/dictionaries/nl/auth.ts`
+  should both export `auth`.
+
+```ts
+import { auth } from "./en/auth";
+
+const en = {
+  auth,
+};
+```

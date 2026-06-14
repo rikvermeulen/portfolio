@@ -1,11 +1,9 @@
-const {{name}}: {{name}}Props = ({}) => {
+import type { {{name}}Props } from "./{{name}}.types.ts";
+
+export default function {{name}}(_props: {{name}}Props) {
   return (
     <div>
       {{name}}
     </div>
   );
-};
-
-interface {{name}}Props {}
-
-export default {{name}};
+}

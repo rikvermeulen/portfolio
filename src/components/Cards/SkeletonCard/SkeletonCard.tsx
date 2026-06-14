@@ -1,7 +1,14 @@
+import type { SkeletonCardProps } from "./SkeletonCard.types.ts";
+
 import classnames from "@/utils/classnames/classnames.ts";
 
-function SkeletonCard({ className }: React.HTMLAttributes<HTMLDivElement>) {
-  return <div className={classnames("animate-pulse bg-black/10", className)} />;
+function SkeletonCard({ className, ...props }: SkeletonCardProps) {
+  return (
+    <div
+      className={classnames("animate-pulse bg-black/10", className)}
+      {...props}
+    />
+  );
 }
 
 export default SkeletonCard;

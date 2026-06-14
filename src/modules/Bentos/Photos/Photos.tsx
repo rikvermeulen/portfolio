@@ -3,14 +3,11 @@
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 
-import Bento from "@/components/Bento/Bento.tsx";
+import type { PhotosProps } from "./Photos.types.ts";
+import type { ToggleOption } from "@/components/ToggleGroup/index.ts";
 
-/**
- * Props for the Photos component
- */
-interface AlbumsProps {
-  readonly albums: Record<string, readonly string[]>;
-}
+import Bento, { bentoBoxSizes } from "@/components/Bento/index.ts";
+import ToggleGroup from "@/components/ToggleGroup/index.ts";
 
 const AUTO_ADVANCE_INTERVAL_MS = 3000 as const;
 const ALBUM_LINK = "https://www.icloud.com/sharedalbum/#B0fGWZuqDFg0VA";
@@ -27,13 +24,29 @@ const getNextMediaIndex = (currentIndex: number, totalCount: number): number =>
  * @param props - Component props containing album data
  * @returns A link element containing the photo gallery
  */
-const Photos = ({ albums }: AlbumsProps) => {
+const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+
+const Photos = ({ albums }: PhotosProps) => {
+  const albumNames = Object.keys(albums);
+  const [selectedAlbum, setSelectedAlbum] = useState(albumNames[0] ?? "");
   const [activeMediaIndex, setActiveMediaIndex] = useState(0);
   const intervalId = useRef<NodeJS.Timeout | null>(null);
 
-  const albumNames = Object.keys(albums);
-  const currentAlbumName = albumNames[0];
+  const currentAlbumName = selectedAlbum || albumNames[0];
   const mediaFiles = currentAlbumName ? (albums[currentAlbumName] ?? []) : [];
+
+  const ALBUM_ICONS: Record<string, string> = {
+    apps: "images",
+    map: "map",
+    heart: "heart",
+    dog: "dog",
+  };
+
+  const albumOptions: readonly ToggleOption[] = albumNames.map((name) => ({
+    value: name,
+    label: capitalize(name),
+    icon: ALBUM_ICONS[name],
+  }));
   const hasMedia = mediaFiles.length > 0;
 
   /**
@@ -72,6 +85,11 @@ const Photos = ({ albums }: AlbumsProps) => {
   //   }
   // };
 
+  const handleAlbumChange = (album: string) => {
+    setSelectedAlbum(album);
+    setActiveMediaIndex(0);
+  };
+
   useEffect(() => {
     clearAutoAdvanceInterval();
 
@@ -100,8 +118,18 @@ const Photos = ({ albums }: AlbumsProps) => {
     <Bento
       href={ALBUM_LINK}
       image="/images/icons/photos.png"
-      className="col-span-2 aspect-square size-full"
+      sizes={bentoBoxSizes.photos}
+      className="group size-full"
     >
+      {albumNames.length > 1 && (
+        <div className="absolute bottom-5 left-1/2 z-20 -translate-x-1/2 translate-y-[200%] transition-transform duration-300 ease-in-out group-hover:translate-y-0">
+          <ToggleGroup
+            onChange={handleAlbumChange}
+            options={albumOptions}
+            value={selectedAlbum}
+          />
+        </div>
+      )}
       {mediaFiles.map((mediaUrl, index) => {
         const isActive = activeMediaIndex === index;
         const isVideoItem = isVideoFile(mediaUrl);

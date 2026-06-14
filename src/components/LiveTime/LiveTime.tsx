@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 
+import type { LiveTimeProps } from "./LiveTime.types.ts";
+
 /**
  * Formats a Date object to 12-hour format with AM/PM.
  *
@@ -24,10 +26,6 @@ function formatTime(date: Date): string {
  */
 function getCurrentTime(): string {
   return formatTime(new Date());
-}
-
-export interface LiveTimeProps {
-  updateInterval?: number;
 }
 
 /**

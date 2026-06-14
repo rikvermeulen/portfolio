@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 340 233" overflow="visible">
+  <defs>
+    <path id="a1046z" d="M 26.5 16 C 26.5 7.163 33.663 0 42.5 0 L 217 0 C 225.837 0 233 7.163 233 16 L 233 324 C 233 332.837 225.837 340 217 340 L 39.262 340 C 32.214 340 26.5 334.286 26.5 327.238 L 26.5 323.398 C 26.5 317.852 23.628 312.701 18.91 309.786 L 7.59 302.792 C 2.872 299.876 0 294.726 0 289.18 L 0 217.93 C 0 212.384 2.872 207.234 7.59 204.319 L 18.91 197.324 C 23.628 194.409 26.5 189.259 26.5 183.713 Z"/>
+    <clipPath id="a1047z">
+      <use xlink:href="#a1046z"/>
+    </clipPath>
+    <radialGradient id="idsEpdjjW67v_1g-972145068" cx="0.911" cy="0.044" r="1.13" gradientTransform="translate(0.911, 0.044) scale(1 0.6637168141592921) translate(-0.911, -0.044)">
+      <stop offset="0" stop-color="rgb(121, 165, 216)" stop-opacity="1"/>
+      <stop offset="1" stop-color="rgb(151, 188, 230)" stop-opacity="1"/>
+    </radialGradient>
+  </defs>
+  <g transform="matrix(0 1 -1 0 340 0)">
+    <use xlink:href="#a1046z" fill="url(#idsEpdjjW67v_1g-972145068)" clip-path="url(#a1047z)" stroke-width="2" stroke="rgb(255, 244, 212)"/>
+  </g>
+</svg>

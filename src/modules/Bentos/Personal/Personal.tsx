@@ -1,20 +1,22 @@
 import Image from "next/image";
 
-import Link from "@/components/Link/Link.tsx";
+import Bento, { bentoBoxSizes } from "@/components/Bento/index.ts";
+import Link from "@/components/Link/index.ts";
 
 const Personal = () => {
   return (
-    <div className="col-span-6">
+    <Bento sizes={bentoBoxSizes.personal} className="size-full">
       <Image
         alt="Portrait of Rik Vermeulen"
         height="184"
         src="/images/me.jpg"
         width="184"
-        className="w-40 rounded-full 2xl:w-auto"
+        className="h-auto w-40 rounded-full 2xl:w-auto"
       />
       <div className="pt-8">
         <h2 className="flex gap-2 text-xl font-bold md:text-3xl">
-          Hey hey, I’m Rik <div className="shake w-fit cursor-pointer"> 👋🏻</div>
+          Hey hey, I’m Rik{" "}
+          <span className="shake w-fit cursor-pointer">👋🏻</span>
         </h2>
         <p className="max-w-xl pt-3 text-dark-grey">
           I’m a Creative Developer based in Heukelum, the Netherlands. I develop
@@ -22,8 +24,8 @@ const Personal = () => {
           hugely talented people. ✨
         </p>
       </div>
-      <div className="hidden pt-6 2xl:block">
-        <p className="text-dark_grey pt-2 md:text-xl">
+      <div className="">
+        <p className="text-dark_grey">
           🐙 Coding:&nbsp;
           <Link
             href="https://github.com/rikvermeulen"
@@ -32,7 +34,7 @@ const Personal = () => {
             @rikvermeulen
           </Link>
         </p>
-        <p className="text-dark_grey pt-1 md:text-xl">
+        <p className="text-dark_grey">
           💌 Hello?&nbsp;
           <Link
             href="mailto:hello@rikvermeulen.com"
@@ -42,7 +44,7 @@ const Personal = () => {
           </Link>
         </p>
       </div>
-    </div>
+    </Bento>
   );
 };
 

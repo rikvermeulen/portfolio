@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import LiveTime from "@/components/LiveTime/LiveTime.tsx";
+import LiveTime from "@/components/LiveTime/index.ts";
 
 export default function Header() {
   return (
@@ -11,7 +11,13 @@ export default function Header() {
           href="/"
           className="flex items-center gap-2 justify-self-start text-black"
         >
-          <Image alt="logo" height="20" src="/images/logo.png" width="20" />
+          <Image
+            alt="logo"
+            height="20"
+            src="/images/logo.png"
+            width="20"
+            className="size-6"
+          />
           <p className="hidden text-xs font-normal sm:block md:text-sm">
             Rik Vermeulen
           </p>

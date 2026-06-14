@@ -1,8 +1,10 @@
-import { eslintConfig } from "@greenberry/linting-config";
+import {
+  eslintConfig,
+  eslintStorybookConfig,
+} from "@greenberry/linting-config";
 
 /**
- * Don't add any rules here, edited the linting-config package instead. Please discuss with the team before adding any rules.
+ * Don't add rules here — edit @greenberry/linting-config instead.
+ * Discuss with the team before adding project-specific overrides.
  */
-const config = [...eslintConfig];
-
-export default config;
+export default [...eslintConfig, ...eslintStorybookConfig];

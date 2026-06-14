@@ -5,16 +5,11 @@
 
 import NextLink from "next/link";
 
-import type { LinkProps } from "next/link";
+import type { LinkProps } from "./Link.types.ts";
 
 import { isExternalUrl } from "@/utils/isExternalUrl/isExternalUrl.ts";
 
-export type NextLinkProps = LinkProps &
-  React.AnchorHTMLAttributes<HTMLAnchorElement> & {
-    children: React.ReactNode;
-  };
-
-const Link = ({ children, ...props }: NextLinkProps) => {
+const Link = ({ children, ...props }: LinkProps) => {
   const isExternalLink =
     typeof props.href === "string" ? isExternalUrl(props.href) : false;
 

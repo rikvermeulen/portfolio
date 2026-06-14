@@ -1,0 +1,10 @@
+@import "tailwindcss";
+/* stylelint-disable scss/at-rule-no-unknown -- Tailwind v4 @source */
+@source "../components/**/*.{ts,tsx}";
+@source "../modules/**/*.{ts,tsx}";
+/* stylelint-enable scss/at-rule-no-unknown */
+
+@theme {
+  --font-inter: "Inter", sans-serif;
+  --color-dark-grey: #707070;
+}

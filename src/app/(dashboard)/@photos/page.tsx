@@ -1,5 +1,5 @@
 import { createSupabaseClient } from "@/lib/supabase/supabase.ts";
-import Photos from "@/modules/Bentos/Photos/Photos.tsx";
+import { Photos } from "@/modules/Bentos/index.ts";
 
 /**
  * Album configuration with name identifier
@@ -40,13 +40,7 @@ const ALBUMS: readonly AlbumConfig[] = [
  */
 async function fetchAlbumPhotos(albumName: string): Promise<readonly string[]> {
   const supabase = createSupabaseClient();
-  const { data, error } = await supabase.storage
-    .from(PHOTOS_BUCKET)
-    .list(albumName);
-
-  if (error) {
-    throw new Error(`Failed to fetch album "${albumName}": ${error.message}`);
-  }
+  const { data } = await supabase.storage.from(PHOTOS_BUCKET).list(albumName);
 
   if (!data || data.length === 0) {
     return [];

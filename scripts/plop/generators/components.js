@@ -26,8 +26,23 @@ export const componentGenerator = (plop) => {
         },
         {
           type: "add",
+          path: "src/components/{{name}}/{{name}}.types.ts",
+          templateFile: "scripts/plop/templates/components/types.ts.hbs",
+        },
+        {
+          type: "add",
+          path: "src/components/{{name}}/{{name}}.mock.ts",
+          templateFile: "scripts/plop/templates/components/mock.ts.hbs",
+        },
+        {
+          type: "add",
           path: "src/components/{{name}}/{{name}}.stories.tsx",
           templateFile: "scripts/plop/templates/components/stories.tsx.hbs",
+        },
+        {
+          type: "add",
+          path: "src/components/{{name}}/index.ts",
+          templateFile: "scripts/plop/templates/components/index.ts.hbs",
         },
       ];
     },

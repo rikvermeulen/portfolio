@@ -19,26 +19,40 @@ const getScriptSrc = () => {
   // https://community.vercel.com/t/create-a-note-in-csp-documentation-regarding-unsafe-eval-locally/3066
   // https://chris.lu/web_development/tutorials/next-js-static-first-mdx-starterkit/content-security-policy
   if (process.env.NODE_ENV === "development") {
-    return [SELF, UNSAFE_INLINE, UNSAFE_EVAL];
+    return [SELF, UNSAFE_INLINE, UNSAFE_EVAL, "https://sdk.scdn.co"];
   }
 
-  return [SELF, UNSAFE_INLINE];
+  return [SELF, UNSAFE_INLINE, "https://sdk.scdn.co"];
 };
 
 const cspConfig: CspConfig = {
-  "connect-src": [SELF],
+  "connect-src": [
+    SELF,
+    "https://*.mapbox.com",
+    "https://tile.openstreetmap.org",
+    "https://api.spotify.com",
+    "https://accounts.spotify.com",
+    "wss://*.spotify.com",
+  ],
   "default-src": [SELF],
   "font-src": [SELF],
   "form-action": [SELF],
   "frame-ancestors": [NONE],
-  "frame-src": [],
-  "img-src": [SELF, "data:"],
+  "frame-src": ["https://*.scdn.co"],
+  "img-src": [
+    SELF,
+    "data:",
+    "blob:",
+    "https://*.mapbox.com",
+    "https://tile.openstreetmap.org",
+    "https://*.scdn.co",
+  ],
   "manifest-src": [SELF],
-  "media-src": [SELF],
+  "media-src": [SELF, "https://*.scdn.co", "https://*.spotifycdn.com"],
   "object-src": [NONE],
   "script-src": getScriptSrc(),
   "style-src": [SELF, UNSAFE_INLINE],
-  "worker-src": [SELF],
+  "worker-src": [SELF, "blob:"],
 };
 
 const securityHeadersConfig: SecurityHeadersConfig = {
