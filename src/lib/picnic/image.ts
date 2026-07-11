@@ -26,13 +26,13 @@ export const parseAccessibilityLabel = (
   if (!label) {
     return {};
   }
+
+  const servings = label.match(/\b(\d+)\s+personen\b/i)?.[1];
+  const minutes = label.match(/\b(\d+)\s+Bereidingstijd\b/i)?.[1];
+
   return {
-    servings: label.match(/\b(\d+)\s+personen\b/i)?.[1]
-      ? Number(label.match(/\b(\d+)\s+personen\b/i)![1])
-      : undefined,
-    totalMinutes: label.match(/\b(\d+)\s+Bereidingstijd\b/i)?.[1]
-      ? Number(label.match(/\b(\d+)\s+Bereidingstijd\b/i)![1])
-      : undefined,
+    servings: servings ? Number(servings) : undefined,
+    totalMinutes: minutes ? Number(minutes) : undefined,
   };
 };
 

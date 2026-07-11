@@ -1,5 +1,7 @@
 import "server-only";
 
+import { unstable_cache } from "next/cache";
+
 import type { PicnicRecipe, PicnicRecipeCard } from "./types.ts";
 
 import { env } from "@env";
@@ -108,3 +110,37 @@ export const toPicnicErrorMessage = (error: unknown): string => {
   }
   return "Unknown Picnic error while loading recipes.";
 };
+
+export type PicnicRecipesServiceResult =
+  | {
+      readonly ok: true;
+      readonly data: { readonly recipeCards: readonly PicnicRecipeCard[] };
+    }
+  | { readonly ok: false; readonly errorMessage: string };
+
+/**
+ * Cached projection of the saved recipe cards. `picnic-api` calls bare `fetch`
+ * with no Next cache integration, so without this every dashboard render hits
+ * Picnic live and blocks the `@recipes` slot. Saved recipes change rarely, so a
+ * 1h revalidate is plenty. Only the serializable cards are cached — the wrapped
+ * fn throws on failure, so errors propagate and aren't cached. (Per-slot route
+ * `revalidate` can't be used here: parallel-route siblings must share one value.)
+ */
+const getCachedPicnicRecipeCards = unstable_cache(
+  async (): Promise<readonly PicnicRecipeCard[]> => {
+    const { recipeCards } = await fetchSavedPicnicRecipes();
+    return recipeCards;
+  },
+  ["picnic-saved-recipes"],
+  { revalidate: 3600, tags: ["picnic"] },
+);
+
+export const getPicnicRecipesResult =
+  async (): Promise<PicnicRecipesServiceResult> => {
+    try {
+      const recipeCards = await getCachedPicnicRecipeCards();
+      return { ok: true, data: { recipeCards } };
+    } catch (error) {
+      return { ok: false, errorMessage: toPicnicErrorMessage(error) };
+    }
+  };

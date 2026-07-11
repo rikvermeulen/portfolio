@@ -5,25 +5,62 @@
 .bentogrid {
   display: grid;
   grid-auto-flow: row;
-  grid-template-columns: repeat(
-    var(--bento-columns-current, var(--bento-columns-base, 4)),
-    minmax(0, 1fr)
+
+  /* Columns, gap and the width cap are all resolved from CSS per breakpoint —
+   * NOT from the geometry JS's --bento-*-current vars. Those go stale (the JS
+   * writes them once and can lag a breakpoint/orientation/cap change), which
+   * left tiles the wrong height. Below desktop everything is exact from CSS, so
+   * the layout is correct instantly and can't destale. (Desktop still uses the
+   * JS row height — see the 80rem block — where it measures the real width.) */
+  --bento-cols: var(--bento-columns-base, 4);
+  --bento-gap: var(--bento-gap-base, 0.75rem);
+  --bento-cap: 360px;
+
+  grid-template-columns: repeat(var(--bento-cols), minmax(0, 1fr));
+  gap: var(--bento-gap);
+
+  /* Keep every base unit square (row height = column width) so bentos scale by
+   * their span and never stretch. A column is
+   * (gridWidth − (cols−1)·gap) / cols wide; `gridWidth` is the viewport-derived
+   * width (--bento-row-height-*) until the cap kicks in, then the cap. `min()`
+   * picks whichever is active, so units stay square capped or not. */
+  grid-auto-rows: min(
+    var(--bento-row-height-base, 8rem),
+    calc((var(--bento-cap) - 3 * var(--bento-gap)) / 4)
   );
-  grid-auto-rows: var(--bento-row-current, var(--bento-row-height-base, 8rem));
-  gap: var(--bento-gap-current, var(--bento-gap-base, 0.75rem));
+
+  /* Cap the grid — and therefore every bento — so it can't balloon on small
+   * screens. Tiered per device, lifted entirely at desktop:
+   *   phone  (< 48rem)  → 360px (4-col layout)
+   *   tablet (48–80rem) → 720px (8-col layout)
+   *   desktop (≥ 80rem) → none  (fills the container) */
+  width: 100%;
+  max-width: var(--bento-cap);
+  margin-inline: auto;
 }
 
 @media (width >= 48rem) {
   .bentogrid {
-    grid-auto-rows: var(
-      --bento-row-current,
-      var(--bento-row-height-md, var(--bento-row-height-base, 8rem))
+    --bento-cols: var(--bento-columns-md, 8);
+    --bento-gap: var(--bento-gap-md, 1rem);
+    --bento-cap: 720px;
+
+    grid-auto-rows: min(
+      var(--bento-row-height-md, var(--bento-row-height-base, 8rem)),
+      calc((var(--bento-cap) - 7 * var(--bento-gap)) / 8)
     );
   }
 }
 
 @media (width >= 80rem) {
   .bentogrid {
+    --bento-cols: var(--bento-columns-lg, 12);
+    --bento-gap: var(--bento-gap-lg, 1.25rem);
+
+    /* Desktop: no width cap. The container itself is bounded (max 90rem), so the
+     * viewport-derived row height overshoots on very wide screens — here we DO
+     * defer to the JS row height (it measures the real width), falling back to
+     * the viewport estimate before/without it. */
     grid-auto-rows: var(
       --bento-row-current,
       var(
@@ -31,6 +68,8 @@
         var(--bento-row-height-md, var(--bento-row-height-base, 8rem))
       )
     );
+    max-width: none;
+    margin-inline: 0;
   }
 }
 

@@ -1,18 +1,20 @@
 "use client";
 
-import { memo, useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import mapboxgl from "mapbox-gl";
 
 import type { FindMeProps } from "./FindMe.types.ts";
+// Type-only: the ~1.7 MB runtime is loaded lazily in the effect below (see the
+// dynamic `import("mapbox-gl")`), so it never lands in the initial bundle.
+import type mapboxgl from "mapbox-gl";
 
 import Bento, { bentoBoxSizes } from "@/components/Bento/index.ts";
 import Glass from "@/components/Glass/index.ts";
 import Icon from "@/components/Icon/index.ts";
-import { FIND_ME_LOCATION } from "@/constants/findMe.ts";
 import { env } from "@/env.ts";
 import classnames from "@/utils/classnames/classnames.ts";
 
+import { FIND_ME_LOCATION } from "./FindMe.const.ts";
 import FindMeWeatherBadge from "./FindMeWeatherBadge.tsx";
 import { useFindMeConditions } from "./useFindMeConditions.ts";
 
@@ -24,7 +26,7 @@ const MIN_ZOOM = 2;
 const MARKER_PING_DURATION_S = 1;
 const MARKER_PING_INTERVAL_S = 4;
 
-function FindMe({ className }: FindMeProps) {
+const FindMe = ({ className }: FindMeProps) => {
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<mapboxgl.Map | null>(null);
   const hasTriedFallbackStyleRef = useRef(false);
@@ -33,39 +35,52 @@ function FindMe({ className }: FindMeProps) {
   const conditionsState = useFindMeConditions();
 
   useEffect(() => {
-    if (!mapContainerRef.current || !MAP_TOKEN) {
+    const container = mapContainerRef.current;
+    if (!container || !MAP_TOKEN) {
       return;
     }
 
-    // Disable telemetry before setting access token and creating map
-    const mapboxWithTelemetry = mapboxgl as typeof mapboxgl & {
-      setTelemetryEnabled?: (enabled: boolean) => void;
-    };
-    if (typeof mapboxWithTelemetry.setTelemetryEnabled === "function") {
-      mapboxWithTelemetry.setTelemetryEnabled(false);
-    }
+    let cancelled = false;
+    let disposeMap: (() => void) | undefined;
 
-    mapboxgl.accessToken = MAP_TOKEN;
+    // Actual map init — runs only once the tile is (near) the viewport, and only
+    // after the mapbox-gl runtime has been dynamically imported. Keeping the
+    // heavy WebGL library and its context out of first paint is the whole point.
+    const initMap = async (): Promise<void> => {
+      const mapbox = (await import("mapbox-gl")).default;
+      if (cancelled || !mapContainerRef.current) {
+        return;
+      }
 
-    const map = new mapboxgl.Map({
-      container: mapContainerRef.current,
-      style: PRIMARY_MAP_STYLE,
-      center: [FIND_ME_LOCATION.longitude, FIND_ME_LOCATION.latitude],
-      zoom: 12,
-      performanceMetricsCollection: false,
-      collectResourceTiming: false,
-      attributionControl: false,
-      pitchWithRotate: false,
-      dragRotate: false,
-    });
+      // Disable telemetry before setting access token and creating map
+      const mapboxWithTelemetry = mapbox as typeof mapbox & {
+        setTelemetryEnabled?: (enabled: boolean) => void;
+      };
+      if (typeof mapboxWithTelemetry.setTelemetryEnabled === "function") {
+        mapboxWithTelemetry.setTelemetryEnabled(false);
+      }
 
-    mapRef.current = map;
+      mapbox.accessToken = MAP_TOKEN;
 
-    // Add breathing animation style if not already added
-    if (!document.querySelector("#marker-breathing-animation")) {
-      const style = document.createElement("style");
-      style.id = "marker-breathing-animation";
-      style.textContent = `
+      const map = new mapbox.Map({
+        container: mapContainerRef.current,
+        style: PRIMARY_MAP_STYLE,
+        center: [FIND_ME_LOCATION.longitude, FIND_ME_LOCATION.latitude],
+        zoom: 12,
+        performanceMetricsCollection: false,
+        collectResourceTiming: false,
+        attributionControl: false,
+        pitchWithRotate: false,
+        dragRotate: false,
+      });
+
+      mapRef.current = map;
+
+      // Add breathing animation style if not already added
+      if (!document.querySelector("#marker-breathing-animation")) {
+        const style = document.createElement("style");
+        style.id = "marker-breathing-animation";
+        style.textContent = `
         @keyframes breathe-border {
           0%, 100% {
             box-shadow: inset 0 0 0 0.25rem white;
@@ -98,71 +113,129 @@ function FindMe({ className }: FindMeProps) {
           will-change: transform, opacity;
         }
       `;
-      document.head.appendChild(style);
+        document.head.appendChild(style);
+      }
+
+      const markerElement = document.createElement("div");
+      markerElement.className =
+        "relative flex h-6 w-6 items-center justify-center";
+      markerElement.setAttribute("role", "img");
+      markerElement.setAttribute("aria-label", "My location");
+
+      const pingSpan = document.createElement("span");
+      pingSpan.className =
+        "marker-ping-slow absolute inline-flex h-6 w-6 rounded-full bg-ds-blue opacity-75";
+
+      const innerSpan = document.createElement("span");
+      innerSpan.className =
+        "relative inline-flex h-6 w-6 rounded-full bg-ds-blue shadow-md marker-border-breathe";
+
+      markerElement.appendChild(pingSpan);
+      markerElement.appendChild(innerSpan);
+
+      new mapbox.Marker(markerElement)
+        .setLngLat([FIND_ME_LOCATION.longitude, FIND_ME_LOCATION.latitude])
+        .addTo(map);
+
+      map.scrollZoom.disable();
+      map.doubleClickZoom.disable();
+      map.boxZoom.disable();
+      map.dragPan.disable();
+
+      // Guarded resize. Calling `map.resize()` straight from a ResizeObserver
+      // feeds back into layout, and Safari (unlike Chrome) re-delivers the
+      // observation, so an unguarded resize loops forever and freezes the tab.
+      // Coalesce to one rAF and skip when the container size hasn't changed.
+      let resizeRaf: number | null = null;
+      let lastW = 0;
+      let lastH = 0;
+      const handleResize = () => {
+        if (resizeRaf !== null) {
+          return;
+        }
+        resizeRaf = requestAnimationFrame(() => {
+          resizeRaf = null;
+          const container = mapContainerRef.current;
+          if (!container) {
+            return;
+          }
+          const width = container.clientWidth;
+          const height = container.clientHeight;
+          if (width === lastW && height === lastH) {
+            return;
+          }
+          lastW = width;
+          lastH = height;
+          map.resize();
+        });
+      };
+
+      const handleMapError = (event: { error?: { message?: string } }) => {
+        const nextMessage = event.error?.message ?? "Unknown map error";
+        const isBlockedTelemetryError =
+          nextMessage.includes("events.mapbox.com") ||
+          nextMessage.includes("ERR_BLOCKED_BY_CONTENT_BLOCKER") ||
+          nextMessage.includes("net::ERR_BLOCKED_BY_CONTENT_BLOCKER");
+
+        if (isBlockedTelemetryError) {
+          // Silently ignore telemetry/analytics errors blocked by content blockers
+          return;
+        }
+
+        setMapErrorMessage(nextMessage);
+
+        if (!hasTriedFallbackStyleRef.current) {
+          hasTriedFallbackStyleRef.current = true;
+          map.setStyle(FALLBACK_MAP_STYLE);
+          return;
+        }
+
+        setMapFailed(true);
+      };
+
+      map.on("load", handleResize);
+      map.on("error", handleMapError);
+
+      const resizeObserver = new ResizeObserver(handleResize);
+      if (mapContainerRef.current) {
+        resizeObserver.observe(mapContainerRef.current);
+      }
+
+      disposeMap = () => {
+        resizeObserver.disconnect();
+        if (resizeRaf !== null) {
+          cancelAnimationFrame(resizeRaf);
+        }
+        map.off("error", handleMapError);
+        map.remove();
+        mapRef.current = null;
+      };
+    };
+
+    // Defer the whole thing until the map tile approaches the viewport, so the
+    // WebGL context + tile fetches don't compete with first paint. Falls back to
+    // an immediate load where IntersectionObserver is unavailable.
+    let observer: IntersectionObserver | null = null;
+    if (typeof IntersectionObserver === "undefined") {
+      void initMap();
+    } else {
+      observer = new IntersectionObserver(
+        (entries) => {
+          if (entries.some((entry) => entry.isIntersecting)) {
+            observer?.disconnect();
+            observer = null;
+            void initMap();
+          }
+        },
+        { rootMargin: "200px" },
+      );
+      observer.observe(container);
     }
 
-    const markerElement = document.createElement("div");
-    markerElement.className =
-      "relative flex h-6 w-6 items-center justify-center";
-    markerElement.setAttribute("role", "img");
-    markerElement.setAttribute("aria-label", "My location");
-
-    const pingSpan = document.createElement("span");
-    pingSpan.className =
-      "marker-ping-slow absolute inline-flex h-6 w-6 rounded-full bg-[#007AFF] opacity-75";
-
-    const innerSpan = document.createElement("span");
-    innerSpan.className =
-      "relative inline-flex h-6 w-6 rounded-full bg-[#007AFF] shadow-md marker-border-breathe";
-
-    markerElement.appendChild(pingSpan);
-    markerElement.appendChild(innerSpan);
-
-    new mapboxgl.Marker(markerElement)
-      .setLngLat([FIND_ME_LOCATION.longitude, FIND_ME_LOCATION.latitude])
-      .addTo(map);
-
-    map.scrollZoom.disable();
-    map.doubleClickZoom.disable();
-    map.boxZoom.disable();
-    map.dragPan.disable();
-
-    const handleResize = () => {
-      map.resize();
-    };
-
-    const handleMapError = (event: { error?: { message?: string } }) => {
-      const nextMessage = event.error?.message ?? "Unknown map error";
-      const isBlockedTelemetryError =
-        nextMessage.includes("events.mapbox.com") ||
-        nextMessage.includes("ERR_BLOCKED_BY_CONTENT_BLOCKER") ||
-        nextMessage.includes("net::ERR_BLOCKED_BY_CONTENT_BLOCKER");
-
-      if (isBlockedTelemetryError) {
-        // Silently ignore telemetry/analytics errors blocked by content blockers
-        return;
-      }
-
-      setMapErrorMessage(nextMessage);
-
-      if (!hasTriedFallbackStyleRef.current) {
-        hasTriedFallbackStyleRef.current = true;
-        map.setStyle(FALLBACK_MAP_STYLE);
-        return;
-      }
-
-      setMapFailed(true);
-    };
-
-    map.on("load", handleResize);
-    map.on("error", handleMapError);
-    window.addEventListener("resize", handleResize);
-
     return () => {
-      window.removeEventListener("resize", handleResize);
-      map.off("error", handleMapError);
-      map.remove();
-      mapRef.current = null;
+      cancelled = true;
+      observer?.disconnect();
+      disposeMap?.();
     };
   }, []);
 
@@ -202,7 +275,7 @@ function FindMe({ className }: FindMeProps) {
     <Bento
       image="/images/icons/findme.png"
       sizes={bentoBoxSizes.findMe}
-      className={classnames("relative z-0 size-full bg-[#dbeefe]", className)}
+      className={classnames("relative z-0 size-full bg-ds-map", className)}
     >
       {MAP_TOKEN ? (
         <div ref={mapContainerRef} className="findme-map size-full" />
@@ -231,23 +304,23 @@ function FindMe({ className }: FindMeProps) {
         />
       </div>
 
-      <div className="group absolute right-5 bottom-5 z-20 flex h-8 overflow-hidden">
+      <div className="group absolute right-5 bottom-5 z-20 flex h-8 overflow-hidden rounded-2xl">
         <Glass intensity={2} interactive radius={16} />
         <button
           aria-label="Zoom out"
           onClick={handleZoomOut}
           type="button"
-          className="relative flex h-8 items-center justify-center px-2.5 text-black"
+          className="relative flex size-8 items-center justify-center text-black transition-transform active:scale-90"
         >
-          <Icon iconClassName="size-3" name="minus" />
+          <Icon iconClassName="size-3.5" name="minus" />
         </button>
         <button
           aria-label="Zoom in"
           onClick={handleZoomIn}
           type="button"
-          className="relative flex h-8 items-center justify-center px-2.5"
+          className="relative flex size-8 items-center justify-center text-black transition-transform active:scale-90"
         >
-          <Icon iconClassName="size-3" name="plus" />
+          <Icon iconClassName="size-3.5" name="plus" />
         </button>
       </div>
       {mapFailed && (
@@ -257,6 +330,6 @@ function FindMe({ className }: FindMeProps) {
       )}
     </Bento>
   );
-}
+};
 
-export default memo(FindMe);
+export default FindMe;

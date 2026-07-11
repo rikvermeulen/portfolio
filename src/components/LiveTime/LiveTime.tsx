@@ -1,15 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useSyncExternalStore } from "react";
 
 import type { LiveTimeProps } from "./LiveTime.types.ts";
 
-/**
- * Formats a Date object to 12-hour format with AM/PM.
- *
- * @param {Date} date - The date to format.
- * @returns {string} Formatted time string (e.g., "3:45 PM").
- */
 function formatTime(date: Date): string {
   const hours = date.getHours();
   const minutes = date.getMinutes();
@@ -19,11 +13,6 @@ function formatTime(date: Date): string {
   return `${displayHours}:${displayMinutes} ${ampm}`;
 }
 
-/**
- * Gets the current time formatted as a string.
- *
- * @returns {string} Current time in 12-hour format with AM/PM.
- */
 function getCurrentTime(): string {
   return formatTime(new Date());
 }
@@ -31,24 +20,24 @@ function getCurrentTime(): string {
 /**
  * Displays the current time that updates at regular intervals.
  *
- * @param {LiveTimeProps} props - Component props.
- * @returns {JSX.Element} The live time display component.
- *
  * @example
  * ```tsx
- * <LiveTime className="text-lg" updateInterval={5000} />
+ * <LiveTime updateInterval={5000} />
  * ```
  */
 export default function LiveTime({ updateInterval = 1000 }: LiveTimeProps) {
-  const [time, setTime] = useState(getCurrentTime);
+  const subscribe = useCallback(
+    (callback: () => void) => {
+      const id = setInterval(callback, updateInterval);
+      return () => clearInterval(id);
+    },
+    [updateInterval],
+  );
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setTime(getCurrentTime());
-    }, updateInterval);
+  const time = useSyncExternalStore(subscribe, getCurrentTime, () => null);
 
-    return () => clearInterval(interval);
-  }, [updateInterval]);
-
+  if (time === null) {
+    return null;
+  }
   return <>{time}</>;
 }

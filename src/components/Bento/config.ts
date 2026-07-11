@@ -1,22 +1,4 @@
-export type BentoBoxSize = `${number}x${number}`;
-
-export interface ResponsiveBentoSize {
-  readonly base: BentoBoxSize;
-  readonly md?: BentoBoxSize;
-  readonly lg?: BentoBoxSize;
-}
-
-export interface ResponsiveGridValue<T> {
-  readonly base: T;
-  readonly md?: T;
-  readonly lg?: T;
-}
-
-export interface BentoGridConfig {
-  readonly columns: ResponsiveGridValue<number>;
-  readonly gap: ResponsiveGridValue<string>;
-  readonly rowHeight: ResponsiveGridValue<string>;
-}
+import type { BentoGridConfig, ResponsiveBentoSize } from "./Bento.types.ts";
 
 export const bentoGridConfig: BentoGridConfig = {
   columns: { base: 4, md: 8, lg: 12 },
@@ -48,4 +30,8 @@ export const bentoBoxSizes = {
   findMe: { base: "4x4", md: "4x3", lg: "3x3" },
   music: { base: "4x4", md: "4x4", lg: "3x3" },
   podcast: { base: "4x4", md: "4x4", lg: "3x3" },
+  games: { base: "4x4", md: "4x4", lg: "3x3" },
 } as const satisfies Record<string, ResponsiveBentoSize>;
+
+/** Keys of the canonical tile-size table — the single source of truth for sizing. */
+export type BentoBoxSizeKey = keyof typeof bentoBoxSizes;

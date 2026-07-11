@@ -8,7 +8,7 @@ import type { ContactProps } from "./Contact.types.ts";
 import Bento, { bentoBoxSizes } from "@/components/Bento/index.ts";
 import Glass from "@/components/Glass/index.ts";
 import Icon from "@/components/Icon/index.ts";
-import { Link } from "@/components/index.ts";
+import Link from "@/components/Link/index.ts";
 import useOutsideClick from "@/hooks/useOutsideClick/useOutsideClick.ts";
 import classnames from "@/utils/classnames/classnames.ts";
 
@@ -27,7 +27,7 @@ const GLASS = {
   intensity: 2,
   radius: 18,
   tint: "adaptive" as const,
-  className: "bg-black/10",
+  className: "bg-black/10 dark:bg-white/10",
 };
 
 const Contact = ({ className }: ContactProps) => {
@@ -58,19 +58,21 @@ const Contact = ({ className }: ContactProps) => {
 
   return (
     <Bento
+      image="/images/icons/messages.png"
       sizes={bentoBoxSizes.contact}
       className={classnames(
-        "relative flex flex-col border border-[#EAEBED] bg-white",
+        "relative flex flex-col border border-ds-border bg-white",
+        "dark:border-ds-border-dark dark:bg-black",
         className,
       )}
     >
-      <header className="h-11 shrink-0 border-b border-[#ECECEC] bg-[#EBECEB]/40 backdrop-blur-xl" />
+      <header className="h-11 shrink-0 border-b border-ds-border-soft bg-ds-surface/40 backdrop-blur-xl dark:border-ds-border-dark dark:bg-ds-surface-dark/70" />
 
       <div
         ref={chatRef}
         className="no-scrollbar flex flex-1 flex-col gap-4 overflow-y-auto px-5 pt-5 pb-20"
       >
-        <p className="relative -top-3 text-center text-[0.625rem] text-dark-grey">
+        <p className="relative -top-3 text-center text-[0.625rem] text-dark-grey dark:text-ds-gray">
           <span className="font-medium">Today: </span>
           {TODAY}
         </p>
@@ -99,7 +101,7 @@ const Contact = ({ className }: ContactProps) => {
           <div className="absolute bottom-0 left-0 z-50 flex h-9 w-9 flex-col-reverse overflow-hidden rounded-[1.125rem] transition-[height,width,border-radius] duration-300 ease-in-out group-data-open:h-43 group-data-open:w-52 group-data-open:rounded-2xl group-data-open:shadow-lg">
             <Glass
               {...GLASS}
-              className="bg-black/10 group-data-open:backdrop-blur-sm!"
+              className="bg-black/10 group-data-open:backdrop-blur-sm! dark:bg-white/10"
             />
             <button
               aria-expanded={showMenu}

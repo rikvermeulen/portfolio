@@ -96,7 +96,7 @@ function IncomingMessage({
 
       <div>
         {!isGrouped && (
-          <p className="ml-3 text-xs text-[#8D8D93]">{CHAT_SENDER.name}</p>
+          <p className="ml-3 text-xs text-ds-gray">{CHAT_SENDER.name}</p>
         )}
         <MessageBubble
           showTail={!isGrouped}

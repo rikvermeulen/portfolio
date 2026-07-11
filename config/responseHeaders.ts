@@ -46,6 +46,7 @@ const cspConfig: CspConfig = {
     "https://*.mapbox.com",
     "https://tile.openstreetmap.org",
     "https://*.scdn.co",
+    "https://*.steamstatic.com",
   ],
   "manifest-src": [SELF],
   "media-src": [SELF, "https://*.scdn.co", "https://*.spotifycdn.com"],

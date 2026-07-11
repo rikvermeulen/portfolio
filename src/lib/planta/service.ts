@@ -1,3 +1,5 @@
+import { unstable_cache } from "next/cache";
+
 import type { PlantaPlant, PlantaPlantCardData } from "@/lib/planta/types.ts";
 
 import {
@@ -43,6 +45,19 @@ export const fetchPlantaPlantsData = async (): Promise<PlantaPlantsData> => {
   };
 };
 
+/**
+ * Cached plants data. The Planta client hardcodes `cache: "no-store"` and can
+ * run a token-refresh POST → GET waterfall on cold requests, so without this
+ * every dashboard render blocks the `@plants` slot on a live (possibly double)
+ * round trip. Plant care data changes slowly; 30 min revalidate is reasonable.
+ * The wrapped fn throws on failure, so errors aren't cached.
+ */
+const getCachedPlantaPlantsData = unstable_cache(
+  fetchPlantaPlantsData,
+  ["planta-plants"],
+  { revalidate: 1800, tags: ["planta"] },
+);
+
 export const toPlantaErrorMessage = (error: unknown): string => {
   if (error instanceof PlantaUnauthorizedError) {
     return "Planta authentication failed. Your refresh token or auth code was rejected by Planta.";
@@ -65,7 +80,7 @@ export const toPlantaStatusCode = (error: unknown): 401 | 500 => {
 
 export const getPlantaPlantsResult = async (): Promise<PlantaPlantsResult> => {
   try {
-    const data = await fetchPlantaPlantsData();
+    const data = await getCachedPlantaPlantsData();
 
     return {
       ok: true,

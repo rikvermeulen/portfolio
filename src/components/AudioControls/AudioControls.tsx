@@ -4,6 +4,8 @@ import Glass from "@/components/Glass/index.ts";
 import Icon from "@/components/Icon/index.ts";
 import classnames from "@/utils/classnames/classnames.ts";
 
+import { NextIcon } from "./NextIcon.tsx";
+
 const AudioControls = ({
   isPlaying,
   pulsedButton,
@@ -21,7 +23,7 @@ const AudioControls = ({
           "relative border-none fill-white outline-hidden",
         )}
       >
-        <Icon iconClassName="relative -top-1 size-[22px]" name="next" />
+        <NextIcon className="relative -top-1 size-[22px]" />
       </button>
 
       <button
@@ -65,7 +67,7 @@ const AudioControls = ({
           "-scale-x-100 border-none fill-white outline-hidden",
         )}
       >
-        <Icon iconClassName="relative -top-1 size-[22px]" name="next" />
+        <NextIcon className="relative -top-1 size-[22px]" />
       </button>
     </div>
   );

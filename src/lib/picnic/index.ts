@@ -9,6 +9,10 @@ export type {
 export {
   fetchSavedPicnicRecipes,
   fetchPicnicAuthKey,
+  getPicnicRecipesResult,
   toPicnicErrorMessage,
 } from "./service.ts";
-export type { PicnicRecipesResult } from "./service.ts";
+export type {
+  PicnicRecipesResult,
+  PicnicRecipesServiceResult,
+} from "./service.ts";

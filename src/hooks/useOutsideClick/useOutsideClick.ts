@@ -1,9 +1,7 @@
 import { useEffect } from "react";
 
-import type { RefObject } from "react";
-
 function useOutsideClick<T extends HTMLElement>(
-  ref: RefObject<T | null>,
+  ref: React.RefObject<T | null>,
   callback: () => void,
   enabled = true,
 ): void {

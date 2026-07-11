@@ -7,6 +7,7 @@ const createJestConfig = nextJest({
 });
 
 const config: Config = {
+  setupFilesAfterEnv: ["<rootDir>/jest.setup.ts"],
   collectCoverage: true,
   collectCoverageFrom: [
     "src/utils/**/*.ts",

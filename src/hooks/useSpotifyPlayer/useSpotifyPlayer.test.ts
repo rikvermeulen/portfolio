@@ -68,14 +68,22 @@ async function waitForInit(mockPlayer: ReturnType<typeof buildMockPlayer>) {
   await act(async () => {
     await Promise.resolve();
   });
-  act(() => {
+  await act(async () => {
     mockPlayer._fireReady("device-abc");
+    await Promise.resolve(); // flush transferPlayback fetch
   });
 }
 
 describe("useSpotifyPlayer", () => {
   afterEach(() => {
     jest.clearAllMocks();
+    // Remove any SDK script tags so DOM state doesn't bleed between tests
+    document
+      .querySelectorAll('script[src="https://sdk.scdn.co/spotify-player.js"]')
+      .forEach((s) => s.remove());
+    // Reset the SDK ready handler
+    (window as Window).onSpotifyWebPlaybackSDKReady =
+      undefined as unknown as () => void;
   });
 
   it("starts with isPlaying false and isReady false", () => {
@@ -90,6 +98,50 @@ describe("useSpotifyPlayer", () => {
     const { result, mockPlayer } = setup();
     await waitForInit(mockPlayer);
     expect(result.current.isReady).toBe(true);
+  });
+
+  it("passes the playerName to the Spotify Player constructor", async () => {
+    mockTokenFetch();
+    const mockPlayer = buildMockPlayer();
+    Object.defineProperty(window, "Spotify", {
+      value: { Player: jest.fn().mockImplementation(() => mockPlayer) },
+      writable: true,
+      configurable: true,
+    });
+
+    renderHook(() => useSpotifyPlayer(ITEMS, "track", "Rik's Music"));
+    await act(async () => {
+      await Promise.resolve();
+    });
+
+    const PlayerMock = (window.Spotify as typeof window.Spotify)
+      .Player as jest.Mock;
+    expect(PlayerMock.mock.calls[0]?.[0]).toMatchObject({
+      name: "Rik's Music",
+    });
+  });
+
+  it("transfers playback to the SDK device when ready fires", async () => {
+    const { mockPlayer } = setup();
+
+    const fetchSpy = jest.fn().mockResolvedValue({ ok: true, status: 204 });
+    global.fetch = fetchSpy as typeof global.fetch;
+
+    await act(async () => {
+      await Promise.resolve();
+    });
+    await act(async () => {
+      mockPlayer._fireReady("device-abc");
+      await Promise.resolve();
+    });
+
+    expect(fetchSpy).toHaveBeenCalledWith(
+      "https://api.spotify.com/v1/me/player",
+      expect.objectContaining({
+        method: "PUT",
+        body: JSON.stringify({ device_ids: ["device-abc"] }),
+      }),
+    );
   });
 
   it("togglePlay starts playback on the first press when ready", async () => {
@@ -213,6 +265,26 @@ describe("useSpotifyPlayer", () => {
     expect(mockPlayer.disconnect).toHaveBeenCalled();
   });
 
+  it("logs an error when startPlayback receives a non-404 error response", async () => {
+    const { result, mockPlayer } = setup();
+    await waitForInit(mockPlayer);
+
+    const consoleSpy = jest
+      .spyOn(console, "error")
+      .mockImplementation(jest.fn());
+    global.fetch = jest
+      .fn()
+      .mockResolvedValue({ ok: false, status: 500 }) as typeof global.fetch;
+
+    await act(async () => {
+      result.current.togglePlay();
+      await Promise.resolve();
+    });
+
+    expect(consoleSpy).toHaveBeenCalledWith("Spotify playback error: 500");
+    consoleSpy.mockRestore();
+  });
+
   it("does nothing when items list is empty", () => {
     const fetchMock = jest.fn();
     global.fetch = fetchMock as typeof global.fetch;
@@ -238,26 +310,78 @@ describe("useSpotifyPlayer", () => {
       await Promise.resolve();
     });
 
-    const scripts = document.querySelectorAll("script");
-    const sdkScript = Array.from(scripts).find((s) =>
-      s.src.includes("spotify-player"),
+    const sdkScript = document.querySelector(
+      'script[src="https://sdk.scdn.co/spotify-player.js"]',
     );
     expect(sdkScript).toBeTruthy();
 
-    // Simulate the SDK firing the ready callback
-    act(() => {
+    // Simulate the SDK firing the ready callback (now goes through the wrapper)
+    await act(async () => {
       Object.defineProperty(window, "Spotify", {
         value: { Player: jest.fn().mockImplementation(() => mockPlayer) },
         writable: true,
         configurable: true,
       });
       window.onSpotifyWebPlaybackSDKReady();
+      await Promise.resolve();
     });
 
     act(() => {
       mockPlayer._fireReady("device-xyz");
     });
     expect(result.current.isReady).toBe(true);
+  });
+
+  it("does not append the SDK script twice when two hook instances mount", async () => {
+    mockTokenFetch();
+
+    Object.defineProperty(window, "Spotify", {
+      value: undefined,
+      writable: true,
+      configurable: true,
+    });
+
+    renderHook(() => useSpotifyPlayer(ITEMS));
+    renderHook(() => useSpotifyPlayer(ITEMS));
+
+    await act(async () => {
+      await Promise.resolve();
+    });
+
+    const count = document.querySelectorAll(
+      'script[src="https://sdk.scdn.co/spotify-player.js"]',
+    ).length;
+    expect(count).toBe(1);
+  });
+
+  it("composes with an existing onSpotifyWebPlaybackSDKReady so the previous handler is not lost", async () => {
+    mockTokenFetch();
+
+    Object.defineProperty(window, "Spotify", {
+      value: undefined,
+      writable: true,
+      configurable: true,
+    });
+
+    const prevHandler = jest.fn();
+    window.onSpotifyWebPlaybackSDKReady = prevHandler;
+
+    const mockPlayer = buildMockPlayer();
+    renderHook(() => useSpotifyPlayer(ITEMS));
+
+    await act(async () => {
+      await Promise.resolve();
+    });
+
+    Object.defineProperty(window, "Spotify", {
+      value: { Player: jest.fn().mockImplementation(() => mockPlayer) },
+      writable: true,
+      configurable: true,
+    });
+
+    window.onSpotifyWebPlaybackSDKReady();
+
+    expect(prevHandler).toHaveBeenCalled();
   });
 
   it("does nothing in goToNext when deviceId is not ready yet", async () => {

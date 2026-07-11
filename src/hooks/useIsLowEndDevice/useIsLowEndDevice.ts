@@ -26,8 +26,8 @@ export const useIsLowEndDevice = (): boolean => {
   const [isLowEndDevice] = useState(() => {
     const deviceMemory =
       typeof navigator !== "undefined"
-        ? //@ts-ignore
-          (navigator.deviceMemory ?? DEFAULT_DEVICE_MEMORY_GB)
+        ? ((navigator as Navigator & { deviceMemory?: number }).deviceMemory ??
+          DEFAULT_DEVICE_MEMORY_GB)
         : DEFAULT_DEVICE_MEMORY_GB;
     const hardwareConcurrency =
       typeof navigator !== "undefined"

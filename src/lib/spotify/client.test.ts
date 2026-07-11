@@ -1,6 +1,7 @@
 // Module-level token variables must be reset between tests.
 let fetchRecentlyPlayed: typeof import("./client.ts").fetchRecentlyPlayed;
 let fetchShowEpisodes: typeof import("./client.ts").fetchShowEpisodes;
+let fetchPlaylistTracks: typeof import("./client.ts").fetchPlaylistTracks;
 
 const createJsonResponse = (payload: unknown, status = 200): Response =>
   new Response(JSON.stringify(payload), {
@@ -27,6 +28,22 @@ const makeRecentlyPlayedResponse = () =>
     ],
   });
 
+const makePlaylistTracksResponse = () =>
+  createJsonResponse({
+    items: [
+      {
+        track: {
+          id: "pt1",
+          name: "Playlist Track",
+          explicit: false,
+          preview_url: null,
+          artists: [{ name: "Artist" }],
+          album: { name: "Album", images: [] },
+        },
+      },
+    ],
+  });
+
 const makeEpisodesResponse = () =>
   createJsonResponse({
     items: [
@@ -42,11 +59,14 @@ const makeEpisodesResponse = () =>
     ],
   });
 
-beforeEach(() => {
+beforeEach(async () => {
   jest.resetModules();
   jest.restoreAllMocks();
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  ({ fetchRecentlyPlayed, fetchShowEpisodes } = require("./client.ts"));
+
+  const client = await import("./client.ts");
+  fetchRecentlyPlayed = client.fetchRecentlyPlayed;
+  fetchShowEpisodes = client.fetchShowEpisodes;
+  fetchPlaylistTracks = client.fetchPlaylistTracks;
 });
 
 describe("fetchRecentlyPlayed", () => {
@@ -176,5 +196,54 @@ describe("fetchShowEpisodes", () => {
       String(c[0]).includes("accounts.spotify.com"),
     );
     expect(tokenCalls).toHaveLength(1);
+  });
+});
+
+describe("fetchPlaylistTracks", () => {
+  it("fetches a client-credentials token then fetches playlist tracks", async () => {
+    const fetchMock = jest
+      .spyOn(globalThis, "fetch")
+      .mockResolvedValueOnce(makeTokenResponse())
+      .mockResolvedValueOnce(makePlaylistTracksResponse());
+
+    const result = await fetchPlaylistTracks("playlist-id", "cid", "csecret");
+
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+    expect(fetchMock.mock.calls[1]?.[0]).toContain(
+      "/playlists/playlist-id/tracks",
+    );
+    expect(result.items).toHaveLength(1);
+  });
+
+  it("includes the limit param", async () => {
+    const fetchMock = jest
+      .spyOn(globalThis, "fetch")
+      .mockResolvedValueOnce(makeTokenResponse())
+      .mockResolvedValueOnce(makePlaylistTracksResponse());
+
+    await fetchPlaylistTracks("playlist-id", "cid", "csecret", 5);
+
+    expect(fetchMock.mock.calls[1]?.[0]).toContain("limit=5");
+  });
+
+  it("throws when the playlist endpoint returns non-ok", async () => {
+    jest
+      .spyOn(globalThis, "fetch")
+      .mockResolvedValueOnce(makeTokenResponse())
+      .mockResolvedValueOnce(createJsonResponse({ error: "not found" }, 404));
+
+    await expect(
+      fetchPlaylistTracks("playlist-id", "cid", "csecret"),
+    ).rejects.toThrow("Spotify playlist fetch failed: 404");
+  });
+
+  it("throws when the client-credentials token request fails", async () => {
+    jest
+      .spyOn(globalThis, "fetch")
+      .mockResolvedValue(createJsonResponse({ error: "invalid_client" }, 400));
+
+    await expect(
+      fetchPlaylistTracks("playlist-id", "cid", "csecret"),
+    ).rejects.toThrow("Spotify client credentials failed: 400");
   });
 });

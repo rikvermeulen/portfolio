@@ -1,5 +1,3 @@
-import type { HTMLAttributes } from "react";
-
 export type TagVariant =
   | "neutral"
   | "yellow"
@@ -8,7 +6,7 @@ export type TagVariant =
   | "orange"
   | "pink";
 
-export interface TagProps extends HTMLAttributes<HTMLDivElement> {
+export interface TagProps extends React.HTMLAttributes<HTMLDivElement> {
   readonly label: string;
   readonly variant?: TagVariant;
 }

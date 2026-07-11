@@ -1,6 +1,8 @@
 "use client";
 
-import { createContext, useContext, useMemo } from "react";
+import { createContext, use, useMemo } from "react";
+
+import type { Plugin } from "@/hooks/useLoadGsap/useLoadGsap.ts";
 
 import { useIsLowEndDevice } from "@/hooks/useIsLowEndDevice/useIsLowEndDevice.ts";
 import { useLoadGsap } from "@/hooks/useLoadGsap/useLoadGsap.ts";
@@ -16,31 +18,24 @@ const AnimationContext = createContext<AnimationContextType>({
   isAnimationDisabled: false,
 });
 
-export const useAnimationContext = () => useContext(AnimationContext);
+export const useAnimationContext = () => use(AnimationContext);
+
+const GSAP_PLUGINS: Plugin[] = ["ScrollTrigger"];
 
 interface AnimationProviderProps {
   children: React.ReactNode;
 }
 
-export const AnimationProvider: React.FC<AnimationProviderProps> = ({
-  children,
-}) => {
+export function AnimationProvider({ children }: AnimationProviderProps) {
   const prefersReducedMotion = usePrefersReducedMotion();
   const isLowEndDevice = useIsLowEndDevice();
-
-  // Disable animations if either condition is true
   const isAnimationDisabled = prefersReducedMotion || isLowEndDevice;
+  const gsap = useLoadGsap(!isAnimationDisabled, GSAP_PLUGINS);
 
-  const gsap = useLoadGsap(!isAnimationDisabled, ["ScrollTrigger"]);
-
-  const contextValue = useMemo(
+  const value = useMemo(
     () => ({ gsap, isAnimationDisabled }),
     [gsap, isAnimationDisabled],
   );
 
-  return (
-    <AnimationContext.Provider value={contextValue}>
-      {children}
-    </AnimationContext.Provider>
-  );
-};
+  return <AnimationContext value={value}>{children}</AnimationContext>;
+}

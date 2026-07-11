@@ -10,13 +10,13 @@ export const INITIAL_MESSAGE_ID_PREFIX = "init-";
 
 export const MESSAGE_VARIANT = {
   incoming: {
-    bubble: "bg-[#E9E9EB]",
-    tailFill: "fill-[#E9E9EB]",
+    bubble: "bg-ds-bubble dark:bg-ds-bubble-dark",
+    tailFill: "fill-ds-bubble dark:fill-ds-bubble-dark",
     tailPosition: "absolute bottom-0.5 -left-1 size-4 -scale-x-100",
   },
   outgoing: {
-    bubble: "bg-[#007AFF] text-white",
-    tailFill: "fill-[#007AFF]",
+    bubble: "bg-ds-blue text-white dark:bg-ds-blue-dark",
+    tailFill: "fill-ds-blue dark:fill-ds-blue-dark",
     tailPosition: "absolute -right-1 bottom-0.5 size-4",
   },
 } as const;

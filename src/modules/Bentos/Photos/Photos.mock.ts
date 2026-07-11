@@ -4,7 +4,7 @@ export const mockPhotosProps = {
   albums: {
     apps: ["/images/me.jpg", "/images/profile.png"],
     map: ["/images/cloud.png"],
-    heart: ["/images/book-image.png"],
-    dog: ["/images/noalbum.png"],
+    heart: ["/images/profile.png"],
+    dog: ["/images/no-album.png"],
   },
 } satisfies PhotosProps;

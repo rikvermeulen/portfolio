@@ -1,43 +1,13 @@
 import { BentoGrid, bentoGridConfig } from "@/components/Bento/index.ts";
 
 /**
- * Dashboard layout with parallel routes support.
- * Each slot (@photos, etc.) renders independently and can be extended
- * with additional modules in the future.
- *
- * @see https://nextjs.org/docs/app/building-your-application/routing/parallel-routes
+ * Dashboard layout. The grid is composed entirely from `bento-registry.tsx`
+ * via `page.tsx` (the `children` slot) — there are no parallel-route slots.
  */
-export default function Layout({
-  children,
-  personal,
-  contact,
-  music,
-  podcast,
-  photos,
-  plants,
-  recipes,
-}: {
-  children: React.ReactNode;
-  personal: React.ReactNode;
-  contact: React.ReactNode;
-  music: React.ReactNode;
-  podcast: React.ReactNode;
-  photos: React.ReactNode;
-  plants: React.ReactNode;
-  recipes: React.ReactNode;
-}) {
+export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <main className="main-container">
-      <BentoGrid config={bentoGridConfig}>
-        {personal}
-        {photos}
-        {plants}
-        {music}
-        {podcast}
-        {contact}
-        {recipes}
-        {children}
-      </BentoGrid>
+      <BentoGrid config={bentoGridConfig}>{children}</BentoGrid>
     </main>
   );
 }

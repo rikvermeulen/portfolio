@@ -7,6 +7,13 @@
       "runtimeArgs": ["run", "dev"],
       "port": 3000,
       "autoPort": false
+    },
+    {
+      "name": "dev-debug",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["next", "dev", "-p", "3007"],
+      "port": 3007,
+      "autoPort": false
     }
   ]
 }

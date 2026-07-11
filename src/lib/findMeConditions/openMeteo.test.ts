@@ -1,4 +1,4 @@
-import { FIND_ME_LOCATION } from "@/constants/findMe.ts";
+import { FIND_ME_LOCATION } from "@/modules/Bentos/FindMe/FindMe.const.ts";
 
 import {
   buildOpenMeteoAirQualityUrl,

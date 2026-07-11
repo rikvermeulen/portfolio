@@ -37,12 +37,30 @@ async function fetchToken(): Promise<string> {
   return data.token;
 }
 
+async function transferPlayback(
+  token: string,
+  deviceId: string,
+): Promise<void> {
+  try {
+    await fetch("https://api.spotify.com/v1/me/player", {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ device_ids: [deviceId] }),
+    });
+  } catch {
+    // Best-effort; SDK device may not be reachable yet
+  }
+}
+
 async function startPlayback(
   token: string,
   deviceId: string,
   trackUri: string,
 ): Promise<void> {
-  await fetch(
+  const resp = await fetch(
     `https://api.spotify.com/v1/me/player/play?device_id=${deviceId}`,
     {
       method: "PUT",
@@ -53,6 +71,9 @@ async function startPlayback(
       body: JSON.stringify({ uris: [trackUri] }),
     },
   );
+  if (!resp.ok && resp.status !== 404) {
+    console.error(`Spotify playback error: ${resp.status}`);
+  }
 }
 
 export interface UseSpotifyPlayerReturn {
@@ -69,11 +90,12 @@ export interface UseSpotifyPlayerReturn {
 export function useSpotifyPlayer(
   items: readonly SpotifyItem[],
   uriType: "track" | "episode" = "track",
+  playerName = "Rik's Portfolio",
 ): UseSpotifyPlayerReturn {
   const [deviceId, setDeviceId] = useState<string | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [volume, setVolumeState] = useState(0.5);
+  const [volume, setVolume] = useState(0.5);
   const tokenRef = useRef<string>("");
   const playerRef = useRef<SpotifyPlayer | null>(null);
   const hasStartedRef = useRef(false);
@@ -92,7 +114,7 @@ export function useSpotifyPlayer(
 
       const initPlayer = () => {
         player = new window.Spotify.Player({
-          name: "Rik's Portfolio",
+          name: playerName,
           getOAuthToken: (cb) => {
             fetchToken().then(cb);
           },
@@ -102,6 +124,7 @@ export function useSpotifyPlayer(
         player.addListener("ready", (data) => {
           const { device_id } = data as { device_id: string };
           setDeviceId(device_id);
+          transferPlayback(tokenRef.current, device_id);
         });
 
         player.addListener("player_state_changed", (state) => {
@@ -119,10 +142,22 @@ export function useSpotifyPlayer(
       if (window.Spotify) {
         initPlayer();
       } else {
-        window.onSpotifyWebPlaybackSDKReady = initPlayer;
-        const script = document.createElement("script");
-        script.src = "https://sdk.scdn.co/spotify-player.js";
-        document.body.appendChild(script);
+        // Compose with any existing handler so multiple hook instances all
+        // get their player created when the SDK fires.
+        const prev = window.onSpotifyWebPlaybackSDKReady;
+        window.onSpotifyWebPlaybackSDKReady = () => {
+          prev?.();
+          initPlayer();
+        };
+        if (
+          !document.querySelector(
+            'script[src="https://sdk.scdn.co/spotify-player.js"]',
+          )
+        ) {
+          const script = document.createElement("script");
+          script.src = "https://sdk.scdn.co/spotify-player.js";
+          document.body.appendChild(script);
+        }
       }
     };
 
@@ -131,7 +166,7 @@ export function useSpotifyPlayer(
     return () => {
       player?.disconnect();
     };
-  }, [items.length]);
+  }, [items.length, playerName]);
 
   async function playAtIndex(index: number) {
     const item = items[index];
@@ -178,9 +213,9 @@ export function useSpotifyPlayer(
     playAtIndex(prev);
   }
 
-  function setVolume(value: number) {
+  function applyVolume(value: number) {
     playerRef.current?.setVolume(value);
-    setVolumeState(value);
+    setVolume(value);
   }
 
   return {
@@ -191,6 +226,6 @@ export function useSpotifyPlayer(
     togglePlay,
     goToNext,
     goToPrevious,
-    setVolume,
+    setVolume: applyVolume,
   };
 }

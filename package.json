@@ -28,16 +28,16 @@
     "framer-motion": "^12.40.0",
     "gsap": "3.13.0",
     "mapbox-gl": "^3.20.0",
-    "next": "16.2.1",
+    "next": "^16.2.9",
     "picnic-api": "^4.5.0",
     "react": "19.2.4",
     "react-aria-components": "^1.18.0",
     "react-dom": "19.2.4",
-    "react-scan": "^0.5.3",
     "zod": "^4.3.6"
   },
   "devDependencies": {
     "@greenberry/linting-config": "^0.2.35",
+    "react-scan": "^0.5.3",
     "@storybook/addon-a11y": "^10.4.4",
     "@storybook/addon-docs": "^10.4.4",
     "@storybook/nextjs-vite": "^10.4.4",

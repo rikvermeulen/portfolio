@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "./theme.css";
 /* stylelint-disable scss/at-rule-no-unknown -- Tailwind v4 @source */
 @source "../components/**/*.{ts,tsx}";
 @source "../modules/**/*.{ts,tsx}";

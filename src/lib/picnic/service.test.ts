@@ -3,6 +3,7 @@ import { PicnicError } from "./client.ts";
 import {
   fetchPicnicAuthKey,
   fetchSavedPicnicRecipes,
+  getPicnicRecipesResult,
   toPicnicErrorMessage,
 } from "./index.ts";
 
@@ -207,5 +208,32 @@ describe("toPicnicErrorMessage", () => {
     expect(toPicnicErrorMessage("oops")).toBe(
       "Unknown Picnic error while loading recipes.",
     );
+  });
+});
+
+describe("getPicnicRecipesResult", () => {
+  beforeEach(() => {
+    mockCreatePicnicClientFromEnv.mockReturnValue({
+      recipe: { getCookbookPage: mockGetCookbookPage },
+    });
+    mockEnsurePicnicAuth.mockResolvedValue("auth-key");
+    mockGetCookbookPage.mockResolvedValue({});
+  });
+
+  it("returns ok:true with recipeCards on success", async () => {
+    const result = await getPicnicRecipesResult();
+    expect(result.ok).toBe(true);
+    if (result.ok) {
+      expect(result.data.recipeCards).toHaveLength(1);
+    }
+  });
+
+  it("returns ok:false with errorMessage when fetchSavedPicnicRecipes throws", async () => {
+    mockGetCookbookPage.mockRejectedValue(new Error("network failure"));
+    const result = await getPicnicRecipesResult();
+    expect(result.ok).toBe(false);
+    if (!result.ok) {
+      expect(result.errorMessage).toBe("network failure");
+    }
   });
 });

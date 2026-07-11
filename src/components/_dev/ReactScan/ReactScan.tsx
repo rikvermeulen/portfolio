@@ -5,10 +5,9 @@ import { scan } from "react-scan";
 
 function ReactScan(): null {
   useEffect(() => {
-    scan({
-      enabled: true,
-    });
+    scan();
   }, []);
+
   return null;
 }
 

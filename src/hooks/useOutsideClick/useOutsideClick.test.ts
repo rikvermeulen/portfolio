@@ -2,8 +2,6 @@
  * @jest-environment jsdom
  */
 
-import type React from "react";
-
 import { act, renderHook } from "@testing-library/react";
 
 import useOutsideClick from "./useOutsideClick.ts";

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
 const PREVIEW_CUTOFF_SECONDS = 26;
 const FADE_DURATION_MS = 400;
@@ -14,10 +14,11 @@ export interface UseAudioPlayerReturn {
   readonly audioRef: React.RefObject<HTMLAudioElement | null>;
   readonly isPlaying: boolean;
   readonly currentIndex: number;
+  readonly volume: number;
   readonly playOrPause: () => void;
   readonly goToNext: () => void;
   readonly goToPrevious: () => void;
-  readonly handleVolumeChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  readonly setVolume: (value: number) => void;
   readonly handleTimeUpdate: () => void;
 }
 
@@ -27,6 +28,11 @@ export function useAudioPlayer({
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [volume, setVolume] = useState(0.5);
+  const isPlayingRef = useRef(false);
+  useLayoutEffect(() => {
+    isPlayingRef.current = isPlaying;
+  });
 
   useEffect(() => {
     const audio = audioRef.current;
@@ -38,12 +44,10 @@ export function useAudioPlayer({
     audio.src = url;
     audio.load();
 
-    if (isPlaying && url) {
-      audio.play().catch(() => {
-        setIsPlaying(false);
-      });
+    if (isPlayingRef.current && url) {
+      audio.play().catch(() => setIsPlaying(false));
     }
-  }, [currentIndex, previewUrls]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [currentIndex, previewUrls]);
 
   function fadeOut(): void {
     const audio = audioRef.current;
@@ -104,10 +108,8 @@ export function useAudioPlayer({
     }
   }
 
-  function handleVolumeChange(e: React.ChangeEvent<HTMLInputElement>): void {
-    const value = e.target.valueAsNumber;
-    const fill = (value / Number(e.target.max)) * 100;
-    e.target.style.setProperty("--background-size", `${fill}%`);
+  function applyVolume(value: number): void {
+    setVolume(value);
     if (audioRef.current) {
       audioRef.current.volume = value;
     }
@@ -125,10 +127,11 @@ export function useAudioPlayer({
     audioRef,
     isPlaying,
     currentIndex,
+    volume,
     playOrPause,
     goToNext: () => navigate("next"),
     goToPrevious: () => navigate("previous"),
-    handleVolumeChange,
+    setVolume: applyVolume,
     handleTimeUpdate,
   };
 }

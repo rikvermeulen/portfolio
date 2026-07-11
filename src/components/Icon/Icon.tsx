@@ -3,6 +3,8 @@ import { memo } from "react";
 import type { IconProps, SvgIconComponent } from "./Icon.types.ts";
 
 import ArrowIcon from "@/assets/icons/arrow.svg";
+import ChevronDownIcon from "@/assets/icons/chevron.down.svg";
+import ChevronUpIcon from "@/assets/icons/chevron.up.svg";
 import DogIcon from "@/assets/icons/dog.svg";
 import ExplicitIcon from "@/assets/icons/explicit.svg";
 import HeartIcon from "@/assets/icons/heart.svg";
@@ -12,11 +14,13 @@ import MinusIcon from "@/assets/icons/minus.svg";
 import MuteIcon from "@/assets/icons/mute.svg";
 import NextIcon from "@/assets/icons/next.svg";
 import PauseIcon from "@/assets/icons/pause.svg";
+import PersonsIcon from "@/assets/icons/persons.svg";
 import PlayIcon from "@/assets/icons/play.svg";
 import PlusIcon from "@/assets/icons/plus.svg";
 import SoundIcon from "@/assets/icons/sound.svg";
 import SprayIcon from "@/assets/icons/spray.svg";
 import TailIcon from "@/assets/icons/tail.svg";
+import TimerIcon from "@/assets/icons/timer.svg";
 import WateringCanIcon from "@/assets/icons/watering-can.svg";
 import WeatherCloudSunIcon from "@/assets/icons/weather-cloud-sun.svg";
 import WeatherCloudIcon from "@/assets/icons/weather-cloud.svg";
@@ -43,6 +47,10 @@ export const ICON_COMPONENTS: Record<string, SvgIconComponent> = {
   sound: SoundIcon,
   spray: SprayIcon,
   tail: TailIcon,
+  persons: PersonsIcon,
+  timer: TimerIcon,
+  chevronDown: ChevronDownIcon,
+  chevronUp: ChevronUpIcon,
   "watering-can": WateringCanIcon,
   "weather-cloud": WeatherCloudIcon,
   "weather-cloud-sun": WeatherCloudSunIcon,

@@ -12,7 +12,7 @@ const meta = {
   parameters: { layout: "centered" },
   decorators: [
     (Story) => (
-      <div className="flex items-center justify-center rounded-2xl bg-[#E96575] p-8">
+      <div className="flex items-center justify-center rounded-2xl bg-ds-music-from p-8">
         <Story />
       </div>
     ),

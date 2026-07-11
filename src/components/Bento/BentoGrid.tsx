@@ -3,7 +3,6 @@
 import { useLayoutEffect, useRef } from "react";
 
 import type { BentoGridProps } from "./Bento.types.ts";
-import type { CSSProperties } from "react";
 
 import classnames from "@/utils/classnames/classnames.ts";
 
@@ -107,7 +106,7 @@ const BentoGrid = ({
     "--bento-row-height-lg":
       config.rowHeight.lg ?? config.rowHeight.md ?? config.rowHeight.base,
     ...style,
-  } as CSSProperties;
+  } as React.CSSProperties;
 
   return (
     <div

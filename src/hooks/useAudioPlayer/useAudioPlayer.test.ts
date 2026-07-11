@@ -128,26 +128,15 @@ describe("useAudioPlayer", () => {
     expect(result.current.currentIndex).toBe(0);
   });
 
-  it("updates the audio volume when handleVolumeChange is called", () => {
+  it("updates the audio volume when setVolume is called", () => {
     const { result, mockAudio } = setup();
 
-    const event = {
-      target: {
-        valueAsNumber: 0.5,
-        max: "1",
-        style: { setProperty: jest.fn() },
-      },
-    } as unknown as React.ChangeEvent<HTMLInputElement>;
-
     act(() => {
-      result.current.handleVolumeChange(event);
+      result.current.setVolume(0.5);
     });
 
     expect(mockAudio.volume).toBe(0.5);
-    expect(event.target.style.setProperty).toHaveBeenCalledWith(
-      "--background-size",
-      "50%",
-    );
+    expect(result.current.volume).toBe(0.5);
   });
 
   it("fades out and resets currentTime when handleTimeUpdate is called past 26s", () => {
@@ -271,22 +260,14 @@ describe("useAudioPlayer", () => {
     expect(mockAudio.src).toBe("");
   });
 
-  it("handleVolumeChange does not throw when audioRef.current is null", () => {
+  it("setVolume does not throw when audioRef.current is null", () => {
     const { result } = renderHook(() =>
       useAudioPlayer({ previewUrls: ["a.mp3"] }),
     );
 
-    const event = {
-      target: {
-        valueAsNumber: 0.5,
-        max: "1",
-        style: { setProperty: jest.fn() },
-      },
-    } as unknown as React.ChangeEvent<HTMLInputElement>;
-
     expect(() => {
       act(() => {
-        result.current.handleVolumeChange(event);
+        result.current.setVolume(0.5);
       });
     }).not.toThrow();
   });

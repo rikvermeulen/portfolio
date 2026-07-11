@@ -5,7 +5,7 @@ import type {
   FindMeConditionsSuccessResponse,
 } from "./types.ts";
 
-import { FIND_ME_LOCATION } from "@/constants/findMe.ts";
+import { FIND_ME_LOCATION } from "@/modules/Bentos/FindMe/FindMe.const.ts";
 
 import {
   buildOpenMeteoAirQualityUrl,
@@ -19,27 +19,16 @@ const FIND_ME_CONDITIONS_ERROR =
 const OPEN_METEO_TIMEOUT_MS = 5000;
 
 const fetchOpenMeteoJson = async (url: string): Promise<unknown> => {
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => {
-    controller.abort();
-  }, OPEN_METEO_TIMEOUT_MS);
+  const response = await fetch(url, {
+    cache: "no-store",
+    signal: AbortSignal.timeout(OPEN_METEO_TIMEOUT_MS),
+  });
 
-  try {
-    const response = await fetch(url, {
-      cache: "no-store",
-      signal: controller.signal,
-    });
-
-    if (!response.ok) {
-      throw new Error(`Open-Meteo request failed with ${response.status}`);
-    }
-
-    const payload: unknown = await response.json();
-
-    return payload;
-  } finally {
-    clearTimeout(timeoutId);
+  if (!response.ok) {
+    throw new Error(`Open-Meteo request failed with ${response.status}`);
   }
+
+  return response.json();
 };
 
 export const fetchFindMeConditions =

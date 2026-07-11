@@ -23,7 +23,7 @@ function FindMeWeatherBadgeShell({
       title={SOURCE_LABEL}
       className="absolute top-5 left-5 z-20 flex overflow-hidden rounded-lg px-2 py-1 text-black"
     >
-      <Glass intensity={2} radius={8} />
+      <Glass blur={2} intensity={2} radius={8} />
       <div className="relative flex flex-col text-xs">{children}</div>
     </div>
   );

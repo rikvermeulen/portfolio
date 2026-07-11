@@ -1,5 +1,4 @@
 import type { FindMeConditionsState } from "./useFindMeConditions.ts";
-import type { ReactNode } from "react";
 
 export interface FindMeProps {
   readonly className?: string;
@@ -11,7 +10,7 @@ export interface FindMeWeatherBadgeProps {
 
 export interface FindMeWeatherBadgeShellProps {
   readonly ariaLabel: string;
-  readonly children: ReactNode;
+  readonly children: React.ReactNode;
 }
 
 export interface FindMeWeatherBadgePlaceholderProps {

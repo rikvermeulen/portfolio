@@ -7,7 +7,7 @@ import type {
   FindMeWeatherIconName,
 } from "./types.ts";
 
-import { FIND_ME_LOCATION } from "@/constants/findMe.ts";
+import { FIND_ME_LOCATION } from "@/modules/Bentos/FindMe/FindMe.const.ts";
 
 interface WeatherCondition {
   readonly codes: readonly number[];

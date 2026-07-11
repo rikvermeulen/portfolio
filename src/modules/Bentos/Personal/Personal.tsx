@@ -24,21 +24,21 @@ const Personal = () => {
           hugely talented people. ✨
         </p>
       </div>
-      <div className="">
-        <p className="text-dark_grey">
+      <div>
+        <p className="text-dark-grey">
           🐙 Coding:&nbsp;
           <Link
             href="https://github.com/rikvermeulen"
-            className="decoration-1 underline-offset-2 transition-colors hover:text-[#007AFF] hover:underline"
+            className="decoration-1 underline-offset-2 transition-colors hover:text-ds-blue hover:underline"
           >
             @rikvermeulen
           </Link>
         </p>
-        <p className="text-dark_grey">
+        <p className="text-dark-grey">
           💌 Hello?&nbsp;
           <Link
             href="mailto:hello@rikvermeulen.com"
-            className="decoration-1 underline-offset-2 transition-colors hover:text-[#007AFF] hover:underline"
+            className="decoration-1 underline-offset-2 transition-colors hover:text-ds-blue hover:underline"
           >
             hello@rikvermeulen.com
           </Link>

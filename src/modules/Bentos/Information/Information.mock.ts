@@ -8,5 +8,5 @@ export const mockInformationProps = {
   iconSrc: "/images/icons/greenberry.png",
   iconAlt: "Greenberry",
   iconPosition: "top-right",
-  className: "bg-[#5801ff] text-white",
+  className: "bg-ds-violet text-white",
 } satisfies InformationProps;

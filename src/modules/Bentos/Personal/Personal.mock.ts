@@ -1,3 +1,3 @@
-import type { PersonalProps } from "./Personal.types.ts";
-
-export const mockPersonalProps = {} satisfies PersonalProps;
+// Personal renders static content and takes no props; the empty mock keeps the
+// Storybook story consistent with the other Bento modules.
+export const mockPersonalProps = {};

@@ -23,12 +23,12 @@ const Plants = ({ plants, errorMessage }: PlantsProps) => {
     <Bento
       image="/images/icons/planta.png"
       sizes={bentoBoxSizes.plants}
-      className="flex size-full flex-col justify-between gap-2 bg-[#234823] p-5 text-[#e7edde]"
+      className="flex size-full flex-col justify-between gap-2 bg-ds-forest p-5 text-ds-forest-ink"
     >
       <div className="space-y-2">
         <h2 className="text-2xl font-semibold">Plant Care</h2>
         {errorMessage ? (
-          <p className="max-w-xs text-sm text-[#f3d6d6]">{errorMessage}</p>
+          <p className="max-w-xs text-sm text-ds-forest-warn">{errorMessage}</p>
         ) : null}
       </div>
       {visiblePlants.length > 0 ? (
@@ -65,7 +65,7 @@ const Plants = ({ plants, errorMessage }: PlantsProps) => {
                     className="size-12 rounded-full object-cover"
                   />
                 ) : (
-                  <div className="flex size-12 items-center justify-center rounded-full bg-white/10 text-xs font-semibold text-[#e7edde] uppercase">
+                  <div className="flex size-12 items-center justify-center rounded-full bg-white/10 text-xs font-semibold text-ds-forest-ink uppercase">
                     {plant.name.slice(0, 2)}
                   </div>
                 )}
@@ -75,7 +75,6 @@ const Plants = ({ plants, errorMessage }: PlantsProps) => {
                       <h3 className="text-sm font-medium">
                         {plant.scientificName}
                       </h3>
-                      {/* <p className="text-[10px]">{plant.siteName}</p> */}
                     </div>
                     <div className="flex flex-wrap gap-1">
                       {dueCareIcons.map(({ iconName, label }) => (
@@ -102,7 +101,7 @@ const Plants = ({ plants, errorMessage }: PlantsProps) => {
           })}
         </ul>
       ) : (
-        <p className="text-sm text-[#cfe0cc]">
+        <p className="text-sm text-ds-forest-muted">
           {errorMessage ?? "No Planta plants available right now."}
         </p>
       )}

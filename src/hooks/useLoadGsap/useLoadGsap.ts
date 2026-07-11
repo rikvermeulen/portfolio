@@ -3,7 +3,7 @@
 
 import { useEffect, useState } from "react";
 
-type Plugin =
+export type Plugin =
   | "ScrollTrigger"
   | "Draggable"
   | "MotionPathPlugin"
@@ -30,20 +30,21 @@ const pluginMap = {
 
 export const useLoadGsap = (enabled: boolean, plugins: Plugin[] = []) => {
   const [gsap, setGsap] = useState<GSAP | null>(null);
+  const pluginsKey = plugins.join(",");
 
   useEffect(() => {
-    const loadGsap = async () => {
-      if (!enabled) {
-        return;
-      }
+    if (!enabled) {
+      return;
+    }
 
+    const loadGsap = async () => {
       const { default: gsapModule } = await import("gsap");
+      const pluginList = pluginsKey ? (pluginsKey.split(",") as Plugin[]) : [];
 
       const loadedPlugins = await Promise.all(
-        plugins.map((plugin) => pluginMap[plugin]?.()),
+        pluginList.map((plugin) => pluginMap[plugin]?.()),
       );
 
-      // Register each plugin
       loadedPlugins.forEach(({ default: plugin }) => {
         gsapModule.registerPlugin(plugin);
       });
@@ -52,7 +53,7 @@ export const useLoadGsap = (enabled: boolean, plugins: Plugin[] = []) => {
     };
 
     loadGsap();
-  }, [enabled, plugins]);
+  }, [enabled, pluginsKey]);
 
   return gsap;
 };

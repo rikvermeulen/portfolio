@@ -26,21 +26,21 @@ const getNextMediaIndex = (currentIndex: number, totalCount: number): number =>
  */
 const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 
-const Photos = ({ albums }: PhotosProps) => {
+const ALBUM_ICONS: Record<string, string> = {
+  apps: "images",
+  map: "map",
+  heart: "heart",
+  dog: "dog",
+};
+
+const Photos = ({ albums, errorMessage }: PhotosProps) => {
   const albumNames = Object.keys(albums);
   const [selectedAlbum, setSelectedAlbum] = useState(albumNames[0] ?? "");
-  const [activeMediaIndex, setActiveMediaIndex] = useState(0);
-  const intervalId = useRef<NodeJS.Timeout | null>(null);
 
-  const currentAlbumName = selectedAlbum || albumNames[0];
-  const mediaFiles = currentAlbumName ? (albums[currentAlbumName] ?? []) : [];
+  const mediaRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const activeIndexRef = useRef(0);
 
-  const ALBUM_ICONS: Record<string, string> = {
-    apps: "images",
-    map: "map",
-    heart: "heart",
-    dog: "dog",
-  };
+  const mediaFiles = albums[selectedAlbum] ?? [];
 
   const albumOptions: readonly ToggleOption[] = albumNames.map((name) => ({
     value: name,
@@ -49,70 +49,47 @@ const Photos = ({ albums }: PhotosProps) => {
   }));
   const hasMedia = mediaFiles.length > 0;
 
-  /**
-   * Clears the current auto-advance interval
-   */
-  const clearAutoAdvanceInterval = () => {
-    if (intervalId.current) {
-      clearInterval(intervalId.current);
-      intervalId.current = null;
-    }
-  };
-
-  /**
-   * Handles click on media to manually advance to next item
-   */
-  // const handleMediaClick = () => {
-  //   if (!hasMedia) {
-  //     return;
-  //   }
-
-  //   clearAutoAdvanceInterval();
-  //   setActiveMediaIndex((prevIndex) =>
-  //     getNextMediaIndex(prevIndex, mediaFiles.length),
-  //   );
-  // };
-
-  // const handleLinkClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
-  //   event.preventDefault();
-  //   handleMediaClick();
-  // };
-
-  // const handleLinkKeyDown = (event: React.KeyboardEvent<HTMLAnchorElement>) => {
-  //   if (event.key === "Enter" || event.key === " ") {
-  //     event.preventDefault();
-  //     handleMediaClick();
-  //   }
-  // };
-
   const handleAlbumChange = (album: string) => {
     setSelectedAlbum(album);
-    setActiveMediaIndex(0);
   };
 
   useEffect(() => {
-    clearAutoAdvanceInterval();
-
-    if (!hasMedia) {
+    // A single item (or none) has nothing to advance through.
+    if (mediaFiles.length < 2) {
       return;
     }
 
-    intervalId.current = setInterval(() => {
-      setActiveMediaIndex((prevIndex) =>
-        getNextMediaIndex(prevIndex, mediaFiles.length),
-      );
+    // The album (media set) just (re)mounted at index 0 via JSX; keep the ref
+    // in sync so the first advance moves off the correct slide.
+    activeIndexRef.current = 0;
+
+    const interval = setInterval(() => {
+      const items = mediaRefs.current;
+      const previous = activeIndexRef.current;
+      const next = getNextMediaIndex(previous, mediaFiles.length);
+
+      items[previous]?.removeAttribute("data-active");
+      items[next]?.setAttribute("data-active", "true");
+      activeIndexRef.current = next;
     }, AUTO_ADVANCE_INTERVAL_MS);
 
     return () => {
-      clearAutoAdvanceInterval();
+      clearInterval(interval);
     };
-  }, [mediaFiles.length, hasMedia]);
+  }, [mediaFiles.length, selectedAlbum]);
 
-  if (!hasMedia) {
-    return null;
+  if (errorMessage || !hasMedia) {
+    return (
+      <Bento
+        sizes={bentoBoxSizes.photos}
+        className="flex size-full items-center justify-center bg-neutral-900 p-5"
+      >
+        <p className="text-xs text-white/50">
+          {errorMessage ?? "No photos found."}
+        </p>
+      </Bento>
+    );
   }
-
-  const albumDisplayName = currentAlbumName ?? "unknown";
 
   return (
     <Bento
@@ -122,7 +99,7 @@ const Photos = ({ albums }: PhotosProps) => {
       className="group size-full"
     >
       {albumNames.length > 1 && (
-        <div className="absolute bottom-5 left-1/2 z-20 -translate-x-1/2 translate-y-[200%] transition-transform duration-300 ease-in-out group-hover:translate-y-0">
+        <div className="absolute bottom-5 left-1/2 z-20 -translate-x-1/2 translate-y-0 transition-transform duration-300 ease-in-out [@media(hover:hover)]:translate-y-[200%] [@media(hover:hover)]:group-hover:translate-y-0">
           <ToggleGroup
             onChange={handleAlbumChange}
             options={albumOptions}
@@ -131,18 +108,20 @@ const Photos = ({ albums }: PhotosProps) => {
         </div>
       )}
       {mediaFiles.map((mediaUrl, index) => {
-        const isActive = activeMediaIndex === index;
         const isVideoItem = isVideoFile(mediaUrl);
 
         return (
           <div
             key={mediaUrl}
-            data-active={isActive ? true : undefined}
+            ref={(element) => {
+              mediaRefs.current[index] = element;
+            }}
+            data-active={index === 0 ? true : undefined}
             className="absolute inset-0 opacity-0 transition-opacity duration-500 ease-in-out data-active:opacity-100"
           >
             {isVideoItem ? (
               <video
-                aria-label={`Video ${index + 1} of ${mediaFiles.length} from ${albumDisplayName} album`}
+                aria-label={`Video ${index + 1} of ${mediaFiles.length} from ${selectedAlbum} album`}
                 autoPlay
                 loop
                 muted
@@ -152,7 +131,7 @@ const Photos = ({ albums }: PhotosProps) => {
               />
             ) : (
               <Image
-                alt={`Photo ${index + 1} of ${mediaFiles.length} from ${albumDisplayName} album`}
+                alt={`Photo ${index + 1} of ${mediaFiles.length} from ${selectedAlbum} album`}
                 height={348}
                 priority={index === 0}
                 src={mediaUrl}

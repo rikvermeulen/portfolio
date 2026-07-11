@@ -1,4 +1,4 @@
-import { FIND_ME_LOCATION } from "@/constants/findMe.ts";
+import { FIND_ME_LOCATION } from "@/modules/Bentos/FindMe/FindMe.const.ts";
 
 import { fetchFindMeConditions, getFindMeConditionsResult } from "./service.ts";
 
@@ -83,6 +83,9 @@ describe("FindMe conditions service", () => {
   });
 
   it("aborts the fetch and returns an error when the timeout fires", async () => {
+    const controller = new AbortController();
+    jest.spyOn(AbortSignal, "timeout").mockReturnValue(controller.signal);
+
     jest.spyOn(globalThis, "fetch").mockImplementation((_url, opts) => {
       return new Promise<Response>((_resolve, reject) => {
         (opts as RequestInit).signal?.addEventListener("abort", () => {
@@ -94,7 +97,7 @@ describe("FindMe conditions service", () => {
     });
 
     const resultPromise = getFindMeConditionsResult();
-    jest.advanceTimersByTime(6000);
+    controller.abort();
 
     const result = await resultPromise;
     expect(result.ok).toBe(false);

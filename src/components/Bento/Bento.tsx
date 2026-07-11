@@ -1,14 +1,9 @@
-import Image from "next/image";
+import type { BentoBoxSize, BentoProps } from "./Bento.types.ts";
 
-import type { BentoProps } from "./Bento.types.ts";
-import type { BentoBoxSize } from "./config.ts";
-import type { CSSProperties } from "react";
-
-import Glass from "@/components/Glass/index.ts";
 import Link from "@/components/Link/index.ts";
 import classnames from "@/utils/classnames/classnames.ts";
 
-const ICON_TILE_RADIUS = 8;
+import AppIcon from "./AppIcon.tsx";
 
 /**
  * Bento component - A flexible container for bento grid layouts
@@ -19,8 +14,9 @@ const ICON_TILE_RADIUS = 8;
  */
 const Bento = ({
   image,
+  imageAlt,
   href,
-  size,
+  iconPosition = "top-right",
   sizes,
   children,
   className,
@@ -28,7 +24,7 @@ const Bento = ({
   ...props
 }: BentoProps) => {
   const hasLink = Boolean(href);
-  const baseSize = sizes?.base ?? size;
+  const baseSize = sizes?.base;
 
   const toParts = (value?: BentoBoxSize): { col: number; row: number } => {
     if (!value) {
@@ -55,31 +51,10 @@ const Bento = ({
     "--bento-col-lg": large.col,
     "--bento-row-lg": large.row,
     ...style,
-  } as CSSProperties;
+  } as React.CSSProperties;
 
-  // App icon on a rounded liquid-glass tile, à la Apple's glass app icons.
   const iconTile = image ? (
-    <div
-      style={{ borderRadius: ICON_TILE_RADIUS }}
-      className={classnames(
-        "relative size-7 overflow-hidden",
-        hasLink && "group",
-      )}
-    >
-      <Image
-        alt={image}
-        height={240}
-        src={image}
-        width={240}
-        className="absolute inset-0 size-7"
-      />
-      <Glass
-        intensity={0.05}
-        interactive={hasLink}
-        radius={ICON_TILE_RADIUS}
-        tint="none"
-      />
-    </div>
+    <AppIcon alt={imageAlt} interactive={hasLink} src={image} />
   ) : null;
 
   return (
@@ -99,7 +74,8 @@ const Bento = ({
       {image && (
         <div
           className={classnames(
-            "absolute top-5 right-5 z-20",
+            "absolute right-4 z-20",
+            iconPosition === "bottom-right" ? "bottom-4" : "top-4",
             hasLink &&
               "cursor-pointer transition-transform duration-300 hover:scale-105",
           )}

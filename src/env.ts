@@ -34,6 +34,10 @@ export const env = createEnv({
     PICNIC_AUTH_KEY: z.string().optional(),
     PICNIC_COUNTRY_CODE: z.enum(["NL", "DE"]).optional(),
     PICNIC_AUTH_ADMIN_SECRET: z.string().optional(),
+
+    // Steam
+    STEAM_API_KEY: z.string().optional(),
+    STEAM_ID: z.string().optional(),
   },
   /**
    * Environment variables available on the client (and server).
@@ -74,6 +78,8 @@ export const env = createEnv({
       | "DE"
       | undefined,
     PICNIC_AUTH_ADMIN_SECRET: process.env.PICNIC_AUTH_ADMIN_SECRET,
+    STEAM_API_KEY: process.env.STEAM_API_KEY,
+    STEAM_ID: process.env.STEAM_ID,
     // NOTE: you could set this to process.env.VERCEL_ENV when hosting on Vercel
     NEXT_PUBLIC_ENVIRONMENT:
       process.env.NEXT_PUBLIC_ENVIRONMENT || "development",

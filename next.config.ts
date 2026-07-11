@@ -6,9 +6,10 @@ import { svgrOptions } from "@config/webpackLoaders.ts";
 import "./src/env.ts";
 
 const config: NextConfig = {
-  allowedDevOrigins: ["[::1]", "127.0.0.1"],
+  allowedDevOrigins: ["*.*", "*.*.*", "*.*.*.*"],
   reactStrictMode: true,
   images: {
+    formats: ["image/avif", "image/webp"],
     remotePatterns: [
       {
         protocol: "https",
@@ -25,6 +26,14 @@ const config: NextConfig = {
       {
         protocol: "https",
         hostname: "images.getplanta.com",
+      },
+      {
+        protocol: "https",
+        hostname: "**.steamstatic.com",
+      },
+      {
+        protocol: "https",
+        hostname: "assets.nintendo.com",
       },
     ],
   },

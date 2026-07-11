@@ -1,4 +1,6 @@
-export type IconPosition = "top-right" | "bottom-right";
+import type { BentoIconPosition } from "@/components/Bento/index.ts";
+
+export type IconPosition = BentoIconPosition;
 
 export interface InformationProps {
   readonly title: string;

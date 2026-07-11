@@ -42,6 +42,14 @@ export interface PodcastEpisode {
   readonly explicit: boolean;
 }
 
+export interface SpotifyPlaylistItem {
+  readonly track: SpotifyTrack | null; // null for local Spotify files
+}
+
+export interface SpotifyPlaylistTracks {
+  readonly items: readonly SpotifyPlaylistItem[];
+}
+
 // Domain type consumed by the Music module — agnostic of data source
 export interface PlaylistTrack {
   readonly id: string;
