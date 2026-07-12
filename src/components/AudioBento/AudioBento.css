@@ -1,0 +1,40 @@
+/* ================================================================== *
+ * AudioBento — album-art pulse
+ * Toggled from AudioBento.tsx via the `pop-up` / `pop-down` classes as
+ * playback starts / stops (skipped when prefers-reduced-motion).
+ * ================================================================== */
+@keyframes pop-up {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.13);
+  }
+
+  100% {
+    transform: scale(1.1);
+  }
+}
+
+@keyframes pop-down {
+  0% {
+    transform: scale(1.1);
+  }
+
+  50% {
+    transform: scale(0.97);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+.pop-up {
+  animation: pop-up 600ms forwards ease-in-out;
+}
+
+.pop-down {
+  animation: pop-down 600ms forwards ease-in-out;
+}

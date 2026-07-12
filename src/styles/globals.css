@@ -1,13 +1,13 @@
 @import "tailwindcss";
 @import "mapbox-gl/dist/mapbox-gl.css";
 @import "./theme.css";
+@import "../components/AudioBento/AudioBento.css";
 
-/* ================================================================== *
- * App theme — color & material tokens live in theme.css
- * ================================================================== */
-@theme {
-  --font-inter: "var(--font-inter)", sans-serif;
-  --color-dark-grey: #707070;
+/* `inline` so the `font-inter` utility resolves the runtime `--font-inter`
+ * that next/font sets on <body>, instead of Tailwind emitting a (necessarily
+ * self-referential) :root copy of it. */
+@theme inline {
+  --font-inter: var(--font-inter), sans-serif;
 }
 
 /* ================================================================== *
@@ -34,7 +34,12 @@
   }
 
   button {
+    cursor: pointer;
     transition: scale 0.5s var(--elastic-out);
+  }
+
+  button:disabled {
+    cursor: default;
   }
 
   button:active {
@@ -44,124 +49,8 @@
 }
 
 /* ================================================================== *
- * Components
- * ================================================================== */
-@layer components {
-  .slider {
-    --background-size: 0%;
-
-    background: linear-gradient(
-      to right,
-      #fff 0%,
-      #fff var(--background-size),
-      rgb(255 255 255 / 50%) var(--background-size)
-    );
-  }
-
-  .slider::-webkit-slider-thumb {
-    appearance: none;
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    background: rgb(255 255 255 / 25%);
-    border: 0.5px solid rgb(255 255 255 / 70%);
-    box-shadow:
-      inset 0 0 0 0.5px rgb(255 255 255 / 90%),
-      inset 0 1px 2px rgb(255 255 255 / 40%),
-      0 2px 8px rgb(0 0 0 / 25%);
-    backdrop-filter: blur(8px);
-    cursor: pointer;
-  }
-}
-
-/* ================================================================== *
  * Utilities
  * ================================================================== */
 @layer utilities {
   @import "./utilities/layout.css";
-}
-
-/* ================================================================== *
- * Animations
- * ================================================================== */
-@keyframes pop-up {
-  0% {
-    transform: scale(1);
-  }
-
-  50% {
-    transform: scale(1.13);
-  }
-
-  100% {
-    transform: scale(1.1);
-  }
-}
-
-@keyframes pop-down {
-  0% {
-    transform: scale(1.1);
-  }
-
-  50% {
-    transform: scale(0.97);
-  }
-
-  100% {
-    transform: scale(1);
-  }
-}
-
-@keyframes move-cloud {
-  100% {
-    transform: translateX(120%);
-  }
-}
-
-@keyframes fade-in-out {
-  0%,
-  100% {
-    opacity: 0;
-  }
-
-  20%,
-  80% {
-    opacity: 1;
-  }
-}
-
-.pop-up {
-  animation: pop-up 600ms forwards ease-in-out;
-}
-
-.pop-down {
-  animation: pop-down 600ms forwards ease-in-out;
-}
-
-.cloud-one {
-  animation:
-    move-cloud linear 15s infinite,
-    fade-in-out 15s infinite;
-}
-
-.cloud-two {
-  animation:
-    move-cloud linear 15s infinite,
-    fade-in-out 15s infinite;
-  animation-delay: 8s;
-}
-
-/* ================================================================== *
- * Third-party overrides (Mapbox)
- * ================================================================== */
-.mapboxgl-ctrl-bottom-left {
-  display: none !important;
-}
-
-.findme-map,
-.findme-map .mapboxgl-map,
-.findme-map .mapboxgl-canvas-container,
-.findme-map .mapboxgl-canvas {
-  height: 100%;
-  width: 100%;
 }

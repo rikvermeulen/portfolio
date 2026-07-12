@@ -22,8 +22,10 @@ export interface Game {
   readonly name: string;
   readonly coverImage: string;
   readonly coverImageFallback?: string; // tried if coverImage 404s (Steam header art)
+  readonly portraitImage?: string; // high-res library capsule, cropped square for tiles
   readonly href?: string; // store page
   readonly playtimeMinutes?: number;
+  readonly lastPlayedUnix?: number; // seconds; from rtime_last_played
 }
 
 // --- Service result ---
@@ -31,7 +33,3 @@ export interface Game {
 export interface SteamGamesData {
   readonly games: readonly Game[];
 }
-
-export type SteamGamesResult =
-  | { readonly ok: true; readonly data: SteamGamesData }
-  | { readonly ok: false; readonly errorMessage: string };

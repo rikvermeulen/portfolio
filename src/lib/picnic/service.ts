@@ -3,6 +3,7 @@ import "server-only";
 import { unstable_cache } from "next/cache";
 
 import type { PicnicRecipe, PicnicRecipeCard } from "./types.ts";
+import type { Result } from "@/types/index.ts";
 
 import { env } from "@env";
 
@@ -111,12 +112,9 @@ export const toPicnicErrorMessage = (error: unknown): string => {
   return "Unknown Picnic error while loading recipes.";
 };
 
-export type PicnicRecipesServiceResult =
-  | {
-      readonly ok: true;
-      readonly data: { readonly recipeCards: readonly PicnicRecipeCard[] };
-    }
-  | { readonly ok: false; readonly errorMessage: string };
+export interface PicnicRecipeCardsData {
+  readonly recipeCards: readonly PicnicRecipeCard[];
+}
 
 /**
  * Cached projection of the saved recipe cards. `picnic-api` calls bare `fetch`
@@ -135,12 +133,13 @@ const getCachedPicnicRecipeCards = unstable_cache(
   { revalidate: 3600, tags: ["picnic"] },
 );
 
-export const getPicnicRecipesResult =
-  async (): Promise<PicnicRecipesServiceResult> => {
-    try {
-      const recipeCards = await getCachedPicnicRecipeCards();
-      return { ok: true, data: { recipeCards } };
-    } catch (error) {
-      return { ok: false, errorMessage: toPicnicErrorMessage(error) };
-    }
-  };
+export const getPicnicRecipesResult = async (): Promise<
+  Result<PicnicRecipeCardsData>
+> => {
+  try {
+    const recipeCards = await getCachedPicnicRecipeCards();
+    return { ok: true, data: { recipeCards } };
+  } catch (error) {
+    return { ok: false, errorMessage: toPicnicErrorMessage(error) };
+  }
+};

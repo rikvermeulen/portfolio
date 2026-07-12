@@ -84,6 +84,16 @@ export function buildSteamHeaderUrl(appid: number): string {
   return `${STEAM_CDN_URL}/${appid}/header.jpg`;
 }
 
+/**
+ * High-res portrait library capsule (600×900). Guessable from the appid alone —
+ * unlike the 32px `img_icon_url` community icon, this stays crisp when cropped
+ * square for a tile. 404s for some newer/obscure titles, so callers fall back to
+ * the landscape header art.
+ */
+export function buildSteamLibraryArtUrl(appid: number): string {
+  return `${STEAM_CDN_URL}/${appid}/library_600x900_2x.jpg`;
+}
+
 /** Steam store page for an app. */
 export function buildSteamStoreUrl(appid: number): string {
   return `https://store.steampowered.com/app/${appid}`;

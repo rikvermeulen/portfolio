@@ -1,14 +1,24 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 
 import type { Game, GamesProps } from "./Games.types.ts";
 
 import Bento, { bentoBoxSizes } from "@/components/Bento/index.ts";
 import Glass from "@/components/Glass/index.ts";
+import Icon from "@/components/Icon/index.ts";
 import Link from "@/components/Link/index.ts";
 import classnames from "@/utils/classnames/classnames.ts";
+import { formatRelativeTime } from "@/utils/datetime/datetime.ts";
+
+/** "2 days ago", "yesterday", "3 weeks ago" — from a unix-seconds timestamp. */
+function formatLastPlayed(unixSeconds?: number): string | null {
+  if (!unixSeconds || unixSeconds <= 0) {
+    return null;
+  }
+  return formatRelativeTime(new Date(unixSeconds * 1000));
+}
 
 function formatPlaytime(minutes?: number): string | null {
   if (!minutes || minutes <= 0) {
@@ -21,34 +31,43 @@ function formatPlaytime(minutes?: number): string | null {
   return `${hours.toLocaleString()} ${hours === 1 ? "hr" : "hrs"}`;
 }
 
-/** Cover-art URLs to try in order before giving up on the generated tile. */
+/** Landscape art for the full-bleed hero backdrop. */
 function coverCandidates(game: Game): string[] {
   return [game.coverImage, game.coverImageFallback].filter(
     (url): url is string => Boolean(url),
   );
 }
 
-function GameCover({
-  game,
+/** Square-tile art — high-res portrait capsule first, cover art as backup. */
+function tileCandidates(game: Game): string[] {
+  return [game.portraitImage, game.coverImage, game.coverImageFallback].filter(
+    (url): url is string => Boolean(url),
+  );
+}
+
+function GameArt({
+  alt,
+  sources,
   errorCount,
   onError,
   className,
   sizes,
 }: {
-  readonly game: Game;
+  readonly alt: string;
+  readonly sources: readonly string[];
   readonly errorCount: number;
-  readonly onError: (id: string) => void;
+  readonly onError: () => void;
   readonly className?: string;
   readonly sizes: string;
 }) {
-  const src = coverCandidates(game)[errorCount];
+  const src = sources[errorCount];
 
   if (src) {
     return (
       <Image
-        alt={game.name}
+        alt={alt}
         fill
-        onError={() => onError(game.id)}
+        onError={onError}
         sizes={sizes}
         src={src}
         className={classnames("object-cover", className)}
@@ -56,7 +75,7 @@ function GameCover({
     );
   }
 
-  // Generated fallback tile — no cover art available (or all candidates 404'd).
+  // Generated fallback tile — no art available (or all candidates 404'd).
   return (
     <div
       className={classnames(
@@ -64,19 +83,70 @@ function GameCover({
         className,
       )}
     >
-      <span className="text-lg font-bold">{game.name.charAt(0)}</span>
+      <span className="text-lg font-bold">{alt.charAt(0)}</span>
     </div>
+  );
+}
+
+/** Circular Steam mark pinned to a tile's corner — marks the source platform. */
+function SteamBadge() {
+  return (
+    <span
+      aria-hidden="true"
+      className="pointer-events-none absolute right-0.5 bottom-0.5 flex size-3.5 items-center justify-center rounded-full bg-[#171a21] text-white ring-1 ring-black/40"
+    >
+      <Icon iconClassName="size-2.5" name="steam" />
+    </span>
+  );
+}
+
+/** A rounded game tile: cropped square art + Steam corner badge. */
+function GameTile({
+  game,
+  sizeClassName,
+  sizes,
+  interactive = false,
+  errorCount,
+  onError,
+}: {
+  readonly game: Game;
+  readonly sizeClassName: string;
+  readonly sizes: string;
+  readonly interactive?: boolean;
+  readonly errorCount: number;
+  readonly onError: () => void;
+}) {
+  return (
+    <span className={classnames("relative block shrink-0", sizeClassName)}>
+      <span className="relative block size-full overflow-hidden rounded-lg shadow-md ring-1 ring-white/15">
+        <GameArt
+          alt={game.name}
+          errorCount={errorCount}
+          onError={onError}
+          sizes={sizes}
+          sources={tileCandidates(game)}
+          className={
+            interactive
+              ? "transition-transform duration-200 group-hover:scale-110"
+              : undefined
+          }
+        />
+        <Glass intensity={0.05} radius={8} tint="none" />
+      </span>
+      <SteamBadge />
+    </span>
   );
 }
 
 const Games = ({ games, errorMessage }: GamesProps) => {
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  const [coverErrors, setCoverErrors] = useState<
-    Readonly<Record<string, number>>
-  >({});
+  const [artErrors, setArtErrors] = useState<Readonly<Record<string, number>>>(
+    {},
+  );
+  const railRef = useRef<HTMLUListElement>(null);
 
-  const markCoverError = (id: string) =>
-    setCoverErrors((prev) => ({ ...prev, [id]: (prev[id] ?? 0) + 1 }));
+  const markArtError = (key: string) =>
+    setArtErrors((prev) => ({ ...prev, [key]: (prev[key] ?? 0) + 1 }));
 
   const featured = useMemo(
     () => games.find((game) => game.id === selectedId) ?? games[0],
@@ -87,6 +157,28 @@ const Games = ({ games, errorMessage }: GamesProps) => {
     () => games.filter((game) => game.id !== featured?.id),
     [games, featured],
   );
+
+  // Vertical wheel input scrolls the rail horizontally (native wheel only pans
+  // it via horizontal deltas). Non-passive because we suppress page scroll.
+  useEffect(() => {
+    const rail = railRef.current;
+    if (!rail) {
+      return;
+    }
+    const onWheel = (event: WheelEvent) => {
+      if (rail.scrollWidth <= rail.clientWidth) {
+        return;
+      }
+      const delta =
+        Math.abs(event.deltaX) > Math.abs(event.deltaY)
+          ? event.deltaX
+          : event.deltaY;
+      rail.scrollLeft += delta;
+      event.preventDefault();
+    };
+    rail.addEventListener("wheel", onWheel, { passive: false });
+    return () => rail.removeEventListener("wheel", onWheel);
+  }, [others.length]);
 
   if (!featured) {
     return (
@@ -101,39 +193,28 @@ const Games = ({ games, errorMessage }: GamesProps) => {
     );
   }
 
+  const lastPlayed = formatLastPlayed(featured.lastPlayedUnix);
   const playtime = formatPlaytime(featured.playtimeMinutes);
-  const featuredBackdrop =
-    coverCandidates(featured)[coverErrors[featured.id] ?? 0];
+  const subtitle = [lastPlayed, playtime].filter(Boolean).join(" · ");
 
-  // Full-bleed landscape art with the title + a glass chip overlaid at the base.
-  const featuredCard = (
-    <div className="relative size-full overflow-hidden rounded-2xl shadow-lg ring-1 ring-white/10">
-      <GameCover
-        errorCount={coverErrors[featured.id] ?? 0}
+  // Featured game identity row — the sheet header links to the store page.
+  const identity = (
+    <div className="flex items-center gap-2.5">
+      <GameTile
+        errorCount={artErrors[`${featured.id}#tile`] ?? 0}
         game={featured}
-        onError={markCoverError}
-        sizes="(min-width: 80rem) 22vw, 90vw"
+        onError={() => markArtError(`${featured.id}#tile`)}
+        sizeClassName="size-10"
+        sizes="40px"
       />
-      <div
-        aria-hidden="true"
-        className="absolute inset-0 bg-linear-to-t from-black/90 via-black/25 to-transparent"
-      />
-      <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-2 p-3.5">
-        <div className="flex min-w-0 flex-col gap-0.5 text-white">
-          <span className="text-[10px] font-medium tracking-wide text-white/70 uppercase">
-            Recently played
+      <div className="flex min-w-0 flex-col text-white">
+        <p className="truncate text-sm font-semibold tracking-tight">
+          {featured.name}
+        </p>
+        {subtitle && (
+          <span className="truncate text-[11px] text-white/60 tabular-nums">
+            {subtitle}
           </span>
-          <p className="line-clamp-2 text-sm font-semibold tracking-tight">
-            {featured.name}
-          </p>
-        </div>
-        {playtime && (
-          <div className="relative shrink-0 overflow-hidden rounded-full px-2.5 py-1">
-            <Glass intensity={2} radius={999} tint="dark" />
-            <span className="relative z-10 text-[11px] font-semibold text-white tabular-nums">
-              {playtime}
-            </span>
-          </div>
         )}
       </div>
     </div>
@@ -146,57 +227,58 @@ const Games = ({ games, errorMessage }: GamesProps) => {
       sizes={bentoBoxSizes.games}
       className="relative z-0 bg-linear-to-b from-[#1c1c22] to-[#0b0b0f]"
     >
-      {/* Blurred featured cover backdrop */}
-      {featuredBackdrop && (
-        <div
-          aria-hidden="true"
-          style={{ backgroundImage: `url(${featuredBackdrop})` }}
-          className="absolute inset-0 z-0 size-full bg-cover bg-center opacity-40"
-        >
-          <div className="size-full backdrop-blur-2xl" />
-        </div>
-      )}
+      {/* Full-bleed featured art — the poster is the tile */}
+      <div aria-hidden="true" className="absolute inset-0 z-0">
+        <GameArt
+          alt={featured.name}
+          errorCount={artErrors[featured.id] ?? 0}
+          onError={() => markArtError(featured.id)}
+          sizes="(min-width: 80rem) 22vw, 90vw"
+          sources={coverCandidates(featured)}
+        />
+        {/* Grounding gradient under the glass sheet */}
+        <div className="absolute inset-x-0 bottom-0 h-3/5 bg-linear-to-t from-black/90 via-black/40 to-transparent" />
+      </div>
 
-      <div className="relative z-10 flex h-full flex-col gap-3 p-4">
-        {/* Featured game */}
-        <div className="min-h-0 flex-1">
+      {/* Glass sheet — one floating surface holds identity + rail */}
+      <div className="absolute inset-x-2 bottom-2 z-10 overflow-hidden rounded-xl">
+        <Glass blur={12} intensity={1} radius={12} tint="dark" />
+        <div className="relative z-10 flex flex-col gap-2.5 p-3">
           {featured.href ? (
-            <Link href={featured.href} className="block size-full">
-              {featuredCard}
+            <Link href={featured.href} className="block min-w-0">
+              {identity}
             </Link>
           ) : (
-            featuredCard
+            identity
           )}
-        </div>
 
-        {/* Continue playing */}
-        {others.length > 0 && (
-          <div className="flex shrink-0 flex-col gap-1.5">
-            <span className="text-[10px] font-medium tracking-wide text-white/50 uppercase">
-              Continue playing
-            </span>
-            <ul className="flex gap-2 overflow-x-auto pb-1">
+          {others.length > 0 && (
+            <ul
+              ref={railRef}
+              className="-mx-3 flex gap-2.5 overflow-x-auto px-3 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            >
               {others.map((game) => (
                 <li key={game.id} className="shrink-0">
                   <button
                     aria-label={`Show ${game.name}`}
                     onClick={() => setSelectedId(game.id)}
                     type="button"
-                    className="group relative block h-12 w-[5.5rem] overflow-hidden rounded-xl shadow-md ring-1 ring-white/10 transition-transform duration-200 hover:scale-105"
+                    className="group block rounded-lg focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:outline-none"
                   >
-                    <GameCover
-                      errorCount={coverErrors[game.id] ?? 0}
+                    <GameTile
+                      errorCount={artErrors[`${game.id}#tile`] ?? 0}
                       game={game}
-                      onError={markCoverError}
-                      sizes="88px"
+                      interactive
+                      onError={() => markArtError(`${game.id}#tile`)}
+                      sizeClassName="size-9"
+                      sizes="36px"
                     />
-                    <Glass intensity={0.05} radius={12} tint="none" />
                   </button>
                 </li>
               ))}
             </ul>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </Bento>
   );

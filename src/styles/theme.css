@@ -49,6 +49,15 @@
   --color-ds-podcast-from: #bc6aeb;
   --color-ds-podcast-to: #6e2aad;
 
+  /* ---- Journal bento --------------------------------------- */
+  --color-ds-journal-from: #463463; /* card gradient start — purple (top-left) */
+  --color-ds-journal-to: #271e3a; /* card gradient end — dark plum (bottom-right) */
+  --color-ds-journal-glow: #8b5cf6; /* violet bloom (bottom-left) */
+  --color-ds-journal-glow-pink: #e668b0; /* pink bloom (top-right) */
+  --color-ds-journal-ink-from: #d3bffa; /* question text gradient start */
+  --color-ds-journal-ink-to: #b18ff4; /* question text gradient end */
+  --color-ds-journal-date: #cfc6e4; /* date & feedback text */
+
   /* ---- Recipe card stack ----------------------------------------- */
   --color-ds-recipe-1: #1a1a2e;
   --color-ds-recipe-2: #16213e;

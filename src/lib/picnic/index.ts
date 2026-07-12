@@ -12,7 +12,4 @@ export {
   getPicnicRecipesResult,
   toPicnicErrorMessage,
 } from "./service.ts";
-export type {
-  PicnicRecipesResult,
-  PicnicRecipesServiceResult,
-} from "./service.ts";
+export type { PicnicRecipeCardsData, PicnicRecipesResult } from "./service.ts";

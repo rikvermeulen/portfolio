@@ -1,6 +1,7 @@
 import { unstable_cache } from "next/cache";
 
 import type { PlantaPlant, PlantaPlantCardData } from "@/lib/planta/types.ts";
+import type { StatusResult } from "@/types/index.ts";
 
 import {
   createPlantaClientFromEnv,
@@ -14,21 +15,7 @@ export interface PlantaPlantsData {
   readonly plantCards: readonly PlantaPlantCardData[];
 }
 
-export interface PlantaPlantsSuccessResult {
-  readonly ok: true;
-  readonly statusCode: 200;
-  readonly data: PlantaPlantsData;
-}
-
-export interface PlantaPlantsErrorResult {
-  readonly ok: false;
-  readonly statusCode: 401 | 500;
-  readonly errorMessage: string;
-}
-
-export type PlantaPlantsResult =
-  | PlantaPlantsSuccessResult
-  | PlantaPlantsErrorResult;
+export type PlantaPlantsResult = StatusResult<PlantaPlantsData>;
 
 const MAX_PLANTS_TO_FETCH = 6 as const;
 

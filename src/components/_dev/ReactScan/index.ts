@@ -1,2 +1,2 @@
-export { default } from "@/components/_dev/ReactScan/ReactScan.tsx";
-export type { ReactScanProps } from "@/components/_dev/ReactScan/ReactScan.types.ts";
+export { default } from "./ReactScan.tsx";
+export type { ReactScanProps } from "./ReactScan.types.ts";

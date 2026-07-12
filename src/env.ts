@@ -15,11 +15,9 @@ export const env = createEnv({
     SUPABASE_ANON_KEY: z.string().min(1),
 
     // Spotify
-    SPOTIFY_CLIENT_ACCESS_TOKEN: z.string().optional(),
     SPOTIFY_CLIENT_ID: z.string().min(1),
     SPOTIFY_CLIENT_SECRET: z.string().min(1),
     SPOTIFY_REFRESH_TOKEN: z.string().optional(),
-    SPOTIFY_PLAYLIST_ID: z.string().optional(),
     SPOTIFY_MARKET: z.string().optional(),
 
     // Planta
@@ -62,9 +60,7 @@ export const env = createEnv({
     SUPABASE_ANON_KEY: process.env.SUPABASE_ANON_KEY,
     SPOTIFY_CLIENT_ID: process.env.SPOTIFY_CLIENT_ID,
     SPOTIFY_CLIENT_SECRET: process.env.SPOTIFY_CLIENT_SECRET,
-    SPOTIFY_CLIENT_ACCESS_TOKEN: process.env.SPOTIFY_CLIENT_ACCESS_TOKEN,
     SPOTIFY_REFRESH_TOKEN: process.env.SPOTIFY_REFRESH_TOKEN,
-    SPOTIFY_PLAYLIST_ID: process.env.SPOTIFY_PLAYLIST_ID,
     SPOTIFY_MARKET: process.env.SPOTIFY_MARKET,
     PLANTA_AUTH_CODE: process.env.PLANTA_AUTH_CODE,
     PLANTA_ACCESS_TOKEN: process.env.PLANTA_ACCESS_TOKEN,

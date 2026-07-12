@@ -23,14 +23,11 @@ const { fetchShowEpisodes } = jest.requireMock("./client.ts") as {
 const makeEpisode = (id: string, name = "Episode") => ({
   id,
   name,
-  audio_preview_url: `https://cdn.example.com/${id}.mp3`,
   images: [
     { url: "https://img.example.com/large.jpg" },
     { url: "https://img.example.com/medium.jpg" },
   ],
   explicit: false,
-  description: "A podcast episode",
-  duration_ms: 3600000,
 });
 
 describe("getSpotifyPodcastResult", () => {
@@ -52,9 +49,6 @@ describe("getSpotifyPodcastResult", () => {
       expect(result.data.episodes[0]?.name).toBe("Intro");
       expect(result.data.episodes[0]?.imageUrl).toBe(
         "https://img.example.com/medium.jpg",
-      );
-      expect(result.data.episodes[0]?.previewUrl).toBe(
-        "https://cdn.example.com/ep-1.mp3",
       );
     }
   });

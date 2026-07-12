@@ -21,6 +21,7 @@ export const bentoSizeBreakpoints = {
 export const bentoBoxSizes = {
   personal: { base: "4x4", md: "8x4", lg: "6x4" },
   contact: { base: "4x4", md: "8x4", lg: "6x3" },
+  journal: { base: "4x4", md: "8x4", lg: "6x3" },
   photos: { base: "4x4", md: "4x4", lg: "3x3" },
   plants: { base: "4x4", md: "4x4", lg: "3x3" },
   recipes: { base: "4x4", md: "4x4", lg: "3x3" },

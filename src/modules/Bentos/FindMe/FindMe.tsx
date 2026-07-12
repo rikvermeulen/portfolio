@@ -18,6 +18,8 @@ import { FIND_ME_LOCATION } from "./FindMe.const.ts";
 import FindMeWeatherBadge from "./FindMeWeatherBadge.tsx";
 import { useFindMeConditions } from "./useFindMeConditions.ts";
 
+import "./FindMe.css";
+
 const PRIMARY_MAP_STYLE = "mapbox://styles/mapbox/streets-v12";
 const FALLBACK_MAP_STYLE = "mapbox://styles/mapbox/outdoors-v12";
 const MAP_TOKEN = env.NEXT_PUBLIC_MAPBOX_TOKEN;
@@ -280,7 +282,7 @@ const FindMe = ({ className }: FindMeProps) => {
       {MAP_TOKEN ? (
         <div ref={mapContainerRef} className="findme-map size-full" />
       ) : (
-        <div className="flex size-full items-center justify-center p-6 text-center text-sm text-dark-grey">
+        <div className="flex size-full items-center justify-center p-6 text-center text-sm text-ds-gray">
           Add NEXT_PUBLIC_MAPBOX_TOKEN to enable this map.
         </div>
       )}
@@ -290,17 +292,17 @@ const FindMe = ({ className }: FindMeProps) => {
       <div className="pointer-events-none absolute top-0 z-10">
         <Image
           alt="Cloud"
-          height={300}
+          height={267}
           src="/images/cloud.png"
           width={300}
-          className="cloud-one -translate-x-full -translate-y-32 opacity-90 contrast-125 transition-transform ease-in-out"
+          className="cloud-one h-auto w-auto -translate-x-full -translate-y-32 opacity-90 contrast-125 transition-transform ease-in-out"
         />
         <Image
           alt="Cloud"
-          height={240}
+          height={214}
           src="/images/cloud.png"
           width={240}
-          className="cloud-two -translate-x-full -translate-y-32 opacity-80 contrast-125 transition-transform ease-in-out"
+          className="cloud-two h-auto w-auto -translate-x-full -translate-y-32 opacity-80 contrast-125 transition-transform ease-in-out"
         />
       </div>
 
@@ -310,7 +312,7 @@ const FindMe = ({ className }: FindMeProps) => {
           aria-label="Zoom out"
           onClick={handleZoomOut}
           type="button"
-          className="relative flex size-8 items-center justify-center text-black transition-transform active:scale-90"
+          className="relative flex size-8 items-center justify-center text-black transition-transform active:scale-90 dark:text-white"
         >
           <Icon iconClassName="size-3.5" name="minus" />
         </button>
@@ -318,13 +320,13 @@ const FindMe = ({ className }: FindMeProps) => {
           aria-label="Zoom in"
           onClick={handleZoomIn}
           type="button"
-          className="relative flex size-8 items-center justify-center text-black transition-transform active:scale-90"
+          className="relative flex size-8 items-center justify-center text-black transition-transform active:scale-90 dark:text-white"
         >
           <Icon iconClassName="size-3.5" name="plus" />
         </button>
       </div>
       {mapFailed && (
-        <p className="absolute top-16 left-5 z-20 rounded-md bg-white/80 px-2 py-1 text-xs">
+        <p className="absolute top-16 left-5 z-20 rounded-md bg-white/80 px-2 py-1 text-xs dark:bg-black/80 dark:text-white">
           {`Map style failed: ${mapErrorMessage}`}
         </p>
       )}

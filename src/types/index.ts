@@ -1,3 +1,12 @@
+/**
+ * Shared contract for a data-driven view that can fail to load. Bento
+ * containers extend this instead of re-declaring `errorMessage?` each time.
+ */
+export interface WithErrorMessage {
+  /** Message shown when the underlying data failed to load. */
+  readonly errorMessage?: string;
+}
+
 /** Generic discriminated union for service results. */
 export type Result<T> =
   | { readonly ok: true; readonly data: T }

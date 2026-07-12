@@ -4,17 +4,10 @@ import { useCallback, useSyncExternalStore } from "react";
 
 import type { LiveTimeProps } from "./LiveTime.types.ts";
 
-function formatTime(date: Date): string {
-  const hours = date.getHours();
-  const minutes = date.getMinutes();
-  const ampm = hours >= 12 ? "PM" : "AM";
-  const displayHours = hours % 12 || 12;
-  const displayMinutes = minutes.toString().padStart(2, "0");
-  return `${displayHours}:${displayMinutes} ${ampm}`;
-}
+import { formatClock } from "@/utils/datetime/datetime.ts";
 
 function getCurrentTime(): string {
-  return formatTime(new Date());
+  return formatClock(new Date());
 }
 
 /**

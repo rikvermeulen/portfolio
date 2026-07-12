@@ -1,8 +1,4 @@
-import type {
-  SpotifyPlaylistTracks,
-  SpotifyRecentlyPlayed,
-  SpotifyShowEpisodes,
-} from "./types.ts";
+import type { SpotifyRecentlyPlayed, SpotifyShowEpisodes } from "./types.ts";
 
 const SPOTIFY_API_URL = "https://api.spotify.com/v1";
 const SPOTIFY_TOKEN_URL = "https://accounts.spotify.com/api/token";
@@ -135,27 +131,4 @@ export async function fetchShowEpisodes(
   }
 
   return response.json() as Promise<SpotifyShowEpisodes>;
-}
-
-export async function fetchPlaylistTracks(
-  playlistId: string,
-  clientId: string,
-  clientSecret: string,
-  limit = 20,
-): Promise<SpotifyPlaylistTracks> {
-  const token = await getClientCredentialsToken(clientId, clientSecret);
-
-  const url = new URL(`${SPOTIFY_API_URL}/playlists/${playlistId}/tracks`);
-  url.searchParams.set("limit", String(limit));
-
-  const response = await fetch(url.toString(), {
-    headers: { Authorization: `Bearer ${token}` },
-    next: { revalidate: 3600 },
-  });
-
-  if (!response.ok) {
-    throw new Error(`Spotify playlist fetch failed: ${response.status}`);
-  }
-
-  return response.json() as Promise<SpotifyPlaylistTracks>;
 }

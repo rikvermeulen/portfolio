@@ -1,11 +1,13 @@
 import { unstable_cache } from "next/cache";
 
-import type { Game, SteamGamesResult, SteamOwnedGame } from "./types.ts";
+import type { Game, SteamGamesData, SteamOwnedGame } from "./types.ts";
+import type { Result } from "@/types/index.ts";
 
 import { env } from "@env";
 
 import {
   buildSteamHeaderUrl,
+  buildSteamLibraryArtUrl,
   buildSteamStoreUrl,
   fetchOwnedGames,
   fetchSteamHeaderImage,
@@ -33,8 +35,10 @@ function toGame(game: SteamOwnedGame, headerImage: string | null): Game {
     name: game.name,
     coverImage: headerImage ?? fallback,
     coverImageFallback: fallback,
+    portraitImage: buildSteamLibraryArtUrl(game.appid),
     href: buildSteamStoreUrl(game.appid),
     playtimeMinutes: game.playtime_forever,
+    lastPlayedUnix: game.rtime_last_played,
   };
 }
 
@@ -70,7 +74,7 @@ const getCachedSteamGames = unstable_cache(
   { revalidate: 1800, tags: ["steam"] },
 );
 
-export async function getSteamGamesResult(): Promise<SteamGamesResult> {
+export async function getSteamGamesResult(): Promise<Result<SteamGamesData>> {
   const { STEAM_API_KEY, STEAM_ID } = env;
 
   if (!STEAM_API_KEY || !STEAM_ID) {

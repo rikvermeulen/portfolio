@@ -6,9 +6,8 @@ import {
 } from "./AudioBento.mock.ts";
 import AudioBento from "./AudioBento.tsx";
 
-// AudioBento is generic over its item type, so stories render it directly
-// (with fully-typed mock props) rather than via `args`, which Storybook would
-// otherwise widen to the base item type.
+// AudioBento is presentational; stories render it with fully-typed mock props
+// (player state + no-op handlers) supplied by the containers at runtime.
 const meta: Meta = {
   title: "Components/AudioBento",
   parameters: { layout: "fullscreen" },

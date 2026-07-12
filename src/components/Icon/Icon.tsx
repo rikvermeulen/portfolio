@@ -17,8 +17,10 @@ import PauseIcon from "@/assets/icons/pause.svg";
 import PersonsIcon from "@/assets/icons/persons.svg";
 import PlayIcon from "@/assets/icons/play.svg";
 import PlusIcon from "@/assets/icons/plus.svg";
+import RefreshIcon from "@/assets/icons/refresh.svg";
 import SoundIcon from "@/assets/icons/sound.svg";
 import SprayIcon from "@/assets/icons/spray.svg";
+import SteamIcon from "@/assets/icons/steam.svg";
 import TailIcon from "@/assets/icons/tail.svg";
 import TimerIcon from "@/assets/icons/timer.svg";
 import WateringCanIcon from "@/assets/icons/watering-can.svg";
@@ -31,7 +33,7 @@ import WeatherSnowIcon from "@/assets/icons/weather-snow.svg";
 import WeatherSunIcon from "@/assets/icons/weather-sun.svg";
 import WeatherThunderstormIcon from "@/assets/icons/weather-thunderstorm.svg";
 
-export const ICON_COMPONENTS: Record<string, SvgIconComponent> = {
+const ICON_COMPONENTS: Record<string, SvgIconComponent> = {
   arrow: ArrowIcon,
   dog: DogIcon,
   explicit: ExplicitIcon,
@@ -44,8 +46,10 @@ export const ICON_COMPONENTS: Record<string, SvgIconComponent> = {
   pause: PauseIcon,
   play: PlayIcon,
   plus: PlusIcon,
+  refresh: RefreshIcon,
   sound: SoundIcon,
   spray: SprayIcon,
+  steam: SteamIcon,
   tail: TailIcon,
   persons: PersonsIcon,
   timer: TimerIcon,

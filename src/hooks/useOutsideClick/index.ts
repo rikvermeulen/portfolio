@@ -1,2 +1,1 @@
-/* istanbul ignore file */
-export { default as useOutsideClick } from "./useOutsideClick.ts";
+export { useOutsideClick } from "./useOutsideClick.ts";

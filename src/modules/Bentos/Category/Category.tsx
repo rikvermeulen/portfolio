@@ -31,6 +31,7 @@ const Category = ({ label, tags, className }: CategoryProps) => {
       <Image
         alt="Category folder"
         height={100}
+        priority
         src="/svgs/directory.svg"
         width={100}
         className="h-auto w-full object-cover object-center"

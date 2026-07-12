@@ -15,6 +15,7 @@ import {
   Games,
   Image,
   Information,
+  Journal,
   Music,
   Personal,
   Photos,
@@ -147,6 +148,8 @@ export const bentoRegistry: readonly BentoTile[] = [
       <Games errorMessage={errorMessage} games={[]} />
     ),
   }),
+
+  { kind: "static", id: "journal", render: () => <Journal /> },
 
   {
     kind: "static",

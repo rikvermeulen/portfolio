@@ -1,8 +1,17 @@
 import type { Preview } from "@storybook/nextjs-vite";
 
+import { SpotifyConnectionProvider } from "@/contexts/SpotifyConnectionContext/index.ts";
+
 import "@/styles/storybook.css";
 
 const preview: Preview = {
+  decorators: [
+    (Story) => (
+      <SpotifyConnectionProvider>
+        <Story />
+      </SpotifyConnectionProvider>
+    ),
+  ],
   parameters: {
     layout: "centered",
     controls: {

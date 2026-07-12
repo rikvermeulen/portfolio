@@ -7,7 +7,10 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import type { FlipDirection } from "./Recipes.animate.ts";
 import type { RecipesProps } from "./Recipes.types.ts";
 
-import Bento, { bentoBoxSizes } from "@/components/Bento/index.ts";
+import Bento, {
+  bentoBoxSizes,
+  BentoEmptyState,
+} from "@/components/Bento/index.ts";
 import Glass from "@/components/Glass/index.ts";
 import Icon from "@/components/Icon/index.ts";
 import Link from "@/components/Link/index.ts";
@@ -33,14 +36,10 @@ const Recipes = ({ recipes, errorMessage }: RecipesProps) => {
 
   if (errorMessage || isEmpty) {
     return (
-      <Bento
+      <BentoEmptyState
+        message={errorMessage ?? "No saved recipes found."}
         sizes={bentoBoxSizes.recipes}
-        className="flex size-full items-center justify-center bg-neutral-900 p-5"
-      >
-        <p className="text-xs text-white/50">
-          {errorMessage ?? "No saved recipes found."}
-        </p>
-      </Bento>
+      />
     );
   }
 

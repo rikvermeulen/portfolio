@@ -9,6 +9,13 @@
       "autoPort": false
     },
     {
+      "name": "storybook",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "storybook", "--", "--no-open"],
+      "port": 6006,
+      "autoPort": false
+    },
+    {
       "name": "dev-debug",
       "runtimeExecutable": "npx",
       "runtimeArgs": ["next", "dev", "-p", "3007"],

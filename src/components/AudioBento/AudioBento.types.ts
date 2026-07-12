@@ -1,11 +1,6 @@
 import type { ResponsiveBentoSize } from "@/components/Bento/index.ts";
 
-/** Minimum shape the Spotify player needs from an item. */
-export interface AudioBentoItem {
-  readonly id: string;
-}
-
-/** Presentation fields the shell reads from the currently-selected item. */
+/** Presentation fields the shell renders for the currently-selected item. */
 export interface AudioBentoDisplay {
   readonly image: string | null;
   readonly title: string;
@@ -14,16 +9,26 @@ export interface AudioBentoDisplay {
   readonly explicit?: boolean;
 }
 
-export interface AudioBentoProps<T extends AudioBentoItem> {
-  readonly items: readonly T[];
+/**
+ * Purely presentational audio tile: art, blurred backdrop, transport controls,
+ * pulse animation, and volume slider. It owns no Spotify logic — the Music and
+ * Podcast containers wire their own player hooks and pass state + handlers in.
+ */
+export interface AudioBentoProps {
+  /** The active item's display fields, or null when there's nothing to show. */
+  readonly display: AudioBentoDisplay | null;
+  /** Message shown when the underlying data failed to load. */
   readonly errorMessage?: string;
-  /** Spotify URI kind passed through to `useSpotifyPlayer`. */
-  readonly uriType?: "track" | "episode";
+  /** Message shown when playback itself can't start. */
+  readonly playbackError?: string | null;
+  readonly isPlaying: boolean;
+  readonly volume: number;
   /** App-icon shown in the Bento's top-right corner. */
   readonly icon: string;
   readonly sizes: ResponsiveBentoSize;
   /** Extra classes merged onto the tile shell (e.g. a gradient background). */
   readonly className?: string;
-  /** Maps the active item to the fields the shell renders. */
-  readonly getDisplay: (item: T) => AudioBentoDisplay;
+  readonly onPlayOrPause: () => void;
+  readonly onChangeTrack: (direction: "previous" | "next") => void;
+  readonly onVolumeChange: (value: number) => void;
 }

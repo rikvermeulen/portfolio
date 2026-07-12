@@ -42,7 +42,7 @@ class BentoErrorBoundary extends Component<
 
     return (
       <Bento sizes={bentoBoxSizes[this.props.size]} className="size-full">
-        <div className="flex size-full items-center justify-center p-4 text-center text-sm text-dark-grey">
+        <div className="flex size-full items-center justify-center p-4 text-center text-sm text-ds-gray">
           Couldn’t load this tile.
         </div>
       </Bento>

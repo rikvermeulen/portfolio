@@ -123,8 +123,11 @@ describe("getSteamGamesResult", () => {
         coverImage: "https://img.example.com/2/header.jpg", // real store art
         coverImageFallback:
           "https://cdn.cloudflare.steamstatic.com/steam/apps/2/header.jpg",
+        portraitImage:
+          "https://cdn.cloudflare.steamstatic.com/steam/apps/2/library_600x900_2x.jpg",
         href: "https://store.steampowered.com/app/2",
         playtimeMinutes: 9000,
+        lastPlayedUnix: 9_000,
       });
     }
   });

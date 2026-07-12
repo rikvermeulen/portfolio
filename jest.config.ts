@@ -13,6 +13,8 @@ const config: Config = {
     "src/utils/**/*.ts",
     "src/lib/**/*.ts",
     "src/hooks/**/*.ts",
+    // Barrels are pure re-exports with no logic to cover.
+    "!src/**/index.ts",
   ],
   coverageThreshold: {
     global: {

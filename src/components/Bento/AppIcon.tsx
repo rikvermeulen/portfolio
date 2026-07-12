@@ -5,7 +5,7 @@ import type { AppIconProps } from "./AppIcon.types.ts";
 import Glass from "@/components/Glass/index.ts";
 import classnames from "@/utils/classnames/classnames.ts";
 
-export const APP_ICON_RADIUS = 6;
+const APP_ICON_RADIUS = 6;
 
 const AppIcon = ({
   src,

@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 
-import type { AudioBentoItem, AudioBentoProps } from "./AudioBento.types.ts";
+import type { AudioBentoProps } from "./AudioBento.types.ts";
 import type { PulsedButton } from "@/components/AudioControls/index.ts";
 
 import AudioControls from "@/components/AudioControls/index.ts";
@@ -11,36 +11,29 @@ import Bento from "@/components/Bento/index.ts";
 import Icon from "@/components/Icon/index.ts";
 import Slider from "@/components/Slider/index.ts";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion/usePrefersReducedMotion.ts";
-import { useSpotifyPlayer } from "@/hooks/useSpotifyPlayer/index.ts";
 import classnames from "@/utils/classnames/classnames.ts";
 
 const PULSE_DURATION_MS = 600;
 const FALLBACK_IMAGE = "/images/no-album.png";
 
 /**
- * Shared Spotify-backed audio tile. Owns the player wiring, pulse animation,
- * blurred backdrop, and transport controls; consumers (Music, Podcast) supply
- * their data plus a `getDisplay` adapter and visual tokens.
+ * Presentational Spotify-backed audio tile. Owns the pulse animation, blurred
+ * backdrop and transport layout only; the Music and Podcast containers supply
+ * player state (via their own hooks) and the handlers wired below.
  */
-const AudioBento = <T extends AudioBentoItem>({
-  items,
+const AudioBento = ({
+  display,
   errorMessage,
-  uriType = "track",
+  playbackError,
+  isPlaying,
+  volume,
   icon,
   sizes,
   className,
-  getDisplay,
-}: AudioBentoProps<T>) => {
-  const {
-    isPlaying,
-    currentIndex,
-    volume,
-    togglePlay,
-    goToNext,
-    goToPrevious,
-    setVolume,
-  } = useSpotifyPlayer(items, uriType);
-
+  onPlayOrPause,
+  onChangeTrack,
+  onVolumeChange,
+}: AudioBentoProps) => {
   const prefersReducedMotion = usePrefersReducedMotion();
   const [pulsedButton, setPulsedButton] = useState<PulsedButton>(null);
 
@@ -53,21 +46,15 @@ const AudioBento = <T extends AudioBentoItem>({
   }, [pulsedButton]);
 
   const handlePlayOrPause = () => {
-    togglePlay();
+    onPlayOrPause();
     setPulsedButton("playPause");
   };
 
   const handleChangeTrack = (direction: "previous" | "next") => {
-    if (direction === "previous") {
-      goToPrevious();
-    } else {
-      goToNext();
-    }
+    onChangeTrack(direction);
     setPulsedButton(direction);
   };
 
-  const currentItem = items[currentIndex];
-  const display = currentItem ? getDisplay(currentItem) : null;
   const image = display?.image ?? FALLBACK_IMAGE;
 
   return (
@@ -129,6 +116,15 @@ const AudioBento = <T extends AudioBentoItem>({
           pulsedButton={pulsedButton}
         />
 
+        {playbackError && (
+          <p
+            role="alert"
+            className="mt-2 text-center text-[0.65rem] leading-tight text-white/80"
+          >
+            {playbackError}
+          </p>
+        )}
+
         {/* Volume slider */}
         <div className="mt-2 flex items-center justify-center gap-3">
           <Icon iconClassName="w-2 fill-white" name="mute" />
@@ -136,7 +132,7 @@ const AudioBento = <T extends AudioBentoItem>({
             label="Volume"
             maxValue={1}
             minValue={0}
-            onChange={setVolume}
+            onChange={onVolumeChange}
             step={0.01}
             value={volume}
             className="w-[70%] opacity-80 transition-opacity duration-200 hover:opacity-100"

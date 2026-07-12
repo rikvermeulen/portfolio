@@ -1,4 +1,5 @@
 import { BentoGrid, bentoGridConfig } from "@/components/Bento/index.ts";
+import { SpotifyConnectionProvider } from "@/contexts/SpotifyConnectionContext/index.ts";
 
 /**
  * Dashboard layout. The grid is composed entirely from `bento-registry.tsx`
@@ -6,8 +7,10 @@ import { BentoGrid, bentoGridConfig } from "@/components/Bento/index.ts";
  */
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <main className="main-container">
-      <BentoGrid config={bentoGridConfig}>{children}</BentoGrid>
-    </main>
+    <SpotifyConnectionProvider>
+      <main className="main-container">
+        <BentoGrid config={bentoGridConfig}>{children}</BentoGrid>
+      </main>
+    </SpotifyConnectionProvider>
   );
 }

@@ -2,89 +2,130 @@
 
 ## Project
 
-`refugeework-website` — Next.js + Payload CMS website for the RefugeeWork project.
+Personal portfolio — a single-page **bento-grid dashboard** (rikvermeulen.com). A Next.js
+app that composes a responsive grid of "bento" tiles, several of which pull live data from
+third-party integrations (Spotify, Steam, Planta, Picnic, Supabase, Open-Meteo).
+
+There is **no CMS, database, or i18n layer** in this project.
 
 ## Stack
 
-- Next.js 16, React 19, TypeScript 6
-- Payload CMS 3 with Postgres
-- Tailwind CSS 4, Storybook 10, Jest + Vitest
-- Zod + `@t3-oss/env-nextjs`, Sharp, react-scan
+- Next.js 16, React 19, TypeScript 5.9 (React Compiler enabled via `babel-plugin-react-compiler` + `reactCompiler: true`)
+- Tailwind CSS 4 (v4, configured via the `@tailwindcss/postcss` plugin — there is **no** `tailwind.config` file)
+- Storybook 10 (`@storybook/nextjs-vite`)
+- Animation: GSAP 3 (`@gsap/react`, lazily loaded) + framer-motion 12
+- Data/validation: Zod 4 + `@t3-oss/env-nextjs`; `@supabase/supabase-js`; `picnic-api`; `mapbox-gl`
+- Testing: **Jest 30 only** (jsdom). No Vitest — `vite` is present only as Storybook's transitive builder.
+- Tooling: plop (scaffolding), husky (git hooks), react-scan (dev perf overlay), ESLint (`@greenberry/linting-config`), Stylelint, Prettier
+- Runtime: Node `>=22.11` (`.nvmrc`)
 
 ## Structure
 
-- `src/app/(frontend)`: public routes and page shells
-- `src/app/(payload)`: Payload admin routes
-- `src/payload`: Payload plugins, custom admin UI, app helpers (`lib/`), and shared non-schema assets (e.g. `definitions/`, `i18n.config`)
-- `src/vendor/payload`: Payload `buildConfig`, and CMS definitions in `blocks/`, `collections/`, `fields/`, `heroes/`, `tabs/`, and `globals/` (plus `lib/` for shared helpers such as locale resolution, `pages/`, `roles/`, etc.), generated types, import map, and migrations
-- `src/modules`, `src/templates`, `src/components`: page composition, content blocks, reusable UI
-- `src/hooks`, `src/contexts`, `src/i18n`: client behavior and localization
-- `src/utils`: generic utility functions, project-agnostic, no business logic (e.g. `debounce`, `classnames`)
-- `src/lib`: project-specific utilities and helpers, project-aware but no direct third-party SDK calls (e.g. `a11yPreferences`, `fonts`)
-- `src/vendor`: third-party-coupled integration code where the vendor boundary is intentional (for example `vendor/payload` config, CMS models, admin components, and field/page helpers)
-- `config`: app configuration
-- `src/styles`, `src/assets`: design system styles and static assets
+- `src/app/(dashboard)`: the dashboard route — `layout.tsx` wraps children in `BentoGrid`,
+  `page.tsx` maps the registry, `bento-registry.tsx` is the single source of truth for tile order/wiring
+- `src/app/api/*`: HTTP routes (contact, greeting, spotify/token, planta/plants, find-me/conditions, picnic/*, dev-diagnostics)
+- `src/components`: generic, reusable UI primitives (folder-per-component, PascalCase). Includes the
+  Bento grid infrastructure in `components/Bento/` (`Bento`, `AsyncBento`, `BentoGrid`, `BentoSkeleton`, `BentoErrorBoundary`, `AppIcon`)
+- `src/modules`: feature blocks (`Bentos/*` — the 13 concrete tiles — and `Navigation/*`)
+- `src/hooks`: React hooks (folder-per-hook, camelCase `useX`, named export)
+- `src/contexts`: React contexts (Provider + accessor hook)
+- `src/lib`: project-aware domain code + third-party integrations (Spotify, Steam, Planta, Picnic, Supabase, Open-Meteo) plus feature modules `glass` and `fonts`
+- `src/utils`: pure, project-agnostic helpers — no env, no business logic (`classnames`, `datetime`, `debounce`, `isExternalUrl`, `playSound`, `getSecurityHeaders`)
+- `src/types`: cross-cutting shared types only (`Result<T>`, `StatusResult<T>`)
+- `src/styles`, `src/assets`: design-system styles and static assets
+- `config/`: app config consumed by `next.config.ts` (`responseHeaders.ts`, `webpackLoaders.ts`)
+- `scripts/`: one-off auth helpers (`spotify-auth.ts`, `picnic-auth.ts`) and the plop generators/templates under `scripts/plop/`
 
 ## Scripts
 
-| Command                  | Purpose                                   |
-| ------------------------ | ----------------------------------------- |
-| `npm run dev`            | Start local Next dev server               |
-| `npm run build`          | Build production bundle                   |
-| `npm run start`          | Run production build locally              |
-| `npm run lint`           | Run ESLint with autofix                   |
-| `npm run lint:styles`    | Run Stylelint with autofix                |
-| `npm run type-check`     | Run TypeScript without emitting           |
-| `npm run test`           | Run Jest tests                            |
-| `npm run storybook`      | Start Storybook                           |
-| `npm run test-storybook` | Run Storybook/Vitest tests                |
-| `npm run payload`        | Run Payload CLI                           |
-| `npm run generate:types` | Regenerate Payload types                  |
-| `npm run migrate:create` | Create migration file from schema changes |
-| `npm run migrate`        | Run Payload migrations                    |
-| `npm run migrate:status` | Check for pending migrations              |
-| `npm run generate:icons` | Regenerate SVG icon registry              |
+| Command                | Purpose                                              |
+| ---------------------- | ---------------------------------------------------- |
+| `npm run dev`          | Start local Next dev server                          |
+| `npm run build`        | Build production bundle                              |
+| `npm run start`        | Run production build locally                         |
+| `npm run lint`         | Run ESLint with autofix                              |
+| `npm run lint:styles`  | Run Stylelint with autofix                           |
+| `npm run type-check`   | Run TypeScript without emitting                      |
+| `npm run test`         | Run Jest tests (with coverage)                       |
+| `npm run test:watch`   | Run Jest in watch mode                               |
+| `npm run plop`         | Scaffold a component / module / util                 |
+| `npm run spotify:auth` | Local OAuth helper to mint a Spotify refresh token   |
+| `npm run picnic:auth`  | Interactive Picnic login (SMS 2FA) to mint auth key  |
+| `npm run storybook`    | Start Storybook                                      |
+| `npm run build-storybook` | Build the static Storybook                        |
 
-## Payload Migrations
+## Scaffolding (plop)
 
-When you modify collection schemas (add/remove/change fields):
-
-1. Run `npm run migrate:create` locally to capture the schema changes
-2. The migration file will be created in `src/vendor/payload/migrations/`
-3. Commit the migration file before pushing
-4. The `pre-push` hook will verify no pending migrations remain
-
-**Never push without committing migrations.** The hook will block the push if migrations are pending.
-
-**AI agents must not run any migrate commands** (`migrate`, `migrate:create`,
-`migrate:status`, `migrate:fresh`, `migrate:reset`, or `payload migrate*`).
-Schema work and `npm run generate:types` are fine; migration create/apply is
-always manual.
+`npm run plop` is the source of truth for new-unit structure (`plopfile.js` +
+`scripts/plop/`). Generators: **component**, **module**, **util**. Prefer scaffolding new
+units so they match the conventions below rather than hand-creating folders.
 
 ## Conventions
 
-- Prefer **extracted React components** (named function components in the same file or a module) over **inline helpers** inside a component that only exist to `return` JSX. Apply this even when the extracted piece is very small — it keeps structure consistent, improves readability in diffs, and avoids unstable nested component identities when the helper is used as a child or passed around.
-- ESLint extends `@greenberry/linting-config`; local rule changes should be discussed before adding them here.
-- Merge request titles should start with the Jira ticket key when the work maps to a ticket, for example `RFW-25: collection Organisation`, so the GitLab/Jira integration can pick it up reliably.
-- Prefer deriving the Jira ticket key from the branch name or linked backlog/spec work when present, and do not invent a key when none is known.
-- Prefer `npx` for temporary npm package execution over global (`-g` or `--global`) installation.
-- Prefer **explicit object properties** (`{ test, test2 }`) over **conditional spreads** used only to add optional keys (for example `{ test, ...(test2 ? { test2 } : {}) }`) when building objects or passing JSX props. Use a real merge spread when combining objects, or a small ternary between two literals when branches differ. See `rules/object-literals.md`.
+### Directory taxonomy & file-naming grammar
 
-## Backlog
+- Casing is role-dependent: `components/`, `modules/`, `contexts/` are **PascalCase**;
+  `hooks/`, `utils/`, `lib/` are **camelCase**.
+- A unit named `Foo` uses exactly: `Foo.tsx`/`foo.ts`, `Foo.types.ts`, `Foo.const.ts`
+  (constants/static data), `Foo.utils.ts` (local helpers), `Foo.animate.ts` (animation
+  logic), `Foo.mock.ts`, `Foo.stories.tsx`, `Foo.test.ts(x)`, and an `index.ts` barrel.
+- **Every leaf unit folder has an `index.ts` barrel**, using relative `./Foo.tsx` internal paths.
+- Components/modules: `default` export. Hooks: **named** export. Props types: `interface XProps`.
+- Contexts: Provider + accessor hook (`useXContext`), `null` default + throw-if-outside-provider.
 
-- Backlog items in `docs/backlog/` must start the filename with the Jira ticket key from the file's `Ticket` field, for example `RFW-214-feat-organization-contact-invites.md`.
-- If a backlog item is created before the Jira ticket exists, rename the file as soon as the ticket key is assigned and update local `docs/` references to match.
+### Integrations (`src/lib/<vendor>/`)
+
+Each integration follows one template: a **client** (transport only — fetch/SDK, tokens,
+throws a typed error), a **service** (env-gate → cache → client → map wire→domain → return
+`Result<T>`/`StatusResult<T>`), a **types** file, and Zod validation at the wire boundary.
+Use the shared `Result<T>`/`StatusResult<T>` from `src/types` — do not re-invent the union.
+
+### Imports
+
+- Cross-unit → `@/…` alias; own siblings → relative `./`. Always explicit `.ts`/`.tsx` extensions.
+- Env is imported from `@env`.
+- Group: third-party → blank line → `@/` internal.
+
+### Components
+
+- Prefer **extracted named function components** over inline helpers that only exist to
+  `return` JSX — even small ones. It keeps structure consistent, improves diffs, and avoids
+  unstable nested component identities.
+- Styling is inline Tailwind via the `classnames()` util. Avoid CSS files (the one exception
+  is `AudioBento.css`, imported globally from `styles/globals.css`).
+- ESLint extends `@greenberry/linting-config`; discuss local rule changes before adding them.
+- Prefer `npx` for one-off package execution over global installs.
+- Prefer **explicit object properties** (`{ test, test2 }`) over conditional spreads used
+  only to add optional keys. See `rules/object-literals.md`.
 
 ## Type Safety
 
 - `strict`, `noUncheckedIndexedAccess`, `checkJs`, and `allowImportingTsExtensions` are enabled.
-- `exactOptionalPropertyTypes`, `useUnknownInCatchVariables`, `noPropertyAccessFromIndexSignature`, `noFallthroughCasesInSwitch`, and `noImplicitOverride` are not enabled; this is weaker than the shared baseline.
+- `exactOptionalPropertyTypes`, `useUnknownInCatchVariables`, `noPropertyAccessFromIndexSignature`,
+  `noFallthroughCasesInSwitch`, and `noImplicitOverride` are not enabled.
 - Env boundaries are validated with Zod in `src/env.ts`.
+- External data is not trusted because TypeScript types exist nearby — validate at the wire
+  boundary (see `rules/type-safety.md`).
 
-## Deviations from Global Rules
+## Testing
 
-- Jest and Vitest are both intentional: Jest is the primary test runner, while Vitest supports Storybook/browser testing.
+- Jest is the only test runner. `jest.config.ts` enforces **100% coverage** on
+  `src/{utils,lib,hooks}` (re-export `index.ts` barrels are excluded from collection).
+- Storybook stories double as visual/interaction documentation for components and modules.
+
+## Git hooks (husky)
+
+- `pre-commit`: `lint` + `lint:styles` + `type-check`, then re-stages fixed files.
+- `pre-push`: `npm run test`.
 
 ## Precedence
 
-Rules in this file override shared baseline rules from `ai-workflows` when they conflict.
+1. `CONVENTIONS.md` (this file — project-specific conventions)
+2. `rules/` (baseline coding standards)
+3. `CLAUDE.md` / `AGENTS.md` (tool adapters)
+
+When `CONVENTIONS.md` conflicts with `rules/`, this file wins.
+
+> Note: `rules/`, `AGENTS.md`, `CLAUDE.md`, and `AI-WORKFLOWS.md` are synced from a shared
+> `ai-workflows` template and still contain Payload-CMS / Jira-workflow material that does
+> **not** apply to this project. See `docs/unification-plan.md` §P0 for the cleanup in progress.

@@ -9,19 +9,16 @@ import Bento, { bentoBoxSizes } from "@/components/Bento/index.ts";
 import Glass from "@/components/Glass/index.ts";
 import Icon from "@/components/Icon/index.ts";
 import Link from "@/components/Link/index.ts";
-import useOutsideClick from "@/hooks/useOutsideClick/useOutsideClick.ts";
+import { useOutsideClick } from "@/hooks/useOutsideClick/index.ts";
 import classnames from "@/utils/classnames/classnames.ts";
+import { formatCalendarDate } from "@/utils/datetime/datetime.ts";
 
 import { socials } from "./Contact.const.ts";
 import { hasEnoughText } from "./Contact.validation.ts";
 import { ChatMessage } from "./Messages.tsx";
 import useChat from "./useChat.ts";
 
-const TODAY = new Intl.DateTimeFormat("en-US", {
-  weekday: "long",
-  month: "long",
-  day: "numeric",
-}).format(new Date());
+const TODAY = formatCalendarDate(new Date());
 
 const GLASS = {
   intensity: 2,
@@ -72,7 +69,7 @@ const Contact = ({ className }: ContactProps) => {
         ref={chatRef}
         className="no-scrollbar flex flex-1 flex-col gap-4 overflow-y-auto px-5 pt-5 pb-20"
       >
-        <p className="relative -top-3 text-center text-[0.625rem] text-dark-grey dark:text-ds-gray">
+        <p className="relative -top-3 text-center text-[0.625rem] text-ds-gray">
           <span className="font-medium">Today: </span>
           {TODAY}
         </p>

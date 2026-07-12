@@ -1,7 +1,7 @@
 import type { PlantsProps } from "./Plants.types.ts";
 import type { PlantaPlantCardData } from "@/lib/planta/types.ts";
 
-export const mockPlants: readonly PlantaPlantCardData[] = [
+const mockPlants: readonly PlantaPlantCardData[] = [
   {
     id: "plant-1",
     name: "Monstera",

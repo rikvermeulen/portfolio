@@ -18,14 +18,14 @@ const Personal = () => {
           Hey hey, I’m Rik{" "}
           <span className="shake w-fit cursor-pointer">👋🏻</span>
         </h2>
-        <p className="max-w-xl pt-3 text-dark-grey">
+        <p className="max-w-xl pt-3 text-ds-gray">
           I’m a Creative Developer based in Heukelum, the Netherlands. I develop
           full-scale creative digital experiences for some amazing agencies and
           hugely talented people. ✨
         </p>
       </div>
       <div>
-        <p className="text-dark-grey">
+        <p className="text-ds-gray">
           🐙 Coding:&nbsp;
           <Link
             href="https://github.com/rikvermeulen"
@@ -34,7 +34,7 @@ const Personal = () => {
             @rikvermeulen
           </Link>
         </p>
-        <p className="text-dark-grey">
+        <p className="text-ds-gray">
           💌 Hello?&nbsp;
           <Link
             href="mailto:hello@rikvermeulen.com"

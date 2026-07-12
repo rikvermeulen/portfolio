@@ -4,7 +4,7 @@
 
 import { act, renderHook } from "@testing-library/react";
 
-import useOutsideClick from "./useOutsideClick.ts";
+import { useOutsideClick } from "./useOutsideClick.ts";
 
 function createRefObject<T>(current: T): React.RefObject<T> {
   return { current };

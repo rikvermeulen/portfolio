@@ -6,7 +6,10 @@ import Image from "next/image";
 import type { PhotosProps } from "./Photos.types.ts";
 import type { ToggleOption } from "@/components/ToggleGroup/index.ts";
 
-import Bento, { bentoBoxSizes } from "@/components/Bento/index.ts";
+import Bento, {
+  bentoBoxSizes,
+  BentoEmptyState,
+} from "@/components/Bento/index.ts";
 import ToggleGroup from "@/components/ToggleGroup/index.ts";
 
 const AUTO_ADVANCE_INTERVAL_MS = 3000 as const;
@@ -80,14 +83,10 @@ const Photos = ({ albums, errorMessage }: PhotosProps) => {
 
   if (errorMessage || !hasMedia) {
     return (
-      <Bento
+      <BentoEmptyState
+        message={errorMessage ?? "No photos found."}
         sizes={bentoBoxSizes.photos}
-        className="flex size-full items-center justify-center bg-neutral-900 p-5"
-      >
-        <p className="text-xs text-white/50">
-          {errorMessage ?? "No photos found."}
-        </p>
-      </Bento>
+      />
     );
   }
 

@@ -9,6 +9,7 @@ export { default as Photos } from "@/modules/Bentos/Photos/index.ts";
 export { default as Plants } from "@/modules/Bentos/Plants/index.ts";
 export { default as Recipes } from "@/modules/Bentos/Recipes/index.ts";
 export { default as Contact } from "@/modules/Bentos/Contact/index.ts";
+export { default as Journal } from "@/modules/Bentos/Journal/index.ts";
 export { default as Games } from "@/modules/Bentos/Games/index.ts";
 export type {
   CategoryProps,
@@ -21,6 +22,7 @@ export type { PhotosProps } from "@/modules/Bentos/Photos/index.ts";
 export type { PlantsProps } from "@/modules/Bentos/Plants/index.ts";
 export type { RecipesProps } from "@/modules/Bentos/Recipes/index.ts";
 export type { ContactProps } from "@/modules/Bentos/Contact/index.ts";
+export type { JournalProps } from "@/modules/Bentos/Journal/index.ts";
 export type { MusicProps } from "@/modules/Bentos/Music/index.ts";
 export type { Game, GamesProps } from "@/modules/Bentos/Games/index.ts";
 export type {

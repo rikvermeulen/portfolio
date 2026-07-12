@@ -1,4 +1,5 @@
 import type { PodcastEpisode, SpotifyEpisode } from "./types.ts";
+import type { Result } from "@/types/index.ts";
 
 import { env } from "@env";
 
@@ -10,21 +11,16 @@ export interface PodcastData {
   readonly episodes: readonly PodcastEpisode[];
 }
 
-export type PodcastResult =
-  | { readonly ok: true; readonly data: PodcastData }
-  | { readonly ok: false; readonly errorMessage: string };
-
 function toPodcastEpisode(episode: SpotifyEpisode): PodcastEpisode {
   return {
     id: episode.id,
     name: episode.name,
-    previewUrl: episode.audio_preview_url,
     imageUrl: episode.images[1]?.url ?? episode.images[0]?.url ?? null,
     explicit: episode.explicit,
   };
 }
 
-export async function getSpotifyPodcastResult(): Promise<PodcastResult> {
+export async function getSpotifyPodcastResult(): Promise<Result<PodcastData>> {
   const { SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET, SPOTIFY_MARKET } = env;
 
   try {
