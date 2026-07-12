@@ -1,4 +1,17 @@
-<svg viewBox="0 0 26 26" xmlns="http://www.w3.org/2000/svg" fill="none">
-  <circle cx="13" cy="13" r="13" fill="#007AFF"/>
-  <path d="M13 18V10M13 10L9 14M13 10L17 14" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.166 18.4473">
+  <path
+    d="M7.402 17.65V5.15"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2.6"
+    stroke-linecap="round"
+  />
+  <path
+    d="M1.35 7.95 7.402 1.65 13.45 7.95"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2.6"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
 </svg>

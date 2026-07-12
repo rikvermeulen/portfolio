@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 
+import type { SpotifyConnection } from "./useSpotifyConnection.types.ts";
 import type {
   SpotifyPlayer,
   WebPlaybackDevice,
@@ -16,25 +17,6 @@ import {
   reportDiagnostic,
   reportEnvironmentDiagnostics,
 } from "@/lib/spotify/webPlayback.ts";
-
-export interface SpotifyConnection {
-  /** The SDK device id once registered, else null. */
-  readonly deviceId: string | null;
-  /** True once the device has fired `ready`. */
-  readonly isReady: boolean;
-  /** Mirrors the SDK's `player_state_changed.paused`. */
-  readonly isPaused: boolean;
-  /** URI currently loaded in the shared SDK player, if known. */
-  readonly currentUri: string | null;
-  /** User-facing error if the SDK failed to initialize/authenticate. */
-  readonly error: string | null;
-  /** The underlying SDK player, available once connected. */
-  readonly player: SpotifyPlayer | null;
-  /** Returns a non-expired access token, refreshing if needed. */
-  readonly getValidToken: () => Promise<string>;
-  /** Unblocks autoplay-restricted browsers; call inside a user gesture. */
-  readonly activate: () => void;
-}
 
 /**
  * Registers a single Spotify Connect device in the browser via the Web Playback

@@ -36,3 +36,72 @@ export const bentoBoxSizes = {
 
 /** Keys of the canonical tile-size table — the single source of truth for sizing. */
 export type BentoBoxSizeKey = keyof typeof bentoBoxSizes;
+
+/**
+ * App identity per bento — the single source of truth tying a tile to its
+ * icon and display name. Tiles reference an app by key (`<Bento app="journal">`)
+ * and toasts look icons up here, so a notification shows the exact same icon as
+ * its bento.
+ *
+ * List the light `icon` for every app. Add `darkIcon` when a dark-mode twin
+ * exists; without it the light icon is used in both themes.
+ */
+export const bentoApps = {
+  personal: { name: "Rik Vermeulen", icon: "/images/me.jpg" },
+  contact: {
+    name: "Messages",
+    icon: "/images/icons/light/messages.png",
+    darkIcon: "/images/icons/dark/messages.png",
+  },
+  journal: {
+    name: "Journal",
+    icon: "/images/icons/light/journal.png",
+    darkIcon: "/images/icons/dark/journal.png",
+  },
+  music: {
+    name: "Music",
+    icon: "/images/icons/light/music.png",
+    darkIcon: "/images/icons/dark/music.png",
+  },
+  podcast: {
+    name: "Podcasts",
+    icon: "/images/icons/light/podcast.png",
+    darkIcon: "/images/icons/dark/podcast.png",
+  },
+  photos: {
+    name: "Photos",
+    icon: "/images/icons/light/photos.png",
+    darkIcon: "/images/icons/dark/photos.png",
+  },
+  plants: {
+    name: "Planta",
+    icon: "/images/icons/light/planta.png",
+    darkIcon: "/images/icons/dark/planta.png",
+  },
+  recipes: {
+    name: "Picnic",
+    icon: "/images/icons/light/picnic.png",
+    darkIcon: "/images/icons/dark/picnic.png",
+  },
+  games: {
+    name: "Steam",
+    icon: "/images/icons/light/games.png",
+    darkIcon: "/images/icons/dark/games.png",
+  },
+  findme: {
+    name: "Find Me",
+    icon: "/images/icons/light/findme.png",
+    darkIcon: "/images/icons/dark/findme.png",
+  },
+  greenberry: {
+    name: "Greenberry",
+    icon: "/images/icons/light/greenberry.png",
+    darkIcon: "/images/icons/dark/greenberry.png",
+  },
+} as const satisfies Record<
+  string,
+  { name: string; icon: string; darkIcon?: string }
+>;
+
+/** Keys of the app-identity table — one per notifiable bento. */
+export type BentoAppKey = keyof typeof bentoApps;

@@ -1,4 +1,4 @@
-import { formatCalendarDate } from "@/utils/datetime/datetime.ts";
+import { time } from "@/utils/datetime/index.ts";
 
 import { journalQuestions } from "./Journal.questions.ts";
 
@@ -28,4 +28,4 @@ export const getRandomQuestionIndex = (currentIndex: number): number => {
 
 /** "Sunday, 12 Jul" — en-GB day/month order with an explicit comma. */
 export const formatQuestionDate = (date: Date): string =>
-  formatCalendarDate(date, { locale: "en-GB", month: "short" });
+  time.date(date, { locale: "en-GB", month: "short" });

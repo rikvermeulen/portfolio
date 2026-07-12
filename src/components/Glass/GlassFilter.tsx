@@ -1,5 +1,7 @@
 import { Fragment } from "react";
 
+import type { GlassFilterProps } from "./Glass.types.ts";
+
 // Below ~0.5px the chromatic split is invisible, so the three-channel
 // aberration collapses to a single displacement pass (~3× less filter work).
 const MIN_CHROMA_SPLIT_PX = 0.5;
@@ -10,16 +12,6 @@ const CHANNEL_MATRIX = {
   green: "0 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 0 0 1 0",
   blue: "0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 0 1 0",
 } as const;
-
-interface GlassFilterProps {
-  readonly id: string;
-  readonly feImageRef: React.RefObject<SVGFEImageElement | null>;
-  /** Base pixel reach of the refraction. */
-  readonly displacementScale: number;
-  /** How far the red/blue channels split from green (chromatic aberration). */
-  readonly chroma: number;
-  readonly blur: number;
-}
 
 /**
  * The SVG filter behind the refraction. A per-instance displacement map —

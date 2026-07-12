@@ -1,12 +1,12 @@
 /**
- * Shared date/time formatting. Bentos and widgets that need to render a clock,
- * a calendar date, or a relative timestamp all go through here so the plumbing
- * (Intl config, division tables, padding) lives in one place.
+ * Shared date/time formatting. Every clock, calendar date, relative timestamp,
+ * and notification stamp goes through the `time` object below, so the Intl
+ * plumbing (locale config, the relative-unit table) lives in exactly one place.
  */
 
 const relativeTime = new Intl.RelativeTimeFormat("en", { numeric: "auto" });
 
-/** Ordered largest-fitting-unit table for {@link formatRelativeTime}. */
+/** Ordered largest-fitting-unit table for `time.ago`. */
 const RELATIVE_DIVISIONS = [
   { amount: 60, unit: "second" },
   { amount: 60, unit: "minute" },
@@ -17,16 +17,6 @@ const RELATIVE_DIVISIONS = [
   { amount: Number.POSITIVE_INFINITY, unit: "year" },
 ] as const;
 
-/** Wall-clock time like `"3:05 PM"` — 12-hour, zero-padded minutes. */
-export function formatClock(date: Date): string {
-  const hours = date.getHours();
-  const minutes = date.getMinutes();
-  const ampm = hours >= 12 ? "PM" : "AM";
-  const displayHours = hours % 12 || 12;
-  const displayMinutes = minutes.toString().padStart(2, "0");
-  return `${displayHours}:${displayMinutes} ${ampm}`;
-}
-
 interface CalendarDateOptions {
   /** BCP-47 locale tag; drives day/month ordering. Defaults to `"en-US"`. */
   readonly locale?: string;
@@ -34,13 +24,21 @@ interface CalendarDateOptions {
   readonly month?: "long" | "short";
 }
 
+/** Wall-clock time like `"3:05 PM"` — 12-hour, zero-padded minutes. */
+function clock(date: Date): string {
+  return date.toLocaleTimeString("en-US", {
+    hour: "numeric",
+    minute: "2-digit",
+  });
+}
+
 /**
  * `"Weekday, <date>"` with the weekday always followed by a comma.
  *
- * @example formatCalendarDate(d) // "Sunday, July 12" (en-US)
- * @example formatCalendarDate(d, { locale: "en-GB", month: "short" }) // "Sunday, 12 Jul"
+ * @example time.date(d) // "Sunday, July 12" (en-US)
+ * @example time.date(d, { locale: "en-GB", month: "short" }) // "Sunday, 12 Jul"
  */
-export function formatCalendarDate(
+function calendarDate(
   date: Date,
   { locale = "en-US", month = "long" }: CalendarDateOptions = {},
 ): string {
@@ -50,7 +48,7 @@ export function formatCalendarDate(
 }
 
 /** `"2 days ago"`, `"yesterday"`, `"3 weeks ago"` — relative to now. */
-export function formatRelativeTime(date: Date): string {
+function ago(date: Date): string {
   let value = (date.getTime() - Date.now()) / 1000;
   for (const division of RELATIVE_DIVISIONS) {
     if (Math.abs(value) < division.amount) {
@@ -61,3 +59,36 @@ export function formatRelativeTime(date: Date): string {
   /* istanbul ignore next — the final division's infinite bound always matches, so the loop always returns first */
   return relativeTime.format(Math.round(value), "year");
 }
+
+/** Calendar days between two dates, ignoring the time of day. */
+function calendarDayDelta(date: Date, now: Date): number {
+  const startOf = (d: Date) =>
+    new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
+  return Math.round((startOf(now) - startOf(date)) / 86_400_000);
+}
+
+/**
+ * macOS-notification-style stamp: `"6:21 PM"` for today, `"Yesterday, 6:21 PM"`
+ * for yesterday, and the calendar date (`"Sunday, July 12"`) for anything older.
+ * `now` is injectable for deterministic tests.
+ */
+function stamp(date: Date, now: Date = new Date()): string {
+  const delta = calendarDayDelta(date, now);
+  if (delta <= 0) {
+    return clock(date);
+  }
+  if (delta === 1) {
+    return `Yesterday, ${clock(date)}`;
+  }
+  return calendarDate(date);
+}
+
+/**
+ * One home for date/time display formatting.
+ *
+ * - `time.clock(d)`  → `"3:05 PM"`
+ * - `time.date(d)`   → `"Sunday, July 12"`
+ * - `time.ago(d)`    → `"2 days ago"`
+ * - `time.stamp(d)`  → today/yesterday/date, notification-style
+ */
+export const time = { clock, date: calendarDate, ago, stamp } as const;

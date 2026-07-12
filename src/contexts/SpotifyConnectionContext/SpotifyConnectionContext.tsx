@@ -6,8 +6,8 @@ import type { SpotifyConnection } from "@/hooks/useSpotifyConnection/index.ts";
 import type { ReactNode } from "react";
 
 import { useSpotifyConnection } from "@/hooks/useSpotifyConnection/index.ts";
+import { SPOTIFY_DEVICE_NAME } from "@/lib/spotify/webPlayback.ts";
 
-const PLAYER_NAME = "Rik's Portfolio";
 const SpotifyConnectionContext = createContext<SpotifyConnection | null>(null);
 
 export function SpotifyConnectionProvider({
@@ -15,7 +15,7 @@ export function SpotifyConnectionProvider({
 }: {
   children: ReactNode;
 }) {
-  const connection = useSpotifyConnection(PLAYER_NAME, true);
+  const connection = useSpotifyConnection(SPOTIFY_DEVICE_NAME, true);
 
   return (
     <SpotifyConnectionContext value={connection}>

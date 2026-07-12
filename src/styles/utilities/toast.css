@@ -1,0 +1,32 @@
+.app-toast {
+  view-transition-class: toast;
+}
+
+@keyframes toast-enter {
+  from {
+    opacity: 0;
+    transform: translateX(1.25rem) scale(0.95);
+  }
+}
+
+@keyframes toast-exit {
+  to {
+    opacity: 0;
+    transform: translateX(1.25rem) scale(0.95);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  ::view-transition-group(.toast) {
+    animation-duration: 0.42s;
+    animation-timing-function: cubic-bezier(0.32, 0.72, 0, 1);
+  }
+
+  ::view-transition-new(.toast) {
+    animation: toast-enter 0.42s cubic-bezier(0.32, 0.72, 0, 1) both;
+  }
+
+  ::view-transition-old(.toast) {
+    animation: toast-exit 0.3s ease-in both;
+  }
+}

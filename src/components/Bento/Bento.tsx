@@ -1,9 +1,10 @@
 import type { BentoBoxSize, BentoProps } from "./Bento.types.ts";
 
+import AppIcon from "@/components/AppIcon/index.ts";
 import Link from "@/components/Link/index.ts";
 import classnames from "@/utils/classnames/classnames.ts";
 
-import AppIcon from "./AppIcon.tsx";
+import { bentoApps } from "./config.ts";
 
 /**
  * Bento component - A flexible container for bento grid layouts
@@ -13,6 +14,7 @@ import AppIcon from "./AppIcon.tsx";
  * @returns A styled article element for bento grid layouts
  */
 const Bento = ({
+  app,
   image,
   imageAlt,
   href,
@@ -53,8 +55,22 @@ const Bento = ({
     ...style,
   } as React.CSSProperties;
 
-  const iconTile = image ? (
-    <AppIcon alt={imageAlt} interactive={hasLink} src={image} />
+  // `app` resolves icon + alt from the registry; `image` is the raw escape hatch.
+  const resolvedApp = app ? bentoApps[app] : null;
+  const iconSrc = resolvedApp?.icon ?? image;
+  const iconAlt = imageAlt ?? resolvedApp?.name;
+
+  const iconTile = iconSrc ? (
+    <AppIcon
+      alt={iconAlt}
+      darkSrc={
+        resolvedApp && "darkIcon" in resolvedApp
+          ? resolvedApp.darkIcon
+          : undefined
+      }
+      interactive={hasLink}
+      src={iconSrc}
+    />
   ) : null;
 
   return (
@@ -71,7 +87,7 @@ const Bento = ({
       )}
       {...props}
     >
-      {image && (
+      {iconTile && (
         <div
           className={classnames(
             "absolute right-4 z-20",

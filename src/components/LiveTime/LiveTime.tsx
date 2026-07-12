@@ -4,10 +4,10 @@ import { useCallback, useSyncExternalStore } from "react";
 
 import type { LiveTimeProps } from "./LiveTime.types.ts";
 
-import { formatClock } from "@/utils/datetime/datetime.ts";
+import { time } from "@/utils/datetime/index.ts";
 
 function getCurrentTime(): string {
-  return formatClock(new Date());
+  return time.clock(new Date());
 }
 
 /**

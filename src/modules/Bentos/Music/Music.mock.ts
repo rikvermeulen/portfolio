@@ -30,8 +30,3 @@ export const mockMusicProps = {
     },
   ],
 } satisfies MusicProps;
-
-export const mockMusicPropsEmpty = {
-  tracks: [],
-  errorMessage: "Could not load the playlist right now",
-} satisfies MusicProps;

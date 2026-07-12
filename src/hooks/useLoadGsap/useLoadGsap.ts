@@ -3,17 +3,7 @@
 
 import { useEffect, useState } from "react";
 
-export type Plugin =
-  | "ScrollTrigger"
-  | "Draggable"
-  | "MotionPathPlugin"
-  | "ScrollSmoother"
-  | "Flip"
-  | "Observer"
-  | "SplitText"
-  | "EaselPlugin"
-  | "GSDevTools"
-  | "InertiaPlugin";
+import type { Plugin } from "./useLoadGsap.types.ts";
 
 const pluginMap = {
   ScrollTrigger: () => import("gsap/ScrollTrigger"),

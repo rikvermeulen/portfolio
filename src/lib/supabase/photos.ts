@@ -5,6 +5,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 
 import { env } from "@/env.ts";
 import { createSupabaseClient } from "@/lib/supabase/supabase.ts";
+import { compact } from "@/utils/compact/index.ts";
 
 /** Album name → ordered public URLs of its photos/videos. */
 export type PhotoAlbums = Record<string, readonly string[]>;
@@ -29,14 +30,14 @@ async function fetchAlbumPhotos(
     return [];
   }
 
-  return data
-    .map(
+  return compact(
+    data.map(
       (file) =>
         supabase.storage
           .from(PHOTOS_BUCKET)
           .getPublicUrl(`${albumName}/${file.name}`).data?.publicUrl,
-    )
-    .filter((url): url is string => Boolean(url));
+    ),
+  );
 }
 
 async function fetchAllAlbums(): Promise<PhotoAlbums> {

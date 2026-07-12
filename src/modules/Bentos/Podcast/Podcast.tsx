@@ -6,7 +6,7 @@ import AudioBento from "@/components/AudioBento/index.ts";
 import { bentoBoxSizes } from "@/components/Bento/index.ts";
 import { useSpotifyPodcastPlayer } from "@/hooks/useSpotifyPodcastPlayer/index.ts";
 
-const Podcast = ({ episodes, errorMessage }: PodcastProps) => {
+const Podcast = ({ episodes }: PodcastProps) => {
   const {
     isPlaying,
     currentIndex,
@@ -31,9 +31,8 @@ const Podcast = ({ episodes, errorMessage }: PodcastProps) => {
 
   return (
     <AudioBento
+      app="podcast"
       display={display}
-      errorMessage={errorMessage}
-      icon="/images/icons/podcast.png"
       isPlaying={isPlaying}
       onChangeTrack={(direction) =>
         direction === "next" ? goToNext() : goToPrevious()

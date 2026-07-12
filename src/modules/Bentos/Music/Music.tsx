@@ -6,7 +6,7 @@ import AudioBento from "@/components/AudioBento/index.ts";
 import { bentoBoxSizes } from "@/components/Bento/index.ts";
 import { useSpotifyMusicPlayer } from "@/hooks/useSpotifyMusicPlayer/index.ts";
 
-const Music = ({ tracks, errorMessage }: MusicProps) => {
+const Music = ({ tracks }: MusicProps) => {
   const {
     isPlaying,
     currentIndex,
@@ -31,9 +31,8 @@ const Music = ({ tracks, errorMessage }: MusicProps) => {
 
   return (
     <AudioBento
+      app="music"
       display={display}
-      errorMessage={errorMessage}
-      icon="/images/icons/music.png"
       isPlaying={isPlaying}
       onChangeTrack={(direction) =>
         direction === "next" ? goToNext() : goToPrevious()

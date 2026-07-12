@@ -2,31 +2,20 @@
 
 import { useRef, useState } from "react";
 
+import type {
+  PodcastEpisodeItem,
+  UseSpotifyPodcastPlayerReturn,
+} from "./useSpotifyPodcastPlayer.types.ts";
+
 import { useSharedSpotifyConnection } from "@/contexts/SpotifyConnectionContext/index.ts";
 import {
   PLAYBACK_RETRY_MESSAGE,
   PLAYBACK_UNAVAILABLE_MESSAGE,
   reportDiagnostic,
   resolveDeviceId,
+  SPOTIFY_DEVICE_NAME,
   startPlaybackUris,
 } from "@/lib/spotify/webPlayback.ts";
-
-/** Minimal shape the podcast player needs from an episode. */
-export interface PodcastEpisodeItem {
-  readonly id: string;
-}
-
-export interface UseSpotifyPodcastPlayerReturn {
-  readonly isPlaying: boolean;
-  readonly isReady: boolean;
-  readonly currentIndex: number;
-  readonly volume: number;
-  readonly error: string | null;
-  readonly togglePlay: () => void;
-  readonly goToNext: () => void;
-  readonly goToPrevious: () => void;
-  readonly setVolume: (value: number) => void;
-}
 
 /**
  * Podcast playback over a list of episodes. Episodes are played with their
@@ -74,10 +63,10 @@ export function useSpotifyPodcastPlayer(
         (await resolveDeviceId(
           token,
           connection.deviceId,
-          "Rik's Portfolio",
+          SPOTIFY_DEVICE_NAME,
         )) ?? connection.deviceId;
       reportDiagnostic("play-attempt", {
-        name: "Rik's Portfolio",
+        name: SPOTIFY_DEVICE_NAME,
         cachedId: connection.deviceId,
         resolvedId: deviceId,
         uri: `spotify:episode:${episode.id}`,
@@ -86,7 +75,7 @@ export function useSpotifyPodcastPlayer(
         `spotify:episode:${episode.id}`,
       ]);
       reportDiagnostic("play-result", {
-        name: "Rik's Portfolio",
+        name: SPOTIFY_DEVICE_NAME,
         status: resp.status,
       });
       if (!resp.ok) {

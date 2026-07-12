@@ -16,6 +16,13 @@
       "autoPort": false
     },
     {
+      "name": "storybook-verify",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["storybook", "dev", "-p", "6007", "--no-open"],
+      "port": 6007,
+      "autoPort": false
+    },
+    {
       "name": "dev-debug",
       "runtimeExecutable": "npx",
       "runtimeArgs": ["next", "dev", "-p", "3007"],

@@ -1,9 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 
-import {
-  mockAudioBentoProps,
-  mockAudioBentoPropsEmpty,
-} from "./AudioBento.mock.ts";
+import { mockAudioBentoProps } from "./AudioBento.mock.ts";
 import AudioBento from "./AudioBento.tsx";
 
 // AudioBento is presentational; stories render it with fully-typed mock props
@@ -27,8 +24,4 @@ type Story = StoryObj;
 
 export const Default: Story = {
   render: () => <AudioBento {...mockAudioBentoProps} />,
-};
-
-export const Empty: Story = {
-  render: () => <AudioBento {...mockAudioBentoPropsEmpty} />,
 };

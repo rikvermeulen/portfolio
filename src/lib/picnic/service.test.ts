@@ -11,6 +11,10 @@ const mockGetCookbookPage = jest.fn();
 const mockEnsurePicnicAuth = jest.fn();
 const mockCreatePicnicClientFromEnv = jest.fn();
 
+jest.mock("next/cache", () => ({
+  unstable_cache: (fn: () => Promise<unknown>) => fn,
+}));
+
 jest.mock("./client.ts", () => ({
   createPicnicClientFromEnv: (...args: unknown[]) =>
     mockCreatePicnicClientFromEnv(...args),
@@ -225,6 +229,19 @@ describe("getPicnicRecipesResult", () => {
     expect(result.ok).toBe(true);
     if (result.ok) {
       expect(result.data.recipeCards).toHaveLength(1);
+    }
+  });
+
+  it("returns ok:false when no recipes are saved", async () => {
+    const { extractSavedRecipes } = jest.requireMock("./extract.ts") as {
+      extractSavedRecipes: jest.Mock;
+    };
+    extractSavedRecipes.mockReturnValueOnce([]);
+    mockGetCookbookPage.mockResolvedValue({ recipes: {} });
+    const result = await getPicnicRecipesResult();
+    expect(result.ok).toBe(false);
+    if (!result.ok) {
+      expect(result.errorMessage).toBe("No saved recipes found.");
     }
   });
 

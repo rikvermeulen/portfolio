@@ -69,6 +69,14 @@ export const getPlantaPlantsResult = async (): Promise<PlantaPlantsResult> => {
   try {
     const data = await getCachedPlantaPlantsData();
 
+    if (data.plantCards.length === 0) {
+      return {
+        ok: false,
+        statusCode: 500,
+        errorMessage: "No Planta plants available right now.",
+      };
+    }
+
     return {
       ok: true,
       statusCode: 200,

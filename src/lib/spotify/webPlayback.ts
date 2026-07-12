@@ -18,6 +18,9 @@
 
 export const WEB_PLAYBACK_SDK_SRC = "https://sdk.scdn.co/spotify-player.js";
 
+/** Connect device name registered with the SDK — single source across the app. */
+export const SPOTIFY_DEVICE_NAME = "Rik's Portfolio";
+
 /** Message shown to the user when playback can't initialize or start. */
 export const PLAYBACK_UNAVAILABLE_MESSAGE =
   "Playback needs Spotify Premium in a browser that supports DRM (e.g. Chrome, Edge or Safari).";

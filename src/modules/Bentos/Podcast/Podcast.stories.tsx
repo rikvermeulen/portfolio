@@ -1,6 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 
-import { mockPodcastProps, mockPodcastPropsEmpty } from "./Podcast.mock.ts";
+import { bentoBoxSizes, BentoEmptyState } from "@/components/Bento/index.ts";
+
+import { mockPodcastProps } from "./Podcast.mock.ts";
 import Podcast from "./Podcast.tsx";
 
 const meta = {
@@ -25,6 +27,12 @@ export const Default: Story = {
   args: mockPodcastProps,
 };
 
-export const Empty: Story = {
-  args: mockPodcastPropsEmpty,
+export const Unavailable: Story = {
+  args: mockPodcastProps,
+  render: () => (
+    <BentoEmptyState
+      message="Could not load episodes right now"
+      sizes={bentoBoxSizes.podcast}
+    />
+  ),
 };

@@ -2,15 +2,10 @@
 
 import { Component } from "react";
 
-import type { BentoBoxSizeKey } from "./config.ts";
+import type { BentoErrorBoundaryProps } from "./Bento.types.ts";
 
 import Bento from "./Bento.tsx";
 import { bentoBoxSizes } from "./config.ts";
-
-interface BentoErrorBoundaryProps {
-  readonly size: BentoBoxSizeKey;
-  readonly children: React.ReactNode;
-}
 
 interface BentoErrorBoundaryState {
   readonly hasError: boolean;

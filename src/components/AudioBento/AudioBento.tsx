@@ -23,11 +23,10 @@ const FALLBACK_IMAGE = "/images/no-album.png";
  */
 const AudioBento = ({
   display,
-  errorMessage,
   playbackError,
   isPlaying,
   volume,
-  icon,
+  app,
   sizes,
   className,
   onPlayOrPause,
@@ -59,7 +58,7 @@ const AudioBento = ({
 
   return (
     <Bento
-      image={icon}
+      app={app}
       sizes={sizes}
       className={classnames("relative z-0 border-none!", className)}
     >
@@ -87,27 +86,23 @@ const AudioBento = ({
             width={124}
             className={classnames(
               !prefersReducedMotion && (isPlaying ? "pop-up" : "pop-down"),
-              "scale-100 rounded-md drop-shadow-md transition-transform duration-300 ease-in-out",
+              "aspect-square scale-100 rounded-md object-cover drop-shadow-md transition-transform duration-300 ease-in-out",
             )}
           />
         </div>
 
         {/* Item info */}
-        {errorMessage && !display ? (
-          <div className="mt-2 text-sm text-white/70">{errorMessage}</div>
-        ) : (
-          <div className="mt-2 flex flex-col text-white">
-            <div className="flex items-center gap-2 text-xs">
-              <p className="line-clamp-1 font-bold">{display?.title}</p>
-              {display?.explicit && (
-                <Icon iconClassName="w-2.5" name="explicit" />
-              )}
-            </div>
-            <div className="relative text-xs text-white/70">
-              {display?.subtitle}
-            </div>
+        <div className="mt-2 flex flex-col text-white">
+          <div className="flex items-center gap-2 text-xs">
+            <p className="line-clamp-1 font-bold">{display?.title}</p>
+            {display?.explicit && (
+              <Icon iconClassName="w-2.5" name="explicit" />
+            )}
           </div>
-        )}
+          <div className="relative text-xs text-white/70">
+            {display?.subtitle}
+          </div>
+        </div>
 
         <AudioControls
           isPlaying={isPlaying}

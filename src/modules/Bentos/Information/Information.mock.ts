@@ -5,7 +5,7 @@ export const mockInformationProps = {
   description: "Building polished digital experiences with a talented team.",
   href: "https://greenberry.nl",
   linkLabel: "Current role",
-  iconSrc: "/images/icons/greenberry.png",
+  iconSrc: "/images/icons/light/greenberry.png",
   iconAlt: "Greenberry",
   iconPosition: "top-right",
   className: "bg-ds-violet text-white",

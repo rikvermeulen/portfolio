@@ -1,7 +1,12 @@
 import type { BentoBoxSizeKey } from "@/components/Bento/index.ts";
 import type { Result } from "@/types/index.ts";
 
-import { AsyncBento } from "@/components/Bento/index.ts";
+import {
+  AsyncBento,
+  bentoApps,
+  bentoBoxSizes,
+  BentoEmptyState,
+} from "@/components/Bento/index.ts";
 import { getPicnicRecipesResult } from "@/lib/picnic/service.ts";
 import { getPlantaPlantsResult } from "@/lib/planta/service.ts";
 import { getSpotifyPodcastResult } from "@/lib/spotify/podcast-service.ts";
@@ -60,11 +65,12 @@ interface AsyncTileConfig<T> {
   readonly sizeKey: BentoBoxSizeKey;
   readonly load: () => Promise<Result<T>>;
   readonly render: (data: T) => React.ReactNode;
-  readonly renderError: (errorMessage: string) => React.ReactNode;
 }
 
 /** Binds a data tile's `T` at definition, erasing it from the registry type. */
 function asyncTile<T>(config: AsyncTileConfig<T>): AsyncTile {
+  const sizes = bentoBoxSizes[config.sizeKey];
+
   return {
     kind: "async",
     id: config.id,
@@ -73,7 +79,9 @@ function asyncTile<T>(config: AsyncTileConfig<T>): AsyncTile {
       <AsyncBento
         load={config.load}
         render={config.render}
-        renderError={config.renderError}
+        renderError={(errorMessage) => (
+          <BentoEmptyState message={errorMessage} sizes={sizes} />
+        )}
       />
     ),
   };
@@ -92,9 +100,6 @@ export const bentoRegistry: readonly BentoTile[] = [
     sizeKey: "photos",
     load: getPhotosResult,
     render: (albums) => <Photos albums={albums} />,
-    renderError: (errorMessage) => (
-      <Photos albums={{}} errorMessage={errorMessage} />
-    ),
   }),
 
   asyncTile({
@@ -102,9 +107,6 @@ export const bentoRegistry: readonly BentoTile[] = [
     sizeKey: "plants",
     load: getPlantaPlantsResult,
     render: (data) => <Plants plants={data.plantCards} />,
-    renderError: (errorMessage) => (
-      <Plants errorMessage={errorMessage} plants={[]} />
-    ),
   }),
 
   asyncTile({
@@ -112,9 +114,6 @@ export const bentoRegistry: readonly BentoTile[] = [
     sizeKey: "music",
     load: getSpotifyMusicResult,
     render: (data) => <Music tracks={data.tracks} />,
-    renderError: (errorMessage) => (
-      <Music errorMessage={errorMessage} tracks={[]} />
-    ),
   }),
 
   asyncTile({
@@ -122,9 +121,6 @@ export const bentoRegistry: readonly BentoTile[] = [
     sizeKey: "podcast",
     load: getSpotifyPodcastResult,
     render: (data) => <Podcast episodes={data.episodes} />,
-    renderError: (errorMessage) => (
-      <Podcast episodes={[]} errorMessage={errorMessage} />
-    ),
   }),
 
   { kind: "static", id: "contact", render: () => <Contact /> },
@@ -134,9 +130,6 @@ export const bentoRegistry: readonly BentoTile[] = [
     sizeKey: "recipes",
     load: getPicnicRecipesResult,
     render: (data) => <Recipes recipes={data.recipeCards} />,
-    renderError: (errorMessage) => (
-      <Recipes errorMessage={errorMessage} recipes={[]} />
-    ),
   }),
 
   asyncTile({
@@ -144,9 +137,6 @@ export const bentoRegistry: readonly BentoTile[] = [
     sizeKey: "games",
     load: getSteamGamesResult,
     render: (data) => <Games games={data.games} />,
-    renderError: (errorMessage) => (
-      <Games errorMessage={errorMessage} games={[]} />
-    ),
   }),
 
   { kind: "static", id: "journal", render: () => <Journal /> },
@@ -184,7 +174,7 @@ export const bentoRegistry: readonly BentoTile[] = [
         description="Building polished digital experiences together with a talented team."
         href="https://greenberry.nl"
         iconPosition="top-right"
-        iconSrc="/images/icons/greenberry.png"
+        iconSrc={bentoApps.greenberry.icon}
         linkLabel="Current role"
         title="Medior Front-end engineer at Greenberry"
         className="bg-ds-violet text-white"

@@ -1,5 +1,3 @@
-import type { WithErrorMessage } from "@/types/index.ts";
-
-export interface PhotosProps extends WithErrorMessage {
+export interface PhotosProps {
   readonly albums: Record<string, readonly string[]>;
 }

@@ -6,3 +6,7 @@ export interface AudioControlsProps {
   readonly onPlayOrPause: () => void;
   readonly onChangeTrack: (direction: "previous" | "next") => void;
 }
+
+export interface NextIconProps {
+  className?: string;
+}

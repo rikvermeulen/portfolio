@@ -25,7 +25,7 @@ There is **no CMS, database, or i18n layer** in this project.
   `page.tsx` maps the registry, `bento-registry.tsx` is the single source of truth for tile order/wiring
 - `src/app/api/*`: HTTP routes (contact, greeting, spotify/token, planta/plants, find-me/conditions, picnic/*, dev-diagnostics)
 - `src/components`: generic, reusable UI primitives (folder-per-component, PascalCase). Includes the
-  Bento grid infrastructure in `components/Bento/` (`Bento`, `AsyncBento`, `BentoGrid`, `BentoSkeleton`, `BentoErrorBoundary`, `AppIcon`)
+  Bento grid infrastructure in `components/Bento/` (`Bento`, `AsyncBento`, `BentoGrid`, `BentoSkeleton`, `BentoErrorBoundary`); `AppIcon` in `components/AppIcon/`
 - `src/modules`: feature blocks (`Bentos/*` — the 13 concrete tiles — and `Navigation/*`)
 - `src/hooks`: React hooks (folder-per-hook, camelCase `useX`, named export)
 - `src/contexts`: React contexts (Provider + accessor hook)

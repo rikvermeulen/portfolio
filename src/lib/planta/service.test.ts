@@ -6,6 +6,10 @@ import {
   toPlantaStatusCode,
 } from "./service.ts";
 
+jest.mock("next/cache", () => ({
+  unstable_cache: (fn: () => Promise<unknown>) => fn,
+}));
+
 jest.mock("./client.ts", () => {
   return {
     createPlantaClientFromEnv: jest.fn(),
@@ -114,6 +118,18 @@ describe("Planta service", () => {
 
     expect(data.rawPlants[0]?.id).toBe("direct-plant");
     expect(data.plantCards[0]?.name).toBe("DirectPlant");
+  });
+
+  it("returns ok:false when no plants are configured", async () => {
+    createPlantaClientFromEnv.mockReturnValue({
+      getPlants: jest.fn().mockResolvedValue({ plants: [] }),
+    });
+
+    await expect(getPlantaPlantsResult()).resolves.toEqual({
+      ok: false,
+      statusCode: 500,
+      errorMessage: "No Planta plants available right now.",
+    });
   });
 
   it("returns a 500 result when a non-unauthorized error is thrown", async () => {

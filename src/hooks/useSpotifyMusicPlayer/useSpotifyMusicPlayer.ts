@@ -2,31 +2,20 @@
 
 import { useRef, useState } from "react";
 
+import type {
+  MusicTrack,
+  UseSpotifyMusicPlayerReturn,
+} from "./useSpotifyMusicPlayer.types.ts";
+
 import { useSharedSpotifyConnection } from "@/contexts/SpotifyConnectionContext/index.ts";
 import {
   PLAYBACK_RETRY_MESSAGE,
   PLAYBACK_UNAVAILABLE_MESSAGE,
   reportDiagnostic,
   resolveDeviceId,
+  SPOTIFY_DEVICE_NAME,
   startPlaybackUris,
 } from "@/lib/spotify/webPlayback.ts";
-
-/** Minimal shape the music player needs from a track. */
-export interface MusicTrack {
-  readonly id: string;
-}
-
-export interface UseSpotifyMusicPlayerReturn {
-  readonly isPlaying: boolean;
-  readonly isReady: boolean;
-  readonly currentIndex: number;
-  readonly volume: number;
-  readonly error: string | null;
-  readonly togglePlay: () => void;
-  readonly goToNext: () => void;
-  readonly goToPrevious: () => void;
-  readonly setVolume: (value: number) => void;
-}
 
 /**
  * Music playback over a list of tracks on the page's single Spotify device.
@@ -73,20 +62,20 @@ export function useSpotifyMusicPlayer(
         (await resolveDeviceId(
           token,
           connection.deviceId,
-          "Rik's Portfolio",
+          SPOTIFY_DEVICE_NAME,
         )) ?? connection.deviceId;
       const uris = [...tracks.slice(index), ...tracks.slice(0, index)].map(
         (item) => `spotify:track:${item.id}`,
       );
       reportDiagnostic("play-attempt", {
-        name: "Rik's Portfolio",
+        name: SPOTIFY_DEVICE_NAME,
         cachedId: connection.deviceId,
         resolvedId: deviceId,
         uri: `spotify:track:${track.id}`,
       });
       const resp = await startPlaybackUris(token, deviceId, uris);
       reportDiagnostic("play-result", {
-        name: "Rik's Portfolio",
+        name: SPOTIFY_DEVICE_NAME,
         status: resp.status,
       });
       if (!resp.ok) {

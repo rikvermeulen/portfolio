@@ -1,4 +1,23 @@
-import type { FindMeConditionsState } from "./useFindMeConditions.ts";
+import type { FindMeConditionsSuccessResponse } from "@/lib/findMeConditions/types.ts";
+
+interface FindMeConditionsLoadingState {
+  readonly status: "loading";
+}
+
+interface FindMeConditionsSuccessState {
+  readonly status: "success";
+  readonly data: FindMeConditionsSuccessResponse;
+}
+
+interface FindMeConditionsErrorState {
+  readonly status: "error";
+  readonly message: string;
+}
+
+export type FindMeConditionsState =
+  | FindMeConditionsLoadingState
+  | FindMeConditionsSuccessState
+  | FindMeConditionsErrorState;
 
 export interface FindMeProps {
   readonly className?: string;

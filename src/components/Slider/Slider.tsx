@@ -42,12 +42,25 @@ const Slider = ({
           />
         </div>
 
-        {/* Glass thumb — style prop merges after React Aria's inline styles so top:50% wins */}
-        <SliderThumb
-          style={{ top: "50%" }}
-          className="h-4 w-4 overflow-hidden rounded-full outline-none"
-        >
-          <Glass blur={8} intensity={2} interactive radius={999} tint="light" />
+        {/* Glass thumb — React Aria owns the thumb's centering transform, so the
+            drag scale lives on an inner wrapper to grow symmetrically about center */}
+        <SliderThumb className="top-1/2 h-4 w-4 outline-none">
+          {({ isDragging }) => (
+            <div
+              className={classnames(
+                "h-full w-full overflow-hidden rounded-full transition-transform duration-150 ease-out",
+                isDragging ? "scale-125" : "scale-100",
+              )}
+            >
+              <Glass
+                blur={8}
+                intensity={2}
+                interactive
+                radius={999}
+                tint="light"
+              />
+            </div>
+          )}
         </SliderThumb>
       </SliderTrack>
     </AriaSlider>

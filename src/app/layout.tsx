@@ -3,6 +3,7 @@ import "@/styles/globals.css";
 import type { Metadata, Viewport } from "next";
 
 import TWBreakpointIndicator from "@/components/_dev/TWBreakpointIndicator/index.ts";
+import { ToastProvider } from "@/components/Toast/index.ts";
 import { AnimationProvider } from "@/contexts/AnimationContext/AnimationContext.tsx";
 import { fontInter } from "@/lib/fonts/fonts.ts";
 import Header from "@/modules/Navigation/Header/index.ts";
@@ -30,6 +31,7 @@ export default function RootLayout({
         <AnimationProvider>
           <Header />
           {children}
+          <ToastProvider />
           <TWBreakpointIndicator />
         </AnimationProvider>
       </body>

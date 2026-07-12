@@ -8,7 +8,7 @@ const mockPlants: readonly PlantaPlantCardData[] = [
     scientificName: "Monstera deliciosa",
     health: "needs attention",
     siteName: "Living room",
-    imageUrl: "/images/icons/planta.png",
+    imageUrl: "/images/icons/light/planta.png",
     dueCareActionTypes: ["watering"],
   },
   {

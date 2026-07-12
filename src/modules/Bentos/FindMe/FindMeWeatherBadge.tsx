@@ -21,7 +21,7 @@ function FindMeWeatherBadgeShell({
       aria-live="polite"
       role="status"
       title={SOURCE_LABEL}
-      className="absolute top-5 left-5 z-20 flex overflow-hidden rounded-lg px-2 py-1 text-black dark:text-white"
+      className="absolute top-5 left-5 z-20 flex overflow-hidden rounded-lg px-2 py-1 text-black dark:bg-black/45 dark:text-white"
     >
       <Glass blur={2} intensity={2} radius={8} />
       <div className="relative flex flex-col text-xs">{children}</div>
@@ -36,7 +36,7 @@ function FindMeWeatherBadgePlaceholder({
     <FindMeWeatherBadgeShell ariaLabel={ariaLabel}>
       <Icon iconClassName="size-4" name="weather-cloud" />
       <span>--°</span>
-      <span className="text-ds-gray">AQI --</span>
+      <span className="text-ds-gray dark:text-white/60">AQI --</span>
     </FindMeWeatherBadgeShell>
   );
 }
@@ -51,7 +51,7 @@ function FindMeWeatherBadgeSuccess({ state }: FindMeWeatherBadgeSuccessProps) {
         <Icon iconClassName="size-4" name={weather.iconName} />
         <span>{`${weather.temperatureCelsius}°`}</span>
       </div>
-      <span className="text-[8px] text-ds-gray">{`AQI ${airQuality.europeanAqi}`}</span>
+      <span className="text-[8px] text-ds-gray dark:text-white/60">{`AQI ${airQuality.europeanAqi}`}</span>
     </FindMeWeatherBadgeShell>
   );
 }

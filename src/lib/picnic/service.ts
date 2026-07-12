@@ -138,6 +138,9 @@ export const getPicnicRecipesResult = async (): Promise<
 > => {
   try {
     const recipeCards = await getCachedPicnicRecipeCards();
+    if (recipeCards.length === 0) {
+      return { ok: false, errorMessage: "No saved recipes found." };
+    }
     return { ok: true, data: { recipeCards } };
   } catch (error) {
     return { ok: false, errorMessage: toPicnicErrorMessage(error) };

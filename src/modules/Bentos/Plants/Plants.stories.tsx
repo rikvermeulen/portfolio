@@ -1,5 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 
+import { bentoBoxSizes, BentoEmptyState } from "@/components/Bento/index.ts";
+
 import { mockPlantsProps } from "./Plants.mock.ts";
 import Plants from "./Plants.tsx";
 
@@ -25,6 +27,12 @@ export const Default: Story = {
   args: mockPlantsProps,
 };
 
-export const Empty: Story = {
-  args: { plants: [] },
+export const Unavailable: Story = {
+  args: mockPlantsProps,
+  render: () => (
+    <BentoEmptyState
+      message="No Planta plants available right now."
+      sizes={bentoBoxSizes.plants}
+    />
+  ),
 };

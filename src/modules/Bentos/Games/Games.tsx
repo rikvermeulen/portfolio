@@ -10,14 +10,15 @@ import Glass from "@/components/Glass/index.ts";
 import Icon from "@/components/Icon/index.ts";
 import Link from "@/components/Link/index.ts";
 import classnames from "@/utils/classnames/classnames.ts";
-import { formatRelativeTime } from "@/utils/datetime/datetime.ts";
+import { compact } from "@/utils/compact/index.ts";
+import { time } from "@/utils/datetime/index.ts";
 
 /** "2 days ago", "yesterday", "3 weeks ago" — from a unix-seconds timestamp. */
 function formatLastPlayed(unixSeconds?: number): string | null {
   if (!unixSeconds || unixSeconds <= 0) {
     return null;
   }
-  return formatRelativeTime(new Date(unixSeconds * 1000));
+  return time.ago(new Date(unixSeconds * 1000));
 }
 
 function formatPlaytime(minutes?: number): string | null {
@@ -33,16 +34,16 @@ function formatPlaytime(minutes?: number): string | null {
 
 /** Landscape art for the full-bleed hero backdrop. */
 function coverCandidates(game: Game): string[] {
-  return [game.coverImage, game.coverImageFallback].filter(
-    (url): url is string => Boolean(url),
-  );
+  return compact([game.coverImage, game.coverImageFallback]);
 }
 
 /** Square-tile art — high-res portrait capsule first, cover art as backup. */
 function tileCandidates(game: Game): string[] {
-  return [game.portraitImage, game.coverImage, game.coverImageFallback].filter(
-    (url): url is string => Boolean(url),
-  );
+  return compact([
+    game.portraitImage,
+    game.coverImage,
+    game.coverImageFallback,
+  ]);
 }
 
 function GameArt({
@@ -131,14 +132,13 @@ function GameTile({
               : undefined
           }
         />
-        <Glass intensity={0.05} radius={8} tint="none" />
       </span>
       <SteamBadge />
     </span>
   );
 }
 
-const Games = ({ games, errorMessage }: GamesProps) => {
+const Games = ({ games }: GamesProps) => {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [artErrors, setArtErrors] = useState<Readonly<Record<string, number>>>(
     {},
@@ -181,21 +181,12 @@ const Games = ({ games, errorMessage }: GamesProps) => {
   }, [others.length]);
 
   if (!featured) {
-    return (
-      <Bento
-        image="/images/icons/games.png"
-        imageAlt="Games icon"
-        sizes={bentoBoxSizes.games}
-        className="relative z-0 bg-linear-to-b from-[#1c1c22] to-[#0b0b0f]"
-      >
-        {errorMessage ?? "No games to show right now"}
-      </Bento>
-    );
+    return null;
   }
 
   const lastPlayed = formatLastPlayed(featured.lastPlayedUnix);
   const playtime = formatPlaytime(featured.playtimeMinutes);
-  const subtitle = [lastPlayed, playtime].filter(Boolean).join(" · ");
+  const subtitle = compact([lastPlayed, playtime]).join(" · ");
 
   // Featured game identity row — the sheet header links to the store page.
   const identity = (
@@ -222,7 +213,7 @@ const Games = ({ games, errorMessage }: GamesProps) => {
 
   return (
     <Bento
-      image="/images/icons/games.png"
+      app="games"
       imageAlt="Games icon"
       sizes={bentoBoxSizes.games}
       className="relative z-0 bg-linear-to-b from-[#1c1c22] to-[#0b0b0f]"

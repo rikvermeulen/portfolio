@@ -1,16 +1,8 @@
-import type { ResponsiveBentoSize } from "./Bento.types.ts";
+import type { BentoEmptyStateProps } from "./Bento.types.ts";
 
 import classnames from "@/utils/classnames/classnames.ts";
 
 import Bento from "./Bento.tsx";
-
-interface BentoEmptyStateProps {
-  readonly sizes?: ResponsiveBentoSize;
-  /** Muted message to show — typically `errorMessage ?? "No X…"`. */
-  readonly message: string;
-  /** Extra classes merged onto the tile (e.g. a bespoke background). */
-  readonly className?: string;
-}
 
 /**
  * Shared empty/error fallback tile: a centered muted message on a dark card.

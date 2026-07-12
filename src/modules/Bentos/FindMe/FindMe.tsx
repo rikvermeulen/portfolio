@@ -18,8 +18,6 @@ import { FIND_ME_LOCATION } from "./FindMe.const.ts";
 import FindMeWeatherBadge from "./FindMeWeatherBadge.tsx";
 import { useFindMeConditions } from "./useFindMeConditions.ts";
 
-import "./FindMe.css";
-
 const PRIMARY_MAP_STYLE = "mapbox://styles/mapbox/streets-v12";
 const FALLBACK_MAP_STYLE = "mapbox://styles/mapbox/outdoors-v12";
 const MAP_TOKEN = env.NEXT_PUBLIC_MAPBOX_TOKEN;
@@ -275,7 +273,7 @@ const FindMe = ({ className }: FindMeProps) => {
 
   return (
     <Bento
-      image="/images/icons/findme.png"
+      app="findme"
       sizes={bentoBoxSizes.findMe}
       className={classnames("relative z-0 size-full bg-ds-map", className)}
     >
@@ -306,23 +304,23 @@ const FindMe = ({ className }: FindMeProps) => {
         />
       </div>
 
-      <div className="group absolute right-5 bottom-5 z-20 flex h-8 overflow-hidden rounded-2xl">
+      <div className="group absolute right-5 bottom-5 z-20 flex h-9 overflow-hidden rounded-full">
         <Glass intensity={2} interactive radius={16} />
         <button
           aria-label="Zoom out"
           onClick={handleZoomOut}
           type="button"
-          className="relative flex size-8 items-center justify-center text-black transition-transform active:scale-90 dark:text-white"
+          className="relative flex size-9 items-center justify-center text-black transition-transform active:scale-90 dark:text-white"
         >
-          <Icon iconClassName="size-3.5" name="minus" />
+          <Icon iconClassName="size-4" name="minus" />
         </button>
         <button
           aria-label="Zoom in"
           onClick={handleZoomIn}
           type="button"
-          className="relative flex size-8 items-center justify-center text-black transition-transform active:scale-90 dark:text-white"
+          className="relative flex size-9 items-center justify-center text-black transition-transform active:scale-90 dark:text-white"
         >
-          <Icon iconClassName="size-3.5" name="plus" />
+          <Icon iconClassName="size-4" name="plus" />
         </button>
       </div>
       {mapFailed && (

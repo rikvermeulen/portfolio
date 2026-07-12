@@ -2,30 +2,12 @@
 
 import { useEffect, useState } from "react";
 
+import type { FindMeConditionsState } from "./FindMe.types.ts";
 import type {
   FindMeConditionsResponse,
   FindMeConditionsSuccessResponse,
   FindMeWeatherIconName,
 } from "@/lib/findMeConditions/types.ts";
-
-interface FindMeConditionsLoadingState {
-  readonly status: "loading";
-}
-
-interface FindMeConditionsSuccessState {
-  readonly status: "success";
-  readonly data: FindMeConditionsSuccessResponse;
-}
-
-interface FindMeConditionsErrorState {
-  readonly status: "error";
-  readonly message: string;
-}
-
-export type FindMeConditionsState =
-  | FindMeConditionsLoadingState
-  | FindMeConditionsSuccessState
-  | FindMeConditionsErrorState;
 
 const CONDITIONS_URL = "/api/find-me/conditions";
 const FALLBACK_ERROR_MESSAGE =

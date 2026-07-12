@@ -1,18 +1,16 @@
 @import "tailwindcss";
 @import "mapbox-gl/dist/mapbox-gl.css";
 @import "./theme.css";
-@import "../components/AudioBento/AudioBento.css";
 
-/* `inline` so the `font-inter` utility resolves the runtime `--font-inter`
- * that next/font sets on <body>, instead of Tailwind emitting a (necessarily
- * self-referential) :root copy of it. */
+/* stylelint-disable scss/at-rule-no-unknown -- Tailwind v4 @source */
+@source "../components/**/*.{ts,tsx}";
+@source "../modules/**/*.{ts,tsx}";
+/* stylelint-enable scss/at-rule-no-unknown */
+
 @theme inline {
   --font-inter: var(--font-inter), sans-serif;
 }
 
-/* ================================================================== *
- * Base
- * ================================================================== */
 @layer base {
   :root {
     --elastic-out: linear(
@@ -27,8 +25,6 @@
 
   html {
     interpolate-size: allow-keywords;
-
-    /* Fluid root size: 15px floor on mobile, up to 20px on large screens. */
     font-size: 16px;
     font-size: clamp(15px, calc(0.5vw + 0.5lvh + 4.8px), 20px);
   }
@@ -48,9 +44,6 @@
   }
 }
 
-/* ================================================================== *
- * Utilities
- * ================================================================== */
 @layer utilities {
-  @import "./utilities/layout.css";
+  @import "./utilities/index.css";
 }

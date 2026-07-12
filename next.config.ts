@@ -37,7 +37,7 @@ const config: NextConfig = {
       },
     ],
   },
-  reactCompiler: true,
+  reactCompiler: process.env.NODE_ENV === "production",
   turbopack: {
     rules: {
       "*.svg": {

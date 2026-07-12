@@ -1,15 +1,4 @@
-/* ================================================================== *
- * DESIGN SYSTEM (ds) — single source of truth for color & material.
- * Imported by globals.css (app) and storybook.css (stories) so the
- * tokens never drift between the two.
- *
- * Tailwind v4 turns each --color-ds-* into utilities:
- *   bg-ds-*, text-ds-*, border-ds-*, fill-ds-*, from-ds-*, to-ds-*
- * and exposes every token as a :root CSS variable for inline styles:
- *   style={{ background: "var(--color-ds-forest)" }}
- * ================================================================== */
 @theme {
-  /* ---- iOS system accent palette --------------------------------- */
   --color-ds-gray: #8e8e93;
   --color-ds-yellow: #fc0;
   --color-ds-green: #34c759;
@@ -17,59 +6,37 @@
   --color-ds-orange: #ff9500;
   --color-ds-purple: #af52de;
   --color-ds-violet: #5801ff;
-
-  /* ---- Neutral surfaces & borders (light chrome) ----------------- */
-  --color-ds-bubble: #e9e9eb; /* iMessage incoming bubble */
-  --color-ds-surface: #ebeceb; /* translucent header / chrome */
-  --color-ds-border: #eaebed; /* hairline border */
-  --color-ds-border-soft: #ececec; /* lighter hairline */
-
-  /* ---- Neutral surfaces & borders (iMessage dark mode) ----------- */
-  --color-ds-surface-dark: #1c1c1e; /* elevated chrome / nav bar (over black) */
-  --color-ds-bubble-dark: #26262a; /* iMessage incoming bubble (dark) */
-  --color-ds-blue-dark: #0a84ff; /* iMessage outgoing bubble (dark) */
-  --color-ds-border-dark: #38383a; /* hairline separator (dark) */
-
-  /* ---- Tinted "category" material pills -------------------------- */
+  --color-ds-bubble: #e9e9eb;
+  --color-ds-surface: #ebeceb;
+  --color-ds-border: #eaebed;
+  --color-ds-border-soft: #ececec;
+  --color-ds-surface-dark: #1c1c1e;
+  --color-ds-bubble-dark: #26262a;
+  --color-ds-blue-dark: #0a84ff;
+  --color-ds-border-dark: #38383a;
   --color-ds-mint: #dff5e7;
   --color-ds-mint-ink: #143224;
-
-  /* ---- Plants bento (forest) ------------------------------------- */
   --color-ds-forest: #234823;
   --color-ds-forest-ink: #e7edde;
   --color-ds-forest-muted: #cfe0cc;
   --color-ds-forest-warn: #f3d6d6;
-
-  /* ---- FindMe map ------------------------------------------------- */
   --color-ds-map: #dbeefe;
-
-  /* ---- Brand gradients (from → to) ------------------------------- */
   --color-ds-music-from: #e96575;
   --color-ds-music-to: #ff333a;
   --color-ds-podcast-from: #bc6aeb;
   --color-ds-podcast-to: #6e2aad;
-
-  /* ---- Journal bento --------------------------------------- */
-  --color-ds-journal-from: #463463; /* card gradient start — purple (top-left) */
-  --color-ds-journal-to: #271e3a; /* card gradient end — dark plum (bottom-right) */
-  --color-ds-journal-glow: #8b5cf6; /* violet bloom (bottom-left) */
-  --color-ds-journal-glow-pink: #e668b0; /* pink bloom (top-right) */
-  --color-ds-journal-ink-from: #d3bffa; /* question text gradient start */
-  --color-ds-journal-ink-to: #b18ff4; /* question text gradient end */
-  --color-ds-journal-date: #cfc6e4; /* date & feedback text */
-
-  /* ---- Recipe card stack ----------------------------------------- */
+  --color-ds-journal-from: #463463;
+  --color-ds-journal-to: #271e3a;
+  --color-ds-journal-glow: #8b5cf6;
+  --color-ds-journal-glow-pink: #e668b0;
+  --color-ds-journal-ink-from: #d3bffa;
+  --color-ds-journal-ink-to: #b18ff4;
+  --color-ds-journal-date: #cfc6e4;
   --color-ds-recipe-1: #1a1a2e;
   --color-ds-recipe-2: #16213e;
   --color-ds-recipe-3: #0f3460;
   --color-ds-stack-1: #525252;
   --color-ds-stack-2: #404040;
-
-  /* ---- Liquid Glass — tinted pill shadows (Tag) ------------------ *
-   * glass-lift  : faint side rims + soft drop shadow under the pill
-   * glass-sheen : inset top highlight + faint top/bottom edge rims
-   * Usage: shadow-glass-lift, shadow-glass-sheen
-   * ---------------------------------------------------------------- */
   --shadow-glass-lift:
     0.0625rem 0 0 0 rgb(0 0 0 / 4%), -0.0625rem 0 0 0 rgb(0 0 0 / 4%),
     0 0.375rem 0.75rem 0 rgb(0 0 0 / 6%);

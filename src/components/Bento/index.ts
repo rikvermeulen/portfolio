@@ -5,11 +5,15 @@ export { default as BentoErrorBoundary } from "@/components/Bento/BentoErrorBoun
 export { default as BentoGrid } from "@/components/Bento/BentoGrid.tsx";
 export { default as BentoSkeleton } from "@/components/Bento/BentoSkeleton.tsx";
 export {
+  bentoApps,
   bentoBoxSizes,
   bentoGridConfig,
   bentoSizeBreakpoints,
 } from "@/components/Bento/config.ts";
-export type { BentoBoxSizeKey } from "@/components/Bento/config.ts";
+export type {
+  BentoAppKey,
+  BentoBoxSizeKey,
+} from "@/components/Bento/config.ts";
 export type {
   BentoBoxSize,
   BentoGridConfig,

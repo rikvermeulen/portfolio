@@ -16,95 +16,84 @@ const ACTION_ICON_INDEX: Partial<
   misting: "spray",
 };
 
-const Plants = ({ plants, errorMessage }: PlantsProps) => {
+const Plants = ({ plants }: PlantsProps) => {
   const visiblePlants = plants.slice(0, MAX_VISIBLE_PLANTS);
 
   return (
     <Bento
-      image="/images/icons/planta.png"
+      app="plants"
       sizes={bentoBoxSizes.plants}
       className="flex size-full flex-col justify-between gap-2 bg-ds-forest p-5 text-ds-forest-ink"
     >
-      <div className="space-y-2">
-        <h2 className="text-2xl font-semibold">Plant Care</h2>
-        {errorMessage ? (
-          <p className="max-w-xs text-sm text-ds-forest-warn">{errorMessage}</p>
-        ) : null}
-      </div>
-      {visiblePlants.length > 0 ? (
-        <ul className="flex flex-col gap-4">
-          {visiblePlants.map((plant) => {
-            const dueCareIcons =
-              plant.dueCareActionTypes?.flatMap((actionType) => {
-                const iconName = ACTION_ICON_INDEX[actionType];
+      <h2 className="text-2xl font-semibold">Plant Care</h2>
+      <ul className="flex flex-col gap-4">
+        {visiblePlants.map((plant) => {
+          const dueCareIcons =
+            plant.dueCareActionTypes?.flatMap((actionType) => {
+              const iconName = ACTION_ICON_INDEX[actionType];
 
-                if (!iconName) {
-                  return [];
-                }
+              if (!iconName) {
+                return [];
+              }
 
-                return [
-                  {
-                    iconName,
-                    label:
-                      actionType === "watering"
-                        ? `${plant.name} needs watering`
-                        : `${plant.name} needs misting`,
-                  },
-                ];
-              }) ?? [];
+              return [
+                {
+                  iconName,
+                  label:
+                    actionType === "watering"
+                      ? `${plant.name} needs watering`
+                      : `${plant.name} needs misting`,
+                },
+              ];
+            }) ?? [];
 
-            return (
-              <li key={plant.id} className="flex items-center gap-2">
-                {plant.imageUrl ? (
-                  <Image
-                    alt={plant.name}
-                    height={48}
-                    sizes="48px"
-                    src={plant.imageUrl}
-                    width={48}
-                    className="size-12 rounded-full object-cover"
-                  />
-                ) : (
-                  <div className="flex size-12 items-center justify-center rounded-full bg-white/10 text-xs font-semibold text-ds-forest-ink uppercase">
-                    {plant.name.slice(0, 2)}
+          return (
+            <li key={plant.id} className="flex items-center gap-2">
+              {plant.imageUrl ? (
+                <Image
+                  alt={plant.name}
+                  height={48}
+                  sizes="48px"
+                  src={plant.imageUrl}
+                  width={48}
+                  className="size-12 rounded-full object-cover"
+                />
+              ) : (
+                <div className="flex size-12 items-center justify-center rounded-full bg-white/10 text-xs font-semibold text-ds-forest-ink uppercase">
+                  {plant.name.slice(0, 2)}
+                </div>
+              )}
+              <div className="flex justify-between gap-2">
+                <div className="flex flex-col gap-2">
+                  <div>
+                    <h3 className="text-sm font-medium">
+                      {plant.scientificName}
+                    </h3>
                   </div>
-                )}
-                <div className="flex justify-between gap-2">
-                  <div className="flex flex-col gap-2">
-                    <div>
-                      <h3 className="text-sm font-medium">
-                        {plant.scientificName}
-                      </h3>
-                    </div>
-                    <div className="flex flex-wrap gap-1">
-                      {dueCareIcons.map(({ iconName, label }) => (
-                        <Icon
-                          key={`${plant.id}-${iconName}`}
-                          iconClassName="size-3.5"
-                          label={label}
-                          name={iconName}
-                          className="rounded-full bg-rose-500/35 p-1 text-rose-50"
-                        />
-                      ))}
-                      {isPlantaHappyHealth(plant.health) ? (
-                        <Icon
-                          iconClassName="size-4"
-                          label="Happy plant"
-                          name="happy"
-                        />
-                      ) : null}
-                    </div>
+                  <div className="flex flex-wrap gap-1">
+                    {dueCareIcons.map(({ iconName, label }) => (
+                      <Icon
+                        key={`${plant.id}-${iconName}`}
+                        iconClassName="size-3.5"
+                        label={label}
+                        name={iconName}
+                        className="rounded-full bg-rose-500/35 p-1 text-rose-50"
+                      />
+                    ))}
+                    {isPlantaHappyHealth(plant.health) ? (
+                      <Icon
+                        iconClassName="size-4"
+                        label="Happy plant"
+                        name="happy"
+                      />
+                    ) : null}
                   </div>
                 </div>
-              </li>
-            );
-          })}
-        </ul>
-      ) : (
-        <p className="text-sm text-ds-forest-muted">
-          {errorMessage ?? "No Planta plants available right now."}
-        </p>
-      )}
+              </div>
+            </li>
+          );
+        })}
+      </ul>
     </Bento>
   );
 };

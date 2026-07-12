@@ -2,6 +2,8 @@
 
 import { useEffect, useLayoutEffect, useRef } from "react";
 
+import type { GlassLightRefs } from "./Glass.types.ts";
+
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion/index.ts";
 
 /**
@@ -37,13 +39,6 @@ interface Spring {
 interface Eased {
   value: number;
   target: number;
-}
-
-export interface GlassLightRefs {
-  /** Whole-surface "lights up from within" overlay. */
-  readonly illuminateRef: React.RefObject<HTMLSpanElement | null>;
-  /** Pointer-following specular hotspot overlay. */
-  readonly hotspotRef: React.RefObject<HTMLSpanElement | null>;
 }
 
 /**

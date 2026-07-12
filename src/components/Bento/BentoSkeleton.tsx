@@ -1,13 +1,9 @@
-import type { BentoBoxSizeKey } from "./config.ts";
+import type { BentoSkeletonProps } from "./Bento.types.ts";
 
 import { SkeletonCard } from "@/components/Cards/index.ts";
 
 import Bento from "./Bento.tsx";
 import { bentoBoxSizes } from "./config.ts";
-
-interface BentoSkeletonProps {
-  readonly size: BentoBoxSizeKey;
-}
 
 /**
  * Shared loading placeholder for a bento tile. Renders the tile shell at the

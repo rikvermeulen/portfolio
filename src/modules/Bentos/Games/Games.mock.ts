@@ -48,8 +48,3 @@ export const mockGamesProps = {
     },
   ],
 } satisfies GamesProps;
-
-export const mockGamesPropsEmpty = {
-  games: [],
-  errorMessage: "Could not load your games right now",
-} satisfies GamesProps;

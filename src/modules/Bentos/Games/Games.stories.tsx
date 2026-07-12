@@ -1,6 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 
-import { mockGamesProps, mockGamesPropsEmpty } from "./Games.mock.ts";
+import { bentoBoxSizes, BentoEmptyState } from "@/components/Bento/index.ts";
+
+import { mockGamesProps } from "./Games.mock.ts";
 import Games from "./Games.tsx";
 
 const meta = {
@@ -25,6 +27,12 @@ export const Default: Story = {
   args: mockGamesProps,
 };
 
-export const Empty: Story = {
-  args: mockGamesPropsEmpty,
+export const Unavailable: Story = {
+  args: mockGamesProps,
+  render: () => (
+    <BentoEmptyState
+      message="Could not load your games right now"
+      sizes={bentoBoxSizes.games}
+    />
+  ),
 };

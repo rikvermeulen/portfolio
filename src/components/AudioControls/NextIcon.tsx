@@ -2,11 +2,8 @@
 
 import { motion, useAnimation } from "framer-motion";
 
+import type { NextIconProps } from "./AudioControls.types.ts";
 import type { Variants } from "framer-motion";
-
-interface NextIconProps {
-  className?: string;
-}
 
 const inVariants: Variants = {
   initial: { scale: 0, opacity: 0 },

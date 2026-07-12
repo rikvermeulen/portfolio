@@ -5,12 +5,9 @@ import Image from "next/image";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 
 import type { FlipDirection } from "./Recipes.animate.ts";
-import type { RecipesProps } from "./Recipes.types.ts";
+import type { RecipesProps, RecipeStackProps } from "./Recipes.types.ts";
 
-import Bento, {
-  bentoBoxSizes,
-  BentoEmptyState,
-} from "@/components/Bento/index.ts";
+import Bento, { bentoBoxSizes } from "@/components/Bento/index.ts";
 import Glass from "@/components/Glass/index.ts";
 import Icon from "@/components/Icon/index.ts";
 import Link from "@/components/Link/index.ts";
@@ -31,22 +28,11 @@ const STACK_STYLES = [
   },
 ] as const;
 
-const Recipes = ({ recipes, errorMessage }: RecipesProps) => {
-  const isEmpty = recipes.length === 0;
-
-  if (errorMessage || isEmpty) {
-    return (
-      <BentoEmptyState
-        message={errorMessage ?? "No saved recipes found."}
-        sizes={bentoBoxSizes.recipes}
-      />
-    );
-  }
-
+const Recipes = ({ recipes }: RecipesProps) => {
   return (
     <Bento
+      app="recipes"
       href="https://picnic.app"
-      image="/images/icons/picnic.png"
       sizes={bentoBoxSizes.recipes}
       className="size-full p-0"
     >
@@ -54,10 +40,6 @@ const Recipes = ({ recipes, errorMessage }: RecipesProps) => {
     </Bento>
   );
 };
-
-interface RecipeStackProps {
-  readonly recipes: RecipesProps["recipes"];
-}
 
 function RecipeStack({ recipes }: RecipeStackProps) {
   const [index, setIndex] = useState(0);
@@ -177,10 +159,10 @@ function RecipeStack({ recipes }: RecipeStackProps) {
               disabled={recipes.length <= 1}
               onClick={() => switchRecipe(-1)}
               type="button"
-              className="relative flex size-8 items-center justify-center text-white transition-transform active:scale-90 disabled:opacity-40"
+              className="relative flex size-9 items-center justify-center text-white transition-transform active:scale-90 disabled:opacity-40"
             >
               <Icon
-                iconClassName="relative size-3.5 text-white"
+                iconClassName="relative size-4 text-white"
                 name="chevronUp"
               />
             </button>
@@ -189,10 +171,10 @@ function RecipeStack({ recipes }: RecipeStackProps) {
               disabled={recipes.length <= 1}
               onClick={() => switchRecipe(1)}
               type="button"
-              className="relative flex size-8 items-center justify-center text-white transition-transform active:scale-90 disabled:opacity-40"
+              className="relative flex size-9 items-center justify-center text-white transition-transform active:scale-90 disabled:opacity-40"
             >
               <Icon
-                iconClassName="relative size-3.5 text-white"
+                iconClassName="relative size-4 text-white"
                 name="chevronDown"
               />
             </button>
@@ -200,7 +182,7 @@ function RecipeStack({ recipes }: RecipeStackProps) {
           <Link
             aria-label={`Open ${title}`}
             href={recipeUrl}
-            className="group relative flex size-8 shrink-0 items-center justify-center transition-transform active:scale-90"
+            className="group relative flex size-9 shrink-0 items-center justify-center transition-transform active:scale-90"
           >
             <Glass interactive radius={999} />
             <Icon iconClassName="relative size-3.5 text-white" name="plus" />

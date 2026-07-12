@@ -25,7 +25,7 @@ const Personal = () => {
         </p>
       </div>
       <div>
-        <p className="text-ds-gray">
+        <p className="mt-4 text-ds-gray">
           🐙 Coding:&nbsp;
           <Link
             href="https://github.com/rikvermeulen"

@@ -2,16 +2,15 @@
 
 import { createContext, use, useMemo } from "react";
 
-import type { Plugin } from "@/hooks/useLoadGsap/useLoadGsap.ts";
+import type {
+  AnimationContextType,
+  AnimationProviderProps,
+} from "./AnimationContext.types.ts";
+import type { Plugin } from "@/hooks/useLoadGsap/index.ts";
 
 import { useIsLowEndDevice } from "@/hooks/useIsLowEndDevice/useIsLowEndDevice.ts";
 import { useLoadGsap } from "@/hooks/useLoadGsap/useLoadGsap.ts";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion/usePrefersReducedMotion.ts";
-
-interface AnimationContextType {
-  gsap: GSAP | null;
-  isAnimationDisabled: boolean;
-}
 
 const AnimationContext = createContext<AnimationContextType>({
   gsap: null,
@@ -21,10 +20,6 @@ const AnimationContext = createContext<AnimationContextType>({
 export const useAnimationContext = () => use(AnimationContext);
 
 const GSAP_PLUGINS: Plugin[] = ["ScrollTrigger"];
-
-interface AnimationProviderProps {
-  children: React.ReactNode;
-}
 
 export function AnimationProvider({ children }: AnimationProviderProps) {
   const prefersReducedMotion = usePrefersReducedMotion();

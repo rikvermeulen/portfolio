@@ -4,6 +4,7 @@ import type { Result } from "@/types/index.ts";
 import { env } from "@env";
 
 import { fetchShowEpisodes } from "./client.ts";
+import { pickSpotifyImage } from "./utils.ts";
 
 const SHOW_ID = "02fM1JHpt9HmHGp482K71b";
 
@@ -15,7 +16,7 @@ function toPodcastEpisode(episode: SpotifyEpisode): PodcastEpisode {
   return {
     id: episode.id,
     name: episode.name,
-    imageUrl: episode.images[1]?.url ?? episode.images[0]?.url ?? null,
+    imageUrl: pickSpotifyImage(episode.images),
     explicit: episode.explicit,
   };
 }

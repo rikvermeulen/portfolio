@@ -1,10 +1,4 @@
-import type { Result } from "@/types/index.ts";
-
-interface AsyncBentoProps<T> {
-  readonly load: () => Promise<Result<T>>;
-  readonly render: (data: T) => React.ReactNode;
-  readonly renderError: (errorMessage: string) => React.ReactNode;
-}
+import type { AsyncBentoProps } from "./Bento.types.ts";
 
 /**
  * Awaits a service `Result` and renders success or the expected error state.

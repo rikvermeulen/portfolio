@@ -2,4 +2,4 @@ export { useSpotifyMusicPlayer } from "./useSpotifyMusicPlayer.ts";
 export type {
   MusicTrack,
   UseSpotifyMusicPlayerReturn,
-} from "./useSpotifyMusicPlayer.ts";
+} from "./useSpotifyMusicPlayer.types.ts";

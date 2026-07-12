@@ -4,9 +4,9 @@
 
 import { act, renderHook } from "@testing-library/react";
 
-import { useCopyFeedback } from "./useCopyFeedback.ts";
+import { useClipboard } from "./useClipboard.ts";
 
-describe("useCopyFeedback", () => {
+describe("useClipboard", () => {
   const writeText = jest.fn();
 
   beforeEach(() => {
@@ -24,19 +24,21 @@ describe("useCopyFeedback", () => {
   });
 
   it("starts with copied false", () => {
-    const { result } = renderHook(() => useCopyFeedback());
+    const { result } = renderHook(() => useClipboard());
 
     expect(result.current.copied).toBe(false);
   });
 
   it("sets copied true after a successful copy and resets after the default delay", async () => {
-    const { result } = renderHook(() => useCopyFeedback());
+    const { result } = renderHook(() => useClipboard());
 
+    let returned: boolean | undefined;
     await act(async () => {
-      await result.current.copy("Hello");
+      returned = await result.current.copy("Hello");
     });
 
     expect(writeText).toHaveBeenCalledWith("Hello");
+    expect(returned).toBe(true);
     expect(result.current.copied).toBe(true);
 
     act(() => {
@@ -47,7 +49,7 @@ describe("useCopyFeedback", () => {
   });
 
   it("uses a custom feedback duration", async () => {
-    const { result } = renderHook(() => useCopyFeedback(500));
+    const { result } = renderHook(() => useClipboard(500));
 
     await act(async () => {
       await result.current.copy("Quick");
@@ -68,18 +70,20 @@ describe("useCopyFeedback", () => {
 
   it("leaves copied false when clipboard write fails", async () => {
     writeText.mockRejectedValue(new Error("denied"));
-    const { result } = renderHook(() => useCopyFeedback());
+    const { result } = renderHook(() => useClipboard());
 
+    let returned: boolean | undefined;
     await act(async () => {
-      await result.current.copy("Nope");
+      returned = await result.current.copy("Nope");
     });
 
+    expect(returned).toBe(false);
     expect(result.current.copied).toBe(false);
   });
 
   it("clears the reset timer on unmount", async () => {
     const clearTimeoutSpy = jest.spyOn(globalThis, "clearTimeout");
-    const { result, unmount } = renderHook(() => useCopyFeedback());
+    const { result, unmount } = renderHook(() => useClipboard());
 
     await act(async () => {
       await result.current.copy("Bye");

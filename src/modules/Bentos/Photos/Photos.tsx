@@ -6,10 +6,7 @@ import Image from "next/image";
 import type { PhotosProps } from "./Photos.types.ts";
 import type { ToggleOption } from "@/components/ToggleGroup/index.ts";
 
-import Bento, {
-  bentoBoxSizes,
-  BentoEmptyState,
-} from "@/components/Bento/index.ts";
+import Bento, { bentoBoxSizes } from "@/components/Bento/index.ts";
 import ToggleGroup from "@/components/ToggleGroup/index.ts";
 
 const AUTO_ADVANCE_INTERVAL_MS = 3000 as const;
@@ -36,11 +33,11 @@ const ALBUM_ICONS: Record<string, string> = {
   dog: "dog",
 };
 
-const Photos = ({ albums, errorMessage }: PhotosProps) => {
+const Photos = ({ albums }: PhotosProps) => {
   const albumNames = Object.keys(albums);
   const [selectedAlbum, setSelectedAlbum] = useState(albumNames[0] ?? "");
 
-  const mediaRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const slideRef = useRef<(HTMLDivElement | null)[]>([]);
   const activeIndexRef = useRef(0);
 
   const mediaFiles = albums[selectedAlbum] ?? [];
@@ -50,8 +47,6 @@ const Photos = ({ albums, errorMessage }: PhotosProps) => {
     label: capitalize(name),
     icon: ALBUM_ICONS[name],
   }));
-  const hasMedia = mediaFiles.length > 0;
-
   const handleAlbumChange = (album: string) => {
     setSelectedAlbum(album);
   };
@@ -67,7 +62,7 @@ const Photos = ({ albums, errorMessage }: PhotosProps) => {
     activeIndexRef.current = 0;
 
     const interval = setInterval(() => {
-      const items = mediaRefs.current;
+      const items = slideRef.current;
       const previous = activeIndexRef.current;
       const next = getNextMediaIndex(previous, mediaFiles.length);
 
@@ -81,19 +76,10 @@ const Photos = ({ albums, errorMessage }: PhotosProps) => {
     };
   }, [mediaFiles.length, selectedAlbum]);
 
-  if (errorMessage || !hasMedia) {
-    return (
-      <BentoEmptyState
-        message={errorMessage ?? "No photos found."}
-        sizes={bentoBoxSizes.photos}
-      />
-    );
-  }
-
   return (
     <Bento
+      app="photos"
       href={ALBUM_LINK}
-      image="/images/icons/photos.png"
       sizes={bentoBoxSizes.photos}
       className="group size-full"
     >
@@ -113,7 +99,7 @@ const Photos = ({ albums, errorMessage }: PhotosProps) => {
           <div
             key={mediaUrl}
             ref={(element) => {
-              mediaRefs.current[index] = element;
+              slideRef.current[index] = element;
             }}
             data-active={index === 0 ? true : undefined}
             className="absolute inset-0 opacity-0 transition-opacity duration-500 ease-in-out data-active:opacity-100"

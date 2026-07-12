@@ -4,6 +4,7 @@ import type { Result } from "@/types/index.ts";
 import { env } from "@env";
 
 import { fetchRecentlyPlayed } from "./client.ts";
+import { pickSpotifyImage } from "./utils.ts";
 
 export interface SpotifyMusicData {
   readonly tracks: readonly PlaylistTrack[];
@@ -16,8 +17,7 @@ function toPlaylistTrack(item: SpotifyRecentlyPlayedItem): PlaylistTrack {
     name: track.name,
     artist: track.artists[0]?.name ?? "Unknown artist",
     albumName: track.album.name,
-    albumArtUrl:
-      track.album.images[1]?.url ?? track.album.images[0]?.url ?? null,
+    albumArtUrl: pickSpotifyImage(track.album.images),
     explicit: track.explicit,
   };
 }

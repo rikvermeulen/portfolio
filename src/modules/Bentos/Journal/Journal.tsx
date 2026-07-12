@@ -7,7 +7,8 @@ import type { JournalProps } from "./Journal.types.ts";
 import Bento, { bentoBoxSizes } from "@/components/Bento/index.ts";
 import Glass from "@/components/Glass/index.ts";
 import Icon from "@/components/Icon/index.ts";
-import { useCopyFeedback } from "@/hooks/useCopyFeedback/index.ts";
+import { notify } from "@/components/Toast/index.ts";
+import { useClipboard } from "@/hooks/useClipboard/index.ts";
 import classnames from "@/utils/classnames/classnames.ts";
 
 import { journalQuestions } from "./Journal.questions.ts";
@@ -32,14 +33,24 @@ const Journal = ({ className, date }: JournalProps) => {
   const [questionIndex, setQuestionIndex] = useState(() =>
     getQuestionIndexForDate(today),
   );
-  const { copied, copy } = useCopyFeedback();
+  const { copy } = useClipboard();
 
   const question = journalQuestions[questionIndex] ?? "";
 
+  async function copyQuestion(): Promise<void> {
+    const ok = await copy(question);
+    if (ok) {
+      notify({
+        app: "journal",
+        title: "Question copied",
+        description: question,
+      });
+    }
+  }
+
   return (
     <Bento
-      image="/images/icons/journal.png"
-      imageAlt="Journal"
+      app="journal"
       sizes={bentoBoxSizes.journal}
       className={classnames(
         "flex flex-col justify-between p-5 md:p-6",
@@ -74,19 +85,13 @@ const Journal = ({ className, date }: JournalProps) => {
       <footer className="relative z-10 flex items-center justify-between">
         <button
           aria-label="Copy question"
-          onClick={() => void copy(question)}
+          onClick={() => void copyQuestion()}
           type="button"
           className="relative z-10 flex size-9 items-center justify-center overflow-hidden rounded-full text-white"
         >
           <Glass {...ACTION_GLASS} />
-          <Icon iconClassName="relative z-10 size-3" name="plus" />
+          <Icon iconClassName="relative z-10 size-4" name="plus" />
         </button>
-        <span
-          aria-live="polite"
-          className="text-xs font-medium text-ds-journal-date"
-        >
-          {copied ? "Copied!" : ""}
-        </span>
         <button
           aria-label="Show another question"
           onClick={() => setQuestionIndex(getRandomQuestionIndex)}
@@ -94,7 +99,7 @@ const Journal = ({ className, date }: JournalProps) => {
           className="relative z-10 flex size-9 items-center justify-center overflow-hidden rounded-full text-white"
         >
           <Glass {...ACTION_GLASS} />
-          <Icon iconClassName="relative z-10 size-3.5" name="refresh" />
+          <Icon iconClassName="relative z-10 size-4" name="refresh" />
         </button>
       </footer>
     </Bento>

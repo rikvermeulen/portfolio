@@ -1,0 +1,42 @@
+@keyframes move-cloud {
+  100% {
+    transform: translateX(120%);
+  }
+}
+
+@keyframes fade-in-out {
+  0%,
+  100% {
+    opacity: 0;
+  }
+
+  20%,
+  80% {
+    opacity: 1;
+  }
+}
+
+.cloud-one {
+  animation:
+    move-cloud linear 15s infinite,
+    fade-in-out 15s infinite;
+}
+
+.cloud-two {
+  animation:
+    move-cloud linear 15s infinite,
+    fade-in-out 15s infinite;
+  animation-delay: 8s;
+}
+
+.mapboxgl-ctrl-bottom-left {
+  display: none !important;
+}
+
+.findme-map,
+.findme-map .mapboxgl-map,
+.findme-map .mapboxgl-canvas-container,
+.findme-map .mapboxgl-canvas {
+  height: 100%;
+  width: 100%;
+}

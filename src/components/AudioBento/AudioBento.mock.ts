@@ -14,20 +14,7 @@ export const mockAudioBentoProps = {
   },
   isPlaying: true,
   volume: 0.5,
-  icon: "/images/icons/music.png",
-  sizes: bentoBoxSizes.music,
-  className: "bg-linear-to-b from-ds-music-from to-ds-music-to",
-  onPlayOrPause: noop,
-  onChangeTrack: noop,
-  onVolumeChange: noop,
-} satisfies AudioBentoProps;
-
-export const mockAudioBentoPropsEmpty = {
-  display: null,
-  errorMessage: "Nothing to play right now",
-  isPlaying: false,
-  volume: 0.5,
-  icon: "/images/icons/music.png",
+  app: "music",
   sizes: bentoBoxSizes.music,
   className: "bg-linear-to-b from-ds-music-from to-ds-music-to",
   onPlayOrPause: noop,

@@ -227,10 +227,9 @@ The podcast hook has a deliberate "keep independent" comment. **Decide:** extrac
 - [x] `modules/Bentos/Personal/` — add `Personal.types.ts`
 - [x] Coverage: exclude re-export `index.ts` barrels from `collectCoverageFrom` +
       drop the 2 defensive `istanbul ignore file` headers (usePrefersReducedMotion, useCopyFeedback)
-- [ ] Decide keep-or-delete empty scaffolding: `src/constants/`, `src/middleware/`,
-      `src/templates/`, `src/styles/components/`, `src/assets/fonts/` (all `.gitkeep`-only),
-      `src/proxy.example.ts`. Note `instrumentation-client.ts` lives at `src/` root, not in
-      `middleware/`. **(needs decision #6)**
+- [x] Empty scaffolding: deleted `src/constants/`, `src/middleware/`, `src/templates/`
+      (zero refs). **Kept** `src/styles/components/`, `src/assets/fonts/` (design-system/font
+      locations) and `src/proxy.example.ts` (reference example).
 
 ---
 
@@ -264,13 +263,12 @@ local `GLASS` const in `Contact.tsx`.
 
 ### P3.3 Bento data-tile base + empty state — see Part C
 
-### P3.4 Small shared helpers
-- [ ] `utils/compact` — `compact<T>(arr): NonNullable<T>[]` for the `x is string => Boolean(x)`
-      guards (Games x2, photos) and `filter(Boolean)` sites
-- [ ] `lib/spotify` `pickSpotifyImage(images)` for `images[1]?.url ?? images[0]?.url ?? null`
-      (service + podcast-service)
-- [ ] hoist `SPOTIFY_DEVICE_NAME = "Rik's Portfolio"` (6 hardcodes) — note it also lives in
-      `SpotifyConnectionContext`; make that the single source
+### P3.4 Small shared helpers — ✅ done
+- [x] `utils/compact` — `compact<T>(arr): NonNullable<T>[]` + adopted in `supabase/photos.ts`
+      and `Games.tsx` (×3), with tests
+- [x] `lib/spotify/utils.ts` `pickSpotifyImage(images)` — adopted in service + podcast-service, with tests
+- [x] hoist `SPOTIFY_DEVICE_NAME` into `lib/spotify/webPlayback.ts`; `SpotifyConnectionContext`
+      and both player hooks now import it (was 8 hardcodes)
 
 ---
 

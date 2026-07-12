@@ -18,8 +18,3 @@ export const mockPodcastProps = {
     },
   ],
 } satisfies PodcastProps;
-
-export const mockPodcastPropsEmpty = {
-  episodes: [],
-  errorMessage: "Could not load episodes right now",
-} satisfies PodcastProps;

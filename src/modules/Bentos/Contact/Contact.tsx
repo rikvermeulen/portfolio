@@ -11,14 +11,14 @@ import Icon from "@/components/Icon/index.ts";
 import Link from "@/components/Link/index.ts";
 import { useOutsideClick } from "@/hooks/useOutsideClick/index.ts";
 import classnames from "@/utils/classnames/classnames.ts";
-import { formatCalendarDate } from "@/utils/datetime/datetime.ts";
+import { time } from "@/utils/datetime/index.ts";
 
 import { socials } from "./Contact.const.ts";
 import { hasEnoughText } from "./Contact.validation.ts";
 import { ChatMessage } from "./Messages.tsx";
 import useChat from "./useChat.ts";
 
-const TODAY = formatCalendarDate(new Date());
+const TODAY = time.date(new Date());
 
 const GLASS = {
   intensity: 2,
@@ -55,21 +55,31 @@ const Contact = ({ className }: ContactProps) => {
 
   return (
     <Bento
-      image="/images/icons/messages.png"
+      app="contact"
       sizes={bentoBoxSizes.contact}
       className={classnames(
-        "relative flex flex-col border border-ds-border bg-white",
-        "dark:border-ds-border-dark dark:bg-black",
+        "relative isolate flex flex-col border border-ds-border bg-white dark:border-ds-border-dark dark:bg-black",
         className,
       )}
     >
-      <header className="h-11 shrink-0 border-b border-ds-border-soft bg-ds-surface/40 backdrop-blur-xl dark:border-ds-border-dark dark:bg-ds-surface-dark/70" />
-
+      <header className="absolute top-0 left-0 isolate z-50 mt-4 flex w-full flex-col items-center">
+        <Image
+          alt="Rik Vermeulen"
+          height={32}
+          src="/images/profile.png"
+          width={32}
+          className="z-10 rounded-full"
+        />
+        <div className="relative -top-1 flex gap-2 px-3 py-1 text-[10px] font-bold">
+          <Glass intensity={0.5} radius={10} className="dark:bg-white/20" />
+          Rik Vermeulen
+        </div>
+      </header>
       <div
         ref={chatRef}
-        className="no-scrollbar flex flex-1 flex-col gap-4 overflow-y-auto px-5 pt-5 pb-20"
+        className="no-scrollbar flex flex-1 flex-col gap-2 overflow-y-auto px-5 pt-20 pb-20"
       >
-        <p className="relative -top-3 text-center text-[0.625rem] text-ds-gray">
+        <p className="relative text-center text-[0.625rem] text-ds-gray">
           <span className="font-medium">Today: </span>
           {TODAY}
         </p>
@@ -108,7 +118,7 @@ const Contact = ({ className }: ContactProps) => {
               className="relative z-10 flex h-9 w-full shrink-0 items-center justify-center overflow-hidden transition-[height] duration-300 outline-none group-data-open:h-0"
             >
               <Icon
-                iconClassName="size-3 transition-[opacity,transform] duration-100 group-data-open:scale-0 group-data-open:opacity-0"
+                iconClassName="size-4 transition-[opacity,transform] duration-100 group-data-open:scale-0 group-data-open:opacity-0"
                 name="plus"
               />
             </button>
@@ -159,11 +169,13 @@ const Contact = ({ className }: ContactProps) => {
               disabled={!canSend}
               type="submit"
               className={classnames(
-                "relative z-10 shrink-0 rounded-full p-1 transition-opacity",
-                !canSend && "cursor-not-allowed opacity-50",
+                "relative right-2 z-50 shrink-0 rounded-full bg-ds-blue px-2.5 py-1 transition-all duration-300",
+                canSend
+                  ? "scale-100 cursor-pointer opacity-100"
+                  : "scale-70 cursor-not-allowed opacity-0",
               )}
             >
-              <Icon name="arrow" className="w-6.5" />
+              <Icon iconClassName="size-3.5" name="arrow" />
             </button>
           </form>
         )}
