@@ -1,6 +1,7 @@
 import type { ImageProps } from "./Image.types.ts";
 
 export const mockImageProps = {
+  sizeKey: "image",
   src: "/images/me.jpg",
   alt: "Portrait of Rik Vermeulen",
   caption: "Team moments and product thinking.",

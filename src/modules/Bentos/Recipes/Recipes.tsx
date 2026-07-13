@@ -7,7 +7,7 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import type { FlipDirection } from "./Recipes.animate.ts";
 import type { RecipesProps, RecipeStackProps } from "./Recipes.types.ts";
 
-import Bento, { bentoBoxSizes } from "@/components/Bento/index.ts";
+import Bento, { bentos } from "@/components/Bento/index.ts";
 import Glass from "@/components/Glass/index.ts";
 import Icon from "@/components/Icon/index.ts";
 import Link from "@/components/Link/index.ts";
@@ -28,12 +28,12 @@ const STACK_STYLES = [
   },
 ] as const;
 
-const Recipes = ({ recipes }: RecipesProps) => {
+const Recipes = ({ sizeKey, recipes }: RecipesProps) => {
   return (
     <Bento
       app="recipes"
       href="https://picnic.app"
-      sizes={bentoBoxSizes.recipes}
+      sizes={bentos[sizeKey].sizes}
       className="size-full p-0"
     >
       <RecipeStack recipes={recipes} />

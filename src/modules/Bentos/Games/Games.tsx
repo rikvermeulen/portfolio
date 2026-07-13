@@ -5,7 +5,7 @@ import Image from "next/image";
 
 import type { Game, GamesProps } from "./Games.types.ts";
 
-import Bento, { bentoBoxSizes } from "@/components/Bento/index.ts";
+import Bento, { bentos } from "@/components/Bento/index.ts";
 import Glass from "@/components/Glass/index.ts";
 import Icon from "@/components/Icon/index.ts";
 import Link from "@/components/Link/index.ts";
@@ -138,7 +138,7 @@ function GameTile({
   );
 }
 
-const Games = ({ games }: GamesProps) => {
+const Games = ({ sizeKey, games }: GamesProps) => {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [artErrors, setArtErrors] = useState<Readonly<Record<string, number>>>(
     {},
@@ -215,7 +215,7 @@ const Games = ({ games }: GamesProps) => {
     <Bento
       app="games"
       imageAlt="Games icon"
-      sizes={bentoBoxSizes.games}
+      sizes={bentos[sizeKey].sizes}
       className="relative z-0 bg-linear-to-b from-[#1c1c22] to-[#0b0b0f]"
     >
       {/* Full-bleed featured art — the poster is the tile */}

@@ -1,7 +1,4 @@
-import type {
-  BentoAppKey,
-  ResponsiveBentoSize,
-} from "@/components/Bento/index.ts";
+import type { BentoAppKey, BentoSizeKey } from "@/components/Bento/index.ts";
 
 export interface AudioBentoDisplay {
   readonly image: string | null;
@@ -17,7 +14,7 @@ export interface AudioBentoProps {
   readonly isPlaying: boolean;
   readonly volume: number;
   readonly app: BentoAppKey;
-  readonly sizes: ResponsiveBentoSize;
+  readonly sizeKey: BentoSizeKey;
   readonly className?: string;
   readonly onPlayOrPause: () => void;
   readonly onChangeTrack: (direction: "previous" | "next") => void;

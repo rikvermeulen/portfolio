@@ -3,10 +3,9 @@
 import type { MusicProps } from "./Music.types.ts";
 
 import AudioBento from "@/components/AudioBento/index.ts";
-import { bentoBoxSizes } from "@/components/Bento/index.ts";
 import { useSpotifyMusicPlayer } from "@/hooks/useSpotifyMusicPlayer/index.ts";
 
-const Music = ({ tracks }: MusicProps) => {
+const Music = ({ sizeKey, tracks }: MusicProps) => {
   const {
     isPlaying,
     currentIndex,
@@ -40,7 +39,7 @@ const Music = ({ tracks }: MusicProps) => {
       onPlayOrPause={togglePlay}
       onVolumeChange={setVolume}
       playbackError={error}
-      sizes={bentoBoxSizes.music}
+      sizeKey={sizeKey}
       volume={volume}
       className="bg-linear-to-b from-ds-music-from to-ds-music-to"
     />

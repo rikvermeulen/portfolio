@@ -28,10 +28,12 @@ export const mockRecipeCards: readonly PicnicRecipeCard[] = [
 ];
 
 export const mockRecipesProps = {
+  sizeKey: "recipes",
   recipes: mockRecipeCards,
 } satisfies RecipesProps;
 
 export const mockRecipesWithImageProps = {
+  sizeKey: "recipes",
   recipes: [
     {
       id: "recipe-1",

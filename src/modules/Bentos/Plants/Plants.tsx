@@ -3,7 +3,7 @@ import Image from "next/image";
 import type { PlantsProps } from "./Plants.types.ts";
 import type { PlantaActionType } from "@/lib/planta/types.ts";
 
-import Bento, { bentoBoxSizes } from "@/components/Bento/index.ts";
+import Bento, { bentos } from "@/components/Bento/index.ts";
 import Icon from "@/components/Icon/index.ts";
 import { isPlantaHappyHealth } from "@/lib/planta/plantCardFormat.ts";
 
@@ -16,13 +16,13 @@ const ACTION_ICON_INDEX: Partial<
   misting: "spray",
 };
 
-const Plants = ({ plants }: PlantsProps) => {
+const Plants = ({ sizeKey, plants }: PlantsProps) => {
   const visiblePlants = plants.slice(0, MAX_VISIBLE_PLANTS);
 
   return (
     <Bento
       app="plants"
-      sizes={bentoBoxSizes.plants}
+      sizes={bentos[sizeKey].sizes}
       className="flex size-full flex-col justify-between gap-2 bg-ds-forest p-5 text-ds-forest-ink"
     >
       <h2 className="text-2xl font-semibold">Plant Care</h2>

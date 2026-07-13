@@ -3,10 +3,9 @@
 import type { PodcastProps } from "./Podcast.types.ts";
 
 import AudioBento from "@/components/AudioBento/index.ts";
-import { bentoBoxSizes } from "@/components/Bento/index.ts";
 import { useSpotifyPodcastPlayer } from "@/hooks/useSpotifyPodcastPlayer/index.ts";
 
-const Podcast = ({ episodes }: PodcastProps) => {
+const Podcast = ({ sizeKey, episodes }: PodcastProps) => {
   const {
     isPlaying,
     currentIndex,
@@ -40,7 +39,7 @@ const Podcast = ({ episodes }: PodcastProps) => {
       onPlayOrPause={togglePlay}
       onVolumeChange={setVolume}
       playbackError={error}
-      sizes={bentoBoxSizes.podcast}
+      sizeKey={sizeKey}
       volume={volume}
       className="bg-linear-to-b from-ds-podcast-from to-ds-podcast-to"
     />

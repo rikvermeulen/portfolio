@@ -1,4 +1,4 @@
-import type { BentoAppKey, BentoBoxSizeKey } from "./config.ts";
+import type { BentoAppKey, BentoSizeKey } from "./config.ts";
 import type { Result } from "@/types/index.ts";
 
 export type BentoBoxSize = `${number}x${number}`;
@@ -23,6 +23,10 @@ export interface BentoGridConfig {
 
 export type BentoIconPosition = "top-right" | "bottom-right";
 
+export interface BentoSizedProps {
+  readonly sizeKey: BentoSizeKey;
+}
+
 export interface BentoProps extends React.HTMLAttributes<HTMLElement> {
   readonly app?: BentoAppKey;
   readonly image?: string;
@@ -44,16 +48,16 @@ export interface AsyncBentoProps<T> {
 }
 
 export interface BentoEmptyStateProps {
-  readonly sizes?: ResponsiveBentoSize;
+  readonly sizeKey: BentoSizeKey;
   readonly message: string;
   readonly className?: string;
 }
 
 export interface BentoErrorBoundaryProps {
-  readonly size: BentoBoxSizeKey;
+  readonly sizeKey: BentoSizeKey;
   readonly children: React.ReactNode;
 }
 
 export interface BentoSkeletonProps {
-  readonly size: BentoBoxSizeKey;
+  readonly sizeKey: BentoSizeKey;
 }

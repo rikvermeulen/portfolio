@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 
-import { bentoBoxSizes, BentoEmptyState } from "@/components/Bento/index.ts";
+import { BentoEmptyState } from "@/components/Bento/index.ts";
 
 import { mockMusicProps } from "./Music.mock.ts";
 import Music from "./Music.tsx";
@@ -32,7 +32,7 @@ export const Unavailable: Story = {
   render: () => (
     <BentoEmptyState
       message="Could not load the playlist right now"
-      sizes={bentoBoxSizes.music}
+      sizeKey="music"
     />
   ),
 };

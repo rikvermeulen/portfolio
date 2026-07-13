@@ -1,11 +1,13 @@
 import Image from "next/image";
 
-import Bento, { bentoBoxSizes } from "@/components/Bento/index.ts";
+import type { PersonalProps } from "./Personal.types.ts";
+
+import Bento, { bentos } from "@/components/Bento/index.ts";
 import Link from "@/components/Link/index.ts";
 
-const Personal = () => {
+const Personal = ({ sizeKey }: PersonalProps) => {
   return (
-    <Bento sizes={bentoBoxSizes.personal} className="size-full">
+    <Bento sizes={bentos[sizeKey].sizes} className="size-full">
       <Image
         alt="Portrait of Rik Vermeulen"
         height="184"

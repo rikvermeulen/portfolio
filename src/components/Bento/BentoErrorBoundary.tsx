@@ -5,7 +5,7 @@ import { Component } from "react";
 import type { BentoErrorBoundaryProps } from "./Bento.types.ts";
 
 import Bento from "./Bento.tsx";
-import { bentoBoxSizes } from "./config.ts";
+import { bentos } from "./config.ts";
 
 interface BentoErrorBoundaryState {
   readonly hasError: boolean;
@@ -36,7 +36,7 @@ class BentoErrorBoundary extends Component<
     }
 
     return (
-      <Bento sizes={bentoBoxSizes[this.props.size]} className="size-full">
+      <Bento sizes={bentos[this.props.sizeKey].sizes} className="size-full">
         <div className="flex size-full items-center justify-center p-4 text-center text-sm text-ds-gray">
           Couldn’t load this tile.
         </div>

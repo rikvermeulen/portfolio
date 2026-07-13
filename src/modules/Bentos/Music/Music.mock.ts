@@ -1,6 +1,7 @@
 import type { MusicProps } from "./Music.types.ts";
 
 export const mockMusicProps = {
+  sizeKey: "music",
   tracks: [
     {
       id: "mock-1",

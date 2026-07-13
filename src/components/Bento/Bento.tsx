@@ -4,7 +4,7 @@ import AppIcon from "@/components/AppIcon/index.ts";
 import Link from "@/components/Link/index.ts";
 import classnames from "@/utils/classnames/classnames.ts";
 
-import { bentoApps } from "./config.ts";
+import { bentos } from "./config.ts";
 
 /**
  * Bento component - A flexible container for bento grid layouts
@@ -56,7 +56,7 @@ const Bento = ({
   } as React.CSSProperties;
 
   // `app` resolves icon + alt from the registry; `image` is the raw escape hatch.
-  const resolvedApp = app ? bentoApps[app] : null;
+  const resolvedApp = app ? bentos[app] : null;
   const iconSrc = resolvedApp?.icon ?? image;
   const iconAlt = imageAlt ?? resolvedApp?.name;
 

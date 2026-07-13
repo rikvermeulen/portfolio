@@ -1,3 +1,4 @@
+import type { BentoSizedProps } from "@/components/Bento/index.ts";
 import type { TagVariant } from "@/components/Tag/index.ts";
 
 export interface CategoryTag {
@@ -5,7 +6,7 @@ export interface CategoryTag {
   readonly variant?: TagVariant;
 }
 
-export interface CategoryProps {
+export interface CategoryProps extends BentoSizedProps {
   readonly label?: string;
   readonly tags?: readonly (string | CategoryTag)[];
   readonly className?: string;

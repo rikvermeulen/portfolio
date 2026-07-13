@@ -2,11 +2,11 @@ import Image from "next/image";
 
 import type { CategoryProps, CategoryTag } from "./Category.types.ts";
 
-import Bento, { bentoBoxSizes } from "@/components/Bento/index.ts";
+import Bento, { bentos } from "@/components/Bento/index.ts";
 import Tag from "@/components/Tag/index.ts";
 import classnames from "@/utils/classnames/classnames.ts";
 
-const Category = ({ label, tags, className }: CategoryProps) => {
+const Category = ({ sizeKey, label, tags, className }: CategoryProps) => {
   const normalizedTags: CategoryTag[] = tags
     ? tags.map((tag) => (typeof tag === "string" ? { label: tag } : tag))
     : label
@@ -15,7 +15,7 @@ const Category = ({ label, tags, className }: CategoryProps) => {
 
   return (
     <Bento
-      sizes={bentoBoxSizes.category}
+      sizes={bentos[sizeKey].sizes}
       className={classnames("relative", className)}
     >
       <div className="absolute right-4 bottom-4 z-20 flex max-w-[75%] flex-col items-end justify-end gap-2">

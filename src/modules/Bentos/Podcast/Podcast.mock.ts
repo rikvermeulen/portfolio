@@ -1,6 +1,7 @@
 import type { PodcastProps } from "./Podcast.types.ts";
 
 export const mockPodcastProps = {
+  sizeKey: "podcast",
   episodes: [
     {
       id: "mock-1",

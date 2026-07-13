@@ -1,8 +1,11 @@
-import type { BentoIconPosition } from "@/components/Bento/index.ts";
+import type {
+  BentoIconPosition,
+  BentoSizedProps,
+} from "@/components/Bento/index.ts";
 
 export type IconPosition = BentoIconPosition;
 
-export interface InformationProps {
+export interface InformationProps extends BentoSizedProps {
   readonly title: string;
   readonly description: string;
   readonly href: string;

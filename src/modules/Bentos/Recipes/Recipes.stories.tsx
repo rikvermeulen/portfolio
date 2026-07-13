@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 
-import { bentoBoxSizes, BentoEmptyState } from "@/components/Bento/index.ts";
+import { BentoEmptyState } from "@/components/Bento/index.ts";
 
 import {
   mockRecipeCards,
@@ -36,11 +36,11 @@ export const WithImage: Story = {
 };
 
 export const TwoRecipes: Story = {
-  args: { recipes: mockRecipeCards.slice(0, 2) },
+  args: { sizeKey: "recipes", recipes: mockRecipeCards.slice(0, 2) },
 };
 
 export const SingleRecipe: Story = {
-  args: { recipes: mockRecipeCards.slice(0, 1) },
+  args: { sizeKey: "recipes", recipes: mockRecipeCards.slice(0, 1) },
 };
 
 export const Unavailable: Story = {
@@ -48,7 +48,7 @@ export const Unavailable: Story = {
   render: () => (
     <BentoEmptyState
       message="Could not load saved recipes."
-      sizes={bentoBoxSizes.recipes}
+      sizeKey="recipes"
     />
   ),
 };

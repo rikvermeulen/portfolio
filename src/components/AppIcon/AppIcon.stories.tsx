@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 
-import { bentoApps } from "@/components/Bento/config.ts";
+import { bentos } from "@/components/Bento/config.ts";
 
 import {
   mockAppIconInteractiveProps,
@@ -8,6 +8,11 @@ import {
   mockAppIconProps,
 } from "./AppIcon.mock.ts";
 import AppIcon from "./AppIcon.tsx";
+
+const appEntries = Object.values(bentos).filter(
+  (entry): entry is typeof entry & { name: string; icon: string } =>
+    "name" in entry && "icon" in entry,
+);
 
 const meta = {
   title: "Components/AppIcon",
@@ -40,7 +45,7 @@ export const AllApps: Story = {
   args: mockAppIconProps,
   render: () => (
     <div className="flex flex-wrap justify-center gap-4">
-      {Object.values(bentoApps).map((app) => (
+      {appEntries.map((app) => (
         <div key={app.name} className="flex flex-col items-center gap-2">
           <AppIcon
             alt={app.name}

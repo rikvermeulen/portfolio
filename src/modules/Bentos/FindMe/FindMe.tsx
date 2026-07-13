@@ -4,7 +4,7 @@ import Image from "next/image";
 
 import type { FindMeProps } from "./FindMe.types.ts";
 
-import Bento, { bentoBoxSizes } from "@/components/Bento/index.ts";
+import Bento, { bentos } from "@/components/Bento/index.ts";
 import Glass from "@/components/Glass/index.ts";
 import Icon from "@/components/Icon/index.ts";
 import classnames from "@/utils/classnames/classnames.ts";
@@ -13,14 +13,14 @@ import FindMeWeatherBadge from "./FindMeWeatherBadge.tsx";
 import { useFindMeConditions } from "./useFindMeConditions.ts";
 import { useFindMeMap } from "./useFindMeMap.ts";
 
-const FindMe = ({ className }: FindMeProps) => {
+const FindMe = ({ sizeKey, className }: FindMeProps) => {
   const conditionsState = useFindMeConditions();
   const { containerRef, hasToken, zoomIn, zoomOut } = useFindMeMap();
 
   return (
     <Bento
       app="findme"
-      sizes={bentoBoxSizes.findMe}
+      sizes={bentos[sizeKey].sizes}
       className={classnames("relative z-0 size-full bg-ds-map", className)}
     >
       {hasToken ? (

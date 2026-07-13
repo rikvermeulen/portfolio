@@ -11,6 +11,7 @@ const DAY = 86_400;
 const now = Math.floor(Date.parse("2026-07-12T10:00:00Z") / 1000);
 
 export const mockGamesProps = {
+  sizeKey: "games",
   games: [
     {
       id: "steam-1086940",

@@ -1,11 +1,10 @@
-import type { BentoBoxSizeKey } from "@/components/Bento/index.ts";
+import type { BentoSizeKey } from "@/components/Bento/index.ts";
 import type { Result } from "@/types/index.ts";
 
 import {
   AsyncBento,
-  bentoApps,
-  bentoBoxSizes,
   BentoEmptyState,
+  bentos,
 } from "@/components/Bento/index.ts";
 import { getPicnicRecipesResult } from "@/lib/picnic/service.ts";
 import { getPlantaPlantsResult } from "@/lib/planta/service.ts";
@@ -36,7 +35,8 @@ import {
 interface StaticTile {
   readonly kind: "static";
   readonly id: string;
-  readonly render: () => React.ReactNode;
+  readonly sizeKey: BentoSizeKey;
+  readonly render: (sizeKey: BentoSizeKey) => React.ReactNode;
 }
 
 /**
@@ -48,7 +48,7 @@ interface StaticTile {
 interface AsyncTile {
   readonly kind: "async";
   readonly id: string;
-  readonly sizeKey: BentoBoxSizeKey;
+  readonly sizeKey: BentoSizeKey;
   readonly render: () => React.ReactNode;
 }
 
@@ -62,15 +62,13 @@ export type BentoTile = StaticTile | AsyncTile | DividerTile;
 
 interface AsyncTileConfig<T> {
   readonly id: string;
-  readonly sizeKey: BentoBoxSizeKey;
+  readonly sizeKey: BentoSizeKey;
   readonly load: () => Promise<Result<T>>;
-  readonly render: (data: T) => React.ReactNode;
+  readonly render: (data: T, sizeKey: BentoSizeKey) => React.ReactNode;
 }
 
 /** Binds a data tile's `T` at definition, erasing it from the registry type. */
 function asyncTile<T>(config: AsyncTileConfig<T>): AsyncTile {
-  const sizes = bentoBoxSizes[config.sizeKey];
-
   return {
     kind: "async",
     id: config.id,
@@ -78,9 +76,9 @@ function asyncTile<T>(config: AsyncTileConfig<T>): AsyncTile {
     render: () => (
       <AsyncBento
         load={config.load}
-        render={config.render}
+        render={(data) => config.render(data, config.sizeKey)}
         renderError={(errorMessage) => (
-          <BentoEmptyState message={errorMessage} sizes={sizes} />
+          <BentoEmptyState message={errorMessage} sizeKey={config.sizeKey} />
         )}
       />
     ),
@@ -93,71 +91,103 @@ function asyncTile<T>(config: AsyncTileConfig<T>): AsyncTile {
  * array reflows the grid.
  */
 export const bentoRegistry: readonly BentoTile[] = [
-  { kind: "static", id: "personal", render: () => <Personal /> },
+  {
+    kind: "static",
+    id: "personal",
+    sizeKey: "personal",
+    render: (sizeKey) => <Personal sizeKey={sizeKey} />,
+  },
 
   asyncTile({
     id: "photos",
     sizeKey: "photos",
     load: getPhotosResult,
-    render: (albums) => <Photos albums={albums} />,
+    render: (albums, sizeKey) => <Photos albums={albums} sizeKey={sizeKey} />,
   }),
 
   asyncTile({
     id: "plants",
     sizeKey: "plants",
     load: getPlantaPlantsResult,
-    render: (data) => <Plants plants={data.plantCards} />,
+    render: (data, sizeKey) => (
+      <Plants plants={data.plantCards} sizeKey={sizeKey} />
+    ),
   }),
 
   asyncTile({
     id: "music",
     sizeKey: "music",
     load: getSpotifyMusicResult,
-    render: (data) => <Music tracks={data.tracks} />,
+    render: (data, sizeKey) => <Music sizeKey={sizeKey} tracks={data.tracks} />,
   }),
 
   asyncTile({
     id: "podcast",
     sizeKey: "podcast",
     load: getSpotifyPodcastResult,
-    render: (data) => <Podcast episodes={data.episodes} />,
+    render: (data, sizeKey) => (
+      <Podcast episodes={data.episodes} sizeKey={sizeKey} />
+    ),
   }),
 
-  { kind: "static", id: "contact", render: () => <Contact /> },
+  {
+    kind: "static",
+    id: "contact",
+    sizeKey: "contact",
+    render: (sizeKey) => <Contact sizeKey={sizeKey} />,
+  },
 
   asyncTile({
     id: "recipes",
     sizeKey: "recipes",
     load: getPicnicRecipesResult,
-    render: (data) => <Recipes recipes={data.recipeCards} />,
+    render: (data, sizeKey) => (
+      <Recipes recipes={data.recipeCards} sizeKey={sizeKey} />
+    ),
   }),
 
   asyncTile({
     id: "games",
     sizeKey: "games",
     load: getSteamGamesResult,
-    render: (data) => <Games games={data.games} />,
+    render: (data, sizeKey) => <Games games={data.games} sizeKey={sizeKey} />,
   }),
 
-  { kind: "static", id: "journal", render: () => <Journal /> },
+  {
+    kind: "static",
+    id: "journal",
+    sizeKey: "journal",
+    render: (sizeKey) => <Journal sizeKey={sizeKey} />,
+  },
 
   {
     kind: "static",
     id: "category-about",
-    render: () => (
-      <Category tags={[{ label: "About me", variant: "yellow" }]} />
+    sizeKey: "category",
+    render: (sizeKey) => (
+      <Category
+        sizeKey={sizeKey}
+        tags={[{ label: "About me", variant: "yellow" }]}
+      />
     ),
   },
 
-  { kind: "static", id: "findme", render: () => <FindMe /> },
+  {
+    kind: "static",
+    id: "findme",
+    sizeKey: "findme",
+    render: (sizeKey) => <FindMe sizeKey={sizeKey} />,
+  },
 
   { kind: "divider", id: "section-break" },
 
   {
     kind: "static",
     id: "category-work",
-    render: () => (
+    sizeKey: "category",
+    render: (sizeKey) => (
       <Category
+        sizeKey={sizeKey}
         tags={[
           { label: "Work", variant: "green" },
           { label: "2023 - current", variant: "blue" },
@@ -169,13 +199,15 @@ export const bentoRegistry: readonly BentoTile[] = [
   {
     kind: "static",
     id: "information",
-    render: () => (
+    sizeKey: "information",
+    render: (sizeKey) => (
       <Information
         description="Building polished digital experiences together with a talented team."
         href="https://greenberry.nl"
         iconPosition="top-right"
-        iconSrc={bentoApps.greenberry.icon}
+        iconSrc={bentos.greenberry.icon}
         linkLabel="Current role"
+        sizeKey={sizeKey}
         title="Medior Front-end engineer at Greenberry"
         className="bg-ds-violet text-white"
       />
@@ -185,10 +217,12 @@ export const bentoRegistry: readonly BentoTile[] = [
   {
     kind: "static",
     id: "image",
-    render: () => (
+    sizeKey: "image",
+    render: (sizeKey) => (
       <Image
         alt="Portrait of Rik Vermeulen"
         caption="Team moments and product thinking."
+        sizeKey={sizeKey}
         src="/images/me.jpg"
         className="bg-ds-mint text-ds-mint-ink"
       />

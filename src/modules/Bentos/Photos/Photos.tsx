@@ -6,7 +6,7 @@ import Image from "next/image";
 import type { PhotosProps } from "./Photos.types.ts";
 import type { ToggleOption } from "@/components/ToggleGroup/index.ts";
 
-import Bento, { bentoBoxSizes } from "@/components/Bento/index.ts";
+import Bento, { bentos } from "@/components/Bento/index.ts";
 import ToggleGroup from "@/components/ToggleGroup/index.ts";
 
 const AUTO_ADVANCE_INTERVAL_MS = 3000 as const;
@@ -33,7 +33,7 @@ const ALBUM_ICONS: Record<string, string> = {
   dog: "dog",
 };
 
-const Photos = ({ albums }: PhotosProps) => {
+const Photos = ({ sizeKey, albums }: PhotosProps) => {
   const albumNames = Object.keys(albums);
   const [selectedAlbum, setSelectedAlbum] = useState(albumNames[0] ?? "");
 
@@ -80,7 +80,7 @@ const Photos = ({ albums }: PhotosProps) => {
     <Bento
       app="photos"
       href={ALBUM_LINK}
-      sizes={bentoBoxSizes.photos}
+      sizes={bentos[sizeKey].sizes}
       className="group size-full"
     >
       {albumNames.length > 1 && (

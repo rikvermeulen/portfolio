@@ -1,10 +1,11 @@
 import type { InformationProps } from "./Information.types.ts";
 
-import Bento, { bentoBoxSizes } from "@/components/Bento/index.ts";
+import Bento, { bentos } from "@/components/Bento/index.ts";
 import Link from "@/components/Link/index.ts";
 import classnames from "@/utils/classnames/classnames.ts";
 
 const Information = ({
+  sizeKey,
   title,
   description,
   href,
@@ -19,7 +20,7 @@ const Information = ({
       iconPosition={iconPosition}
       image={iconSrc}
       imageAlt={iconAlt}
-      sizes={bentoBoxSizes.information}
+      sizes={bentos[sizeKey].sizes}
       className={classnames(
         "relative flex size-full flex-col justify-between p-5",
         className,

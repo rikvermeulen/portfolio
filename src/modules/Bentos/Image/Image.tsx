@@ -2,13 +2,13 @@ import ImageNext from "next/image";
 
 import type { ImageProps } from "./Image.types.ts";
 
-import Bento, { bentoBoxSizes } from "@/components/Bento/index.ts";
+import Bento, { bentos } from "@/components/Bento/index.ts";
 import classnames from "@/utils/classnames/classnames.ts";
 
-const Image = ({ src, alt, caption, className }: ImageProps) => {
+const Image = ({ sizeKey, src, alt, caption, className }: ImageProps) => {
   return (
     <Bento
-      sizes={bentoBoxSizes.image}
+      sizes={bentos[sizeKey].sizes}
       className={classnames("flex size-full flex-col p-5", className)}
     >
       <ImageNext

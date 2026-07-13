@@ -7,7 +7,7 @@ import type { AudioBentoProps } from "./AudioBento.types.ts";
 import type { PulsedButton } from "@/components/AudioControls/index.ts";
 
 import AudioControls from "@/components/AudioControls/index.ts";
-import Bento from "@/components/Bento/index.ts";
+import Bento, { bentos } from "@/components/Bento/index.ts";
 import Icon from "@/components/Icon/index.ts";
 import Slider from "@/components/Slider/index.ts";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion/usePrefersReducedMotion.ts";
@@ -27,7 +27,7 @@ const AudioBento = ({
   isPlaying,
   volume,
   app,
-  sizes,
+  sizeKey,
   className,
   onPlayOrPause,
   onChangeTrack,
@@ -59,7 +59,7 @@ const AudioBento = ({
   return (
     <Bento
       app={app}
-      sizes={sizes}
+      sizes={bentos[sizeKey].sizes}
       className={classnames("relative z-0 border-none!", className)}
     >
       {/* Blurred art backdrop */}

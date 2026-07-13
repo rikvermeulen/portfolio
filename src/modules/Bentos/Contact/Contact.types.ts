@@ -1,3 +1,5 @@
+import type { BentoSizedProps } from "@/components/Bento/index.ts";
+
 export interface IMessage {
   readonly id: string;
   readonly sender: "admin" | "user";
@@ -17,7 +19,7 @@ export interface SocialLink {
   readonly url: string;
 }
 
-export interface ContactProps {
+export interface ContactProps extends BentoSizedProps {
   readonly className?: string;
 }
 

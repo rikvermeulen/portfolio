@@ -1,6 +1,7 @@
 import type { PhotosProps } from "./Photos.types.ts";
 
 export const mockPhotosProps = {
+  sizeKey: "photos",
   albums: {
     apps: ["/images/me.jpg", "/images/profile.png"],
     map: ["/images/cloud.png"],

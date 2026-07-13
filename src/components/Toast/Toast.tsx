@@ -9,8 +9,9 @@ import {
 
 import type { ToastProps } from "./Toast.types.ts";
 
+import AdaptiveText from "@/components/AdaptiveText/index.ts";
 import AppIcon from "@/components/AppIcon/index.ts";
-import { bentoApps } from "@/components/Bento/index.ts";
+import { bentos } from "@/components/Bento/index.ts";
 import Glass from "@/components/Glass/index.ts";
 import Icon from "@/components/Icon/Icon.tsx";
 import { time } from "@/utils/datetime/index.ts";
@@ -39,7 +40,7 @@ const GLASS = {
  */
 const Toast = ({ toast }: ToastProps) => {
   const { app, title, description, date } = toast.content;
-  const identity = bentoApps[app];
+  const identity = bentos[app];
   const timestamp = date ? time.stamp(date) : null;
 
   return (
@@ -56,7 +57,7 @@ const Toast = ({ toast }: ToastProps) => {
             src={identity.icon}
           />
           <ToastContent className="flex flex-1 items-start gap-2">
-            <div className="flex flex-1 flex-col">
+            <AdaptiveText className="flex flex-1 flex-col">
               <Text slot="title" className="text-sm font-semibold">
                 {title}
               </Text>
@@ -65,7 +66,7 @@ const Toast = ({ toast }: ToastProps) => {
                   {description}
                 </Text>
               )}
-            </div>
+            </AdaptiveText>
             {timestamp && (
               <time className="shrink-0 text-sm text-black/35 dark:text-white/35">
                 {timestamp}

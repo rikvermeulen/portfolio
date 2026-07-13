@@ -5,7 +5,7 @@ import Image from "next/image";
 
 import type { ContactProps } from "./Contact.types.ts";
 
-import Bento, { bentoBoxSizes } from "@/components/Bento/index.ts";
+import Bento, { bentos } from "@/components/Bento/index.ts";
 import Glass from "@/components/Glass/index.ts";
 import Icon from "@/components/Icon/index.ts";
 import Link from "@/components/Link/index.ts";
@@ -27,7 +27,7 @@ const GLASS = {
   className: "bg-black/10 dark:bg-white/10",
 };
 
-const Contact = ({ className }: ContactProps) => {
+const Contact = ({ sizeKey, className }: ContactProps) => {
   const [showMenu, setShowMenu] = useState(false);
   const chatRef = useRef<HTMLDivElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -56,7 +56,7 @@ const Contact = ({ className }: ContactProps) => {
   return (
     <Bento
       app="contact"
-      sizes={bentoBoxSizes.contact}
+      sizes={bentos[sizeKey].sizes}
       className={classnames(
         "relative isolate flex flex-col border border-ds-border bg-white dark:border-ds-border-dark dark:bg-black",
         className,

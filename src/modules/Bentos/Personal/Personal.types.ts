@@ -1,1 +1,3 @@
-export type PersonalProps = Record<string, never>;
+import type { BentoSizedProps } from "@/components/Bento/index.ts";
+
+export type PersonalProps = BentoSizedProps;

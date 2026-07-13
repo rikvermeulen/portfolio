@@ -4,7 +4,7 @@ import { useState } from "react";
 
 import type { JournalProps } from "./Journal.types.ts";
 
-import Bento, { bentoBoxSizes } from "@/components/Bento/index.ts";
+import Bento, { bentos } from "@/components/Bento/index.ts";
 import Glass from "@/components/Glass/index.ts";
 import Icon from "@/components/Icon/index.ts";
 import { notify } from "@/components/Toast/index.ts";
@@ -28,7 +28,7 @@ const ACTION_GLASS = {
   className: "bg-white/15",
 };
 
-const Journal = ({ className, date }: JournalProps) => {
+const Journal = ({ sizeKey, className, date }: JournalProps) => {
   const today = date ?? TODAY;
   const [questionIndex, setQuestionIndex] = useState(() =>
     getQuestionIndexForDate(today),
@@ -51,7 +51,7 @@ const Journal = ({ className, date }: JournalProps) => {
   return (
     <Bento
       app="journal"
-      sizes={bentoBoxSizes.journal}
+      sizes={bentos[sizeKey].sizes}
       className={classnames(
         "flex flex-col justify-between p-5 md:p-6",
         className,

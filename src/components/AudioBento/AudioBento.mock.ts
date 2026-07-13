@@ -1,7 +1,5 @@
 import type { AudioBentoProps } from "./AudioBento.types.ts";
 
-import { bentoBoxSizes } from "@/components/Bento/index.ts";
-
 const noop = () => undefined;
 
 export const mockAudioBentoProps = {
@@ -15,7 +13,7 @@ export const mockAudioBentoProps = {
   isPlaying: true,
   volume: 0.5,
   app: "music",
-  sizes: bentoBoxSizes.music,
+  sizeKey: "music",
   className: "bg-linear-to-b from-ds-music-from to-ds-music-to",
   onPlayOrPause: noop,
   onChangeTrack: noop,

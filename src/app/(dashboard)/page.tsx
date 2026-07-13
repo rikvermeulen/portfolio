@@ -33,15 +33,15 @@ export default function Home() {
         }
 
         if (tile.kind === "static") {
-          return <Fragment key={tile.id}>{tile.render()}</Fragment>;
+          return <Fragment key={tile.id}>{tile.render(tile.sizeKey)}</Fragment>;
         }
 
         return (
           <Suspense
             key={tile.id}
-            fallback={<BentoSkeleton size={tile.sizeKey} />}
+            fallback={<BentoSkeleton sizeKey={tile.sizeKey} />}
           >
-            <BentoErrorBoundary size={tile.sizeKey}>
+            <BentoErrorBoundary sizeKey={tile.sizeKey}>
               {tile.render()}
             </BentoErrorBoundary>
           </Suspense>

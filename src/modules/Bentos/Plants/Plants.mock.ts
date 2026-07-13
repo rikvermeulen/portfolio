@@ -29,5 +29,6 @@ const mockPlants: readonly PlantaPlantCardData[] = [
 ];
 
 export const mockPlantsProps = {
+  sizeKey: "plants",
   plants: mockPlants,
 } satisfies PlantsProps;

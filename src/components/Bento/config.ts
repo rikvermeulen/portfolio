@@ -1,4 +1,4 @@
-import type { BentoGridConfig, ResponsiveBentoSize } from "./Bento.types.ts";
+import type { BentoGridConfig } from "./Bento.types.ts";
 
 export const bentoGridConfig: BentoGridConfig = {
   columns: { base: 4, md: 8, lg: 12 },
@@ -18,90 +18,94 @@ export const bentoSizeBreakpoints = {
   lg: "80rem", // 1280px (Tailwind xl — intentionally skips lg/1024px)
 } as const;
 
-export const bentoBoxSizes = {
-  personal: { base: "4x4", md: "8x4", lg: "6x4" },
-  contact: { base: "4x4", md: "8x4", lg: "6x3" },
-  journal: { base: "4x4", md: "8x4", lg: "6x3" },
-  photos: { base: "4x4", md: "4x4", lg: "3x3" },
-  plants: { base: "4x4", md: "4x4", lg: "3x3" },
-  recipes: { base: "4x4", md: "4x4", lg: "3x3" },
-  category: { base: "4x3", md: "4x3", lg: "3x2" },
-  information: { base: "4x4", md: "4x2", lg: "3x3" },
-  image: { base: "4x4", md: "4x3", lg: "3x3" },
-  findMe: { base: "4x4", md: "4x3", lg: "3x3" },
-  music: { base: "4x4", md: "4x4", lg: "3x3" },
-  podcast: { base: "4x4", md: "4x4", lg: "3x3" },
-  games: { base: "4x4", md: "4x4", lg: "3x3" },
-} as const satisfies Record<string, ResponsiveBentoSize>;
-
-/** Keys of the canonical tile-size table — the single source of truth for sizing. */
-export type BentoBoxSizeKey = keyof typeof bentoBoxSizes;
-
 /**
- * App identity per bento — the single source of truth tying a tile to its
- * icon and display name. Tiles reference an app by key (`<Bento app="journal">`)
- * and toasts look icons up here, so a notification shows the exact same icon as
- * its bento.
- *
- * List the light `icon` for every app. Add `darkIcon` when a dark-mode twin
- * exists; without it the light icon is used in both themes.
+ * Single source of truth for bento tiles: grid sizes plus optional app identity
+ * (icon + display name for `<Bento app>` and toasts). Layout-only tiles omit
+ * name/icon; referenced apps like Greenberry omit sizes.
  */
-export const bentoApps = {
-  personal: { name: "Rik Vermeulen", icon: "/images/me.jpg" },
+export const bentos = {
+  personal: {
+    sizes: { base: "4x4", md: "8x4", lg: "6x4" },
+    name: "Rik Vermeulen",
+    icon: "/images/me.jpg",
+  },
   contact: {
+    sizes: { base: "4x4", md: "8x4", lg: "6x3" },
     name: "Messages",
     icon: "/images/icons/light/messages.png",
     darkIcon: "/images/icons/dark/messages.png",
   },
   journal: {
+    sizes: { base: "4x4", md: "8x4", lg: "6x3" },
     name: "Journal",
     icon: "/images/icons/light/journal.png",
     darkIcon: "/images/icons/dark/journal.png",
   },
-  music: {
-    name: "Music",
-    icon: "/images/icons/light/music.png",
-    darkIcon: "/images/icons/dark/music.png",
-  },
-  podcast: {
-    name: "Podcasts",
-    icon: "/images/icons/light/podcast.png",
-    darkIcon: "/images/icons/dark/podcast.png",
-  },
   photos: {
+    sizes: { base: "4x4", md: "4x4", lg: "3x3" },
     name: "Photos",
     icon: "/images/icons/light/photos.png",
     darkIcon: "/images/icons/dark/photos.png",
   },
   plants: {
+    sizes: { base: "4x4", md: "4x4", lg: "3x3" },
     name: "Planta",
     icon: "/images/icons/light/planta.png",
     darkIcon: "/images/icons/dark/planta.png",
   },
   recipes: {
+    sizes: { base: "4x4", md: "4x4", lg: "3x3" },
     name: "Picnic",
     icon: "/images/icons/light/picnic.png",
     darkIcon: "/images/icons/dark/picnic.png",
   },
-  games: {
-    name: "Steam",
-    icon: "/images/icons/light/games.png",
-    darkIcon: "/images/icons/dark/games.png",
+  category: {
+    sizes: { base: "4x3", md: "4x3", lg: "3x2" },
+  },
+  information: {
+    sizes: { base: "4x4", md: "4x2", lg: "3x3" },
+  },
+  image: {
+    sizes: { base: "4x4", md: "4x3", lg: "3x3" },
   },
   findme: {
+    sizes: { base: "4x4", md: "4x3", lg: "3x3" },
     name: "Find Me",
     icon: "/images/icons/light/findme.png",
     darkIcon: "/images/icons/dark/findme.png",
+  },
+  music: {
+    sizes: { base: "4x4", md: "4x4", lg: "3x3" },
+    name: "Music",
+    icon: "/images/icons/light/music.png",
+    darkIcon: "/images/icons/dark/music.png",
+  },
+  podcast: {
+    sizes: { base: "4x4", md: "4x4", lg: "3x3" },
+    name: "Podcasts",
+    icon: "/images/icons/light/podcast.png",
+    darkIcon: "/images/icons/dark/podcast.png",
+  },
+  games: {
+    sizes: { base: "4x4", md: "4x4", lg: "3x3" },
+    name: "Steam",
+    icon: "/images/icons/light/games.png",
+    darkIcon: "/images/icons/dark/games.png",
   },
   greenberry: {
     name: "Greenberry",
     icon: "/images/icons/light/greenberry.png",
     darkIcon: "/images/icons/dark/greenberry.png",
   },
-} as const satisfies Record<
-  string,
-  { name: string; icon: string; darkIcon?: string }
->;
+} as const;
 
-/** Keys of the app-identity table — one per notifiable bento. */
-export type BentoAppKey = keyof typeof bentoApps;
+export type BentoKey = keyof typeof bentos;
+
+/** Tile keys with grid geometry. */
+export type BentoSizeKey = Exclude<BentoKey, "greenberry">;
+
+/** Tile keys with icon + display name (`<Bento app>`, toasts). */
+export type BentoAppKey = Exclude<
+  BentoKey,
+  "category" | "information" | "image"
+>;
