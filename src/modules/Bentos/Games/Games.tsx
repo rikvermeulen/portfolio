@@ -49,7 +49,7 @@ const Games = ({ sizeKey, profile, platforms, games }: GamesProps) => {
             />
             <span
               aria-hidden="true"
-              className="absolute -right-0.5 -bottom-0.5 size-5 overflow-hidden rounded-full ring-2 ring-ds-games-to"
+              className="absolute -right-0.5 -bottom-0.5 size-5 overflow-hidden rounded-full"
             >
               <Image
                 alt=""
