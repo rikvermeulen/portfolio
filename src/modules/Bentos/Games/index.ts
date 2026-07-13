@@ -2,5 +2,5 @@ export { default } from "./Games.tsx";
 export type {
   GamesProps,
   GamingPlatform,
-  SteamProfile,
+  PlayerProfile,
 } from "./Games.types.ts";

@@ -1,4 +1,4 @@
-import { getSteamProfileResult } from "./service.ts";
+import { getSteamGames, getSteamProfile } from "./service.ts";
 
 jest.mock("./client.ts", () => {
   const actual =
@@ -14,10 +14,6 @@ jest.mock("./client.ts", () => {
 const mockEnv = {
   STEAM_API_KEY: undefined as string | undefined,
   STEAM_ID: undefined as string | undefined,
-  XBOX_GAMERTAG: undefined as string | undefined,
-  XBOX_PROFILE_URL: undefined as string | undefined,
-  DISCORD_USERNAME: undefined as string | undefined,
-  DISCORD_PROFILE_URL: undefined as string | undefined,
 };
 
 jest.mock("@env", () => ({
@@ -58,87 +54,85 @@ beforeEach(() => {
   jest.clearAllMocks();
   mockEnv.STEAM_API_KEY = "key";
   mockEnv.STEAM_ID = "steam-id";
-  mockEnv.XBOX_GAMERTAG = undefined;
-  mockEnv.XBOX_PROFILE_URL = undefined;
-  mockEnv.DISCORD_USERNAME = undefined;
-  mockEnv.DISCORD_PROFILE_URL = undefined;
   fetchPlayerSummaries.mockResolvedValue(ownerResponse());
   fetchOwnedGames.mockResolvedValue({ response: { games: [makeGame()] } });
   fetchSteamHeaderImage.mockResolvedValue(null);
 });
 
-describe("getSteamProfileResult", () => {
-  it("returns ok:false when STEAM_API_KEY is missing", async () => {
+describe("getSteamProfile", () => {
+  it("returns null when STEAM_API_KEY is missing", async () => {
     mockEnv.STEAM_API_KEY = undefined;
-    await expect(getSteamProfileResult()).resolves.toEqual({
-      ok: false,
-      errorMessage: "Steam is not configured",
-    });
+    await expect(getSteamProfile()).resolves.toBeNull();
     expect(fetchPlayerSummaries).not.toHaveBeenCalled();
   });
 
-  it("returns ok:false when STEAM_ID is missing", async () => {
+  it("returns null when STEAM_ID is missing", async () => {
     mockEnv.STEAM_ID = undefined;
-    await expect(getSteamProfileResult()).resolves.toEqual({
-      ok: false,
-      errorMessage: "Steam is not configured",
+    await expect(getSteamProfile()).resolves.toBeNull();
+    expect(fetchPlayerSummaries).not.toHaveBeenCalled();
+  });
+
+  it("maps the owner summary to a profile", async () => {
+    await expect(getSteamProfile()).resolves.toEqual({
+      id: "steam-id",
+      name: "PARADEMON",
+      avatar: "https://avatars.steamstatic.com/owner_full.jpg",
+      href: "https://steamcommunity.com/id/parademon",
+      online: false,
+      playing: undefined,
     });
+  });
+
+  it("reflects online presence and the current game", async () => {
+    fetchPlayerSummaries
+      .mockResolvedValueOnce(
+        ownerResponse({ personastate: 1, gameextrainfo: "Baldur's Gate 3" }),
+      )
+      .mockResolvedValueOnce(ownerResponse({ personastate: 0 }));
+
+    await expect(getSteamProfile()).resolves.toMatchObject({
+      online: true,
+      playing: "Baldur's Gate 3",
+    });
+    await expect(getSteamProfile()).resolves.toMatchObject({ online: false });
+  });
+
+  it("walks the avatar-size fallback chain down to an empty string", async () => {
+    fetchPlayerSummaries
+      .mockResolvedValueOnce(ownerResponse({ avatarfull: undefined }))
+      .mockResolvedValueOnce(
+        ownerResponse({
+          avatarfull: undefined,
+          avatarmedium: undefined,
+          avatar: "https://avatars.steamstatic.com/owner_small.jpg",
+        }),
+      )
+      .mockResolvedValueOnce(
+        ownerResponse({ avatarfull: undefined, avatarmedium: undefined }),
+      );
+
+    await expect(getSteamProfile()).resolves.toMatchObject({
+      avatar: "https://avatars.steamstatic.com/owner_medium.jpg",
+    });
+    await expect(getSteamProfile()).resolves.toMatchObject({
+      avatar: "https://avatars.steamstatic.com/owner_small.jpg",
+    });
+    await expect(getSteamProfile()).resolves.toMatchObject({ avatar: "" });
+  });
+
+  it("throws when the owner summary is missing", async () => {
+    fetchPlayerSummaries.mockResolvedValue({ response: { players: [] } });
+    await expect(getSteamProfile()).rejects.toThrow(
+      "Steam profile summary missing",
+    );
+  });
+});
+
+describe("getSteamGames", () => {
+  it("returns [] when Steam is not configured", async () => {
+    mockEnv.STEAM_ID = undefined;
+    await expect(getSteamGames()).resolves.toEqual([]);
     expect(fetchOwnedGames).not.toHaveBeenCalled();
-  });
-
-  it("maps the profile and returns Steam as the only platform by default", async () => {
-    const result = await getSteamProfileResult();
-    expect(result.ok).toBe(true);
-    if (result.ok) {
-      expect(result.data.profile).toEqual({
-        id: "steam-id",
-        name: "PARADEMON",
-        avatar: "https://avatars.steamstatic.com/owner_full.jpg",
-        href: "https://steamcommunity.com/id/parademon",
-      });
-      expect(result.data.platforms).toEqual([
-        {
-          id: "steam",
-          name: "Steam",
-          handle: "PARADEMON",
-          href: "https://steamcommunity.com/id/parademon",
-        },
-      ]);
-    }
-  });
-
-  it("adds Xbox and Discord platforms when configured", async () => {
-    mockEnv.XBOX_GAMERTAG = "Parademon117";
-    mockEnv.XBOX_PROFILE_URL =
-      "https://account.xbox.com/profile?gt=Parademon117";
-    mockEnv.DISCORD_USERNAME = "parademon";
-    mockEnv.DISCORD_PROFILE_URL = "https://discord.com/users/123";
-
-    const result = await getSteamProfileResult();
-    expect(result.ok).toBe(true);
-    if (result.ok) {
-      expect(result.data.platforms.map((p) => p.id)).toEqual([
-        "steam",
-        "xbox",
-        "discord",
-      ]);
-      expect(result.data.platforms[1]).toMatchObject({
-        handle: "Parademon117",
-      });
-      expect(result.data.platforms[2]).toMatchObject({ handle: "parademon" });
-    }
-  });
-
-  it("falls back to platform names when a handle is not set", async () => {
-    mockEnv.XBOX_PROFILE_URL = "https://account.xbox.com/profile";
-    mockEnv.DISCORD_PROFILE_URL = "https://discord.com/users/123";
-
-    const result = await getSteamProfileResult();
-    expect(result.ok).toBe(true);
-    if (result.ok) {
-      expect(result.data.platforms[1]?.handle).toBe("Xbox");
-      expect(result.data.platforms[2]?.handle).toBe("Discord");
-    }
   });
 
   it("maps played games, drops malformed/unplayed, sorts by last played, resolves art", async () => {
@@ -162,97 +156,46 @@ describe("getSteamProfileResult", () => {
       Promise.resolve(`https://img.example.com/${appid}/header.jpg`),
     );
 
-    const result = await getSteamProfileResult();
-    expect(result.ok).toBe(true);
-    if (result.ok) {
-      const names = result.data.games.map((g) => g.name);
-      expect(names).toHaveLength(4);
-      expect(names[0]).toBe("Newest");
-      expect(names[1]).toBe("Older");
-      expect(names.slice(2).sort()).toEqual(["NoTsA", "NoTsB"]);
-      expect(result.data.games[0]).toMatchObject({
-        id: "steam-2",
-        coverImage: "https://img.example.com/2/header.jpg",
-        coverImageFallback:
-          "https://cdn.cloudflare.steamstatic.com/steam/apps/2/header.jpg",
-        portraitImage:
-          "https://cdn.cloudflare.steamstatic.com/steam/apps/2/library_600x900_2x.jpg",
-        href: "https://store.steampowered.com/app/2",
-        playtimeMinutes: 9000,
-      });
-    }
+    const games = await getSteamGames();
+    const names = games.map((game) => game.name);
+    expect(names).toHaveLength(4);
+    expect(names[0]).toBe("Newest");
+    expect(names[1]).toBe("Older");
+    expect(names.slice(2).sort()).toEqual(["NoTsA", "NoTsB"]);
+    expect(games[0]).toMatchObject({
+      id: "steam-2",
+      coverImage: "https://img.example.com/2/header.jpg",
+      coverImageFallback:
+        "https://cdn.cloudflare.steamstatic.com/steam/apps/2/header.jpg",
+      portraitImage:
+        "https://cdn.cloudflare.steamstatic.com/steam/apps/2/library_600x900_2x.jpg",
+      href: "https://store.steampowered.com/app/2",
+      playtimeMinutes: 9000,
+      platform: "steam",
+    });
   });
 
-  it("caps the games list at 12 and falls back to the guessed header url", async () => {
+  it("returns the whole played library, resolving store art only for the recent slice", async () => {
     fetchOwnedGames.mockResolvedValue({
       response: {
-        games: Array.from({ length: 20 }, (_, i) =>
+        games: Array.from({ length: 30 }, (_, i) =>
           makeGame({ appid: i + 1, name: `Game ${i}`, rtime_last_played: i }),
         ),
       },
     });
-    fetchSteamHeaderImage.mockResolvedValue(null);
+    fetchSteamHeaderImage.mockImplementation((appid: number) =>
+      Promise.resolve(`https://img.example.com/${appid}/header.jpg`),
+    );
 
-    const result = await getSteamProfileResult();
-    expect(result.ok).toBe(true);
-    if (result.ok) {
-      expect(result.data.games).toHaveLength(12);
-      // Sorted by last-played desc → appid 20 (highest) leads; no store art → guessed url.
-      expect(result.data.games[0]?.coverImage).toBe(
-        "https://cdn.cloudflare.steamstatic.com/steam/apps/20/header.jpg",
-      );
-    }
+    const games = await getSteamGames();
+    expect(games).toHaveLength(30);
+    expect(games[0]?.coverImage).toBe("https://img.example.com/30/header.jpg");
+    expect(games[25]?.coverImage).toContain("cdn.cloudflare.steamstatic.com");
+    expect(fetchSteamHeaderImage).toHaveBeenCalledTimes(24);
   });
 
   it("tolerates an empty library", async () => {
     fetchOwnedGames.mockResolvedValue({ response: {} });
-    const result = await getSteamProfileResult();
-    expect(result.ok).toBe(true);
-    if (result.ok) {
-      expect(result.data.games).toEqual([]);
-    }
-  });
-
-  it("walks the avatar-size fallback chain down to an empty string", async () => {
-    fetchPlayerSummaries
-      .mockResolvedValueOnce(ownerResponse({ avatarfull: undefined }))
-      .mockResolvedValueOnce(
-        ownerResponse({
-          avatarfull: undefined,
-          avatarmedium: undefined,
-          avatar: "https://avatars.steamstatic.com/owner_small.jpg",
-        }),
-      )
-      .mockResolvedValueOnce(
-        ownerResponse({ avatarfull: undefined, avatarmedium: undefined }),
-      );
-
-    const medium = await getSteamProfileResult();
-    const small = await getSteamProfileResult();
-    const none = await getSteamProfileResult();
-
-    expect(medium.ok && medium.data.profile.avatar).toBe(
-      "https://avatars.steamstatic.com/owner_medium.jpg",
-    );
-    expect(small.ok && small.data.profile.avatar).toBe(
-      "https://avatars.steamstatic.com/owner_small.jpg",
-    );
-    expect(none.ok && none.data.profile.avatar).toBe("");
-  });
-
-  it("returns ok:false when the owner summary is missing", async () => {
-    fetchPlayerSummaries.mockResolvedValue({ response: { players: [] } });
-    await expect(getSteamProfileResult()).resolves.toEqual({
-      ok: false,
-      errorMessage: "Could not load your Steam profile right now",
-    });
-  });
-
-  it("returns ok:false when a fetch throws", async () => {
-    fetchPlayerSummaries.mockRejectedValue(new Error("network error"));
-    await expect(getSteamProfileResult()).resolves.toEqual({
-      ok: false,
-      errorMessage: "Could not load your Steam profile right now",
-    });
+    await expect(getSteamGames()).resolves.toEqual([]);
   });
 });

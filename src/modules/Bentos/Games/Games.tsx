@@ -13,7 +13,8 @@ import Drawer from "@/components/Drawer/index.ts";
 import Glass from "@/components/Glass/index.ts";
 import Icon from "@/components/Icon/index.ts";
 import Link from "@/components/Link/index.ts";
-import { formatPlaytime } from "@/lib/steam/formatPlaytime.ts";
+import { formatPlaytime } from "@/lib/games/formatPlaytime.ts";
+import classnames from "@/utils/classnames/index.ts";
 import { compact } from "@/utils/compact/index.ts";
 import { time } from "@/utils/datetime/index.ts";
 
@@ -36,8 +37,14 @@ const Games = ({ sizeKey, profile, platforms, games }: GamesProps) => {
       app="games"
       imageAlt="Games icon"
       sizes={bentos[sizeKey].sizes}
-      className="relative z-0 bg-linear-to-b from-ds-games-from to-ds-games-to"
+      className="relative z-0"
     >
+      <Glass
+        intensity={1}
+        radius={24}
+        tint="none"
+        className="-z-10 bg-linear-to-b from-ds-games-from to-ds-games-to"
+      />
       <div className="flex size-full flex-col gap-3 p-4">
         <div className="flex flex-col items-center gap-1.5 text-center">
           <span className="relative inline-block">
@@ -63,6 +70,23 @@ const Games = ({ sizeKey, profile, platforms, games }: GamesProps) => {
           <span className="max-w-full truncate text-sm font-bold tracking-wide text-white uppercase">
             {profile.name}
           </span>
+          <span className="flex max-w-full items-center gap-1.5 text-xs">
+            <span
+              aria-hidden="true"
+              className={classnames(
+                "size-1.5 shrink-0 rounded-full",
+                profile.online ? "bg-ds-green" : "bg-white/30",
+              )}
+            />
+            <span
+              className={classnames(
+                "truncate",
+                profile.online ? "text-ds-green" : "text-white/50",
+              )}
+            >
+              {profile.playing ?? (profile.online ? "Online" : "Offline")}
+            </span>
+          </span>
         </div>
 
         <section className="mt-auto">
@@ -83,11 +107,7 @@ const Games = ({ sizeKey, profile, platforms, games }: GamesProps) => {
                   >
                     <span className="flex size-9 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-white/10">
                       {row.section === "games" && recent ? (
-                        <GameTile
-                          game={recent}
-                          sizeClassName="size-9"
-                          sizes="36px"
-                        />
+                        <GameTile game={recent} sizeClassName="size-9" />
                       ) : (
                         <Icon
                           iconClassName="size-5 text-white"
@@ -173,7 +193,7 @@ const Games = ({ sizeKey, profile, platforms, games }: GamesProps) => {
                     href={game.href ?? profile.href}
                     className="group flex items-center gap-3 rounded-xl px-2.5 py-2 transition hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:outline-none"
                   >
-                    <GameTile game={game} sizeClassName="size-9" sizes="36px" />
+                    <GameTile game={game} sizeClassName="size-9" />
                     <span className="flex min-w-0 flex-1 flex-col">
                       <span className="truncate text-sm font-semibold text-white">
                         {game.name}

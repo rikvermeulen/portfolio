@@ -59,7 +59,7 @@ const Journal = ({ sizeKey, className, date }: JournalProps) => {
     >
       <Glass
         intensity={1}
-        radius={16}
+        radius={24}
         tint="none"
         className="bg-linear-to-br from-ds-journal-from/95 to-ds-journal-to/95"
       />

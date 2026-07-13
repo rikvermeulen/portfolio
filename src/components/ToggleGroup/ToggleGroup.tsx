@@ -17,18 +17,15 @@ import {
 } from "framer-motion";
 import { Tab, TabList, Tabs } from "react-aria-components";
 
-import type { ToggleGroupProps } from "./ToggleGroup.types.ts";
+import type {
+  ToggleGroupProps,
+  ToggleGroupTabRect,
+} from "./ToggleGroup.types.ts";
 
 import Glass from "@/components/Glass/index.ts";
 import Icon from "@/components/Icon/index.ts";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion/index.ts";
 import classnames from "@/utils/classnames/index.ts";
-
-interface Rect {
-  readonly left: number;
-  readonly width: number;
-  readonly height: number;
-}
 
 const HOVER_SCALE = 1.12;
 const PRESS_SCALE = 1.18;
@@ -60,7 +57,7 @@ export default function ToggleGroup<T extends string = string>({
   const draggingRef = useRef(false);
   const readyRef = useRef(false);
 
-  const [rects, setRects] = useState<Record<string, Rect>>({});
+  const [rects, setRects] = useState<Record<string, ToggleGroupTabRect>>({});
   const [barHeight, setBarHeight] = useState(0);
   const [dragPreview, setDragPreview] = useState<T | null>(null);
 
@@ -76,10 +73,7 @@ export default function ToggleGroup<T extends string = string>({
   );
   const scaleX = useSpring(
     useTransform(stretch, (current) => 1 + current),
-    {
-      stiffness: 400,
-      damping: 28,
-    },
+    { stiffness: 400, damping: 28 },
   );
   const scaleY = useSpring(
     useTransform(stretch, (current) => 1 - current * 0.7),
@@ -122,7 +116,7 @@ export default function ToggleGroup<T extends string = string>({
                 left: rect.left - rootRect.left,
                 width: rect.width,
                 height: rect.height,
-              } satisfies Rect,
+              } satisfies ToggleGroupTabRect,
             ],
           ];
         }),
@@ -415,7 +409,7 @@ export default function ToggleGroup<T extends string = string>({
               {option.icon ? (
                 <span className="flex flex-col items-center dark:text-white">
                   <Icon
-                    iconClassName="size-4.5"
+                    iconClassName="size-5"
                     label={option.label}
                     name={option.icon}
                   />

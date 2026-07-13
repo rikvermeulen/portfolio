@@ -1,5 +1,6 @@
 import type { NextConfig } from "next";
 
+import { nextImagesConfig } from "@config/images.ts";
 import { nextSecurityHeaders } from "@config/responseHeaders.ts";
 import { svgrOptions } from "@config/webpackLoaders.ts";
 
@@ -8,35 +9,7 @@ import "./src/env.ts";
 const config: NextConfig = {
   allowedDevOrigins: ["*.*", "*.*.*", "*.*.*.*"],
   reactStrictMode: true,
-  images: {
-    formats: ["image/avif", "image/webp"],
-    remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "*.supabase.co",
-      },
-      {
-        protocol: "https",
-        hostname: "*.scdn.co",
-      },
-      {
-        protocol: "https",
-        hostname: "*.picnicinternational.com",
-      },
-      {
-        protocol: "https",
-        hostname: "images.getplanta.com",
-      },
-      {
-        protocol: "https",
-        hostname: "**.steamstatic.com",
-      },
-      {
-        protocol: "https",
-        hostname: "assets.nintendo.com",
-      },
-    ],
-  },
+  images: nextImagesConfig,
   reactCompiler: process.env.NODE_ENV === "production",
   turbopack: {
     rules: {

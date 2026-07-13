@@ -1,4 +1,4 @@
-import type { PlatformId } from "@/lib/steam/types.ts";
+import type { PlatformId } from "@/lib/games/types.ts";
 
 export const MENU_SECTIONS = [
   { section: "games", label: "Games", icon: "steam" },

@@ -38,6 +38,7 @@ export const env = createEnv({
     STEAM_ID: z.string().optional(),
 
     // Other gaming profiles (links visitors can add / follow)
+    XBOX_API_KEY: z.string().optional(), // OpenXBL (xbl.io) key — enables real Xbox data
     XBOX_GAMERTAG: z.string().optional(),
     XBOX_PROFILE_URL: z.string().optional(),
     DISCORD_USERNAME: z.string().optional(),
@@ -82,6 +83,7 @@ export const env = createEnv({
     PICNIC_AUTH_ADMIN_SECRET: process.env.PICNIC_AUTH_ADMIN_SECRET,
     STEAM_API_KEY: process.env.STEAM_API_KEY,
     STEAM_ID: process.env.STEAM_ID,
+    XBOX_API_KEY: process.env.XBOX_API_KEY,
     XBOX_GAMERTAG: process.env.XBOX_GAMERTAG,
     XBOX_PROFILE_URL: process.env.XBOX_PROFILE_URL,
     DISCORD_USERNAME: process.env.DISCORD_USERNAME,

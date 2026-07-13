@@ -1,10 +1,10 @@
 import type { BentoSizedProps } from "@/components/Bento/index.ts";
-import type { Game, GamingPlatform, SteamProfile } from "@/lib/steam/types.ts";
+import type { Game, GamingPlatform, PlayerProfile } from "@/lib/games/types.ts";
 
-export type { Game, GamingPlatform, SteamProfile };
+export type { Game, GamingPlatform, PlayerProfile };
 
 export interface GamesProps extends BentoSizedProps {
-  readonly profile: SteamProfile;
+  readonly profile: PlayerProfile;
   readonly platforms: readonly GamingPlatform[];
   readonly games: readonly Game[];
 }
@@ -12,5 +12,4 @@ export interface GamesProps extends BentoSizedProps {
 export interface GameTileProps {
   readonly game: Game;
   readonly sizeClassName: string;
-  readonly sizes: string;
 }

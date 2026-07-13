@@ -1,4 +1,5 @@
-// --- Steam Web API transport shapes (untrusted until validated) ---
+// Steam Web API transport shapes (untrusted until validated). The domain types
+// these map into (Game, PlayerProfile, …) live in `@/lib/games/types`.
 
 export interface SteamOwnedGame {
   readonly appid: number;
@@ -23,49 +24,12 @@ export interface SteamPlayerSummary {
   readonly avatar?: string;
   readonly avatarmedium?: string;
   readonly avatarfull?: string;
+  readonly personastate?: number; // 0 = offline; any other value = online-ish
+  readonly gameextrainfo?: string; // name of the game currently being played
 }
 
 export interface SteamPlayerSummariesResponse {
   readonly response: {
     readonly players?: readonly SteamPlayerSummary[];
   };
-}
-
-// --- Domain types consumed by the Games module ---
-
-export interface Game {
-  readonly id: string;
-  readonly name: string;
-  readonly coverImage: string;
-  readonly coverImageFallback?: string; // tried if coverImage 404s (Steam header art)
-  readonly portraitImage?: string; // high-res library capsule, cropped square for tiles
-  readonly href?: string; // store page
-  readonly playtimeMinutes?: number;
-  readonly lastPlayedUnix?: number; // seconds; from rtime_last_played
-}
-
-/** The dashboard owner's Steam identity, used for the profile header. */
-export interface SteamProfile {
-  readonly id: string;
-  readonly name: string;
-  readonly avatar: string;
-  readonly href: string;
-}
-
-/** A gaming profile a visitor can add / follow. */
-export type PlatformId = "steam" | "xbox" | "discord";
-
-export interface GamingPlatform {
-  readonly id: PlatformId;
-  readonly name: string;
-  readonly handle: string;
-  readonly href: string;
-}
-
-// --- Service result ---
-
-export interface SteamProfileData {
-  readonly profile: SteamProfile;
-  readonly platforms: readonly GamingPlatform[];
-  readonly games: readonly Game[];
 }

@@ -1,4 +1,4 @@
-/** Steam playtime label like `"45 min"` or `"70 hrs"`; null when missing or zero. */
+/** Playtime label like `"45 min"` or `"70 hrs"`; null when missing or zero. */
 export function formatPlaytime(minutes?: number): string | null {
   if (!minutes || minutes <= 0) {
     return null;

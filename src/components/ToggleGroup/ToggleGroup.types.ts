@@ -10,3 +10,10 @@ export interface ToggleGroupProps<T extends string = string> {
   readonly onChange: (value: T) => void;
   readonly className?: string;
 }
+
+/** Measured tab geometry relative to the toggle group root. */
+export interface ToggleGroupTabRect {
+  readonly left: number;
+  readonly width: number;
+  readonly height: number;
+}

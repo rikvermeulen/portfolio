@@ -1,14 +1,7 @@
 import { unstable_cache } from "next/cache";
 
-import type {
-  Game,
-  GamingPlatform,
-  SteamOwnedGame,
-  SteamPlayerSummary,
-  SteamProfile,
-  SteamProfileData,
-} from "./types.ts";
-import type { Result } from "@/types/index.ts";
+import type { SteamOwnedGame, SteamPlayerSummary } from "./types.ts";
+import type { Game, PlayerProfile } from "@/lib/games/types.ts";
 
 import { env } from "@env";
 
@@ -21,8 +14,10 @@ import {
   fetchSteamHeaderImage,
 } from "./client.ts";
 
-// How many recently-played titles to surface.
-const MAX_GAMES = 12 as const;
+// Resolve accurate store art only for the most-recent N titles; the rest of the
+// library uses guessable CDN art, so the whole list loads without a store-API
+// lookup per game.
+const ART_LIMIT = 24 as const;
 
 function isSteamGame(value: unknown): value is SteamOwnedGame {
   if (typeof value !== "object" || value === null) {
@@ -47,20 +42,23 @@ function toGame(game: SteamOwnedGame, headerImage: string | null): Game {
     href: buildSteamStoreUrl(game.appid),
     playtimeMinutes: game.playtime_forever,
     lastPlayedUnix: game.rtime_last_played,
+    platform: "steam",
   };
 }
 
-function toProfile(summary: SteamPlayerSummary): SteamProfile {
+function toProfile(summary: SteamPlayerSummary): PlayerProfile {
   return {
     id: summary.steamid,
     name: summary.personaname,
     avatar: summary.avatarfull ?? summary.avatarmedium ?? summary.avatar ?? "",
     href: summary.profileurl,
+    online: (summary.personastate ?? 0) !== 0,
+    playing: summary.gameextrainfo,
   };
 }
 
 const getCachedSteamProfile = unstable_cache(
-  async (apiKey: string, steamId: string): Promise<SteamProfile> => {
+  async (apiKey: string, steamId: string): Promise<PlayerProfile> => {
     const summaries = await fetchPlayerSummaries(apiKey, [steamId]);
     const owner = summaries.response.players?.find(
       (player) => player.steamid === steamId,
@@ -79,16 +77,18 @@ const getCachedSteamProfile = unstable_cache(
 const getCachedSteamGames = unstable_cache(
   async (apiKey: string, steamId: string): Promise<Game[]> => {
     const payload = await fetchOwnedGames(apiKey, steamId);
-    const games = (payload.response.games ?? [])
+    const played = (payload.response.games ?? [])
       .filter(isSteamGame)
       .filter((game) => game.playtime_forever > 0)
       .slice()
-      .sort((a, b) => (b.rtime_last_played ?? 0) - (a.rtime_last_played ?? 0))
-      .slice(0, MAX_GAMES);
+      .sort((a, b) => (b.rtime_last_played ?? 0) - (a.rtime_last_played ?? 0));
 
     return Promise.all(
-      games.map(async (game) =>
-        toGame(game, await fetchSteamHeaderImage(game.appid)),
+      played.map(async (game, index) =>
+        toGame(
+          game,
+          index < ART_LIMIT ? await fetchSteamHeaderImage(game.appid) : null,
+        ),
       ),
     );
   },
@@ -97,71 +97,26 @@ const getCachedSteamGames = unstable_cache(
 );
 
 /**
- * The "add me" list a visitor can follow. Steam comes from the fetched profile;
- * Xbox and Discord are optional and appear only when configured via env.
+ * The owner's Steam profile (name, avatar, presence), or null when Steam isn't
+ * configured. Throws on an API failure — the caller decides whether that's
+ * fatal (the aggregation service treats a missing profile as a soft error).
  */
-function buildPlatforms(profile: SteamProfile): GamingPlatform[] {
-  const platforms: GamingPlatform[] = [
-    { id: "steam", name: "Steam", handle: profile.name, href: profile.href },
-  ];
-
-  const {
-    XBOX_PROFILE_URL,
-    XBOX_GAMERTAG,
-    DISCORD_PROFILE_URL,
-    DISCORD_USERNAME,
-  } = env;
-
-  if (XBOX_PROFILE_URL) {
-    platforms.push({
-      id: "xbox",
-      name: "Xbox",
-      handle: XBOX_GAMERTAG ?? "Xbox",
-      href: XBOX_PROFILE_URL,
-    });
+export async function getSteamProfile(): Promise<PlayerProfile | null> {
+  const { STEAM_API_KEY, STEAM_ID } = env;
+  if (!STEAM_API_KEY || !STEAM_ID) {
+    return null;
   }
-
-  if (DISCORD_PROFILE_URL) {
-    platforms.push({
-      id: "discord",
-      name: "Discord",
-      handle: DISCORD_USERNAME ?? "Discord",
-      href: DISCORD_PROFILE_URL,
-    });
-  }
-
-  return platforms;
+  return getCachedSteamProfile(STEAM_API_KEY, STEAM_ID);
 }
 
 /**
- * The Games bento's data: the owner's Steam profile, the "add me" platform
- * links, and their recently-played library. Profile and games are fetched in
- * parallel; the profile is the only hard requirement (games may be empty).
+ * The owner's played Steam library, newest first. Empty when Steam isn't
+ * configured; store art is resolved only for the most-recent slice.
  */
-export async function getSteamProfileResult(): Promise<
-  Result<SteamProfileData>
-> {
+export async function getSteamGames(): Promise<Game[]> {
   const { STEAM_API_KEY, STEAM_ID } = env;
-
   if (!STEAM_API_KEY || !STEAM_ID) {
-    return { ok: false, errorMessage: "Steam is not configured" };
+    return [];
   }
-
-  try {
-    const [profile, games] = await Promise.all([
-      getCachedSteamProfile(STEAM_API_KEY, STEAM_ID),
-      getCachedSteamGames(STEAM_API_KEY, STEAM_ID),
-    ]);
-
-    return {
-      ok: true,
-      data: { profile, platforms: buildPlatforms(profile), games },
-    };
-  } catch (error) {
-    console.error("[steam] getSteamProfileResult failed:", error);
-    return {
-      ok: false,
-      errorMessage: "Could not load your Steam profile right now",
-    };
-  }
+  return getCachedSteamGames(STEAM_API_KEY, STEAM_ID);
 }
