@@ -6,12 +6,38 @@ const steamHeader = (appid: number) =>
 const steamPortrait = (appid: number) =>
   `https://cdn.cloudflare.steamstatic.com/steam/apps/${appid}/library_600x900_2x.jpg`;
 
-// Relative to the mock's own clock so "last played" stays plausible in stories.
 const DAY = 86_400;
 const now = Math.floor(Date.parse("2026-07-12T10:00:00Z") / 1000);
 
 export const mockGamesProps = {
   sizeKey: "games",
+  profile: {
+    id: "76561198000000000",
+    name: "PARADEMON",
+    avatar:
+      "https://avatars.steamstatic.com/fef49e7fa7e1997310d705b2a6158ff8dc1cdfeb_full.jpg",
+    href: "https://steamcommunity.com/id/parademon",
+  },
+  platforms: [
+    {
+      id: "steam",
+      name: "Steam",
+      handle: "PARADEMON",
+      href: "https://steamcommunity.com/id/parademon",
+    },
+    {
+      id: "xbox",
+      name: "Xbox",
+      handle: "Parademon117",
+      href: "https://account.xbox.com/profile?gt=Parademon117",
+    },
+    {
+      id: "discord",
+      name: "Discord",
+      handle: "parademon",
+      href: "https://discord.com/users/123456789",
+    },
+  ],
   games: [
     {
       id: "steam-1086940",
@@ -39,13 +65,6 @@ export const mockGamesProps = {
       href: "https://store.steampowered.com/app/271590",
       playtimeMinutes: 540,
       lastPlayedUnix: now - 40 * DAY,
-    },
-    {
-      // No cover art → demonstrates the generated fallback tile
-      id: "steam-4704690",
-      name: "MECCHA CHAMELEON",
-      coverImage: "",
-      playtimeMinutes: 127,
     },
   ],
 } satisfies GamesProps;

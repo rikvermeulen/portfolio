@@ -1,4 +1,7 @@
-import type { SteamOwnedGamesResponse } from "./types.ts";
+import type {
+  SteamOwnedGamesResponse,
+  SteamPlayerSummariesResponse,
+} from "./types.ts";
 
 const STEAM_API_URL = "https://api.steampowered.com";
 const STEAM_STORE_API_URL = "https://store.steampowered.com/api/appdetails";
@@ -18,11 +21,33 @@ export class SteamError extends Error {
 }
 
 /**
+ * Player summaries (name, avatar, profile URL) for one or more steamids. Steam
+ * stores its key as a static query param — no token exchange needed. Requires
+ * the profile to be Public.
+ */
+export async function fetchPlayerSummaries(
+  apiKey: string,
+  steamIds: readonly string[],
+): Promise<SteamPlayerSummariesResponse> {
+  const url = new URL(`${STEAM_API_URL}/ISteamUser/GetPlayerSummaries/v2/`);
+  url.searchParams.set("key", apiKey);
+  url.searchParams.set("steamids", steamIds.join(","));
+
+  const response = await fetch(url.toString(), {
+    next: { revalidate: 600 }, // profile changes rarely; 10 min
+  });
+
+  if (!response.ok) {
+    throw new SteamError(
+      `Steam player-summaries fetch failed: ${response.status}`,
+    );
+  }
+
+  return response.json() as Promise<SteamPlayerSummariesResponse>;
+}
+
+/**
  * The full owned library with per-game playtime and last-played timestamps.
- * Unlike GetRecentlyPlayedGames (capped at the last 2 weeks), this lets us build
- * a "recently played" list from the whole library. Steam stores its key as a
- * static query param — no token exchange needed.
- *
  * Requires the user's profile + game details to be set to Public.
  */
 export async function fetchOwnedGames(
@@ -85,10 +110,9 @@ export function buildSteamHeaderUrl(appid: number): string {
 }
 
 /**
- * High-res portrait library capsule (600×900). Guessable from the appid alone —
- * unlike the 32px `img_icon_url` community icon, this stays crisp when cropped
- * square for a tile. 404s for some newer/obscure titles, so callers fall back to
- * the landscape header art.
+ * High-res portrait library capsule (600×900). Guessable from the appid alone;
+ * stays crisp when cropped square for a tile. 404s for some newer/obscure
+ * titles, so callers fall back to the landscape header art.
  */
 export function buildSteamLibraryArtUrl(appid: number): string {
   return `${STEAM_CDN_URL}/${appid}/library_600x900_2x.jpg`;

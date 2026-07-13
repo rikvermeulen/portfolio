@@ -5,6 +5,7 @@ import type { IconProps, SvgIconComponent } from "./Icon.types.ts";
 import ArrowIcon from "@/assets/icons/arrow.svg";
 import ChevronDownIcon from "@/assets/icons/chevron.down.svg";
 import ChevronUpIcon from "@/assets/icons/chevron.up.svg";
+import DiscordIcon from "@/assets/icons/discord.svg";
 import DogIcon from "@/assets/icons/dog.svg";
 import ExplicitIcon from "@/assets/icons/explicit.svg";
 import HeartIcon from "@/assets/icons/heart.svg";
@@ -32,6 +33,7 @@ import WeatherRainIcon from "@/assets/icons/weather-rain.svg";
 import WeatherSnowIcon from "@/assets/icons/weather-snow.svg";
 import WeatherSunIcon from "@/assets/icons/weather-sun.svg";
 import WeatherThunderstormIcon from "@/assets/icons/weather-thunderstorm.svg";
+import XboxIcon from "@/assets/icons/xbox.svg";
 
 const ICON_COMPONENTS: Record<string, SvgIconComponent> = {
   arrow: ArrowIcon,
@@ -50,6 +52,8 @@ const ICON_COMPONENTS: Record<string, SvgIconComponent> = {
   sound: SoundIcon,
   spray: SprayIcon,
   steam: SteamIcon,
+  xbox: XboxIcon,
+  discord: DiscordIcon,
   tail: TailIcon,
   persons: PersonsIcon,
   timer: TimerIcon,

@@ -60,6 +60,14 @@ function ago(date: Date): string {
   return relativeTime.format(Math.round(value), "year");
 }
 
+/** Like `time.ago`, from a unix-seconds timestamp; null when missing or invalid. */
+function agoFromUnix(unixSeconds?: number): string | null {
+  if (!unixSeconds || unixSeconds <= 0) {
+    return null;
+  }
+  return ago(new Date(unixSeconds * 1000));
+}
+
 /** Calendar days between two dates, ignoring the time of day. */
 function calendarDayDelta(date: Date, now: Date): number {
   const startOf = (d: Date) =>
@@ -89,6 +97,13 @@ function stamp(date: Date, now: Date = new Date()): string {
  * - `time.clock(d)`  → `"3:05 PM"`
  * - `time.date(d)`   → `"Sunday, July 12"`
  * - `time.ago(d)`    → `"2 days ago"`
+ * - `time.agoFromUnix(s)` → `"2 days ago"` or null
  * - `time.stamp(d)`  → today/yesterday/date, notification-style
  */
-export const time = { clock, date: calendarDate, ago, stamp } as const;
+export const time = {
+  clock,
+  date: calendarDate,
+  ago,
+  agoFromUnix,
+  stamp,
+} as const;

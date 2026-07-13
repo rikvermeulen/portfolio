@@ -12,35 +12,10 @@
 }
 
 @layer base {
-  :root {
-    --elastic-out: linear(
-      0,
-      0.2178 2.1%,
-      1.1144 8.49%,
-      1.0056 72.24%,
-      0.9981 86.66%,
-      1
-    );
-  }
-
   html {
     interpolate-size: allow-keywords;
     font-size: 16px;
     font-size: clamp(15px, calc(0.5vw + 0.5lvh + 4.8px), 20px);
-  }
-
-  button {
-    cursor: pointer;
-    transition: scale 0.5s var(--elastic-out);
-  }
-
-  button:disabled {
-    cursor: default;
-  }
-
-  button:active {
-    scale: 0.8;
-    transition: scale 0.5s ease;
   }
 }
 

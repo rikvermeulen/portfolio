@@ -38,6 +38,29 @@ describe("time.ago", () => {
   });
 });
 
+describe("time.agoFromUnix", () => {
+  beforeEach(() => {
+    jest.useFakeTimers().setSystemTime(new Date(2026, 6, 12, 12, 0, 0));
+  });
+
+  afterEach(() => {
+    jest.useRealTimers();
+  });
+
+  it("returns null for missing or invalid timestamps", () => {
+    expect(time.agoFromUnix()).toBeNull();
+    expect(time.agoFromUnix(0)).toBeNull();
+    expect(time.agoFromUnix(-1)).toBeNull();
+  });
+
+  it("formats a unix-seconds timestamp relative to now", () => {
+    const unixSeconds = Math.floor(
+      new Date(2026, 6, 10, 12, 0, 0).getTime() / 1000,
+    );
+    expect(time.agoFromUnix(unixSeconds)).toBe("2 days ago");
+  });
+});
+
 describe("time.stamp", () => {
   const now = new Date(2026, 6, 12, 12, 0, 0);
 

@@ -17,7 +17,7 @@ import { getPicnicRecipesResult } from "@/lib/picnic/service.ts";
 import { getPlantaPlantsResult } from "@/lib/planta/service.ts";
 import { getSpotifyPodcastResult } from "@/lib/spotify/podcastService.ts";
 import { getSpotifyMusicResult } from "@/lib/spotify/service.ts";
-import { getSteamGamesResult } from "@/lib/steam/service.ts";
+import { getSteamProfileResult } from "@/lib/steam/service.ts";
 import { getPhotosResult } from "@/lib/supabase/service.ts";
 import {
   Category,
@@ -158,8 +158,15 @@ export const bentoRegistry: readonly BentoTile[] = [
   asyncTile({
     id: "games",
     sizeKey: "games",
-    load: getSteamGamesResult,
-    render: (data, sizeKey) => <Games games={data.games} sizeKey={sizeKey} />,
+    load: getSteamProfileResult,
+    render: (data, sizeKey) => (
+      <Games
+        games={data.games}
+        platforms={data.platforms}
+        profile={data.profile}
+        sizeKey={sizeKey}
+      />
+    ),
   }),
 
   {

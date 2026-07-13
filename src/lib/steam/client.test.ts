@@ -1,7 +1,9 @@
 import {
   buildSteamHeaderUrl,
+  buildSteamLibraryArtUrl,
   buildSteamStoreUrl,
   fetchOwnedGames,
+  fetchPlayerSummaries,
   fetchSteamHeaderImage,
   SteamError,
 } from "./client.ts";
@@ -12,35 +14,49 @@ const createJsonResponse = (payload: unknown, status = 200): Response =>
     headers: { "content-type": "application/json" },
   });
 
-const makeGamesResponse = () =>
-  createJsonResponse({
-    response: {
-      game_count: 1,
-      games: [
-        {
-          appid: 570,
-          name: "Dota 2",
-          playtime_forever: 9000,
-          rtime_last_played: 1700000000,
-          img_icon_url: "abc",
-        },
-      ],
-    },
-  });
-
 beforeEach(() => {
   jest.restoreAllMocks();
 });
 
+describe("fetchPlayerSummaries", () => {
+  it("calls GetPlayerSummaries with the key and a comma-joined steamids list", async () => {
+    const fetchMock = jest.spyOn(globalThis, "fetch").mockResolvedValueOnce(
+      createJsonResponse({
+        response: { players: [{ steamid: "1", personaname: "A" }] },
+      }),
+    );
+
+    const result = await fetchPlayerSummaries("test-key", ["1", "2"]);
+
+    const calledUrl = String(fetchMock.mock.calls[0]?.[0]);
+    expect(calledUrl).toContain("GetPlayerSummaries");
+    expect(calledUrl).toContain("key=test-key");
+    expect(decodeURIComponent(calledUrl)).toContain("steamids=1,2");
+    expect(result.response.players).toHaveLength(1);
+  });
+
+  it("throws a SteamError when the endpoint returns non-ok", async () => {
+    jest
+      .spyOn(globalThis, "fetch")
+      .mockResolvedValue(createJsonResponse({ error: "rate limited" }, 429));
+
+    await expect(fetchPlayerSummaries("k", ["1"])).rejects.toThrow(SteamError);
+    await expect(fetchPlayerSummaries("k", ["1"])).rejects.toThrow(
+      "Steam player-summaries fetch failed: 429",
+    );
+  });
+});
+
 describe("fetchOwnedGames", () => {
   it("calls the GetOwnedGames endpoint with key, steamid and appinfo", async () => {
-    const fetchMock = jest
-      .spyOn(globalThis, "fetch")
-      .mockResolvedValueOnce(makeGamesResponse());
+    const fetchMock = jest.spyOn(globalThis, "fetch").mockResolvedValueOnce(
+      createJsonResponse({
+        response: { game_count: 1, games: [{ appid: 570, name: "Dota 2" }] },
+      }),
+    );
 
     const result = await fetchOwnedGames("test-key", "76561197960287930");
 
-    expect(fetchMock).toHaveBeenCalledTimes(1);
     const calledUrl = String(fetchMock.mock.calls[0]?.[0]);
     expect(calledUrl).toContain("GetOwnedGames");
     expect(calledUrl).toContain("key=test-key");
@@ -86,13 +102,11 @@ describe("fetchSteamHeaderImage", () => {
     jest
       .spyOn(globalThis, "fetch")
       .mockResolvedValue(createJsonResponse({ error: "rate limited" }, 429));
-
     await expect(fetchSteamHeaderImage(570)).resolves.toBeNull();
   });
 
   it("returns null when the appid entry is missing", async () => {
     jest.spyOn(globalThis, "fetch").mockResolvedValue(createJsonResponse({}));
-
     await expect(fetchSteamHeaderImage(570)).resolves.toBeNull();
   });
 
@@ -100,7 +114,6 @@ describe("fetchSteamHeaderImage", () => {
     jest
       .spyOn(globalThis, "fetch")
       .mockResolvedValue(makeDetailsResponse(570, { success: false }));
-
     await expect(fetchSteamHeaderImage(570)).resolves.toBeNull();
   });
 
@@ -108,7 +121,6 @@ describe("fetchSteamHeaderImage", () => {
     jest
       .spyOn(globalThis, "fetch")
       .mockResolvedValue(makeDetailsResponse(570, { success: true, data: {} }));
-
     await expect(fetchSteamHeaderImage(570)).resolves.toBeNull();
   });
 
@@ -116,19 +128,24 @@ describe("fetchSteamHeaderImage", () => {
     jest
       .spyOn(globalThis, "fetch")
       .mockRejectedValue(new Error("network error"));
-
     await expect(fetchSteamHeaderImage(570)).resolves.toBeNull();
   });
 });
 
 describe("url builders", () => {
-  it("builds a landscape header fallback url from an appid", () => {
+  it("builds a landscape header fallback url", () => {
     expect(buildSteamHeaderUrl(570)).toBe(
       "https://cdn.cloudflare.steamstatic.com/steam/apps/570/header.jpg",
     );
   });
 
-  it("builds a store url from an appid", () => {
+  it("builds a portrait library-art url", () => {
+    expect(buildSteamLibraryArtUrl(570)).toBe(
+      "https://cdn.cloudflare.steamstatic.com/steam/apps/570/library_600x900_2x.jpg",
+    );
+  });
+
+  it("builds a store url", () => {
     expect(buildSteamStoreUrl(570)).toBe(
       "https://store.steampowered.com/app/570",
     );

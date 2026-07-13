@@ -15,7 +15,7 @@ export { default as Recipes } from "./Recipes/index.ts";
 export type { CategoryProps, CategoryTag } from "./Category/index.ts";
 export type { ContactProps } from "./Contact/index.ts";
 export type { FindMeProps } from "./FindMe/index.ts";
-export type { Game, GamesProps } from "./Games/index.ts";
+export type { GamesProps } from "./Games/index.ts";
 export type { ImageProps } from "./Image/index.ts";
 export type { InformationProps } from "./Information/index.ts";
 export type { JournalProps } from "./Journal/index.ts";

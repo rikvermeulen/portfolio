@@ -1,6 +1,13 @@
 import { unstable_cache } from "next/cache";
 
-import type { Game, SteamGamesData, SteamOwnedGame } from "./types.ts";
+import type {
+  Game,
+  GamingPlatform,
+  SteamOwnedGame,
+  SteamPlayerSummary,
+  SteamProfile,
+  SteamProfileData,
+} from "./types.ts";
 import type { Result } from "@/types/index.ts";
 
 import { env } from "@env";
@@ -10,10 +17,11 @@ import {
   buildSteamLibraryArtUrl,
   buildSteamStoreUrl,
   fetchOwnedGames,
+  fetchPlayerSummaries,
   fetchSteamHeaderImage,
 } from "./client.ts";
 
-// How many recently-played titles to surface in the bento.
+// How many recently-played titles to surface.
 const MAX_GAMES = 12 as const;
 
 function isSteamGame(value: unknown): value is SteamOwnedGame {
@@ -42,16 +50,32 @@ function toGame(game: SteamOwnedGame, headerImage: string | null): Game {
   };
 }
 
-/**
- * Cached Steam library data. The fetch hardcodes ISR revalidation, but wrapping
- * in unstable_cache decouples the dashboard render from the live round trip and
- * lets us revalidate by tag. The wrapped fn throws on failure so errors aren't
- * cached (mirrors the Planta service pattern).
- *
- * Sourced from the full owned library (not GetRecentlyPlayedGames, which only
- * returns the last 2 weeks), filtered to games actually played and ordered by
- * most-recently-played.
- */
+function toProfile(summary: SteamPlayerSummary): SteamProfile {
+  return {
+    id: summary.steamid,
+    name: summary.personaname,
+    avatar: summary.avatarfull ?? summary.avatarmedium ?? summary.avatar ?? "",
+    href: summary.profileurl,
+  };
+}
+
+const getCachedSteamProfile = unstable_cache(
+  async (apiKey: string, steamId: string): Promise<SteamProfile> => {
+    const summaries = await fetchPlayerSummaries(apiKey, [steamId]);
+    const owner = summaries.response.players?.find(
+      (player) => player.steamid === steamId,
+    );
+
+    if (!owner) {
+      throw new Error("Steam profile summary missing");
+    }
+
+    return toProfile(owner);
+  },
+  ["steam-profile"],
+  { revalidate: 600, tags: ["steam"] },
+);
+
 const getCachedSteamGames = unstable_cache(
   async (apiKey: string, steamId: string): Promise<Game[]> => {
     const payload = await fetchOwnedGames(apiKey, steamId);
@@ -62,8 +86,6 @@ const getCachedSteamGames = unstable_cache(
       .sort((a, b) => (b.rtime_last_played ?? 0) - (a.rtime_last_played ?? 0))
       .slice(0, MAX_GAMES);
 
-    // Resolve real store art per game (parallel). The owned-games endpoint
-    // doesn't include it and the CDN path can't be guessed for every title.
     return Promise.all(
       games.map(async (game) =>
         toGame(game, await fetchSteamHeaderImage(game.appid)),
@@ -74,7 +96,51 @@ const getCachedSteamGames = unstable_cache(
   { revalidate: 1800, tags: ["steam"] },
 );
 
-export async function getSteamGamesResult(): Promise<Result<SteamGamesData>> {
+/**
+ * The "add me" list a visitor can follow. Steam comes from the fetched profile;
+ * Xbox and Discord are optional and appear only when configured via env.
+ */
+function buildPlatforms(profile: SteamProfile): GamingPlatform[] {
+  const platforms: GamingPlatform[] = [
+    { id: "steam", name: "Steam", handle: profile.name, href: profile.href },
+  ];
+
+  const {
+    XBOX_PROFILE_URL,
+    XBOX_GAMERTAG,
+    DISCORD_PROFILE_URL,
+    DISCORD_USERNAME,
+  } = env;
+
+  if (XBOX_PROFILE_URL) {
+    platforms.push({
+      id: "xbox",
+      name: "Xbox",
+      handle: XBOX_GAMERTAG ?? "Xbox",
+      href: XBOX_PROFILE_URL,
+    });
+  }
+
+  if (DISCORD_PROFILE_URL) {
+    platforms.push({
+      id: "discord",
+      name: "Discord",
+      handle: DISCORD_USERNAME ?? "Discord",
+      href: DISCORD_PROFILE_URL,
+    });
+  }
+
+  return platforms;
+}
+
+/**
+ * The Games bento's data: the owner's Steam profile, the "add me" platform
+ * links, and their recently-played library. Profile and games are fetched in
+ * parallel; the profile is the only hard requirement (games may be empty).
+ */
+export async function getSteamProfileResult(): Promise<
+  Result<SteamProfileData>
+> {
   const { STEAM_API_KEY, STEAM_ID } = env;
 
   if (!STEAM_API_KEY || !STEAM_ID) {
@@ -82,18 +148,20 @@ export async function getSteamGamesResult(): Promise<Result<SteamGamesData>> {
   }
 
   try {
-    const games = await getCachedSteamGames(STEAM_API_KEY, STEAM_ID);
+    const [profile, games] = await Promise.all([
+      getCachedSteamProfile(STEAM_API_KEY, STEAM_ID),
+      getCachedSteamGames(STEAM_API_KEY, STEAM_ID),
+    ]);
 
-    if (games.length === 0) {
-      return { ok: false, errorMessage: "No recently played games found" };
-    }
-
-    return { ok: true, data: { games } };
+    return {
+      ok: true,
+      data: { profile, platforms: buildPlatforms(profile), games },
+    };
   } catch (error) {
-    console.error("[steam] getSteamGamesResult failed:", error);
+    console.error("[steam] getSteamProfileResult failed:", error);
     return {
       ok: false,
-      errorMessage: "Could not load your Steam games right now",
+      errorMessage: "Could not load your Steam profile right now",
     };
   }
 }
