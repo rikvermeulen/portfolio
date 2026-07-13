@@ -1,27 +1,20 @@
-import { env } from "@env";
-
-const getDomain = (hostname: string) => {
-  const parts = hostname.split(".").reverse();
-
-  if (parts.length >= 2) {
-    return `${parts[1]}.${parts[0]}`;
-  }
-
-  return hostname;
-};
-
 /**
- * Checks if a given URL is external.
+ * Checks whether `href` points outside the site rooted at `baseUrl`.
  *
- * @param {string | null | undefined} href - The URL to check.
- * @returns {boolean} `true` if the URL is external, otherwise `false`.
+ * Pure and project-agnostic: the caller supplies `baseUrl` (e.g. the app's
+ * public origin) rather than the util reaching into env. A URL is considered
+ * internal when its host equals the base host or is a subdomain of it, so
+ * `yourdomain.com` and `www.yourdomain.com` are internal while
+ * `yourdomain.com.evil.com` is not.
+ *
+ * @param {string} href - The URL to check (absolute, relative, or a non-web scheme like `mailto:`).
+ * @param {string} baseUrl - Absolute URL whose host defines "internal".
+ * @returns {boolean} `true` when `href` is an http(s) URL on a different host, otherwise `false`.
  */
-export const isExternalUrl = (href: string) => {
+export const isExternalUrl = (href: string, baseUrl: string): boolean => {
   if (!href) {
     return false;
   }
-
-  const baseUrl = env.NEXT_PUBLIC_APP_URL;
 
   try {
     const url = new URL(href, baseUrl);
@@ -31,12 +24,11 @@ export const isExternalUrl = (href: string) => {
       return false;
     }
 
-    const urlDomain = getDomain(url.hostname);
-    const baseDomain = getDomain(base.hostname);
+    const host = url.hostname;
+    const baseHost = base.hostname;
 
-    return urlDomain !== baseDomain;
+    return host !== baseHost && !host.endsWith(`.${baseHost}`);
   } catch {
-    console.error(`Invalid URL: ${href}`);
     return false;
   }
 };

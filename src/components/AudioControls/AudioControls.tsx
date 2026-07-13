@@ -2,9 +2,9 @@ import type { AudioControlsProps } from "./AudioControls.types.ts";
 
 import Glass from "@/components/Glass/index.ts";
 import Icon from "@/components/Icon/index.ts";
-import classnames from "@/utils/classnames/classnames.ts";
+import classnames from "@/utils/classnames/index.ts";
 
-import { NextIcon } from "./NextIcon.tsx";
+import { SkipIcon } from "./SkipIcon.tsx";
 
 const AudioControls = ({
   isPlaying,
@@ -23,7 +23,7 @@ const AudioControls = ({
           "relative border-none fill-white outline-hidden",
         )}
       >
-        <NextIcon className="relative -top-1 size-[22px]" />
+        <SkipIcon className="relative -top-1 size-[22px]" />
       </button>
 
       <button
@@ -32,7 +32,7 @@ const AudioControls = ({
         onClick={onPlayOrPause}
         className={classnames(
           pulsedButton === "playPause" && "button",
-          "relative flex h-12 w-12 items-center justify-center overflow-hidden rounded-full fill-white",
+          "relative flex h-12 w-12 items-center justify-center overflow-hidden rounded-full text-white",
         )}
       >
         <Glass
@@ -67,7 +67,7 @@ const AudioControls = ({
           "-scale-x-100 border-none fill-white outline-hidden",
         )}
       >
-        <NextIcon className="relative -top-1 size-[22px]" />
+        <SkipIcon className="relative -top-1 size-[22px]" />
       </button>
     </div>
   );

@@ -1,2 +1,2 @@
-export { default } from "@/modules/Bentos/Music/Music.tsx";
-export type { MusicProps } from "@/modules/Bentos/Music/Music.types.ts";
+export { default } from "./Music.tsx";
+export type { MusicProps } from "./Music.types.ts";

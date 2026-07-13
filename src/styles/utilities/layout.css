@@ -8,7 +8,7 @@
 
   --bento-cols: var(--bento-columns-base, 4);
   --bento-gap: var(--bento-gap-base, 0.75rem);
-  --bento-cap: 360px;
+  --bento-cap: 320px;
 
   grid-template-columns: repeat(var(--bento-cols), minmax(0, 1fr));
   gap: var(--bento-gap);

@@ -1,5 +1,2 @@
-export { default } from "@/modules/Bentos/Category/Category.tsx";
-export type {
-  CategoryProps,
-  CategoryTag,
-} from "@/modules/Bentos/Category/Category.types.ts";
+export { default } from "./Category.tsx";
+export type { CategoryProps, CategoryTag } from "./Category.types.ts";

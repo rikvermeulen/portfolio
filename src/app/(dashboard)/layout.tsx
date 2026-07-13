@@ -1,5 +1,5 @@
-import { BentoGrid, bentoGridConfig } from "@/components/Bento/index.ts";
 import { SpotifyConnectionProvider } from "@/contexts/SpotifyConnectionContext/index.ts";
+import BentoGrid, { bentoGridConfig } from "@/modules/BentoGrid/index.ts";
 
 /**
  * Dashboard layout. The grid is composed entirely from `bento-registry.tsx`

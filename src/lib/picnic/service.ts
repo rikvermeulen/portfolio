@@ -2,7 +2,12 @@ import "server-only";
 
 import { unstable_cache } from "next/cache";
 
-import type { PicnicRecipe, PicnicRecipeCard } from "./types.ts";
+import type {
+  PicnicRecipe,
+  PicnicRecipeCard,
+  PicnicRecipeCardsData,
+  PicnicRecipesResult,
+} from "./types.ts";
 import type { Result } from "@/types/index.ts";
 
 import { env } from "@env";
@@ -18,13 +23,6 @@ import {
   buildPicnicRecipeUrl,
   toPicnicProxyImageUrl,
 } from "./image.ts";
-
-export interface PicnicRecipesResult {
-  readonly rawRecipes: readonly PicnicRecipe[];
-  readonly recipeCards: readonly PicnicRecipeCard[];
-  /** The auth key used for this request. `null` when not available. */
-  readonly authKey?: string | null;
-}
 
 /**
  * Fetches the current user's saved Picnic recipes and returns them in two
@@ -111,10 +109,6 @@ export const toPicnicErrorMessage = (error: unknown): string => {
   }
   return "Unknown Picnic error while loading recipes.";
 };
-
-export interface PicnicRecipeCardsData {
-  readonly recipeCards: readonly PicnicRecipeCard[];
-}
 
 /**
  * Cached projection of the saved recipe cards. `picnic-api` calls bare `fetch`

@@ -7,14 +7,11 @@ import type { FindMeProps } from "./FindMe.types.ts";
 import Bento, { bentos } from "@/components/Bento/index.ts";
 import Glass from "@/components/Glass/index.ts";
 import Icon from "@/components/Icon/index.ts";
-import classnames from "@/utils/classnames/classnames.ts";
+import classnames from "@/utils/classnames/index.ts";
 
-import FindMeWeatherBadge from "./FindMeWeatherBadge.tsx";
-import { useFindMeConditions } from "./useFindMeConditions.ts";
 import { useFindMeMap } from "./useFindMeMap.ts";
 
-const FindMe = ({ sizeKey, className }: FindMeProps) => {
-  const conditionsState = useFindMeConditions();
+const FindMe = ({ sizeKey, className, weatherBadge }: FindMeProps) => {
   const { containerRef, hasToken, zoomIn, zoomOut } = useFindMeMap();
 
   return (
@@ -31,7 +28,7 @@ const FindMe = ({ sizeKey, className }: FindMeProps) => {
         </div>
       )}
 
-      <FindMeWeatherBadge state={conditionsState} />
+      {weatherBadge}
 
       <div className="pointer-events-none absolute top-0 z-10">
         <Image

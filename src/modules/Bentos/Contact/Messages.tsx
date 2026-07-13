@@ -6,7 +6,7 @@ import Image from "next/image";
 import type { ChatMessageProps } from "./Contact.types.ts";
 
 import Icon from "@/components/Icon/index.ts";
-import classnames from "@/utils/classnames/classnames.ts";
+import classnames from "@/utils/classnames/index.ts";
 
 import {
   CHAT_SENDER,

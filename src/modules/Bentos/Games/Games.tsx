@@ -9,7 +9,7 @@ import Bento, { bentos } from "@/components/Bento/index.ts";
 import Glass from "@/components/Glass/index.ts";
 import Icon from "@/components/Icon/index.ts";
 import Link from "@/components/Link/index.ts";
-import classnames from "@/utils/classnames/classnames.ts";
+import classnames from "@/utils/classnames/index.ts";
 import { compact } from "@/utils/compact/index.ts";
 import { time } from "@/utils/datetime/index.ts";
 

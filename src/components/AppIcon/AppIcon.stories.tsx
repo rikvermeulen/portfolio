@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 
-import { bentos } from "@/components/Bento/config.ts";
+import { bentos } from "@/components/Bento/Bento.const.ts";
 
 import {
   mockAppIconInteractiveProps,

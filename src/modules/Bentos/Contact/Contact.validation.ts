@@ -46,9 +46,11 @@ export function validateStep(step: number, value: string): string | null {
     return null;
   }
   const result = contactSchema.shape[s.field].safeParse(value);
-  return result.success
-    ? null
-    : (result.error.issues[0]?.message ?? "Invalid input.");
+  if (result.success) {
+    return null;
+  }
+  /* istanbul ignore next — a failed parse always yields ≥1 issue, so the ?? fallback is unreachable */
+  return result.error.issues[0]?.message ?? "Invalid input.";
 }
 
 export function hasEnoughText(text: string): boolean {

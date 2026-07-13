@@ -1,3 +1,5 @@
+import type { StatusResult } from "@/types/index.ts";
+
 export const plantaActionTypes = [
   "watering",
   "fertilizing",
@@ -61,3 +63,10 @@ export interface PlantaPlantCardData {
   readonly daysUntilNextAction?: number;
   readonly dueCareActionTypes?: readonly PlantaActionType[];
 }
+
+export interface PlantaPlantsData {
+  readonly rawPlants: readonly PlantaPlant[];
+  readonly plantCards: readonly PlantaPlantCardData[];
+}
+
+export type PlantaPlantsResult = StatusResult<PlantaPlantsData>;

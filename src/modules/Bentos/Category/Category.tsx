@@ -4,7 +4,7 @@ import type { CategoryProps, CategoryTag } from "./Category.types.ts";
 
 import Bento, { bentos } from "@/components/Bento/index.ts";
 import Tag from "@/components/Tag/index.ts";
-import classnames from "@/utils/classnames/classnames.ts";
+import classnames from "@/utils/classnames/index.ts";
 
 const Category = ({ sizeKey, label, tags, className }: CategoryProps) => {
   const normalizedTags: CategoryTag[] = tags

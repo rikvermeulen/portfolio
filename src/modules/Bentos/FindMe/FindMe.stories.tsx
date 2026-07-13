@@ -1,7 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 
-import { mockFindMeProps } from "./FindMe.mock.ts";
+import { mockFindMeConditions, mockFindMeProps } from "./FindMe.mock.ts";
 import FindMe from "./FindMe.tsx";
+import WeatherBadgeView from "./WeatherBadgeView.tsx";
 
 const meta = {
   title: "Modules/Bentos/FindMe",
@@ -22,5 +23,8 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-  args: mockFindMeProps,
+  args: {
+    ...mockFindMeProps,
+    weatherBadge: <WeatherBadgeView data={mockFindMeConditions} />,
+  },
 };

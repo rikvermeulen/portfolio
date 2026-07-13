@@ -9,7 +9,7 @@ import {
 
 import type { IMessage, UserContactData } from "./Contact.types.ts";
 
-import { playSound } from "@/utils/playSound/playSound.ts";
+import { playSound } from "@/utils/playSound/index.ts";
 
 import { submitContact } from "./Contact.actions.ts";
 import { initialMessages } from "./Contact.const.ts";

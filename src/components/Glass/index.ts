@@ -1,2 +1,2 @@
-export { default } from "@/components/Glass/Glass.tsx";
-export type { GlassProps, GlassTint } from "@/components/Glass/Glass.types.ts";
+export { default } from "./Glass.tsx";
+export type { GlassProps, GlassTint } from "./Glass.types.ts";

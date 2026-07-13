@@ -4,7 +4,7 @@ import { useRef } from "react";
 
 import type { AdaptiveTextProps } from "./AdaptiveText.types.ts";
 
-import classnames from "@/utils/classnames/classnames.ts";
+import classnames from "@/utils/classnames/index.ts";
 
 import { useAdaptiveTextColor } from "./useAdaptiveTextColor.ts";
 

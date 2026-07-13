@@ -5,15 +5,15 @@ import { memo, useRef } from "react";
 import type { GlassProps } from "./Glass.types.ts";
 
 import { GLASS_DEFAULTS } from "@/lib/glass/displacementMap.ts";
-import classnames from "@/utils/classnames/classnames.ts";
+import classnames from "@/utils/classnames/index.ts";
 
-import { GlassFilter } from "./GlassFilter.tsx";
 import {
   hotspotStyle,
   illuminateStyle,
   rimStyle,
   TINT_CLASSES,
-} from "./layers.ts";
+} from "./Glass.const.ts";
+import { GlassFilter } from "./GlassFilter.tsx";
 import {
   glassBackdropFilter,
   useDisplacementFilter,

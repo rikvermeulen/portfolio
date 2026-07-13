@@ -2,7 +2,7 @@
 
 import type { TagProps, TagVariant } from "./Tag.types.ts";
 
-import classnames from "@/utils/classnames/classnames.ts";
+import classnames from "@/utils/classnames/index.ts";
 
 /** Maps a tag variant to its iOS system accent token (see theme.css). */
 const TINT: Record<TagVariant, string> = {

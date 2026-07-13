@@ -8,7 +8,7 @@ import type {
   ResponseSecurityHeaders,
   SecurityHeaderKey,
   SecurityHeadersConfig,
-} from "./types.ts";
+} from "./getSecurityHeaders.types.ts";
 
 import {
   NONE,
@@ -16,7 +16,7 @@ import {
   STRICT_DYNAMIC,
   UNSAFE_EVAL,
   UNSAFE_INLINE,
-} from "./constants.ts";
+} from "./getSecurityHeaders.const.ts";
 
 const baseCspConfig: FullCspConfig = {
   "base-uri": [NONE],

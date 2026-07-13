@@ -20,16 +20,10 @@ export interface FindMeWeather {
   readonly iconName: FindMeWeatherIconName;
 }
 
-export interface FindMeAirQuality {
-  readonly europeanAqi: number;
-  readonly categoryLabel: string;
-}
-
 export interface FindMeConditionsSuccessResponse {
   readonly ok: true;
   readonly location: FindMeLocation;
   readonly weather: FindMeWeather;
-  readonly airQuality: FindMeAirQuality;
   readonly updatedAt: string;
 }
 

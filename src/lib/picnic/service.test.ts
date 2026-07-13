@@ -1,11 +1,10 @@
-// Import from the barrel so index.ts lines are covered too.
 import { PicnicError } from "./client.ts";
 import {
   fetchPicnicAuthKey,
   fetchSavedPicnicRecipes,
   getPicnicRecipesResult,
   toPicnicErrorMessage,
-} from "./index.ts";
+} from "./service.ts";
 
 const mockGetCookbookPage = jest.fn();
 const mockEnsurePicnicAuth = jest.fn();

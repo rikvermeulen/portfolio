@@ -1,9 +1,9 @@
 import type { BentoSkeletonProps } from "./Bento.types.ts";
 
-import { SkeletonCard } from "@/components/Cards/index.ts";
+import SkeletonCard from "@/components/SkeletonCard/index.ts";
 
+import { bentos } from "./Bento.const.ts";
 import Bento from "./Bento.tsx";
-import { bentos } from "./config.ts";
 
 /**
  * Shared loading placeholder for a bento tile. Renders the tile shell at the

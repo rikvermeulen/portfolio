@@ -1,5 +1,2 @@
-export { default } from "@/components/ToggleGroup/ToggleGroup.tsx";
-export type {
-  ToggleGroupProps,
-  ToggleOption,
-} from "@/components/ToggleGroup/ToggleGroup.types.ts";
+export { default } from "./ToggleGroup.tsx";
+export type { ToggleGroupProps, ToggleOption } from "./ToggleGroup.types.ts";

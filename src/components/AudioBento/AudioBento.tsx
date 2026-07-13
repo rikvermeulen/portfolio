@@ -11,7 +11,7 @@ import Bento, { bentos } from "@/components/Bento/index.ts";
 import Icon from "@/components/Icon/index.ts";
 import Slider from "@/components/Slider/index.ts";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion/usePrefersReducedMotion.ts";
-import classnames from "@/utils/classnames/classnames.ts";
+import classnames from "@/utils/classnames/index.ts";
 
 const PULSE_DURATION_MS = 600;
 const FALLBACK_IMAGE = "/images/no-album.png";
@@ -122,7 +122,7 @@ const AudioBento = ({
 
         {/* Volume slider */}
         <div className="mt-2 flex items-center justify-center gap-3">
-          <Icon iconClassName="w-2 fill-white" name="mute" />
+          <Icon iconClassName="w-2 text-white" name="mute" />
           <Slider
             label="Volume"
             maxValue={1}
@@ -132,7 +132,7 @@ const AudioBento = ({
             value={volume}
             className="w-[70%] opacity-80 transition-opacity duration-200 hover:opacity-100"
           />
-          <Icon iconClassName="w-3.5 fill-white" name="sound" />
+          <Icon iconClassName="w-3.5 text-white" name="sound" />
         </div>
       </div>
     </Bento>

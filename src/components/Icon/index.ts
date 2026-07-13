@@ -1,6 +1,2 @@
-export { default } from "@/components/Icon/Icon.tsx";
-export type {
-  IconName,
-  IconProps,
-  SvgIconComponent,
-} from "@/components/Icon/Icon.types.ts";
+export { default } from "./Icon.tsx";
+export type { IconName, IconProps, SvgIconComponent } from "./Icon.types.ts";

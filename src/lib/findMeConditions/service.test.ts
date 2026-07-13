@@ -20,27 +20,17 @@ describe("FindMe conditions service", () => {
     jest.useRealTimers();
   });
 
-  it("returns weather and air-quality data from Open-Meteo", async () => {
-    const fetchMock = jest
-      .spyOn(globalThis, "fetch")
-      .mockResolvedValueOnce(
-        createJsonResponse({
-          current: {
-            is_day: 1,
-            temperature_2m: 18.4,
-            time: "2026-06-12T12:30",
-            weather_code: 61,
-          },
-        }),
-      )
-      .mockResolvedValueOnce(
-        createJsonResponse({
-          current: {
-            european_aqi: 31,
-            time: "2026-06-12T12:30",
-          },
-        }),
-      );
+  it("returns weather data from Open-Meteo", async () => {
+    const fetchMock = jest.spyOn(globalThis, "fetch").mockResolvedValueOnce(
+      createJsonResponse({
+        current: {
+          is_day: 1,
+          temperature_2m: 18.4,
+          time: "2026-06-12T12:30",
+          weather_code: 61,
+        },
+      }),
+    );
 
     await expect(getFindMeConditionsResult()).resolves.toEqual({
       ok: true,
@@ -50,23 +40,13 @@ describe("FindMe conditions service", () => {
         iconName: "weather-rain",
         temperatureCelsius: 18,
       },
-      airQuality: {
-        categoryLabel: "Fair",
-        europeanAqi: 31,
-      },
       updatedAt: "2026-06-12T10:30:00.000Z",
     });
-    expect(fetchMock).toHaveBeenCalledTimes(2);
+    expect(fetchMock).toHaveBeenCalledTimes(1);
     expect(fetchMock.mock.calls[0]?.[0]).toContain(
       "https://api.open-meteo.com/v1/forecast",
     );
-    expect(fetchMock.mock.calls[1]?.[0]).toContain(
-      "https://air-quality-api.open-meteo.com/v1/air-quality",
-    );
     expect(fetchMock.mock.calls[0]?.[1]).toMatchObject({
-      cache: "no-store",
-    });
-    expect(fetchMock.mock.calls[1]?.[1]).toMatchObject({
       cache: "no-store",
     });
   });
@@ -78,7 +58,7 @@ describe("FindMe conditions service", () => {
 
     await expect(getFindMeConditionsResult()).resolves.toEqual({
       ok: false,
-      error: "Unable to load weather and air quality right now.",
+      error: "Unable to load weather right now.",
     });
   });
 
@@ -104,23 +84,16 @@ describe("FindMe conditions service", () => {
   });
 
   it("fetchFindMeConditions resolves with location and weather data", async () => {
-    jest
-      .spyOn(globalThis, "fetch")
-      .mockResolvedValueOnce(
-        createJsonResponse({
-          current: {
-            is_day: 1,
-            temperature_2m: 22,
-            time: "2026-06-12T12:30",
-            weather_code: 0,
-          },
-        }),
-      )
-      .mockResolvedValueOnce(
-        createJsonResponse({
-          current: { european_aqi: 10, time: "2026-06-12T12:30" },
-        }),
-      );
+    jest.spyOn(globalThis, "fetch").mockResolvedValueOnce(
+      createJsonResponse({
+        current: {
+          is_day: 1,
+          temperature_2m: 22,
+          time: "2026-06-12T12:30",
+          weather_code: 0,
+        },
+      }),
+    );
 
     const result = await fetchFindMeConditions();
     expect(result.ok).toBe(true);

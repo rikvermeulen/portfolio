@@ -296,19 +296,22 @@ This is the meta-layer that makes everything feel foreign. Highest emotional ROI
       `api`, bentos, integrations), real scripts (`plop`, `spotify:auth`, `picnic:auth`,
       `storybook` — **not** `migrate`/`generate:types`/`generate:icons`/`payload`). Encode
       Parts A + B as the authoritative rules.
-- [ ] **Trim `AGENTS.md` / `CLAUDE.md`** — remove references to `commands/` (doesn't exist),
-      `.github/copilot-instructions.md` (doesn't exist), `.github/prompts/`, and the
-      Payload/CMS/sprint command mappings. Keep only what maps to real files.
-- [ ] **Prune `rules/`** — it's CMS-oriented (`payload.md`, `content-blocks.md`,
-      `stacks/nextjs-payload.md`, backlog/sprint). Keep the genuinely shared ones
-      (`type-safety`, `testing`, `tailwind`, `accessibility`, `object-literals`), delete or
-      replace the Payload-specific ones, add a `stacks/nextjs.md` matching this repo.
-- [ ] **`.cursor/rules/`** — drop `no-migrations.mdc` and `i18n-dictionaries.mdc` (glob
-      `src/i18n/**` which doesn't exist).
-- [ ] Add a real root **`README.md`** (there is none).
+- [x] **Trim `AGENTS.md` / `CLAUDE.md`** — removed references to `commands/`,
+      `.github/copilot-instructions.md`, `.github/prompts/`, and the Payload/CMS/sprint
+      command mappings. Now route only to real files + skills.
+- [x] **Prune `rules/`** — deleted `payload.md`, `content-blocks.md`, `backlog.md`,
+      `stacks/nextjs-payload.md`. Kept the shared ones (`type-safety`, `testing`, `tailwind`,
+      `accessibility`, `object-literals`, `communication`, `clean-architecture`, `project`).
+      Added `stacks/nextjs.md` matching this repo and rewrote `rules.md` index (also dropped the
+      dead `stacks/experimental.react-native-expo.md` reference).
+- [x] **`.cursor/rules/`** — dropped `no-migrations.mdc` and `i18n-dictionaries.mdc`; trimmed
+      `conventions.mdc` to reference only existing rules.
+- [x] Add a real root **`README.md`** (fixed a stale `.npmrc` line; there is no `.npmrc`).
 - [x] Fix `package.json` `"name": "project-name"` -> `rikvermeulen.com`.
-- [ ] Per `CLAUDE.md`, upstream the genuinely-reusable rule edits to the `ai-workflows` repo
-      rather than only fixing them here.
+- [ ] **Upstream the reusable parts** to the `ai-workflows` repo — the local edits above are
+      clobbered on re-sync. Reusable upstream candidates: make `command-mappings`/`workflow-assets`
+      blocks conditional on those dirs existing; make `project.md`'s `vendor/`+Payload examples
+      opt-in per stack; make stack detection pick `stacks/nextjs.md` when Payload is absent.
 
 ---
 

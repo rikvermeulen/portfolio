@@ -1,2 +1,2 @@
-export { default } from "@/components/AdaptiveText/AdaptiveText.tsx";
-export type { AdaptiveTextProps } from "@/components/AdaptiveText/AdaptiveText.types.ts";
+export { default } from "./AdaptiveText.tsx";
+export type { AdaptiveTextProps } from "./AdaptiveText.types.ts";

@@ -1,18 +1,14 @@
 import { FIND_ME_LOCATION } from "@/modules/Bentos/FindMe/FindMe.const.ts";
 
 import {
-  buildOpenMeteoAirQualityUrl,
   buildOpenMeteoForecastUrl,
-  getEuropeanAqiCategory,
   getWeatherCondition,
-  toFindMeAirQuality,
   toFindMeWeather,
 } from "./openMeteo.ts";
 
 describe("Open-Meteo FindMe adapter", () => {
-  it("builds forecast and air-quality URLs from the shared FindMe location", () => {
+  it("builds the forecast URL from the shared FindMe location", () => {
     const forecastUrl = new URL(buildOpenMeteoForecastUrl());
-    const airQualityUrl = new URL(buildOpenMeteoAirQualityUrl());
 
     expect(`${forecastUrl.origin}${forecastUrl.pathname}`).toBe(
       "https://api.open-meteo.com/v1/forecast",
@@ -27,18 +23,6 @@ describe("Open-Meteo FindMe adapter", () => {
       "temperature_2m,weather_code,is_day",
     );
     expect(forecastUrl.searchParams.get("temperature_unit")).toBe("celsius");
-
-    expect(`${airQualityUrl.origin}${airQualityUrl.pathname}`).toBe(
-      "https://air-quality-api.open-meteo.com/v1/air-quality",
-    );
-    expect(airQualityUrl.searchParams.get("latitude")).toBe(
-      FIND_ME_LOCATION.latitude.toString(),
-    );
-    expect(airQualityUrl.searchParams.get("longitude")).toBe(
-      FIND_ME_LOCATION.longitude.toString(),
-    );
-    expect(airQualityUrl.searchParams.get("current")).toBe("european_aqi");
-    expect(airQualityUrl.searchParams.get("domains")).toBe("cams_europe");
   });
 
   it.each([
@@ -62,22 +46,6 @@ describe("Open-Meteo FindMe adapter", () => {
     },
   );
 
-  it.each([
-    [0, "Good"],
-    [20, "Good"],
-    [21, "Fair"],
-    [40, "Fair"],
-    [41, "Moderate"],
-    [60, "Moderate"],
-    [61, "Poor"],
-    [80, "Poor"],
-    [81, "Very poor"],
-    [100, "Very poor"],
-    [101, "Extremely poor"],
-  ])("maps European AQI %s to %s", (aqi, category) => {
-    expect(getEuropeanAqiCategory(aqi)).toBe(category);
-  });
-
   it("maps validated forecast payloads into FindMe weather", () => {
     expect(
       toFindMeWeather({
@@ -95,20 +63,6 @@ describe("Open-Meteo FindMe adapter", () => {
     });
   });
 
-  it("maps validated air-quality payloads into FindMe air quality", () => {
-    expect(
-      toFindMeAirQuality({
-        current: {
-          european_aqi: 24.3,
-          time: "2026-06-12T12:00",
-        },
-      }),
-    ).toEqual({
-      categoryLabel: "Fair",
-      europeanAqi: 24,
-    });
-  });
-
   it("rejects malformed provider payloads", () => {
     expect(() =>
       toFindMeWeather({
@@ -117,15 +71,6 @@ describe("Open-Meteo FindMe adapter", () => {
           temperature_2m: "warm",
           time: "2026-06-12T12:00",
           weather_code: 1,
-        },
-      }),
-    ).toThrow();
-
-    expect(() =>
-      toFindMeAirQuality({
-        current: {
-          european_aqi: "24",
-          time: "2026-06-12T12:00",
         },
       }),
     ).toThrow();

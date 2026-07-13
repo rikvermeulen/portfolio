@@ -1,31 +1,27 @@
-export { default as Category } from "@/modules/Bentos/Category/index.ts";
-export { default as Music } from "@/modules/Bentos/Music/index.ts";
-export { default as Podcast } from "@/modules/Bentos/Podcast/index.ts";
-export { default as FindMe } from "@/modules/Bentos/FindMe/index.ts";
-export { default as Image } from "@/modules/Bentos/Image/index.ts";
-export { default as Information } from "@/modules/Bentos/Information/index.ts";
-export { default as Personal } from "@/modules/Bentos/Personal/index.ts";
-export { default as Photos } from "@/modules/Bentos/Photos/index.ts";
-export { default as Plants } from "@/modules/Bentos/Plants/index.ts";
-export { default as Recipes } from "@/modules/Bentos/Recipes/index.ts";
-export { default as Contact } from "@/modules/Bentos/Contact/index.ts";
-export { default as Journal } from "@/modules/Bentos/Journal/index.ts";
-export { default as Games } from "@/modules/Bentos/Games/index.ts";
-export type {
-  CategoryProps,
-  CategoryTag,
-} from "@/modules/Bentos/Category/index.ts";
-export type { FindMeProps } from "@/modules/Bentos/FindMe/index.ts";
-export type { ImageProps } from "@/modules/Bentos/Image/index.ts";
-export type { InformationProps } from "@/modules/Bentos/Information/index.ts";
-export type { PhotosProps } from "@/modules/Bentos/Photos/index.ts";
-export type { PlantsProps } from "@/modules/Bentos/Plants/index.ts";
-export type { RecipesProps } from "@/modules/Bentos/Recipes/index.ts";
-export type { ContactProps } from "@/modules/Bentos/Contact/index.ts";
-export type { JournalProps } from "@/modules/Bentos/Journal/index.ts";
-export type { MusicProps } from "@/modules/Bentos/Music/index.ts";
-export type { Game, GamesProps } from "@/modules/Bentos/Games/index.ts";
-export type {
-  PodcastProps,
-  PodcastEpisode,
-} from "@/modules/Bentos/Podcast/index.ts";
+export { default as Category } from "./Category/index.ts";
+export { default as Contact } from "./Contact/index.ts";
+export { default as FindMe, WeatherBadge } from "./FindMe/index.ts";
+export { default as Games } from "./Games/index.ts";
+export { default as Image } from "./Image/index.ts";
+export { default as Information } from "./Information/index.ts";
+export { default as Journal } from "./Journal/index.ts";
+export { default as Music } from "./Music/index.ts";
+export { default as Personal } from "./Personal/index.ts";
+export { default as Photos } from "./Photos/index.ts";
+export { default as Plants } from "./Plants/index.ts";
+export { default as Podcast } from "./Podcast/index.ts";
+export { default as Recipes } from "./Recipes/index.ts";
+
+export type { CategoryProps, CategoryTag } from "./Category/index.ts";
+export type { ContactProps } from "./Contact/index.ts";
+export type { FindMeProps } from "./FindMe/index.ts";
+export type { Game, GamesProps } from "./Games/index.ts";
+export type { ImageProps } from "./Image/index.ts";
+export type { InformationProps } from "./Information/index.ts";
+export type { JournalProps } from "./Journal/index.ts";
+export type { MusicProps } from "./Music/index.ts";
+export type { PersonalProps } from "./Personal/index.ts";
+export type { PhotosProps } from "./Photos/index.ts";
+export type { PlantsProps } from "./Plants/index.ts";
+export type { PodcastEpisode, PodcastProps } from "./Podcast/index.ts";
+export type { RecipesProps } from "./Recipes/index.ts";

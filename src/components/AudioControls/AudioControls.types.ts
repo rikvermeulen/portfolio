@@ -7,6 +7,6 @@ export interface AudioControlsProps {
   readonly onChangeTrack: (direction: "previous" | "next") => void;
 }
 
-export interface NextIconProps {
+export interface SkipIconProps {
   className?: string;
 }

@@ -1,3 +1,10 @@
+/**
+ * Bento registry — the single source of truth for tile *order* and *data-fetch
+ * wiring*. Each entry declares how a tile is rendered (static vs. async) and,
+ * for async tiles, which service supplies its data. The static per-tile
+ * definitions (grid sizes + app identity) come from the tile catalog in
+ * `@/components/Bento/Bento.const.ts` (re-exported as `bentos`).
+ */
 import type { BentoSizeKey } from "@/components/Bento/index.ts";
 import type { Result } from "@/types/index.ts";
 
@@ -8,10 +15,10 @@ import {
 } from "@/components/Bento/index.ts";
 import { getPicnicRecipesResult } from "@/lib/picnic/service.ts";
 import { getPlantaPlantsResult } from "@/lib/planta/service.ts";
-import { getSpotifyPodcastResult } from "@/lib/spotify/podcast-service.ts";
+import { getSpotifyPodcastResult } from "@/lib/spotify/podcastService.ts";
 import { getSpotifyMusicResult } from "@/lib/spotify/service.ts";
 import { getSteamGamesResult } from "@/lib/steam/service.ts";
-import { getPhotosResult } from "@/lib/supabase/photos.ts";
+import { getPhotosResult } from "@/lib/supabase/service.ts";
 import {
   Category,
   Contact,
@@ -26,11 +33,13 @@ import {
   Plants,
   Podcast,
   Recipes,
+  WeatherBadge,
 } from "@/modules/Bentos/index.ts";
 
 /**
- * A tile rendered immediately with no data fetch (static content or a
- * self-fetching client tile like FindMe).
+ * A tile rendered immediately with no blocking data fetch — static content, or
+ * an interactive client tile like FindMe whose server-fetched parts stream in
+ * via their own `<Suspense>` boundary (see `weatherBadge`).
  */
 interface StaticTile {
   readonly kind: "static";
@@ -176,7 +185,9 @@ export const bentoRegistry: readonly BentoTile[] = [
     kind: "static",
     id: "findme",
     sizeKey: "findme",
-    render: (sizeKey) => <FindMe sizeKey={sizeKey} />,
+    render: (sizeKey) => (
+      <FindMe sizeKey={sizeKey} weatherBadge={<WeatherBadge />} />
+    ),
   },
 
   { kind: "divider", id: "section-break" },

@@ -1,14 +1,14 @@
-import type { PlaylistTrack, SpotifyRecentlyPlayedItem } from "./types.ts";
+import type {
+  PlaylistTrack,
+  SpotifyMusicData,
+  SpotifyRecentlyPlayedItem,
+} from "./types.ts";
 import type { Result } from "@/types/index.ts";
 
 import { env } from "@env";
 
 import { fetchRecentlyPlayed } from "./client.ts";
 import { pickSpotifyImage } from "./utils.ts";
-
-export interface SpotifyMusicData {
-  readonly tracks: readonly PlaylistTrack[];
-}
 
 function toPlaylistTrack(item: SpotifyRecentlyPlayedItem): PlaylistTrack {
   const { track } = item;

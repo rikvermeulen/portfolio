@@ -1,2 +1,2 @@
-export { default } from "@/modules/Bentos/Personal/Personal.tsx";
-export type { PersonalProps } from "@/modules/Bentos/Personal/Personal.types.ts";
+export { default } from "./Personal.tsx";
+export type { PersonalProps } from "./Personal.types.ts";

@@ -1,2 +1,2 @@
-export { default } from "@/modules/Bentos/Games/Games.tsx";
-export type { Game, GamesProps } from "@/modules/Bentos/Games/Games.types.ts";
+export { default } from "./Games.tsx";
+export type { Game, GamesProps } from "./Games.types.ts";

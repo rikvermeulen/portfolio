@@ -1,8 +1,2 @@
-export {
-  default,
-  default as AudioBento,
-} from "@/components/AudioBento/AudioBento.tsx";
-export type {
-  AudioBentoDisplay,
-  AudioBentoProps,
-} from "@/components/AudioBento/AudioBento.types.ts";
+export { default, default as AudioBento } from "./AudioBento.tsx";
+export type { AudioBentoDisplay, AudioBentoProps } from "./AudioBento.types.ts";

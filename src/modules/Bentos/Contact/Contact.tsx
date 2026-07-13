@@ -10,7 +10,7 @@ import Glass from "@/components/Glass/index.ts";
 import Icon from "@/components/Icon/index.ts";
 import Link from "@/components/Link/index.ts";
 import { useOutsideClick } from "@/hooks/useOutsideClick/index.ts";
-import classnames from "@/utils/classnames/classnames.ts";
+import classnames from "@/utils/classnames/index.ts";
 import { time } from "@/utils/datetime/index.ts";
 
 import { socials } from "./Contact.const.ts";
@@ -70,9 +70,13 @@ const Contact = ({ sizeKey, className }: ContactProps) => {
           width={32}
           className="z-10 rounded-full"
         />
-        <div className="relative -top-1 flex gap-2 px-3 py-1 text-[10px] font-bold">
-          <Glass intensity={0.5} radius={10} className="dark:bg-white/20" />
+        <div className="relative -top-1 flex gap-2 rounded-lg px-3 py-1 text-[10px] font-medium">
           Rik Vermeulen
+          <Glass
+            intensity={0.5}
+            radius={10}
+            className="-z-10 bg-black/10 dark:bg-white/20"
+          />
         </div>
       </header>
       <div

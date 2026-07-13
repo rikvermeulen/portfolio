@@ -7,11 +7,14 @@ import NextLink from "next/link";
 
 import type { LinkProps } from "./Link.types.ts";
 
-import { isExternalUrl } from "@/utils/isExternalUrl/isExternalUrl.ts";
+import { isExternalUrl } from "@/utils/isExternalUrl/index.ts";
+import { env } from "@env";
 
 const Link = ({ children, ...props }: LinkProps) => {
   const isExternalLink =
-    typeof props.href === "string" ? isExternalUrl(props.href) : false;
+    typeof props.href === "string"
+      ? isExternalUrl(props.href, env.NEXT_PUBLIC_APP_URL)
+      : false;
 
   return (
     <NextLink

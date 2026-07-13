@@ -1,6 +1,9 @@
-import type { ResponseSecurityHeaders, SecurityHeadersConfig } from "./types";
+import type {
+  ResponseSecurityHeaders,
+  SecurityHeadersConfig,
+} from "./getSecurityHeaders.types.ts";
 
-import { SELF, STRICT_DYNAMIC } from "./constants.ts";
+import { SELF, STRICT_DYNAMIC } from "./getSecurityHeaders.const.ts";
 import {
   createCspHeader,
   getCspValue,

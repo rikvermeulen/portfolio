@@ -2,9 +2,9 @@ import type { BentoBoxSize, BentoProps } from "./Bento.types.ts";
 
 import AppIcon from "@/components/AppIcon/index.ts";
 import Link from "@/components/Link/index.ts";
-import classnames from "@/utils/classnames/classnames.ts";
+import classnames from "@/utils/classnames/index.ts";
 
-import { bentos } from "./config.ts";
+import { bentos } from "./Bento.const.ts";
 
 /**
  * Bento component - A flexible container for bento grid layouts
@@ -82,7 +82,7 @@ const Bento = ({
       data-bento-md={sizes?.md}
       style={bentoItemVars}
       className={classnames(
-        "bento-item relative size-full overflow-hidden rounded-2xl",
+        "bento-item relative size-full overflow-hidden rounded-3xl",
         className,
       )}
       {...props}

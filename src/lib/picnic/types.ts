@@ -50,3 +50,15 @@ export interface PicnicRecipeCard {
   readonly servings?: number;
   readonly totalMinutes?: number;
 }
+
+// Service payloads
+export interface PicnicRecipesResult {
+  readonly rawRecipes: readonly PicnicRecipe[];
+  readonly recipeCards: readonly PicnicRecipeCard[];
+  /** The auth key used for this request. `null` when not available. */
+  readonly authKey?: string | null;
+}
+
+export interface PicnicRecipeCardsData {
+  readonly recipeCards: readonly PicnicRecipeCard[];
+}

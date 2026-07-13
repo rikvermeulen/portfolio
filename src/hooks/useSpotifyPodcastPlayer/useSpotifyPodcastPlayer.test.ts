@@ -187,6 +187,25 @@ describe("useSpotifyPodcastPlayer", () => {
     expect(result.current.currentIndex).toBe(1);
   });
 
+  it("goToNext starts playback when a podcast is already playing", async () => {
+    mockUseConnection.mockReturnValue(
+      fakeConnection({
+        isPaused: false,
+        currentUri: "spotify:episode:ep-1",
+      }),
+    );
+
+    const { result } = renderHook(() => useSpotifyPodcastPlayer(EPISODES));
+    await act(async () => {
+      result.current.goToNext();
+      await flushAsync();
+    });
+
+    expect(mockStartPlayback).toHaveBeenCalledWith("tok", "dev-1", [
+      "spotify:episode:ep-2",
+    ]);
+  });
+
   it("goToPrevious wraps around to the last episode", async () => {
     mockUseConnection.mockReturnValue(fakeConnection());
 
@@ -197,6 +216,25 @@ describe("useSpotifyPodcastPlayer", () => {
     });
 
     expect(result.current.currentIndex).toBe(EPISODES.length - 1);
+  });
+
+  it("goToPrevious starts playback when a podcast is already playing", async () => {
+    mockUseConnection.mockReturnValue(
+      fakeConnection({
+        isPaused: false,
+        currentUri: "spotify:episode:ep-1",
+      }),
+    );
+
+    const { result } = renderHook(() => useSpotifyPodcastPlayer(EPISODES));
+    await act(async () => {
+      result.current.goToPrevious();
+      await flushAsync();
+    });
+
+    expect(mockStartPlayback).toHaveBeenCalledWith("tok", "dev-1", [
+      "spotify:episode:ep-3",
+    ]);
   });
 
   it("surfaces an error when the device is not ready", () => {

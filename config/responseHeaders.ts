@@ -4,15 +4,15 @@
 import type {
   CspConfig,
   SecurityHeadersConfig,
-} from "../src/utils/getSecurityHeaders/types.ts";
+} from "../src/utils/getSecurityHeaders/index.ts";
 
 import {
+  getSecurityHeaders,
   NONE,
   SELF,
   UNSAFE_EVAL,
   UNSAFE_INLINE,
-} from "../src/utils/getSecurityHeaders/constants.ts";
-import { getSecurityHeaders } from "../src/utils/getSecurityHeaders/getSecurityHeaders.ts";
+} from "../src/utils/getSecurityHeaders/index.ts";
 
 const getScriptSrc = () => {
   // In next 15 we need to allow unsafe-eval in develompent to make sure HMR works:

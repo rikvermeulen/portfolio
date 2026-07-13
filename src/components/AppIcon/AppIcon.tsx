@@ -3,7 +3,7 @@ import Image from "next/image";
 import type { AppIconProps } from "./AppIcon.types.ts";
 
 import Glass from "@/components/Glass/index.ts";
-import classnames from "@/utils/classnames/classnames.ts";
+import classnames from "@/utils/classnames/index.ts";
 
 const APP_ICON_RADIUS = 6;
 

@@ -32,6 +32,7 @@ export function useSpotifyPodcastPlayer(
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [volume, setVolume] = useState(0.5);
   const [playError, setPlayError] = useState<string | null>(null);
+  const [followedIndex, setFollowedIndex] = useState(-1);
   const isPendingRef = useRef(false);
 
   // The SDK's paused state is authoritative — derive rather than track our own.
@@ -41,7 +42,20 @@ export function useSpotifyPodcastPlayer(
   const playbackIndex = episodes.findIndex(
     (episode) => `spotify:episode:${episode.id}` === connection.currentUri,
   );
-  const currentIndex = playbackIndex >= 0 ? playbackIndex : selectedIndex;
+
+  // Follow the SDK's auto-advances so pausing (or skipping while paused)
+  // continues from the episode that was actually playing. Adjusting state during
+  // render (gated by the last followed index so it runs once per advance) is the
+  // React-sanctioned alternative to the cascading re-render an effect would cause.
+  if (isPlaying && playbackIndex >= 0 && playbackIndex !== followedIndex) {
+    setFollowedIndex(playbackIndex);
+    setSelectedIndex(playbackIndex);
+  }
+
+  // While playing, the SDK is authoritative (it auto-advances the list);
+  // otherwise the visible item is whatever the user has selected.
+  const currentIndex =
+    isPlaying && playbackIndex >= 0 ? playbackIndex : selectedIndex;
 
   async function playAtIndex(index: number) {
     const episode = episodes[index];
@@ -101,19 +115,33 @@ export function useSpotifyPodcastPlayer(
     if (isPendingRef.current) {
       return;
     }
-    if (playbackIndex < 0) {
-      playAtIndex(currentIndex);
+    // Only resume/pause the SDK when its loaded episode is the one on display;
+    // if the selection has moved (or nothing is loaded), start it instead.
+    if (playbackIndex >= 0 && playbackIndex === currentIndex) {
+      connection.player?.togglePlay();
       return;
     }
-    connection.player?.togglePlay();
+    playAtIndex(currentIndex);
   }
 
+  // Skipping only moves the selection unless a podcast is already playing —
+  // changing episodes should never start audio on its own.
   function goToNext() {
-    playAtIndex((currentIndex + 1) % episodes.length);
+    const next = (currentIndex + 1) % episodes.length;
+    if (isPlaying) {
+      playAtIndex(next);
+    } else {
+      setSelectedIndex(next);
+    }
   }
 
   function goToPrevious() {
-    playAtIndex((currentIndex - 1 + episodes.length) % episodes.length);
+    const previous = (currentIndex - 1 + episodes.length) % episodes.length;
+    if (isPlaying) {
+      playAtIndex(previous);
+    } else {
+      setSelectedIndex(previous);
+    }
   }
 
   function applyVolume(value: number) {

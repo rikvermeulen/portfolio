@@ -1,21 +1,13 @@
 import { unstable_cache } from "next/cache";
 
-import type { PlantaPlant, PlantaPlantCardData } from "@/lib/planta/types.ts";
-import type { StatusResult } from "@/types/index.ts";
+import type { PlantaPlantsData, PlantaPlantsResult } from "./types.ts";
 
 import {
   createPlantaClientFromEnv,
   PlantaError,
   PlantaUnauthorizedError,
-} from "@/lib/planta/client.ts";
-import { toPlantaPlantCards } from "@/lib/planta/selectors.ts";
-
-export interface PlantaPlantsData {
-  readonly rawPlants: readonly PlantaPlant[];
-  readonly plantCards: readonly PlantaPlantCardData[];
-}
-
-export type PlantaPlantsResult = StatusResult<PlantaPlantsData>;
+} from "./client.ts";
+import { toPlantaPlantCards } from "./selectors.ts";
 
 const MAX_PLANTS_TO_FETCH = 6 as const;
 

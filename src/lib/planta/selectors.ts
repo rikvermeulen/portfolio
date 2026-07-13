@@ -2,9 +2,9 @@ import type {
   PlantaActionType,
   PlantaPlant,
   PlantaPlantCardData,
-} from "@/lib/planta/types.ts";
+} from "./types.ts";
 
-import { getDaysUntilIsoDate } from "@/lib/planta/plantaUtils.ts";
+import { getDaysUntilIsoDate } from "./plantaUtils.ts";
 
 /** Next action ignores cleaning and repotting for dashboard surfacing. */
 const actionPriority: readonly PlantaActionType[] = [

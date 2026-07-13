@@ -4,8 +4,8 @@ import { Component } from "react";
 
 import type { BentoErrorBoundaryProps } from "./Bento.types.ts";
 
+import { bentos } from "./Bento.const.ts";
 import Bento from "./Bento.tsx";
-import { bentos } from "./config.ts";
 
 interface BentoErrorBoundaryState {
   readonly hasError: boolean;

@@ -1,9 +1,9 @@
 import type { BentoEmptyStateProps } from "./Bento.types.ts";
 
-import classnames from "@/utils/classnames/classnames.ts";
+import classnames from "@/utils/classnames/index.ts";
 
+import { bentos } from "./Bento.const.ts";
 import Bento from "./Bento.tsx";
-import { bentos } from "./config.ts";
 
 /**
  * Shared empty/error fallback tile: a centered muted message on a dark card.

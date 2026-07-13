@@ -9,7 +9,7 @@ import Glass from "@/components/Glass/index.ts";
 import Icon from "@/components/Icon/index.ts";
 import { notify } from "@/components/Toast/index.ts";
 import { useClipboard } from "@/hooks/useClipboard/index.ts";
-import classnames from "@/utils/classnames/classnames.ts";
+import classnames from "@/utils/classnames/index.ts";
 
 import { journalQuestions } from "./Journal.questions.ts";
 import {

@@ -1,6 +1,6 @@
-import type { PlantaActionType } from "@/lib/planta/types.ts";
+import type { PlantaActionType } from "./types.ts";
 
-import { actionLabels } from "@/lib/planta/selectors.ts";
+import { actionLabels } from "./selectors.ts";
 
 const HAPPY_HEALTH_KEYWORDS = [
   "happy",

@@ -5,15 +5,13 @@ Read `CONVENTIONS.md` in the project root for project-specific conventions.
 Read `rules/` for baseline coding standards (shared across all projects).
 Load only the relevant focused rule files for the task:
 
+- `rules/stacks/nextjs.md` for this repo's folder → layer mapping
+- `rules/clean-architecture.md` for layer/dependency principles
 - `rules/tailwind.md` for styling and design-token work
 - `rules/testing.md` for tests and test reviews
 - `rules/accessibility.md` for interactive UI and accessibility checks
 - `rules/type-safety.md` for TypeScript-heavy work, trust boundaries, and runtime validation checks
 - `rules/object-literals.md` when building objects, composing JSX props, or tempted to use `...(cond ? { key: val } : {})`
-- `rules/backlog.md` for user stories, specs, and backlog work
-- `rules/content-blocks.md` for CMS-backed block architecture, transforms, and block-specific checklists
-- `rules/payload.md` for Payload schema, generated-type, and integration work
-- the appropriate `rules/stacks/*` file after detecting the stack from `package.json`
 
 **Object literals and JSX props:** Do not use spread solely to conditionally add
 keys (`...(x ? { y } : {})`). Prefer explicit properties (`{ a, b }`), optional

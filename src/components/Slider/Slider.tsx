@@ -9,7 +9,7 @@ import {
 import type { SliderProps } from "./Slider.types.ts";
 
 import Glass from "@/components/Glass/index.ts";
-import classnames from "@/utils/classnames/classnames.ts";
+import classnames from "@/utils/classnames/index.ts";
 
 const Slider = ({
   value,
@@ -52,13 +52,7 @@ const Slider = ({
                 isDragging ? "scale-125" : "scale-100",
               )}
             >
-              <Glass
-                blur={8}
-                intensity={2}
-                interactive
-                radius={999}
-                tint="light"
-              />
+              <Glass blur={1} intensity={20} interactive radius={999} />
             </div>
           )}
         </SliderThumb>

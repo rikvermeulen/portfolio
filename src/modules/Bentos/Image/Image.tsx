@@ -3,7 +3,7 @@ import ImageNext from "next/image";
 import type { ImageProps } from "./Image.types.ts";
 
 import Bento, { bentos } from "@/components/Bento/index.ts";
-import classnames from "@/utils/classnames/classnames.ts";
+import classnames from "@/utils/classnames/index.ts";
 
 const Image = ({ sizeKey, src, alt, caption, className }: ImageProps) => {
   return (

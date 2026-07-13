@@ -16,14 +16,14 @@ There is **no CMS, database, or i18n layer** in this project.
 - Animation: GSAP 3 (`@gsap/react`, lazily loaded) + framer-motion 12
 - Data/validation: Zod 4 + `@t3-oss/env-nextjs`; `@supabase/supabase-js`; `picnic-api`; `mapbox-gl`
 - Testing: **Jest 30 only** (jsdom). No Vitest — `vite` is present only as Storybook's transitive builder.
-- Tooling: plop (scaffolding), husky (git hooks), react-scan (dev perf overlay), ESLint (`@greenberry/linting-config`), Stylelint, Prettier
+- Tooling: husky (git hooks), react-scan (dev perf overlay), ESLint (`@greenberry/linting-config`), Stylelint, Prettier
 - Runtime: Node `>=22.11` (`.nvmrc`)
 
 ## Structure
 
 - `src/app/(dashboard)`: the dashboard route — `layout.tsx` wraps children in `BentoGrid`,
   `page.tsx` maps the registry, `bento-registry.tsx` is the single source of truth for tile order/wiring
-- `src/app/api/*`: HTTP routes (contact, greeting, spotify/token, planta/plants, find-me/conditions, picnic/*, dev-diagnostics)
+- `src/app/api/*`: HTTP routes (spotify/token, planta/plants, find-me/conditions, picnic/\*, dev-diagnostics). The contact form submits via the `submitContact` server action, not an API route
 - `src/components`: generic, reusable UI primitives (folder-per-component, PascalCase). Includes the
   Bento grid infrastructure in `components/Bento/` (`Bento`, `AsyncBento`, `BentoGrid`, `BentoSkeleton`, `BentoErrorBoundary`); `AppIcon` in `components/AppIcon/`
 - `src/modules`: feature blocks (`Bentos/*` — the 13 concrete tiles — and `Navigation/*`)
@@ -34,31 +34,24 @@ There is **no CMS, database, or i18n layer** in this project.
 - `src/types`: cross-cutting shared types only (`Result<T>`, `StatusResult<T>`)
 - `src/styles`, `src/assets`: design-system styles and static assets
 - `config/`: app config consumed by `next.config.ts` (`responseHeaders.ts`, `webpackLoaders.ts`)
-- `scripts/`: one-off auth helpers (`spotify-auth.ts`, `picnic-auth.ts`) and the plop generators/templates under `scripts/plop/`
+- `scripts/`: one-off auth helpers (`spotify-auth.ts`, `picnic-auth.ts`)
 
 ## Scripts
 
-| Command                | Purpose                                              |
-| ---------------------- | ---------------------------------------------------- |
-| `npm run dev`          | Start local Next dev server                          |
-| `npm run build`        | Build production bundle                              |
-| `npm run start`        | Run production build locally                         |
-| `npm run lint`         | Run ESLint with autofix                              |
-| `npm run lint:styles`  | Run Stylelint with autofix                           |
-| `npm run type-check`   | Run TypeScript without emitting                      |
-| `npm run test`         | Run Jest tests (with coverage)                       |
-| `npm run test:watch`   | Run Jest in watch mode                               |
-| `npm run plop`         | Scaffold a component / module / util                 |
-| `npm run spotify:auth` | Local OAuth helper to mint a Spotify refresh token   |
-| `npm run picnic:auth`  | Interactive Picnic login (SMS 2FA) to mint auth key  |
-| `npm run storybook`    | Start Storybook                                      |
-| `npm run build-storybook` | Build the static Storybook                        |
-
-## Scaffolding (plop)
-
-`npm run plop` is the source of truth for new-unit structure (`plopfile.js` +
-`scripts/plop/`). Generators: **component**, **module**, **util**. Prefer scaffolding new
-units so they match the conventions below rather than hand-creating folders.
+| Command                   | Purpose                                             |
+| ------------------------- | --------------------------------------------------- |
+| `npm run dev`             | Start local Next dev server                         |
+| `npm run build`           | Build production bundle                             |
+| `npm run start`           | Run production build locally                        |
+| `npm run lint`            | Run ESLint with autofix                             |
+| `npm run lint:styles`     | Run Stylelint with autofix                          |
+| `npm run type-check`      | Run TypeScript without emitting                     |
+| `npm run test`            | Run Jest tests (with coverage)                      |
+| `npm run test:watch`      | Run Jest in watch mode                              |
+| `npm run spotify:auth`    | Local OAuth helper to mint a Spotify refresh token  |
+| `npm run picnic:auth`     | Interactive Picnic login (SMS 2FA) to mint auth key |
+| `npm run storybook`       | Start Storybook                                     |
+| `npm run build-storybook` | Build the static Storybook                          |
 
 ## Conventions
 
@@ -110,7 +103,11 @@ Use the shared `Result<T>`/`StatusResult<T>` from `src/types` — do not re-inve
 ## Testing
 
 - Jest is the only test runner. `jest.config.ts` enforces **100% coverage** on
-  `src/{utils,lib,hooks}` (re-export `index.ts` barrels are excluded from collection).
+  `src/{utils,lib,hooks}` plus module pure logic (`src/modules/**/*.{utils,validation}.ts`);
+  re-export `index.ts` barrels are excluded from collection. Unreachable defensive fallbacks
+  (e.g. `?? 0` behind `noUncheckedIndexedAccess`) use `/* istanbul ignore next — reason */`.
+- Module-private **hooks** with real logic (`useChat`, `useFindMe*`) are not yet gated; give
+  them co-located tests, or move them to `src/hooks/` (gated) once reused.
 - Storybook stories double as visual/interaction documentation for components and modules.
 
 ## Git hooks (husky)
@@ -126,6 +123,7 @@ Use the shared `Result<T>`/`StatusResult<T>` from `src/types` — do not re-inve
 
 When `CONVENTIONS.md` conflicts with `rules/`, this file wins.
 
-> Note: `rules/`, `AGENTS.md`, `CLAUDE.md`, and `AI-WORKFLOWS.md` are synced from a shared
-> `ai-workflows` template and still contain Payload-CMS / Jira-workflow material that does
-> **not** apply to this project. See `docs/unification-plan.md` §P0 for the cleanup in progress.
+> Note: `rules/`, `AGENTS.md`, `CLAUDE.md`, and `AI-WORKFLOWS.md` are synced from the shared
+> `ai-workflows` template. The Payload-CMS / Jira-workflow material that does not apply here
+> has been pruned locally (P0 in `docs/unification-plan.md`); a future re-sync would reintroduce
+> it, so the reusable parts of that cleanup still need upstreaming to `ai-workflows`.

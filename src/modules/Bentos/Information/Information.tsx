@@ -2,7 +2,7 @@ import type { InformationProps } from "./Information.types.ts";
 
 import Bento, { bentos } from "@/components/Bento/index.ts";
 import Link from "@/components/Link/index.ts";
-import classnames from "@/utils/classnames/classnames.ts";
+import classnames from "@/utils/classnames/index.ts";
 
 const Information = ({
   sizeKey,

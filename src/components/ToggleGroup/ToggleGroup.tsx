@@ -22,7 +22,7 @@ import type { ToggleGroupProps } from "./ToggleGroup.types.ts";
 import Glass from "@/components/Glass/index.ts";
 import Icon from "@/components/Icon/index.ts";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion/index.ts";
-import classnames from "@/utils/classnames/classnames.ts";
+import classnames from "@/utils/classnames/index.ts";
 
 interface Rect {
   readonly left: number;

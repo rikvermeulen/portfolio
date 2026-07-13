@@ -46,3 +46,12 @@ export interface PlaylistTrack {
   readonly albumArtUrl: string | null;
   readonly explicit: boolean;
 }
+
+// Service payloads (wrapped in Result<T> by the service functions)
+export interface SpotifyMusicData {
+  readonly tracks: readonly PlaylistTrack[];
+}
+
+export interface PodcastData {
+  readonly episodes: readonly PodcastEpisode[];
+}

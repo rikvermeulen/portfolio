@@ -1,2 +1,2 @@
-export { default } from "@/modules/Bentos/Journal/Journal.tsx";
-export type { JournalProps } from "@/modules/Bentos/Journal/Journal.types.ts";
+export { default } from "./Journal.tsx";
+export type { JournalProps } from "./Journal.types.ts";
