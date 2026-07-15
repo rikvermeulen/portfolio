@@ -19,7 +19,7 @@ function WeatherBadgeShell({ ariaLabel, children }: WeatherBadgeShellProps) {
       className="absolute top-5 left-5 z-20 flex overflow-hidden rounded-lg p-1 text-black dark:bg-black/45 dark:text-white"
     >
       <Glass blur={2} intensity={2} radius={8} />
-      <div className="relative flex flex-col text-xs">{children}</div>
+      <div className="bento-body relative flex flex-col">{children}</div>
     </div>
   );
 }
@@ -43,7 +43,7 @@ function WeatherBadgeView({ data }: WeatherBadgeViewProps) {
     <WeatherBadgeShell ariaLabel={ariaLabel}>
       <div className="flex items-center">
         <Icon iconClassName="size-4" name={weather.iconName} />
-        <span className="text-xs font-medium">{`${weather.temperatureCelsius}°`}</span>
+        <span className="font-medium">{`${weather.temperatureCelsius}°`}</span>
       </div>
     </WeatherBadgeShell>
   );

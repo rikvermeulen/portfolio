@@ -4,10 +4,7 @@ import { sections } from "./Navigation.const.ts";
 
 export default function Navigation() {
   return (
-    <nav
-      aria-label="Jump to section"
-      className="content-container pb-8 md:pb-10"
-    >
+    <nav aria-label="Jump to section" className="content-container">
       <ul className="flex flex-wrap gap-2">
         {sections.map((section) => (
           <li key={section.id}>

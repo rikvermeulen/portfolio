@@ -84,6 +84,9 @@ const Photos = ({ sizeKey, albums }: PhotosProps) => {
       surfaceClassName="bg-ds-surface dark:bg-ds-surface-dark"
       className="group relative z-0 size-full"
     >
+      <div className="absolute top-5 left-5 z-20 text-white">
+        <h2 className="bento-title">My Memories</h2>
+      </div>
       {albumNames.length > 1 && (
         <div className="absolute bottom-5 left-1/2 z-20 -translate-x-1/2 translate-y-0 transition-transform duration-300 ease-in-out [@media(hover:hover)]:translate-y-[200%] [@media(hover:hover)]:group-hover:translate-y-0">
           <ToggleGroup

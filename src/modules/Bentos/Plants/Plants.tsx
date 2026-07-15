@@ -30,7 +30,7 @@ const tileForStatus = (actionType?: PlantaActionType): ActionTile =>
 const isDone = (state: PlantaCareState): boolean => state !== "due";
 
 const TILE_BASE =
-  "relative flex size-7 shrink-0 items-center justify-center rounded-full text-white";
+  "relative flex size-6 shrink-0 items-center justify-center rounded-full text-white";
 
 const Plants = ({ sizeKey, plants }: PlantsProps) => {
   const visiblePlants = plants.slice(0, MAX_VISIBLE_PLANTS);
@@ -43,7 +43,7 @@ const Plants = ({ sizeKey, plants }: PlantsProps) => {
       className="relative z-0 text-ds-forest-ink"
     >
       <div className="flex size-full flex-col gap-3 p-5">
-        <h2 className="text-2xl font-semibold">Plant Care</h2>
+        <h2 className="bento-title">Plant Care</h2>
         <ul className="flex flex-1 flex-col gap-2.5">
           {visiblePlants.map((plant) => {
             const statuses = getPlantaCardStatuses(plant);
@@ -65,9 +65,7 @@ const Plants = ({ sizeKey, plants }: PlantsProps) => {
                   </div>
                 )}
                 <div className="flex min-w-0 flex-col gap-1">
-                  <h3 className="truncate text-sm font-semibold">
-                    {plant.name}
-                  </h3>
+                  <h3 className="bento-headline truncate">{plant.name}</h3>
 
                   <div className="relative z-10 flex flex-wrap gap-2 p-1">
                     {statuses.map((status) => {
@@ -79,12 +77,12 @@ const Plants = ({ sizeKey, plants }: PlantsProps) => {
                       return (
                         <div key={key} className={tileClassName}>
                           <Icon
-                            iconClassName="size-4"
+                            iconClassName="size-3.5"
                             label={status.label}
                             name={tile.icon}
                           />
                           {done ? (
-                            <span className="absolute -right-1 -bottom-1 flex size-3.5 items-center justify-center rounded-full bg-ds-plant-done text-white ring-2 ring-ds-forest-to">
+                            <span className="absolute -right-1 -bottom-1 flex size-3 items-center justify-center rounded-full bg-ds-plant-done text-white ring-2 ring-ds-forest-to">
                               <Icon iconClassName="size-2.5" name="check" />
                             </span>
                           ) : null}

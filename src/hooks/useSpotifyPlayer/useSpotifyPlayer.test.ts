@@ -9,7 +9,7 @@ import {
 } from "@/vendors/spotify/webPlayback.ts";
 import { act, renderHook } from "@testing-library/react";
 
-import { useSpotifyPodcastPlayer } from "./index.ts";
+import { useSpotifyPlayer } from "./index.ts";
 
 // jest.mock is hoisted above the imports above, so both modules are mocked.
 jest.mock("@/contexts/SpotifyConnectionContext/index.ts", () => ({
@@ -42,7 +42,8 @@ function fakeConnection(overrides: Record<string, unknown> = {}) {
   };
 }
 
-const EPISODES = [{ id: "ep-1" }, { id: "ep-2" }, { id: "ep-3" }];
+const TRACKS = [{ id: "track-1" }, { id: "track-2" }, { id: "track-3" }];
+const EPISODES = [{ id: "episode-1" }, { id: "episode-2" }];
 
 const flushAsync = async () => {
   for (let i = 0; i < 10; i++) {
@@ -57,10 +58,10 @@ beforeEach(() => {
 
 afterEach(() => jest.clearAllMocks());
 
-describe("useSpotifyPodcastPlayer", () => {
+describe("useSpotifyPlayer — track mode", () => {
   it("derives paused state and exposes initial values", () => {
     mockUseConnection.mockReturnValue(fakeConnection({ isPaused: true }));
-    const { result } = renderHook(() => useSpotifyPodcastPlayer(EPISODES));
+    const { result } = renderHook(() => useSpotifyPlayer(TRACKS, "track"));
 
     expect(result.current.isPlaying).toBe(false);
     expect(result.current.isReady).toBe(true);
@@ -73,18 +74,18 @@ describe("useSpotifyPodcastPlayer", () => {
     mockUseConnection.mockReturnValue(
       fakeConnection({
         isPaused: false,
-        currentUri: "spotify:episode:ep-1",
+        currentUri: "spotify:track:track-1",
       }),
     );
-    const { result } = renderHook(() => useSpotifyPodcastPlayer(EPISODES));
+    const { result } = renderHook(() => useSpotifyPlayer(TRACKS, "track"));
     expect(result.current.isPlaying).toBe(true);
   });
 
-  it("first togglePlay resolves the live device and starts the episode URI (never a context)", async () => {
+  it("first togglePlay resolves the live device and starts the track URI", async () => {
     const conn = fakeConnection();
     mockUseConnection.mockReturnValue(conn);
 
-    const { result } = renderHook(() => useSpotifyPodcastPlayer(EPISODES));
+    const { result } = renderHook(() => useSpotifyPlayer(TRACKS, "track"));
     await act(async () => {
       result.current.togglePlay();
       await flushAsync();
@@ -97,7 +98,9 @@ describe("useSpotifyPodcastPlayer", () => {
       "Rik's Portfolio",
     );
     expect(mockStartPlayback).toHaveBeenCalledWith("tok", "dev-1", [
-      "spotify:episode:ep-1",
+      "spotify:track:track-1",
+      "spotify:track:track-2",
+      "spotify:track:track-3",
     ]);
     expect(result.current.error).toBeNull();
   });
@@ -106,14 +109,16 @@ describe("useSpotifyPodcastPlayer", () => {
     mockUseConnection.mockReturnValue(fakeConnection());
     mockResolveDeviceId.mockResolvedValue("live-id");
 
-    const { result } = renderHook(() => useSpotifyPodcastPlayer(EPISODES));
+    const { result } = renderHook(() => useSpotifyPlayer(TRACKS, "track"));
     await act(async () => {
       result.current.togglePlay();
       await flushAsync();
     });
 
     expect(mockStartPlayback).toHaveBeenCalledWith("tok", "live-id", [
-      "spotify:episode:ep-1",
+      "spotify:track:track-1",
+      "spotify:track:track-2",
+      "spotify:track:track-3",
     ]);
   });
 
@@ -121,37 +126,39 @@ describe("useSpotifyPodcastPlayer", () => {
     mockUseConnection.mockReturnValue(fakeConnection());
     mockResolveDeviceId.mockResolvedValue(null);
 
-    const { result } = renderHook(() => useSpotifyPodcastPlayer(EPISODES));
+    const { result } = renderHook(() => useSpotifyPlayer(TRACKS, "track"));
     await act(async () => {
       result.current.togglePlay();
       await flushAsync();
     });
 
     expect(mockStartPlayback).toHaveBeenCalledWith("tok", "dev-1", [
-      "spotify:episode:ep-1",
+      "spotify:track:track-1",
+      "spotify:track:track-2",
+      "spotify:track:track-3",
     ]);
   });
 
-  it("togglePlay toggles the SDK player when one of its episodes is loaded", () => {
+  it("togglePlay toggles the SDK player when one of its tracks is loaded", () => {
     const conn = fakeConnection({
-      currentUri: "spotify:episode:ep-1",
+      currentUri: "spotify:track:track-1",
     });
     mockUseConnection.mockReturnValue(conn);
 
-    const { result } = renderHook(() => useSpotifyPodcastPlayer(EPISODES));
+    const { result } = renderHook(() => useSpotifyPlayer(TRACKS, "track"));
     act(() => result.current.togglePlay());
 
     expect(conn.player.togglePlay).toHaveBeenCalled();
     expect(mockStartPlayback).not.toHaveBeenCalled();
   });
 
-  it("starts the podcast instead of toggling when music is loaded", async () => {
+  it("starts music instead of toggling when a podcast is loaded", async () => {
     const conn = fakeConnection({
-      currentUri: "spotify:track:track-1",
+      currentUri: "spotify:episode:episode-1",
     });
     mockUseConnection.mockReturnValue(conn);
 
-    const { result } = renderHook(() => useSpotifyPodcastPlayer(EPISODES));
+    const { result } = renderHook(() => useSpotifyPlayer(TRACKS, "track"));
     await act(async () => {
       result.current.togglePlay();
       await flushAsync();
@@ -159,88 +166,118 @@ describe("useSpotifyPodcastPlayer", () => {
 
     expect(conn.player.togglePlay).not.toHaveBeenCalled();
     expect(mockStartPlayback).toHaveBeenCalledWith("tok", "dev-1", [
-      "spotify:episode:ep-1",
+      "spotify:track:track-1",
+      "spotify:track:track-2",
+      "spotify:track:track-3",
     ]);
   });
 
   it("ignores togglePlay while a play request is pending", async () => {
     const conn = fakeConnection();
+    // getValidToken never resolves → stays pending.
     conn.getValidToken = jest.fn(() => new Promise<string>(() => undefined));
     mockUseConnection.mockReturnValue(conn);
 
-    const { result } = renderHook(() => useSpotifyPodcastPlayer(EPISODES));
+    const { result } = renderHook(() => useSpotifyPlayer(TRACKS, "track"));
     act(() => result.current.togglePlay());
     act(() => result.current.togglePlay());
 
     expect(conn.player.togglePlay).not.toHaveBeenCalled();
   });
 
-  it("goToNext advances the index", async () => {
+  it("goToNext moves the selection without starting playback when idle", async () => {
     mockUseConnection.mockReturnValue(fakeConnection());
 
-    const { result } = renderHook(() => useSpotifyPodcastPlayer(EPISODES));
+    const { result } = renderHook(() => useSpotifyPlayer(TRACKS, "track"));
     await act(async () => {
       result.current.goToNext();
       await flushAsync();
     });
 
     expect(result.current.currentIndex).toBe(1);
+    expect(mockStartPlayback).not.toHaveBeenCalled();
   });
 
-  it("goToNext starts playback when a podcast is already playing", async () => {
+  it("goToPrevious wraps around without starting playback when idle", async () => {
+    mockUseConnection.mockReturnValue(fakeConnection());
+
+    const { result } = renderHook(() => useSpotifyPlayer(TRACKS, "track"));
+    await act(async () => {
+      result.current.goToPrevious();
+      await flushAsync();
+    });
+
+    expect(result.current.currentIndex).toBe(TRACKS.length - 1);
+    expect(mockStartPlayback).not.toHaveBeenCalled();
+  });
+
+  it("goToNext plays the next track while music is playing", async () => {
     mockUseConnection.mockReturnValue(
-      fakeConnection({
-        isPaused: false,
-        currentUri: "spotify:episode:ep-1",
-      }),
+      fakeConnection({ isPaused: false, currentUri: "spotify:track:track-1" }),
     );
 
-    const { result } = renderHook(() => useSpotifyPodcastPlayer(EPISODES));
+    const { result } = renderHook(() => useSpotifyPlayer(TRACKS, "track"));
     await act(async () => {
       result.current.goToNext();
       await flushAsync();
     });
 
     expect(mockStartPlayback).toHaveBeenCalledWith("tok", "dev-1", [
-      "spotify:episode:ep-2",
+      "spotify:track:track-2",
+      "spotify:track:track-3",
+      "spotify:track:track-1",
     ]);
   });
 
-  it("goToPrevious wraps around to the last episode", async () => {
-    mockUseConnection.mockReturnValue(fakeConnection());
-
-    const { result } = renderHook(() => useSpotifyPodcastPlayer(EPISODES));
-    await act(async () => {
-      result.current.goToPrevious();
-      await flushAsync();
-    });
-
-    expect(result.current.currentIndex).toBe(EPISODES.length - 1);
-  });
-
-  it("goToPrevious starts playback when a podcast is already playing", async () => {
+  it("goToPrevious plays the previous track while music is playing", async () => {
     mockUseConnection.mockReturnValue(
-      fakeConnection({
-        isPaused: false,
-        currentUri: "spotify:episode:ep-1",
-      }),
+      fakeConnection({ isPaused: false, currentUri: "spotify:track:track-1" }),
     );
 
-    const { result } = renderHook(() => useSpotifyPodcastPlayer(EPISODES));
+    const { result } = renderHook(() => useSpotifyPlayer(TRACKS, "track"));
     await act(async () => {
       result.current.goToPrevious();
       await flushAsync();
     });
 
     expect(mockStartPlayback).toHaveBeenCalledWith("tok", "dev-1", [
-      "spotify:episode:ep-3",
+      "spotify:track:track-3",
+      "spotify:track:track-1",
+      "spotify:track:track-2",
+    ]);
+  });
+
+  it("togglePlay starts the selected track after skipping while paused", async () => {
+    // Paused on track-1; skipping while paused moves the selection to track-2
+    // without playing, so the next togglePlay must start track-2, not resume.
+    const conn = fakeConnection({
+      isPaused: true,
+      currentUri: "spotify:track:track-1",
+    });
+    mockUseConnection.mockReturnValue(conn);
+
+    const { result } = renderHook(() => useSpotifyPlayer(TRACKS, "track"));
+    act(() => result.current.goToNext());
+    expect(result.current.currentIndex).toBe(1);
+    expect(mockStartPlayback).not.toHaveBeenCalled();
+
+    await act(async () => {
+      result.current.togglePlay();
+      await flushAsync();
+    });
+
+    expect(conn.player.togglePlay).not.toHaveBeenCalled();
+    expect(mockStartPlayback).toHaveBeenCalledWith("tok", "dev-1", [
+      "spotify:track:track-2",
+      "spotify:track:track-3",
+      "spotify:track:track-1",
     ]);
   });
 
   it("surfaces an error when the device is not ready", () => {
     mockUseConnection.mockReturnValue(fakeConnection({ deviceId: null }));
 
-    const { result } = renderHook(() => useSpotifyPodcastPlayer(EPISODES));
+    const { result } = renderHook(() => useSpotifyPlayer(TRACKS, "track"));
     act(() => result.current.togglePlay());
 
     expect(mockStartPlayback).not.toHaveBeenCalled();
@@ -252,7 +289,7 @@ describe("useSpotifyPodcastPlayer", () => {
     mockStartPlayback.mockResolvedValue({ ok: false, status: 500 });
     const warn = jest.spyOn(console, "warn").mockImplementation(jest.fn());
 
-    const { result } = renderHook(() => useSpotifyPodcastPlayer(EPISODES));
+    const { result } = renderHook(() => useSpotifyPlayer(TRACKS, "track"));
     await act(async () => {
       result.current.togglePlay();
       await flushAsync();
@@ -269,7 +306,7 @@ describe("useSpotifyPodcastPlayer", () => {
     mockStartPlayback.mockResolvedValue({ ok: false, status: 404 });
     const warn = jest.spyOn(console, "warn").mockImplementation(jest.fn());
 
-    const { result } = renderHook(() => useSpotifyPodcastPlayer(EPISODES));
+    const { result } = renderHook(() => useSpotifyPlayer(TRACKS, "track"));
     await act(async () => {
       result.current.togglePlay();
       await flushAsync();
@@ -282,15 +319,16 @@ describe("useSpotifyPodcastPlayer", () => {
       await flushAsync();
     });
 
+    // Re-attempts playback (does NOT toggle an empty SDK player).
     expect(conn.player.togglePlay).not.toHaveBeenCalled();
     expect(mockStartPlayback).toHaveBeenCalled();
     warn.mockRestore();
   });
 
-  it("does nothing when there is no episode at the index", () => {
+  it("does nothing when there is no track at the index", () => {
     mockUseConnection.mockReturnValue(fakeConnection());
 
-    const { result } = renderHook(() => useSpotifyPodcastPlayer([]));
+    const { result } = renderHook(() => useSpotifyPlayer([], "track"));
     act(() => result.current.togglePlay());
 
     expect(mockStartPlayback).not.toHaveBeenCalled();
@@ -300,7 +338,7 @@ describe("useSpotifyPodcastPlayer", () => {
     const conn = fakeConnection();
     mockUseConnection.mockReturnValue(conn);
 
-    const { result } = renderHook(() => useSpotifyPodcastPlayer(EPISODES));
+    const { result } = renderHook(() => useSpotifyPlayer(TRACKS, "track"));
     act(() => result.current.setVolume(0.8));
 
     expect(conn.player.setVolume).toHaveBeenCalledWith(0.8);
@@ -309,12 +347,12 @@ describe("useSpotifyPodcastPlayer", () => {
 
   it("tolerates a null SDK player for volume and toggle", () => {
     const conn = fakeConnection({
-      currentUri: "spotify:episode:ep-1",
+      currentUri: "spotify:track:track-1",
       player: null,
     });
     mockUseConnection.mockReturnValue(conn);
 
-    const { result } = renderHook(() => useSpotifyPodcastPlayer(EPISODES));
+    const { result } = renderHook(() => useSpotifyPlayer(TRACKS, "track"));
     expect(() => {
       act(() => result.current.togglePlay());
       act(() => result.current.setVolume(0.3));
@@ -326,7 +364,55 @@ describe("useSpotifyPodcastPlayer", () => {
     mockUseConnection.mockReturnValue(
       fakeConnection({ error: "connection boom" }),
     );
-    const { result } = renderHook(() => useSpotifyPodcastPlayer(EPISODES));
+    const { result } = renderHook(() => useSpotifyPlayer(TRACKS, "track"));
     expect(result.current.error).toBe("connection boom");
+  });
+});
+
+describe("useSpotifyPlayer — episode mode", () => {
+  it("sends a single episode URI (not a rotated list)", async () => {
+    mockUseConnection.mockReturnValue(fakeConnection());
+
+    const { result } = renderHook(() => useSpotifyPlayer(EPISODES, "episode"));
+    await act(async () => {
+      result.current.togglePlay();
+      await flushAsync();
+    });
+
+    expect(mockStartPlayback).toHaveBeenCalledWith("tok", "dev-1", [
+      "spotify:episode:episode-1",
+    ]);
+  });
+
+  it("detects playback state from the episode URI scheme", () => {
+    mockUseConnection.mockReturnValue(
+      fakeConnection({
+        isPaused: false,
+        currentUri: "spotify:episode:episode-2",
+      }),
+    );
+
+    const { result } = renderHook(() => useSpotifyPlayer(EPISODES, "episode"));
+    expect(result.current.isPlaying).toBe(true);
+    expect(result.current.currentIndex).toBe(1);
+  });
+
+  it("plays the selected episode after skipping while playing", async () => {
+    mockUseConnection.mockReturnValue(
+      fakeConnection({
+        isPaused: false,
+        currentUri: "spotify:episode:episode-1",
+      }),
+    );
+
+    const { result } = renderHook(() => useSpotifyPlayer(EPISODES, "episode"));
+    await act(async () => {
+      result.current.goToNext();
+      await flushAsync();
+    });
+
+    expect(mockStartPlayback).toHaveBeenCalledWith("tok", "dev-1", [
+      "spotify:episode:episode-2",
+    ]);
   });
 });

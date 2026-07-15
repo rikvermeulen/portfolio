@@ -18,7 +18,15 @@ const Category = ({ sizeKey, label, tags, className }: CategoryProps) => {
       sizes={bentos[sizeKey].sizes}
       className={classnames("relative", className)}
     >
-      <div className="absolute right-4 bottom-4 z-20 flex max-w-[75%] flex-col items-end justify-end gap-2">
+      <Image
+        alt="Category folder"
+        height={100}
+        priority
+        src="/svgs/directory.svg"
+        width={100}
+        className="absolute inset-0 size-full object-fill"
+      />
+      <div className="absolute right-5 bottom-5 z-20 flex max-w-[75%] flex-col items-end justify-end gap-2">
         {normalizedTags.map((tag) => (
           <Tag
             key={`${tag.label}-${tag.variant ?? "neutral"}`}
@@ -28,14 +36,6 @@ const Category = ({ sizeKey, label, tags, className }: CategoryProps) => {
           />
         ))}
       </div>
-      <Image
-        alt="Category folder"
-        height={100}
-        priority
-        src="/svgs/directory.svg"
-        width={100}
-        className="h-auto w-full object-cover object-center"
-      />
     </Bento>
   );
 };

@@ -22,8 +22,8 @@ import {
  * Registers a single Spotify Connect device in the browser via the Web Playback
  * SDK and exposes its lifecycle. This is the *device* layer only — deliberately
  * identical for music and podcasts, since the SDK docs define exactly one way to
- * register and observe a device. Playback semantics live in the per-feature
- * hooks (`useSpotifyMusicPlayer`, `useSpotifyPodcastPlayer`).
+ * register and observe a device. Playback semantics live in the shared
+ * `useSpotifyPlayer` hook (driven by its `kind` argument).
  *
  * @param name    Device name shown in Spotify Connect (must be unique per tile).
  * @param enabled When false, no SDK connection is attempted (e.g. no items).

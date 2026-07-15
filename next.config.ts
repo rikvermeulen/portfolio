@@ -11,6 +11,10 @@ const config: NextConfig = {
   reactStrictMode: true,
   images: nextImagesConfig,
   reactCompiler: process.env.NODE_ENV === "production",
+  experimental: {
+    turbopackMemoryLimit: 2 * 1024 * 1024 * 1024,
+    preloadEntriesOnStart: false,
+  },
   turbopack: {
     rules: {
       "*.svg": {

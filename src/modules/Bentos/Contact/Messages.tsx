@@ -60,7 +60,7 @@ function DeliveryStatus({ active }: { readonly active: boolean }) {
   return (
     <p
       className={classnames(
-        "mt-1 self-end text-xs text-gray-400 transition-[opacity,transform] duration-200",
+        "bento-body mt-1 self-end text-ds-gray transition-[opacity,transform] duration-200",
         isVisible ? "scale-100 opacity-100" : "scale-50 opacity-0",
       )}
     >
@@ -87,7 +87,7 @@ function IncomingMessage({
 
       <div>
         {!isGrouped && (
-          <p className="ml-3 text-xs text-ds-gray">{CHAT_SENDER.name}</p>
+          <p className="bento-body ml-3 text-ds-gray">{CHAT_SENDER.name}</p>
         )}
         <MessageBubble
           showTail={!isGrouped}

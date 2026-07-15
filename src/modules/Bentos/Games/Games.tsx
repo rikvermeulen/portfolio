@@ -62,10 +62,10 @@ const Games = ({ sizeKey, profile, platforms, games }: GamesProps) => {
               />
             </span>
           </span>
-          <span className="max-w-full truncate text-sm font-bold tracking-wide text-white uppercase">
+          <span className="bento-headline max-w-full truncate text-white">
             {profile.name}
           </span>
-          <span className="flex max-w-full items-center gap-1.5 text-xs">
+          <span className="bento-body flex max-w-full items-center gap-1.5">
             <span
               aria-hidden="true"
               className={classnames(
@@ -85,7 +85,7 @@ const Games = ({ sizeKey, profile, platforms, games }: GamesProps) => {
         </div>
 
         <section className="mt-auto">
-          <h3 className="mb-2 px-1 font-medium text-white">Library</h3>
+          <h3 className="bento-eyebrow mb-2 px-1 text-white/60">Library</h3>
           <div className="relative overflow-hidden rounded-2xl ring-1 ring-white/10">
             <Glass intensity={1} radius={16} tint="dark" />
             <ul className="relative z-10">
@@ -111,10 +111,10 @@ const Games = ({ sizeKey, profile, platforms, games }: GamesProps) => {
                       )}
                     </span>
                     <span className="flex min-w-0 flex-1 flex-col">
-                      <span className="text-sm font-semibold text-white">
+                      <span className="bento-headline text-white">
                         {row.label}
                       </span>
-                      <span className="text-xs text-white/50">
+                      <span className="bento-body text-white/50">
                         {row.section === "games"
                           ? `${games.length} total`
                           : `${platforms.length} total`}
@@ -167,10 +167,10 @@ const Games = ({ sizeKey, profile, platforms, games }: GamesProps) => {
                       />
                     )}
                     <span className="flex min-w-0 flex-1 flex-col">
-                      <span className="truncate text-sm font-semibold text-white">
+                      <span className="bento-headline truncate text-white">
                         {platform.name}
                       </span>
-                      <span className="truncate text-xs text-white/50">
+                      <span className="bento-body truncate text-white/50">
                         {platform.handle}
                       </span>
                     </span>
@@ -199,11 +199,11 @@ const Games = ({ sizeKey, profile, platforms, games }: GamesProps) => {
                   >
                     <GameTile game={game} sizeClassName="size-9" />
                     <span className="flex min-w-0 flex-1 flex-col">
-                      <span className="truncate text-sm font-semibold text-white">
+                      <span className="bento-headline truncate text-white">
                         {game.name}
                       </span>
                       {subtitle && (
-                        <span className="truncate text-xs text-white/50 tabular-nums">
+                        <span className="bento-body truncate text-white/50 tabular-nums">
                           {subtitle}
                         </span>
                       )}

@@ -4,9 +4,9 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 
 import type { AudioBentoProps } from "./AudioBento.types.ts";
-import type { PulsedButton } from "@/components/AudioControls/index.ts";
+import type { PulsedButton } from "@/components/Audio/AudioControls/index.ts";
 
-import AudioControls from "@/components/AudioControls/index.ts";
+import AudioControls from "@/components/Audio/AudioControls/index.ts";
 import Bento, { bentos } from "@/components/Bento/index.ts";
 import Icon from "@/components/Icon/index.ts";
 import Slider from "@/components/Slider/index.ts";
@@ -94,13 +94,13 @@ const AudioBento = ({
 
         {/* Item info */}
         <div className="mt-2 flex flex-col text-white">
-          <div className="flex items-center gap-2 text-xs">
-            <p className="line-clamp-1 font-bold">{display?.title}</p>
+          <div className="flex items-center gap-2">
+            <p className="bento-headline line-clamp-1">{display?.title}</p>
             {display?.explicit && (
               <Icon iconClassName="w-2.5" name="explicit" />
             )}
           </div>
-          <div className="relative text-xs text-white/70">
+          <div className="bento-body relative text-white/70">
             {display?.subtitle}
           </div>
         </div>
@@ -113,10 +113,7 @@ const AudioBento = ({
         />
 
         {playbackError && (
-          <p
-            role="alert"
-            className="mt-2 text-center text-[0.65rem] leading-tight text-white/80"
-          >
+          <p role="alert" className="bento-body mt-2 text-center text-white/70">
             {playbackError}
           </p>
         )}

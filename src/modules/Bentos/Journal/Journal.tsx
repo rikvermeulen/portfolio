@@ -11,7 +11,7 @@ import { notify } from "@/components/Toast/index.ts";
 import { useShare } from "@/hooks/useShare/index.ts";
 import classnames from "@/utils/classnames/index.ts";
 
-import { journalQuestions } from "./Journal.questions.ts";
+import { journalQuestions } from "./Journal.const.ts";
 import {
   formatQuestionDate,
   getQuestionIndexForDate,
@@ -79,12 +79,12 @@ const Journal = ({ sizeKey, className, date }: JournalProps) => {
       />
 
       <header className="relative z-10 flex items-start justify-between">
-        <p className="text-sm font-semibold text-ds-journal-date">
+        <p className="bento-eyebrow text-ds-journal-date">
           {formatQuestionDate(today)}
         </p>
       </header>
 
-      <h2 className="relative z-10 max-w-xl bg-linear-to-b from-ds-journal-ink-from to-ds-journal-ink-to bg-clip-text pr-4 text-3xl leading-tight font-bold tracking-tight text-transparent md:text-4xl">
+      <h2 className="bento-display relative z-10 max-w-xl bg-linear-to-b from-ds-journal-ink-from to-ds-journal-ink-to bg-clip-text pr-4 text-transparent">
         {question}
       </h2>
 

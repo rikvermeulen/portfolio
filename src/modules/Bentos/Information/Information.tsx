@@ -27,13 +27,13 @@ const Information = ({
       )}
     >
       <div className="flex flex-col gap-2">
-        <h2 className="text-2xl font-medium">{title}</h2>
-        <p>{description}</p>
+        <h2 className="bento-title">{title}</h2>
+        <p className="bento-body">{description}</p>
       </div>
       <div className="flex">
         <Link
           href={href}
-          className="w-fit cursor-pointer text-xs underline decoration-1 underline-offset-2 transition-opacity hover:opacity-80"
+          className="bento-body w-fit cursor-pointer underline decoration-1 underline-offset-2 transition-opacity hover:opacity-80"
         >
           {linkLabel}
         </Link>

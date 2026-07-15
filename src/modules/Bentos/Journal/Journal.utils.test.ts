@@ -1,4 +1,4 @@
-import { journalQuestions } from "./Journal.questions.ts";
+import { journalQuestions } from "./Journal.const.ts";
 import {
   formatQuestionDate,
   getQuestionForDate,

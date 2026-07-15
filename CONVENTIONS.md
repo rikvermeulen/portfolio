@@ -23,9 +23,9 @@ There is **no CMS, database, or i18n layer** in this project.
 
 - `src/app/(dashboard)`: the dashboard route — `layout.tsx` wraps children in `BentoGrid`,
   `page.tsx` maps the registry, `bento-registry.tsx` is the single source of truth for tile order/wiring
-- `src/app/api/*`: HTTP routes (spotify/token, planta/plants, find-me/conditions, picnic/\*, dev-diagnostics). The contact form submits via the `submitContact` server action, not an API route
+- `src/app/api/*`: HTTP routes (spotify/token, planta/plants, picnic/{auth/key,image,recipes}, dev-diagnostics). The contact form submits via the `submitContact` server action, not an API route
 - `src/components`: generic, reusable UI primitives (folder-per-component, PascalCase). Includes the
-  Bento grid infrastructure in `components/Bento/` (`Bento`, `AsyncBento`, `BentoGrid`, `BentoSkeleton`, `BentoErrorBoundary`); `AppIcon` in `components/AppIcon/`
+  Bento grid infrastructure in `components/Bento/` (`Bento`, `AsyncBento`, `BentoGrid`, `BentoSkeleton`, `BentoErrorBoundary`); the audio tile family in `components/Audio/` (`AudioBento`, `AudioControls`); `AppIcon` in `components/AppIcon/`
 - `src/modules`: feature blocks (`Bentos/*` — the 13 concrete tiles — and `Navigation/*`)
 - `src/hooks`: React hooks (folder-per-hook, camelCase `useX`, named export)
 - `src/contexts`: React contexts (Provider + accessor hook)
@@ -111,8 +111,10 @@ Use the shared `Result<T>`/`StatusResult<T>` from `src/types` — do not re-inve
 - Prefer **extracted named function components** over inline helpers that only exist to
   `return` JSX — even small ones. It keeps structure consistent, improves diffs, and avoids
   unstable nested component identities.
-- Styling is inline Tailwind via the `classnames()` util. Avoid CSS files (the one exception
-  is `AudioBento.css`, imported globally from `styles/globals.css`).
+- Styling is inline Tailwind via the `classnames()` util. Avoid co-located component CSS;
+  cross-cutting styles live as focused layers in `src/styles/utilities/*.css`
+  (`audio-bento`, `find-me`, `layout`, `toast`), imported centrally via
+  `styles/globals.css` → `styles/utilities/index.css`.
 - ESLint extends `@greenberry/linting-config`; discuss local rule changes before adding them.
 - Prefer `npx` for one-off package execution over global installs.
 - Prefer **explicit object properties** (`{ test, test2 }`) over conditional spreads used

@@ -12,9 +12,11 @@ import Navigation from "@/modules/Navigation/index.ts";
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <SpotifyConnectionProvider>
-      <main className="main-container pt-4 md:pt-8">
-        <Hero />
-        <Navigation />
+      <main className="main-container">
+        <div className="mb-20 flex flex-col gap-12">
+          <Hero />
+          <Navigation />
+        </div>
         <BentoGrid id="about" config={bentoGridConfig} className="scroll-mt-24">
           {children}
         </BentoGrid>

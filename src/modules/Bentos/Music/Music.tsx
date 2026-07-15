@@ -2,8 +2,8 @@
 
 import type { MusicProps } from "./Music.types.ts";
 
-import AudioBento from "@/components/AudioBento/index.ts";
-import { useSpotifyMusicPlayer } from "@/hooks/useSpotifyMusicPlayer/index.ts";
+import AudioBento from "@/components/Audio/AudioBento/index.ts";
+import { useSpotifyPlayer } from "@/hooks/useSpotifyPlayer/index.ts";
 
 const Music = ({ sizeKey, tracks }: MusicProps) => {
   const {
@@ -15,7 +15,7 @@ const Music = ({ sizeKey, tracks }: MusicProps) => {
     goToNext,
     goToPrevious,
     setVolume,
-  } = useSpotifyMusicPlayer(tracks);
+  } = useSpotifyPlayer(tracks, "track");
 
   const track = tracks[currentIndex];
   const display = track

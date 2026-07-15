@@ -11,6 +11,76 @@ Priority: **P0** meta/docs truth · **P1** structural gaps · **P2** naming coll
 
 ---
 
+## Reconciliation — 2026-07-15 (read this first)
+
+Much of the plan below predates two large landings and is now partly stale. Verified
+current reality (`tsc`, ESLint, Stylelint, 559 Jest tests @ 100% coverage, and `next build`
+were all green when this was written):
+
+**Landed since the plan was written**
+
+- **The vendor/domain split is done.** Integrations live in `src/vendors/<vendor>/` with
+  bare `client.ts` / `service.ts` / `types.ts`; pure domain shaping lives in `src/lib/<domain>/`.
+  `CONVENTIONS.md` documents this and now wins. Consequence: **open decision #2 is resolved**
+  (kept the transport layer separate, under `vendors/` not `lib/`), and the **Part B / P2
+  file-name targets that reference `lib/steam`, `lib/spotify`, etc. are obsolete** — those
+  paths no longer exist.
+- **Vendor file naming is bare, not prefixed** (`client.ts`, not `steam.client.ts`), because
+  the folder already namespaces it. This **supersedes open decision #1** (the prefixed form).
+  vendors/lib are imported by **direct file path with explicit `.ts` extensions**
+  (`@/vendors/spotify/service.ts`) — barrels are *not* used there, so "add an index.ts to
+  every vendor/lib folder" is **not** the convention (only `lib/games`, `lib/socials` have one).
+- **`plop` has been removed** (not in `package.json`, no `plopfile`). The entire "Elevate the
+  generators" section is **obsolete** — there are no generators to extend.
+- **Audio family regrouped** (open decision #7 → `components/Audio/`): `AudioBento` +
+  `AudioControls` now live under `src/components/Audio/`.
+- **Spotify player unified to one hook** (open decision #3 → extract, then collapsed): the
+  separate `useSpotifyMusicPlayer` / `useSpotifyPodcastPlayer` hooks are gone. There is now a
+  single `hooks/useSpotifyPlayer(items, kind)` where `kind: "track" | "episode"` selects the
+  URI scheme and play-payload shape (track = rotated list for SDK auto-advance; episode =
+  single URI). Music/Podcast tiles call it directly. If podcast-specific behaviour (resume
+  points, chapter skips) is ever needed, branch on `kind` in the hook or re-introduce a wrapper.
+- **CSS is centralized, not co-located.** There is no `AudioBento.css`; cross-cutting styles
+  are layers in `src/styles/utilities/*.css` imported via `globals.css`. P4's "AudioBento.css
+  outlier" is **obsolete**, and `CONVENTIONS.md` was corrected.
+- **Dead `src/lib/mappers/` removed** (was empty).
+
+**Obsolete / not-warranted (verified against current code)**
+
+- **Glass presets (P3.1):** the shared commonality evaporated — `radius={999}` appears with
+  different `intensity`/`blur`/`interactive` each time and `intensity={0.05}` is now a single
+  site. Extracting `GLASS_PILL/CHIP/FAINT` would add indirection for no real dedup. Contact's
+  local `GLASS` const is used only within Contact and is correct as-is.
+- **"Props: pick `interface`" (A.4):** the 8 `type XProps` are all legitimately `type` —
+  six are `Record<string, never>` (empty props; a clean `interface` can't express it and
+  trips `no-empty-object-type`), and `Link`/`SkeletonCard` are alias/intersection types.
+  Not an inconsistency; leave them.
+
+**Genuinely still open (accurate)**
+
+- **Part B integration helpers (B.3–B.5) — DEFERRED, needs live verification.** `IntegrationError`
+  base (over `SteamError`/`PlantaError`/`PlantaUnauthorizedError`/`PicnicError`/`XboxError`),
+  `fetchJson` (~13 `!res.ok` sites), `cachedService` (4 hand-rolled `unstable_cache` blocks;
+  Spotify still uncached beyond Next fetch-cache), `requireEnv` env-gate. **Risk:** these touch
+  code that talks to live third-party APIs that can't be exercised in a headless/preview
+  environment (Spotify needs real-Chrome DRM), and `PlantaUnauthorizedError` is load-bearing
+  for 401 re-auth control flow that the tests assert on. Do this as a focused PR with the dev
+  server + real Chrome, verifying each vendor, not as a blind sweep.
+- **Zod at the wire boundary (B.4):** only `env.ts`, `lib/weather/conditions.ts`, and
+  `Contact.validation.ts` use Zod today; vendors trust `as` casts. Add wire-schema `.parse()`
+  in each `toDomain` mapper (part of the deferred Part B work).
+- **API route bypasses (B.5):** `api/spotify/token` re-implements the client's token refresh;
+  `api/picnic/recipes` uses the uncached fetch instead of the cached service. Fold into Part B.
+- **`lib/socials` naming outlier:** uses `.const.ts`/`.types.ts` suffixes while sibling
+  `lib`/`vendor` folders use bare `types.ts`. It matches the *component* grammar (A.2) but is
+  the odd one out in this layer — pick one and note the decision (low priority; internally
+  consistent today).
+- **Small P2/P4 polish that still applies:** `Journal.questions.ts` → `.const.ts`;
+  `Bento/config.ts` → `Bento.const.ts`; `getSecurityHeaders/{constants,types}.ts` → `.const/.types`;
+  standardize logging tags; `useLoadGsap` still carries `istanbul ignore file` pending a test.
+
+---
+
 ## Why it feels disconnected (root causes)
 
 The code is actually in decent shape — the disconnection is real but comes from **four

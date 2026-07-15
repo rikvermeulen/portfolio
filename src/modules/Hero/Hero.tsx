@@ -9,14 +9,14 @@ import Link from "@/components/Link/index.ts";
  */
 export default function Hero() {
   return (
-    <section className="content-container flex flex-col gap-4 pb-12">
+    <section className="content-container flex flex-col gap-4">
       <Image
         alt="Portrait of Rik Vermeulen"
         height="184"
         priority
         src="/images/me.jpg"
         width="184"
-        className="h-auto w-32 rounded-full 2xl:w-auto"
+        className="h-auto w-32 max-w-32 rounded-full"
       />
       <div className="flex flex-col gap-2">
         <h1 className="flex gap-2 text-xl font-bold md:text-3xl">

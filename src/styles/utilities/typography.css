@@ -1,0 +1,54 @@
+/* Bento typography scale.
+   A small semantic vocabulary so every tile shares one type ramp. Each class
+   fully owns size, line-height, weight, tracking and casing — apply exactly one
+   per text element and keep colour/truncation/layout as inline Tailwind.
+
+   Five roles, five sizes:
+     display  28/32px  hero feature text
+     title    22px     tile heading
+     headline 15px     names / primary row text
+     body     13px     descriptions, subtitles, meta, captions
+     eyebrow  12px     small label / kicker */
+
+/* Display — oversized feature text (the Journal question). */
+.bento-display {
+  font-size: 1.75rem; /* 28px */
+  line-height: 1.1;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+@media (width >= 48rem) {
+  .bento-display {
+    font-size: 2rem; /* 32px */
+  }
+}
+
+/* Title — a tile's primary heading. */
+.bento-title {
+  font-size: 1.5rem;
+  line-height: 1.2;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+/* Headline — names and primary row text. */
+.bento-headline {
+  font-size: 0.9375rem; /* 15px */
+  line-height: 1.3;
+  font-weight: 600;
+}
+
+/* Body — descriptions, subtitles, metadata and captions. */
+.bento-body {
+  font-size: 0.8125rem; /* 13px */
+  line-height: 1.4;
+  font-weight: 400;
+}
+
+/* Eyebrow — small label / section header (kicker). */
+.bento-eyebrow {
+  font-size: 0.75rem; /* 12px */
+  line-height: 1;
+  font-weight: 600;
+}

@@ -128,26 +128,23 @@ function RecipeStack({ recipes }: RecipeStackProps) {
           )}
           <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent" />
           <div className="absolute top-5 left-5 text-white">
-            <h3 className="text-2xl font-bold text-shadow-sm">My Recipes</h3>
-            <p className="relative text-xs text-shadow-sm">{title}</p>
+            <h2 className="bento-title">My Recipes</h2>
+            <p className="bento-body relative">{title}</p>
           </div>
         </motion.div>
       </AnimatePresence>
       <div className="absolute right-4 bottom-4 left-4 z-10 flex flex-col justify-between gap-2">
-        <div className="flex flex-col text-xs font-medium text-white/90">
+        <div className="bento-body flex flex-col text-white/90">
           {servings != null && (
             <span className="flex items-center gap-1">
-              {servings}
-              <Icon
-                iconClassName="relative size-3.5 text-white"
-                name="persons"
-              />
+              <Icon iconClassName="relative size-4 text-white" name="persons" />
+              {servings} servings{""}
             </span>
           )}
           {totalMinutes != null && (
             <span className="flex items-center gap-1">
+              <Icon iconClassName="relative size-4 text-white" name="timer" />
               {totalMinutes} min{" "}
-              <Icon iconClassName="relative size-3.5 text-white" name="timer" />
             </span>
           )}
         </div>

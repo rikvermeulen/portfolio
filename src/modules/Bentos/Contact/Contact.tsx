@@ -70,7 +70,7 @@ const Contact = ({ sizeKey, className }: ContactProps) => {
           width={32}
           className="z-10 rounded-full"
         />
-        <div className="relative -top-1 flex gap-2 rounded-lg px-3 py-1 text-[10px] font-medium">
+        <div className="relative -top-1 flex gap-2 rounded-lg px-3 py-1 text-xs">
           Rik Vermeulen
           <Glass
             intensity={0.5}
@@ -83,8 +83,8 @@ const Contact = ({ sizeKey, className }: ContactProps) => {
         ref={chatRef}
         className="no-scrollbar flex flex-1 flex-col gap-2 overflow-y-auto px-5 pt-20 pb-20"
       >
-        <p className="relative text-center text-[0.625rem] text-ds-gray">
-          <span className="font-medium">Today: </span>
+        <p className="bento-body relative text-center text-ds-gray">
+          <span className="font-semibold">Today: </span>
           {TODAY}
         </p>
 
@@ -144,7 +144,7 @@ const Contact = ({ sizeKey, className }: ContactProps) => {
                       width={24}
                       className="rounded-xl"
                     />
-                    <span className="text-sm font-medium">{name}</span>
+                    <span className="bento-headline">{name}</span>
                   </Link>
                 </li>
               ))}

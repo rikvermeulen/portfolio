@@ -1,6 +1,6 @@
 import { time } from "@/utils/datetime/index.ts";
 
-import { journalQuestions } from "./Journal.questions.ts";
+import { journalQuestions } from "./Journal.const.ts";
 
 /** Cumulative days before each month in a non-leap year. */
 const DAYS_BEFORE_MONTH = [

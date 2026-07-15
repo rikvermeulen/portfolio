@@ -18,7 +18,7 @@ const Image = ({ sizeKey, src, alt, caption, className }: ImageProps) => {
         src={src}
         className="object-cover"
       />
-      <p className="absolute right-4 bottom-4 left-4 z-20 text-xs text-white">
+      <p className="bento-body absolute right-4 bottom-4 left-4 z-20 text-white">
         {caption}
       </p>
     </Bento>

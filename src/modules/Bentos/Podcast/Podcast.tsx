@@ -2,8 +2,8 @@
 
 import type { PodcastProps } from "./Podcast.types.ts";
 
-import AudioBento from "@/components/AudioBento/index.ts";
-import { useSpotifyPodcastPlayer } from "@/hooks/useSpotifyPodcastPlayer/index.ts";
+import AudioBento from "@/components/Audio/AudioBento/index.ts";
+import { useSpotifyPlayer } from "@/hooks/useSpotifyPlayer/index.ts";
 
 const Podcast = ({ sizeKey, episodes }: PodcastProps) => {
   const {
@@ -15,7 +15,7 @@ const Podcast = ({ sizeKey, episodes }: PodcastProps) => {
     goToNext,
     goToPrevious,
     setVolume,
-  } = useSpotifyPodcastPlayer(episodes);
+  } = useSpotifyPlayer(episodes, "episode");
 
   const episode = episodes[currentIndex];
   const display = episode
