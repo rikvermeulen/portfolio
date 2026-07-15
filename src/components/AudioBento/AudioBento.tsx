@@ -28,7 +28,7 @@ const AudioBento = ({
   volume,
   app,
   sizeKey,
-  className,
+  surfaceClassName,
   onPlayOrPause,
   onChangeTrack,
   onVolumeChange,
@@ -60,7 +60,8 @@ const AudioBento = ({
     <Bento
       app={app}
       sizes={bentos[sizeKey].sizes}
-      className={classnames("relative z-0 border-none!", className)}
+      surfaceClassName={surfaceClassName}
+      className="relative z-0 border-none!"
     >
       {/* Blurred art backdrop */}
       <div

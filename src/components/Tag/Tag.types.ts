@@ -4,7 +4,9 @@ export type TagVariant =
   | "green"
   | "blue"
   | "orange"
-  | "pink";
+  | "pink"
+  | "lavender"
+  | "dark";
 
 export interface TagProps extends React.HTMLAttributes<HTMLDivElement> {
   readonly label: string;

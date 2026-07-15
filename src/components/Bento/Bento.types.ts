@@ -3,6 +3,12 @@ import type { Result } from "@/types/index.ts";
 
 export type BentoBoxSize = `${number}x${number}`;
 
+/** Column/row spans for a single breakpoint. */
+export interface GridSpan {
+  readonly col: number;
+  readonly row: number;
+}
+
 export interface ResponsiveBentoSize {
   readonly base: BentoBoxSize;
   readonly md?: BentoBoxSize;
@@ -22,6 +28,7 @@ export interface BentoProps extends React.HTMLAttributes<HTMLElement> {
   readonly href?: string;
   readonly iconPosition?: BentoIconPosition;
   readonly sizes?: ResponsiveBentoSize;
+  readonly surfaceClassName?: string;
   readonly children: React.ReactNode;
 }
 
@@ -40,6 +47,10 @@ export interface BentoEmptyStateProps {
 export interface BentoErrorBoundaryProps {
   readonly sizeKey: BentoSizeKey;
   readonly children: React.ReactNode;
+}
+
+export interface BentoErrorBoundaryState {
+  readonly hasError: boolean;
 }
 
 export interface BentoSkeletonProps {

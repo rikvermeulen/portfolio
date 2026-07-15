@@ -2,14 +2,13 @@
 
 import { Component } from "react";
 
-import type { BentoErrorBoundaryProps } from "./Bento.types.ts";
+import type {
+  BentoErrorBoundaryProps,
+  BentoErrorBoundaryState,
+} from "./Bento.types.ts";
 
 import { bentos } from "./Bento.const.ts";
 import Bento from "./Bento.tsx";
-
-interface BentoErrorBoundaryState {
-  readonly hasError: boolean;
-}
 
 /**
  * Per-tile error boundary. If a tile throws while rendering (e.g. a service

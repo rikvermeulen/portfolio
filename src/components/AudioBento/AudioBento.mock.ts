@@ -14,7 +14,7 @@ export const mockAudioBentoProps = {
   volume: 0.5,
   app: "music",
   sizeKey: "music",
-  className: "bg-linear-to-b from-ds-music-from to-ds-music-to",
+  surfaceClassName: "bg-linear-to-b from-ds-music-from to-ds-music-to",
   onPlayOrPause: noop,
   onChangeTrack: noop,
   onVolumeChange: noop,

@@ -21,6 +21,7 @@ import PersonsIcon from "@/assets/icons/persons.svg?react";
 import PlayIcon from "@/assets/icons/play.svg?react";
 import PlusIcon from "@/assets/icons/plus.svg?react";
 import RefreshIcon from "@/assets/icons/refresh.svg?react";
+import ShareIcon from "@/assets/icons/share.svg?react";
 import SoundIcon from "@/assets/icons/sound.svg?react";
 import SprayIcon from "@/assets/icons/spray.svg?react";
 import SteamIcon from "@/assets/icons/steam.svg?react";
@@ -55,6 +56,7 @@ const ICON_COMPONENTS: Record<string, SvgIconComponent> = {
   play: PlayIcon,
   plus: PlusIcon,
   refresh: RefreshIcon,
+  share: ShareIcon,
   sound: SoundIcon,
   spray: SprayIcon,
   steam: SteamIcon,

@@ -40,8 +40,8 @@ const Music = ({ sizeKey, tracks }: MusicProps) => {
       onVolumeChange={setVolume}
       playbackError={error}
       sizeKey={sizeKey}
+      surfaceClassName="bg-linear-to-b from-ds-music-from to-ds-music-to"
       volume={volume}
-      className="bg-linear-to-b from-ds-music-from to-ds-music-to"
     />
   );
 };

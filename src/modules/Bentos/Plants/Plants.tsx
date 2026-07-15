@@ -1,21 +1,14 @@
 import Image from "next/image";
 
-import type { PlantsProps } from "./Plants.types.ts";
-import type { IconName } from "@/components/Icon/index.ts";
+import type { ActionTile, PlantsProps } from "./Plants.types.ts";
 import type { PlantaCareState } from "@/lib/plants/plantCardFormat.ts";
 import type { PlantaActionType } from "@/vendors/planta/types.ts";
 
 import Bento, { bentos } from "@/components/Bento/index.ts";
-import Glass from "@/components/Glass/index.ts";
 import Icon from "@/components/Icon/index.ts";
 import { getPlantaCardStatuses } from "@/lib/plants/plantCardFormat.ts";
 
 const MAX_VISIBLE_PLANTS = 3 as const;
-
-interface ActionTile {
-  readonly bg: string;
-  readonly icon: IconName;
-}
 
 /** Care action → its tile colour + icon (one tint per action type). */
 const ACTION_TILE: Record<PlantaActionType, ActionTile> = {
@@ -46,14 +39,9 @@ const Plants = ({ sizeKey, plants }: PlantsProps) => {
     <Bento
       app="plants"
       sizes={bentos[sizeKey].sizes}
+      surfaceClassName="bg-linear-to-b from-ds-forest-from to-ds-forest-to"
       className="relative z-0 text-ds-forest-ink"
     >
-      <Glass
-        intensity={1}
-        radius={24}
-        tint="none"
-        className="-z-10 bg-linear-to-b from-ds-forest-from to-ds-forest-to"
-      />
       <div className="flex size-full flex-col gap-3 p-5">
         <h2 className="text-2xl font-semibold">Plant Care</h2>
         <ul className="flex flex-1 flex-col gap-2.5">

@@ -40,8 +40,8 @@ const Podcast = ({ sizeKey, episodes }: PodcastProps) => {
       onVolumeChange={setVolume}
       playbackError={error}
       sizeKey={sizeKey}
+      surfaceClassName="bg-linear-to-b from-ds-podcast-from to-ds-podcast-to"
       volume={volume}
-      className="bg-linear-to-b from-ds-podcast-from to-ds-podcast-to"
     />
   );
 };

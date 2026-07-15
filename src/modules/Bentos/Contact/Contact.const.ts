@@ -21,6 +21,8 @@ export const MESSAGE_VARIANT = {
   },
 } as const;
 
+export type MessageVariant = keyof typeof MESSAGE_VARIANT;
+
 export const initialMessages: readonly IMessage[] = [
   {
     id: "init-0",

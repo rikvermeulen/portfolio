@@ -1,40 +1,50 @@
 @theme {
+  /* ── iOS system accents ───────────────────────────────────── */
   --color-ds-gray: #8e8e93;
-  --color-ds-yellow: #fc0;
   --color-ds-green: #34c759;
   --color-ds-blue: #007aff;
-  --color-ds-orange: #ff9500;
-  --color-ds-purple: #af52de;
-  --color-ds-violet: #5801ff;
-  --color-ds-bubble: #e9e9eb;
-  --color-ds-surface: #ebeceb;
-  --color-ds-border: #eaebed;
-  --color-ds-border-soft: #ececec;
-  --color-ds-surface-dark: #1c1c1e;
-  --color-ds-bubble-dark: #26262a;
   --color-ds-blue-dark: #0a84ff;
+  --color-ds-violet: #5801ff;
+
+  /* ── Neutrals & surfaces (light / dark) ───────────────────── */
+  --color-ds-surface: #ebeceb;
+  --color-ds-surface-dark: #1c1c1e;
+  --color-ds-bubble: #e9e9eb;
+  --color-ds-bubble-dark: #26262a;
+  --color-ds-border: #eaebed;
   --color-ds-border-dark: #38383a;
+
+  /* ── Tile palettes ────────────────────────────────────────── */
+
+  /* Image tile */
   --color-ds-mint: #dff5e7;
   --color-ds-mint-ink: #143224;
-  --color-ds-forest: #234823;
+
+  /* Plants: surface gradient + ink */
   --color-ds-forest-from: #2b552b;
   --color-ds-forest-to: #18331a;
   --color-ds-forest-ink: #e7edde;
-  --color-ds-forest-muted: #cfe0cc;
-  --color-ds-forest-warn: #f3d6d6;
 
-  /* Plant care action tiles — one tint per Planta action type. */
+  /* Plants: one care-action tint per Planta action type */
   --color-ds-plant-water: #9db0bb;
   --color-ds-plant-mist: #c98d88;
   --color-ds-plant-fertilize: #d8bd6b;
   --color-ds-plant-clean: #c6b795;
   --color-ds-plant-repot: #2f3c4f;
   --color-ds-plant-done: #8bb04a;
+
+  /* FindMe map */
   --color-ds-map: #dbeefe;
+
+  /* Music */
   --color-ds-music-from: #e96575;
   --color-ds-music-to: #ff333a;
+
+  /* Podcast */
   --color-ds-podcast-from: #bc6aeb;
   --color-ds-podcast-to: #6e2aad;
+
+  /* Journal */
   --color-ds-journal-from: #463463;
   --color-ds-journal-to: #271e3a;
   --color-ds-journal-glow: #8b5cf6;
@@ -42,21 +52,30 @@
   --color-ds-journal-ink-from: #d3bffa;
   --color-ds-journal-ink-to: #b18ff4;
   --color-ds-journal-date: #cfc6e4;
+
+  /* Games (Steam / Xbox) */
   --color-ds-games-from: #1b2838;
   --color-ds-games-to: #0a0e14;
-  --color-ds-games-header: #1c6ea4;
   --color-ds-steam: #171a21;
   --color-ds-xbox: #107c10;
+
+  /* Recipes: gradient stops */
   --color-ds-recipe-1: #1a1a2e;
   --color-ds-recipe-2: #16213e;
   --color-ds-recipe-3: #0f3460;
+
+  /* Tech stack: gradient stops */
   --color-ds-stack-1: #525252;
   --color-ds-stack-2: #404040;
-  --shadow-glass-lift:
-    0.0625rem 0 0 0 rgb(0 0 0 / 4%), -0.0625rem 0 0 0 rgb(0 0 0 / 4%),
-    0 0.375rem 0.75rem 0 rgb(0 0 0 / 6%);
-  --shadow-glass-sheen:
-    inset 0 1.75rem 1.3125rem -1.75rem rgb(255 255 255 / 55%),
-    inset 0 1.75rem 0.4375rem -1.75rem rgb(40 40 40 / 35%),
-    inset 0 -1.75rem 0.4375rem -1.75rem rgb(40 40 40 / 35%);
+
+  /* ── Category tags: soft pastel chips (dark ink, except `dark`) ── */
+  --color-ds-tag-ink: #2e2a2e;
+  --color-ds-tag-cream: #f5e5d0;
+  --color-ds-tag-yellow: #f0cb63;
+  --color-ds-tag-green: #d6ef7c;
+  --color-ds-tag-blue: #b4ccef;
+  --color-ds-tag-orange: #e08a6b;
+  --color-ds-tag-pink: #f2deef;
+  --color-ds-tag-lavender: #d9c6e8;
+  --color-ds-tag-dark: #1c1521;
 }

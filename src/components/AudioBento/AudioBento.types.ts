@@ -15,7 +15,7 @@ export interface AudioBentoProps {
   readonly volume: number;
   readonly app: BentoAppKey;
   readonly sizeKey: BentoSizeKey;
-  readonly className?: string;
+  readonly surfaceClassName?: string;
   readonly onPlayOrPause: () => void;
   readonly onChangeTrack: (direction: "previous" | "next") => void;
   readonly onVolumeChange: (value: number) => void;

@@ -36,6 +36,8 @@ const variants: TagVariant[] = [
   "blue",
   "orange",
   "pink",
+  "lavender",
+  "dark",
 ];
 
 export const FinderColors: Story = {

@@ -18,7 +18,8 @@ const FindMe = ({ sizeKey, className, weatherBadge }: FindMeProps) => {
     <Bento
       app="findme"
       sizes={bentos[sizeKey].sizes}
-      className={classnames("relative z-0 size-full bg-ds-map", className)}
+      surfaceClassName="bg-ds-map"
+      className={classnames("relative z-0 size-full", className)}
     >
       {hasToken ? (
         <div ref={containerRef} className="findme-map size-full" />

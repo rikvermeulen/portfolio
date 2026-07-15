@@ -81,7 +81,8 @@ const Photos = ({ sizeKey, albums }: PhotosProps) => {
       app="photos"
       href={ALBUM_LINK}
       sizes={bentos[sizeKey].sizes}
-      className="group size-full"
+      surfaceClassName="bg-ds-surface dark:bg-ds-surface-dark"
+      className="group relative z-0 size-full"
     >
       {albumNames.length > 1 && (
         <div className="absolute bottom-5 left-1/2 z-20 -translate-x-1/2 translate-y-0 transition-transform duration-300 ease-in-out [@media(hover:hover)]:translate-y-[200%] [@media(hover:hover)]:group-hover:translate-y-0">

@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 
-import type { ChatMessageProps } from "./Contact.types.ts";
+import type { ChatMessageProps, MessageBubbleProps } from "./Contact.types.ts";
 
 import Icon from "@/components/Icon/index.ts";
 import classnames from "@/utils/classnames/index.ts";
@@ -13,15 +13,6 @@ import {
   INITIAL_MESSAGE_ID_PREFIX,
   MESSAGE_VARIANT,
 } from "./Contact.const.ts";
-
-type MessageVariant = keyof typeof MESSAGE_VARIANT;
-
-interface MessageBubbleProps {
-  readonly children: React.ReactNode;
-  readonly variant: MessageVariant;
-  readonly showTail?: boolean;
-  readonly className?: string;
-}
 
 function MessageBubble({
   children,

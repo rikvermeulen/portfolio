@@ -37,14 +37,9 @@ const Games = ({ sizeKey, profile, platforms, games }: GamesProps) => {
       app="games"
       imageAlt="Games icon"
       sizes={bentos[sizeKey].sizes}
+      surfaceClassName="bg-linear-to-b from-ds-games-from to-ds-games-to"
       className="relative z-0"
     >
-      <Glass
-        intensity={1}
-        radius={24}
-        tint="none"
-        className="-z-10 bg-linear-to-b from-ds-games-from to-ds-games-to"
-      />
       <div className="flex size-full flex-col gap-3 p-4">
         <div className="flex flex-col items-center gap-1.5 text-center">
           <span className="relative inline-block">
