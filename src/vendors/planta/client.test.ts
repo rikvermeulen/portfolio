@@ -19,6 +19,12 @@ jest.mock("@env", () => ({
   },
 }));
 
+// Keep the token store off disk during client tests (env-seeded, in-memory).
+jest.mock("./tokenPersistence.ts", () => ({
+  readPersistedTokens: jest.fn(() => null),
+  writePersistedTokens: jest.fn(),
+}));
+
 const createUnsignedJwt = (payload: Record<string, unknown>): string => {
   const encode = (value: string) =>
     Buffer.from(value, "utf-8")

@@ -7,6 +7,7 @@ import NextLink from "next/link";
 
 import type { LinkProps } from "./Link.types.ts";
 
+import Icon from "@/components/Icon/index.ts";
 import { isExternalUrl } from "@/utils/isExternalUrl/index.ts";
 import { env } from "@env";
 
@@ -16,6 +17,8 @@ const Link = ({ children, ...props }: LinkProps) => {
       ? isExternalUrl(props.href, env.NEXT_PUBLIC_APP_URL)
       : false;
 
+  const showExternalIcon = isExternalLink && typeof children === "string";
+
   return (
     <NextLink
       prefetch={!isExternalLink}
@@ -23,7 +26,14 @@ const Link = ({ children, ...props }: LinkProps) => {
       target={isExternalLink ? "_blank" : undefined}
       {...props}
     >
-      {children}
+      {showExternalIcon ? (
+        <span className="inline-flex items-center gap-0.5">
+          {children}
+          <Icon iconClassName="size-4 shrink-0" name="arrowUpRight" />
+        </span>
+      ) : (
+        children
+      )}
     </NextLink>
   );
 };

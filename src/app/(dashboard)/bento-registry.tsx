@@ -26,7 +26,6 @@ import {
   Information,
   Journal,
   Music,
-  Personal,
   Photos,
   Plants,
   Podcast,
@@ -65,9 +64,14 @@ function asyncTile<T>(config: AsyncTileConfig<T>): AsyncTile {
 export const bentoRegistry: readonly BentoTile[] = [
   {
     kind: "static",
-    id: "personal",
-    sizeKey: "personal",
-    render: (sizeKey) => <Personal sizeKey={sizeKey} />,
+    id: "category-about",
+    sizeKey: "category",
+    render: (sizeKey) => (
+      <Category
+        sizeKey={sizeKey}
+        tags={[{ label: "About me", variant: "yellow" }]}
+      />
+    ),
   },
 
   asyncTile({
@@ -141,18 +145,6 @@ export const bentoRegistry: readonly BentoTile[] = [
 
   {
     kind: "static",
-    id: "category-about",
-    sizeKey: "category",
-    render: (sizeKey) => (
-      <Category
-        sizeKey={sizeKey}
-        tags={[{ label: "About me", variant: "yellow" }]}
-      />
-    ),
-  },
-
-  {
-    kind: "static",
     id: "findme",
     sizeKey: "findme",
     render: (sizeKey) => (
@@ -160,7 +152,7 @@ export const bentoRegistry: readonly BentoTile[] = [
     ),
   },
 
-  { kind: "divider", id: "section-break" },
+  { kind: "divider", id: "section-break", anchorId: "work" },
 
   {
     kind: "static",

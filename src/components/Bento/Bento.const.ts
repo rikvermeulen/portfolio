@@ -7,11 +7,6 @@
  * live in the registry at `src/app/(dashboard)/bento-registry.tsx`.
  */
 export const bentos = {
-  personal: {
-    sizes: { base: "4x4", md: "8x4", lg: "6x4" },
-    name: "Rik Vermeulen",
-    icon: "/images/me.jpg",
-  },
   contact: {
     sizes: { base: "4x4", md: "8x4", lg: "6x3" },
     name: "Messages",

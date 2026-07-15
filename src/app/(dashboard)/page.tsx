@@ -26,8 +26,9 @@ export default function Home() {
           return (
             <div
               key={tile.id}
+              id={tile.anchorId}
               aria-hidden
-              className="bentogrid-section-break"
+              className="bentogrid-section-break scroll-mt-24"
             />
           );
         }

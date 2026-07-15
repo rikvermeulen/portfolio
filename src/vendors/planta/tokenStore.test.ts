@@ -1,3 +1,5 @@
+import type { PlantaTokenSet } from "./types.ts";
+
 import {
   getPlantaTokens,
   resetPlantaTokens,
@@ -16,9 +18,23 @@ jest.mock("@env", () => ({
   },
 }));
 
+jest.mock("./tokenPersistence.ts", () => ({
+  readPersistedTokens: jest.fn((): PlantaTokenSet | null => null),
+  writePersistedTokens: jest.fn(),
+}));
+
+const { readPersistedTokens, writePersistedTokens } = jest.requireMock(
+  "./tokenPersistence.ts",
+) as {
+  readPersistedTokens: jest.Mock<PlantaTokenSet | null>;
+  writePersistedTokens: jest.Mock;
+};
+
 describe("Planta token store", () => {
   beforeEach(() => {
     resetPlantaTokens();
+    readPersistedTokens.mockReturnValue(null);
+    writePersistedTokens.mockClear();
     mockEnv.PLANTA_ACCESS_TOKEN = undefined;
     mockEnv.PLANTA_REFRESH_TOKEN = undefined;
     mockEnv.PLANTA_TOKEN_TYPE = "Bearer";
@@ -76,5 +92,28 @@ describe("Planta token store", () => {
     mockEnv.PLANTA_ACCESS_TOKEN = "post-reset-access";
 
     expect(getPlantaTokens()?.accessToken).toBe("post-reset-access");
+  });
+
+  it("prefers the persisted file over env when both exist", () => {
+    mockEnv.PLANTA_ACCESS_TOKEN = "env-access";
+    readPersistedTokens.mockReturnValue({
+      accessToken: "file-access",
+      refreshToken: "file-refresh",
+      tokenType: "Bearer",
+    });
+
+    expect(getPlantaTokens()?.accessToken).toBe("file-access");
+  });
+
+  it("persists tokens to the durable file on write", () => {
+    const tokens: PlantaTokenSet = {
+      accessToken: "rotated-access",
+      refreshToken: "rotated-refresh",
+      tokenType: "Bearer",
+    };
+
+    setPlantaTokens(tokens);
+
+    expect(writePersistedTokens).toHaveBeenCalledWith(tokens);
   });
 });

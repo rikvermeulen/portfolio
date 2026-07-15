@@ -30,6 +30,8 @@ export interface AsyncTile {
 export interface DividerTile {
   readonly kind: "divider";
   readonly id: string;
+  /** Optional DOM `id` set on the rendered spacer so Navigation can scroll to it. */
+  readonly anchorId?: string;
 }
 
 export type BentoTile = StaticTile | AsyncTile | DividerTile;

@@ -17,6 +17,12 @@
     font-size: 16px;
     font-size: clamp(15px, calc(0.5vw + 0.5lvh + 4.8px), 20px);
   }
+
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
 }
 
 @layer utilities {

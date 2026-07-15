@@ -1,4 +1,4 @@
-import type { IMessage, SocialLink } from "./Contact.types.ts";
+import type { IMessage } from "./Contact.types.ts";
 
 export const CHAT_SENDER = {
   name: "Rik",
@@ -30,27 +30,4 @@ export const initialMessages: readonly IMessage[] = [
     text: "Want to work together? just want to chat? send me a text here (no, for real)",
   },
   { id: "init-1", sender: "user", text: "Sounds good 🙏" },
-];
-
-export const socials: readonly SocialLink[] = [
-  {
-    name: "Twitter",
-    icon: "twitter",
-    url: "https://twitter.com/rikvermeulen_",
-  },
-  {
-    name: "Github",
-    icon: "github",
-    url: "https://github.com/rikvermeulen",
-  },
-  {
-    name: "LinkedIn",
-    icon: "linkedin",
-    url: "https://www.linkedin.com/in/rik-vermeulen/",
-  },
-  {
-    name: "Mail",
-    icon: "gmail",
-    url: "mailto:rik.vermeulen@greenberry.nl",
-  },
 ];

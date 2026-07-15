@@ -4,6 +4,11 @@ import type { PlantaTokenSet } from "./types.ts";
 
 import { env } from "@env";
 
+import {
+  readPersistedTokens,
+  writePersistedTokens,
+} from "./tokenPersistence.ts";
+
 /**
  * Process-level cache of the current Planta token set.
  *
@@ -39,7 +44,8 @@ const seedFromEnv = (): PlantaTokenSet | null => {
 
 export const getPlantaTokens = (): PlantaTokenSet | null => {
   if (!seeded) {
-    cachedTokens = seedFromEnv();
+    // Durable file (freshest rotated token) wins over the possibly-stale env.
+    cachedTokens = readPersistedTokens() ?? seedFromEnv();
     seeded = true;
   }
 
@@ -49,6 +55,7 @@ export const getPlantaTokens = (): PlantaTokenSet | null => {
 export const setPlantaTokens = (tokens: PlantaTokenSet): void => {
   cachedTokens = tokens;
   seeded = true;
+  writePersistedTokens(tokens);
 };
 
 /** Test-only: clears the in-memory cache so env is re-read on next access. */

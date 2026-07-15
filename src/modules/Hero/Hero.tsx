@@ -1,33 +1,36 @@
 import Image from "next/image";
 
-import type { PersonalProps } from "./Personal.types.ts";
-
-import Bento, { bentos } from "@/components/Bento/index.ts";
 import Link from "@/components/Link/index.ts";
 
-const Personal = ({ sizeKey }: PersonalProps) => {
+/**
+ * Site hero — the personal intro, lifted out of the bento grid into its own
+ * section above it. Keeps the original Personal tile's markup and styling
+ * untouched; only the surrounding container is narrower than the grid.
+ */
+export default function Hero() {
   return (
-    <Bento sizes={bentos[sizeKey].sizes} className="size-full">
+    <section className="content-container flex flex-col gap-4 pb-12">
       <Image
         alt="Portrait of Rik Vermeulen"
         height="184"
+        priority
         src="/images/me.jpg"
         width="184"
-        className="h-auto w-40 rounded-full 2xl:w-auto"
+        className="h-auto w-32 rounded-full 2xl:w-auto"
       />
-      <div className="pt-8">
-        <h2 className="flex gap-2 text-xl font-bold md:text-3xl">
+      <div className="flex flex-col gap-2">
+        <h1 className="flex gap-2 text-xl font-bold md:text-3xl">
           Hey hey, I’m Rik{" "}
           <span className="shake w-fit cursor-pointer">👋🏻</span>
-        </h2>
-        <p className="max-w-xl pt-3 text-ds-gray">
+        </h1>
+        <p className="max-w-xl text-ds-gray">
           I’m a Creative Developer based in Heukelum, the Netherlands. I develop
           full-scale creative digital experiences for some amazing agencies and
           hugely talented people. ✨
         </p>
       </div>
       <div>
-        <p className="mt-4 text-ds-gray">
+        <p className="text-ds-gray">
           🐙 Coding:&nbsp;
           <Link
             href="https://github.com/rikvermeulen"
@@ -46,8 +49,6 @@ const Personal = ({ sizeKey }: PersonalProps) => {
           </Link>
         </p>
       </div>
-    </Bento>
+    </section>
   );
-};
-
-export default Personal;
+}

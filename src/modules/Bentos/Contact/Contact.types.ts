@@ -14,12 +14,6 @@ export interface UserContactData {
   email: string;
 }
 
-export interface SocialLink {
-  readonly name: string;
-  readonly icon: string;
-  readonly url: string;
-}
-
 export interface ContactProps extends BentoSizedProps {
   readonly className?: string;
 }

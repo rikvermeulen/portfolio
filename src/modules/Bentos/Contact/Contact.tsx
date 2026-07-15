@@ -10,10 +10,10 @@ import Glass from "@/components/Glass/index.ts";
 import Icon from "@/components/Icon/index.ts";
 import Link from "@/components/Link/index.ts";
 import { useOutsideClick } from "@/hooks/useOutsideClick/index.ts";
+import { socials } from "@/lib/socials/index.ts";
 import classnames from "@/utils/classnames/index.ts";
 import { time } from "@/utils/datetime/index.ts";
 
-import { socials } from "./Contact.const.ts";
 import { hasEnoughText } from "./Contact.validation.ts";
 import { ChatMessage } from "./Messages.tsx";
 import useChat from "./useChat.ts";

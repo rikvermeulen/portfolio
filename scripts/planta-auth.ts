@@ -4,6 +4,8 @@ import { stdout as output } from "node:process";
 
 import { config } from "dotenv";
 
+import { writePersistedTokens } from "../src/vendors/planta/tokenPersistence.ts";
+
 config({ path: new URL("../.env.local", import.meta.url).pathname });
 config({ path: new URL("../.env", import.meta.url).pathname });
 
@@ -53,16 +55,24 @@ const main = async () => {
 
   const { accessToken, refreshToken, tokenType } = payload.data;
 
+  // Seed the durable token cache so the app uses these immediately and
+  // overwrites any stale (rotated-out) token left over from a previous run.
+  writePersistedTokens({
+    accessToken,
+    refreshToken,
+    tokenType: tokenType ?? "Bearer",
+  });
+
   output.write(
-    "\nSuccess. Add these to your .env and REMOVE PLANTA_AUTH_CODE:\n\n",
+    "\nSuccess — wrote .planta-tokens.local.json (the durable cache the app reads).\n",
   );
+  output.write("As a backup you can also set these in .env:\n\n");
   output.write(`PLANTA_ACCESS_TOKEN="${accessToken}"\n`);
   output.write(`PLANTA_REFRESH_TOKEN="${refreshToken ?? ""}"\n`);
   output.write(`PLANTA_TOKEN_TYPE="${tokenType ?? "Bearer"}"\n\n`);
   output.write(
-    "The refresh token is what keeps this working long-term — the access " +
-      "token is refreshed automatically and rotated refresh tokens are cached " +
-      "per process.\n",
+    "Rotated refresh tokens are now written back to that file, so a dev-server " +
+      "restart no longer resurrects a dead token. Restart the dev server to pick this up.\n",
   );
 };
 

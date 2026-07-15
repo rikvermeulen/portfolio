@@ -6,7 +6,8 @@ import TWBreakpointIndicator from "@/components/_dev/TWBreakpointIndicator/index
 import { ToastProvider } from "@/components/Toast/index.ts";
 import { AnimationProvider } from "@/contexts/AnimationContext/AnimationContext.tsx";
 import { fontInter } from "@/lib/fonts/fonts.ts";
-import Header from "@/modules/Navigation/Header/index.ts";
+import Footer from "@/modules/Footer/index.ts";
+import Header from "@/modules/Header/index.ts";
 
 export const metadata: Metadata = {
   title: "Rik Vermeulen — Creative Developer",
@@ -31,6 +32,7 @@ export default function RootLayout({
         <AnimationProvider>
           <Header />
           {children}
+          <Footer />
           <ToastProvider />
           <TWBreakpointIndicator />
         </AnimationProvider>
