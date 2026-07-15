@@ -18,6 +18,7 @@ const AudioControls = ({
         aria-label="Previous song"
         name="Previous song"
         onClick={() => onChangeTrack("previous")}
+        type="button"
         className={classnames(
           pulsedButton === "previous" && "button",
           "relative cursor-pointer border-none fill-white outline-hidden",
@@ -30,6 +31,7 @@ const AudioControls = ({
         aria-label="Play / Pause"
         name="Play / Pause"
         onClick={onPlayOrPause}
+        type="button"
         className={classnames(
           pulsedButton === "playPause" && "button",
           "relative flex h-12 w-12 cursor-pointer items-center justify-center overflow-hidden rounded-full text-white",
@@ -62,6 +64,7 @@ const AudioControls = ({
         aria-label="Next song"
         name="Next song"
         onClick={() => onChangeTrack("next")}
+        type="button"
         className={classnames(
           pulsedButton === "next" && "button",
           "-scale-x-100 cursor-pointer border-none fill-white outline-hidden",

@@ -57,7 +57,7 @@ export default function Drawer({
             className="absolute inset-0 z-20 cursor-default"
           />
 
-          <motion.div
+          <motion.dialog
             key="drawer-sheet"
             animate={sheetActive}
             aria-label={header ? title : undefined}
@@ -80,10 +80,10 @@ export default function Drawer({
                 close();
               }
             }}
-            role="dialog"
+            open
             transition={SHEET_SPRING}
             className={classnames(
-              "absolute inset-x-0 top-4 bottom-0 z-30 flex touch-none flex-col overflow-hidden rounded-3xl text-white shadow-2xl",
+              "absolute inset-x-0 top-4 bottom-0 z-30 m-0 flex size-auto touch-none flex-col overflow-hidden rounded-3xl bg-transparent p-0 text-white shadow-2xl",
               className,
             )}
           >
@@ -108,14 +108,14 @@ export default function Drawer({
               </header>
             )}
 
-            <div className="relative z-10 min-h-0 flex-1 overflow-y-auto px-3 pb-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            <div className="relative z-10 min-h-0 flex-1 [scrollbar-width:none] overflow-y-auto px-3 pb-3 [&::-webkit-scrollbar]:hidden">
               {children}
             </div>
 
-            {footer && (
+            {footer ? (
               <footer className="relative z-10 shrink-0 p-3">{footer}</footer>
-            )}
-          </motion.div>
+            ) : null}
+          </motion.dialog>
         </>
       )}
     </AnimatePresence>

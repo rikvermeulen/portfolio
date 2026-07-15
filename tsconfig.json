@@ -25,12 +25,12 @@
       }
     ],
     "incremental": true,
+    "types": ["node", "jest"],
     /* Path Aliases */
-    "baseUrl": ".",
     "paths": {
-      "@config/*": ["config/*"],
-      "@env": ["src/env.ts"],
-      "@/*": ["src/*"]
+      "@config/*": ["./config/*"],
+      "@env": ["./src/env.ts"],
+      "@/*": ["./src/*"]
     }
   },
   "include": [

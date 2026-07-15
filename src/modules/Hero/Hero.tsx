@@ -21,17 +21,19 @@ export default function Hero() {
       <div className="flex flex-col gap-2">
         <h1 className="flex gap-2 text-xl font-bold md:text-3xl">
           Hey hey, I’m Rik{" "}
-          <span className="shake w-fit cursor-pointer">👋🏻</span>
+          <span aria-hidden="true" className="shake w-fit cursor-pointer">
+            👋🏻
+          </span>
         </h1>
         <p className="max-w-xl text-ds-gray">
           I’m a Creative Developer based in Heukelum, the Netherlands. I develop
           full-scale creative digital experiences for some amazing agencies and
-          hugely talented people. ✨
+          hugely talented people. <span aria-hidden="true">✨</span>
         </p>
       </div>
       <div>
-        <p className="text-ds-gray">
-          🐙 Coding:&nbsp;
+        <p className="flex gap-1 text-ds-gray">
+          <span aria-hidden="true">🐙</span> Coding:&nbsp;
           <Link
             href="https://github.com/rikvermeulen"
             className="cursor-pointer decoration-1 underline-offset-2 transition-colors hover:text-ds-blue hover:underline"
@@ -39,8 +41,8 @@ export default function Hero() {
             @rikvermeulen
           </Link>
         </p>
-        <p className="text-ds-gray">
-          💌 Hello?&nbsp;
+        <p className="flex gap-1 text-ds-gray">
+          <span aria-hidden="true">💌</span> Hello?&nbsp;
           <Link
             href="mailto:hello@rikvermeulen.com"
             className="cursor-pointer decoration-1 underline-offset-2 transition-colors hover:text-ds-blue hover:underline"

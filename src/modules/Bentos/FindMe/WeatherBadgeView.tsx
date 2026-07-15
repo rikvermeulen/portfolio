@@ -11,16 +11,15 @@ export const SOURCE_LABEL = "Weather by Open-Meteo for Rotterdam.";
 
 function WeatherBadgeShell({ ariaLabel, children }: WeatherBadgeShellProps) {
   return (
-    <div
+    <output
       aria-label={ariaLabel}
       aria-live="polite"
-      role="status"
       title={SOURCE_LABEL}
       className="absolute top-5 left-5 z-20 flex overflow-hidden rounded-lg p-1 text-black dark:bg-black/45 dark:text-white"
     >
       <Glass blur={2} intensity={2} radius={8} />
       <div className="bento-body relative flex flex-col">{children}</div>
-    </div>
+    </output>
   );
 }
 

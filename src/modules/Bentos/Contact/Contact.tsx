@@ -128,11 +128,10 @@ const Contact = ({ sizeKey, className }: ContactProps) => {
             </button>
             <ul
               aria-label="Social links"
-              role="menu"
               className="relative z-10 py-1.5 opacity-0 transition-opacity duration-200 group-data-open:pointer-events-auto group-data-open:opacity-100"
             >
               {socials.map(({ name, icon, url }) => (
-                <li key={name} role="menuitem">
+                <li key={name}>
                   <Link
                     href={url}
                     className="flex cursor-pointer items-center gap-3 px-3 py-2"

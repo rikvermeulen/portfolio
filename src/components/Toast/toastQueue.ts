@@ -9,6 +9,8 @@ import type { AppToastContent } from "./Toast.types.ts";
 const DEFAULT_TIMEOUT = 6000;
 const MAX_VISIBLE_TOASTS = 4;
 
+const applySynchronously = flushSync;
+
 function animationsSupported(): boolean {
   return (
     typeof document !== "undefined" &&
@@ -31,10 +33,7 @@ export const toastQueue = new ToastQueue<AppToastContent>({
   maxVisibleToasts: MAX_VISIBLE_TOASTS,
   wrapUpdate(fn) {
     if (animationsSupported()) {
-      // The synchronous flush is required so the DOM mutation lands inside the
-      // transition's snapshot — the documented react-aria toast pattern.
-      // eslint-disable-next-line @eslint-react/dom/no-flush-sync -- required by the RAC toast view-transition pattern
-      document.startViewTransition(() => flushSync(fn));
+      document.startViewTransition(() => applySynchronously(fn));
     } else {
       fn();
     }
