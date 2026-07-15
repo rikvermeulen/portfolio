@@ -9,20 +9,20 @@ export default function Header() {
       <div className="main-container flex w-full justify-between">
         <Link
           href="/"
-          className="flex items-center gap-2 justify-self-start text-black"
+          className="flex items-center gap-2 justify-self-start text-black dark:text-white"
         >
           <Image
             alt="logo"
             height="20"
             src="/images/logo.png"
             width="20"
-            className="size-6"
+            className="size-6 dark:invert"
           />
           <p className="hidden text-xs font-normal sm:block md:text-sm">
             Rik Vermeulen
           </p>
         </Link>
-        <p className="text-sm font-normal text-black">
+        <p className="text-sm font-normal text-black dark:text-white">
           <LiveTime />
         </p>
       </div>
