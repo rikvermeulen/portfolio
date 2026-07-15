@@ -12,6 +12,7 @@ const config: Config = {
   collectCoverageFrom: [
     "src/utils/**/*.ts",
     "src/lib/**/*.ts",
+    "src/vendors/**/*.ts",
     "src/hooks/**/*.ts",
     "src/modules/**/*.utils.ts",
     "src/modules/**/*.validation.ts",

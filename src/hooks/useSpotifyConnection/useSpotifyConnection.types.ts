@@ -1,4 +1,4 @@
-import type { SpotifyPlayer } from "@/lib/spotify/webPlayback.ts";
+import type { SpotifyPlayer } from "@/vendors/spotify/webPlayback.ts";
 
 export interface SpotifyConnection {
   readonly deviceId: string | null;

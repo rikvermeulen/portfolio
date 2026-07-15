@@ -33,7 +33,7 @@ const Information = ({
       <div className="flex">
         <Link
           href={href}
-          className="w-fit text-xs underline decoration-1 underline-offset-2 transition-opacity hover:opacity-80"
+          className="w-fit cursor-pointer text-xs underline decoration-1 underline-offset-2 transition-opacity hover:opacity-80"
         >
           {linkLabel}
         </Link>

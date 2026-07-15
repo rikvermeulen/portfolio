@@ -1,10 +1,10 @@
 // Provider-agnostic gaming domain types. Shared by every platform provider
-// (Steam, Xbox, Discord, …), the aggregation service, and the Games module.
+// (Steam, Xbox, …), the aggregation service, and the Games module.
 // Providers map their own transport shapes into these; nothing here is tied to
 // a single vendor.
 
 /** A gaming platform this dashboard knows about. */
-export type PlatformId = "steam" | "xbox" | "discord";
+export type PlatformId = "steam" | "xbox";
 
 /** A recently-played game, normalised across providers. */
 export interface Game {
@@ -35,6 +35,7 @@ export interface GamingPlatform {
   readonly name: string;
   readonly handle: string;
   readonly href: string;
+  readonly image?: string;
 }
 
 /** Everything the Games tile renders. */

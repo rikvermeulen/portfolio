@@ -11,12 +11,15 @@ const game = (name: string, overrides: Partial<Game> = {}): Game => ({
 });
 
 describe("titleKey", () => {
-  it("normalises case, punctuation, parentheticals and edition words", () => {
-    expect(titleKey("Grand Theft Auto V Enhanced (PC)")).toBe(
-      titleKey("grand theft auto v"),
-    );
-    expect(titleKey("Dying Light 2: Reloaded Edition")).toBe("dyinglight2");
+  it("normalises case and punctuation", () => {
+    expect(titleKey("Grand Theft Auto V")).toBe(titleKey("grand theft auto v"));
     expect(titleKey("HALO INFINITE")).toBe("haloinfinite");
+  });
+
+  it("keeps edition/platform variants distinct", () => {
+    expect(titleKey("Grand Theft Auto V Enhanced (PC)")).not.toBe(
+      titleKey("Grand Theft Auto V"),
+    );
   });
 });
 
@@ -25,18 +28,22 @@ describe("mergeGames", () => {
     expect(mergeGames([])).toEqual([]);
   });
 
-  it("keeps the higher-priority provider's entry across platforms", () => {
-    const steam = [game("Grand Theft Auto V", { platform: "steam" })];
-    const xbox = [
-      game("Grand Theft Auto V Enhanced (PC)", {
-        platform: "xbox",
-        id: "x1",
-      }),
-    ];
+  it("keeps the higher-priority provider's entry for the same title", () => {
+    const steam = [game("Cyberpunk 2077", { platform: "steam" })];
+    const xbox = [game("CYBERPUNK 2077", { platform: "xbox", id: "x1" })];
 
     const merged = mergeGames([steam, xbox]);
     expect(merged).toHaveLength(1);
     expect(merged[0]?.platform).toBe("steam");
+  });
+
+  it("keeps edition/platform variants as separate games", () => {
+    const steam = [game("Grand Theft Auto V", { platform: "steam" })];
+    const xbox = [
+      game("Grand Theft Auto V Enhanced (PC)", { platform: "xbox", id: "x1" }),
+    ];
+
+    expect(mergeGames([steam, xbox])).toHaveLength(2);
   });
 
   it("collapses repeats within one provider, keeping the most recent", () => {

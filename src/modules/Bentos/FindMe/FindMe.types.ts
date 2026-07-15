@@ -1,5 +1,5 @@
 import type { BentoSizedProps } from "@/components/Bento/index.ts";
-import type { FindMeConditionsSuccessResponse } from "@/lib/findMeConditions/types.ts";
+import type { FindMeConditionsSuccessResponse } from "@/lib/weather/types.ts";
 
 export interface FindMeProps extends BentoSizedProps {
   readonly className?: string;

@@ -31,7 +31,7 @@ const Personal = ({ sizeKey }: PersonalProps) => {
           🐙 Coding:&nbsp;
           <Link
             href="https://github.com/rikvermeulen"
-            className="decoration-1 underline-offset-2 transition-colors hover:text-ds-blue hover:underline"
+            className="cursor-pointer decoration-1 underline-offset-2 transition-colors hover:text-ds-blue hover:underline"
           >
             @rikvermeulen
           </Link>
@@ -40,7 +40,7 @@ const Personal = ({ sizeKey }: PersonalProps) => {
           💌 Hello?&nbsp;
           <Link
             href="mailto:hello@rikvermeulen.com"
-            className="decoration-1 underline-offset-2 transition-colors hover:text-ds-blue hover:underline"
+            className="cursor-pointer decoration-1 underline-offset-2 transition-colors hover:text-ds-blue hover:underline"
           >
             hello@rikvermeulen.com
           </Link>

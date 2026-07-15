@@ -4,7 +4,7 @@ import type { Game, GamingPlatform } from "../types.ts";
 import {
   getXboxGamesResult,
   getXboxProfileResult,
-} from "@/lib/xbox/service.ts";
+} from "@/vendors/xbox/service.ts";
 import { env } from "@env";
 
 /**
@@ -18,8 +18,9 @@ async function getXboxLink(): Promise<GamingPlatform | null> {
     return {
       id: "xbox",
       name: "Xbox",
-      handle: result.data.gamertag,
+      handle: result.data.displayName,
       href: result.data.href,
+      image: result.data.avatar,
     };
   }
 

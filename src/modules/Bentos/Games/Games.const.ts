@@ -19,10 +19,6 @@ export const PLATFORM_APP_ICONS: Record<
     src: "/images/icons/light/xbox.png",
     darkSrc: "/images/icons/dark/xbox.png",
   },
-  discord: {
-    src: "/images/icons/light/discord.png",
-    darkSrc: "/images/icons/dark/discord.png",
-  },
 };
 
 export const ARCADE_BADGE = "/images/icons/light/arcade.png";

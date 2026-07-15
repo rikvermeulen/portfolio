@@ -1,18 +1,18 @@
 import { steamProvider } from "./steam.ts";
 
-jest.mock("@/lib/steam/service.ts", () => ({
+jest.mock("@/vendors/steam/service.ts", () => ({
   getSteamProfile: jest.fn(),
   getSteamGames: jest.fn(),
 }));
 
 const { getSteamProfile, getSteamGames } = jest.requireMock(
-  "@/lib/steam/service.ts",
+  "@/vendors/steam/service.ts",
 ) as { getSteamProfile: jest.Mock; getSteamGames: jest.Mock };
 
 const profile = {
   id: "steam-id",
   name: "PARADEMON",
-  avatar: "",
+  avatar: "https://avatars.steamstatic.com/abc_full.jpg",
   href: "https://steamcommunity.com/id/parademon",
   online: true,
 };
@@ -38,6 +38,7 @@ describe("steamProvider", () => {
       name: "Steam",
       handle: "PARADEMON",
       href: "https://steamcommunity.com/id/parademon",
+      image: "https://avatars.steamstatic.com/abc_full.jpg",
     });
   });
 

@@ -8,18 +8,13 @@ import type {
 import type { Result } from "@/types/index.ts";
 
 import { mergeGames } from "./dedup.ts";
-import { discordProvider } from "./providers/discord.ts";
 import { steamProvider } from "./providers/steam.ts";
 import { xboxProvider } from "./providers/xbox.ts";
 
 // Registration order is meaningful: it sets both the order of the "add me"
 // links and the cross-platform dedup priority (earlier wins — a Steam entry
 // beats its Xbox duplicate). Adding a platform is a one-line change here.
-const PROVIDERS: readonly GameProvider[] = [
-  steamProvider,
-  xboxProvider,
-  discordProvider,
-];
+const PROVIDERS: readonly GameProvider[] = [steamProvider, xboxProvider];
 
 /** Run a provider method, swallowing failures so one bad provider can't break the tile. */
 async function safe<T>(

@@ -15,7 +15,7 @@ import {
   resolveDeviceId,
   SPOTIFY_DEVICE_NAME,
   startPlaybackUris,
-} from "@/lib/spotify/webPlayback.ts";
+} from "@/vendors/spotify/webPlayback.ts";
 
 /**
  * Music playback over a list of tracks on the page's single Spotify device.

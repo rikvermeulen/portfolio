@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 
 import type { NextRequest } from "next/server";
 
-import { getPlantaPlantsResult } from "@/lib/planta/service.ts";
+import { getPlantaPlantsResult } from "@/vendors/planta/service.ts";
 
 export async function GET(request: NextRequest) {
   const shouldReturnRaw = request.nextUrl.searchParams.get("raw") === "1";

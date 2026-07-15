@@ -119,7 +119,7 @@ const Contact = ({ sizeKey, className }: ContactProps) => {
               aria-label={showMenu ? "Close social links" : "Open social links"}
               onClick={() => setShowMenu((open) => !open)}
               type="button"
-              className="relative z-10 flex h-9 w-full shrink-0 items-center justify-center overflow-hidden transition-[height] duration-300 outline-none group-data-open:h-0"
+              className="relative z-10 flex h-9 w-full shrink-0 cursor-pointer items-center justify-center overflow-hidden transition-[height] duration-300 outline-none group-data-open:h-0"
             >
               <Icon
                 iconClassName="size-4 transition-[opacity,transform] duration-100 group-data-open:scale-0 group-data-open:opacity-0"
@@ -135,7 +135,7 @@ const Contact = ({ sizeKey, className }: ContactProps) => {
                 <li key={name} role="menuitem">
                   <Link
                     href={url}
-                    className="flex items-center gap-3 px-3 py-2"
+                    className="flex cursor-pointer items-center gap-3 px-3 py-2"
                   >
                     <Image
                       alt={name}

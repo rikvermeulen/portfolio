@@ -1,7 +1,7 @@
 import type { GameProvider } from "../provider.ts";
 import type { GamingPlatform } from "../types.ts";
 
-import { getSteamGames, getSteamProfile } from "@/lib/steam/service.ts";
+import { getSteamGames, getSteamProfile } from "@/vendors/steam/service.ts";
 
 /**
  * Steam is the primary provider: it supplies the header profile, the played
@@ -21,6 +21,7 @@ export const steamProvider: GameProvider = {
       name: "Steam",
       handle: profile.name,
       href: profile.href,
+      image: profile.avatar,
     };
   },
 };

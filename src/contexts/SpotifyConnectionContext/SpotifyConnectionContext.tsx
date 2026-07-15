@@ -6,7 +6,7 @@ import type { SpotifyConnection } from "@/hooks/useSpotifyConnection/index.ts";
 import type { ReactNode } from "react";
 
 import { useSpotifyConnection } from "@/hooks/useSpotifyConnection/index.ts";
-import { SPOTIFY_DEVICE_NAME } from "@/lib/spotify/webPlayback.ts";
+import { SPOTIFY_DEVICE_NAME } from "@/vendors/spotify/webPlayback.ts";
 
 const SpotifyConnectionContext = createContext<SpotifyConnection | null>(null);
 

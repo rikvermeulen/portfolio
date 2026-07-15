@@ -290,4 +290,44 @@ describe("useSpotifyConnection", () => {
 
     expect(PlayerMock).not.toHaveBeenCalled();
   });
+
+  it("warns when initialization fails", async () => {
+    global.fetch = jest
+      .fn()
+      .mockRejectedValue(new Error("network error")) as typeof global.fetch;
+    const warn = jest.spyOn(console, "warn").mockImplementation(jest.fn());
+
+    renderHook(() => useSpotifyConnection("Dev", true));
+    await flush();
+
+    expect(warn).toHaveBeenCalledWith(
+      "Spotify init failed: Error: network error",
+    );
+    warn.mockRestore();
+  });
+
+  it("ignores init failures after unmount", async () => {
+    let rejectFetch!: (error: Error) => void;
+    global.fetch = jest.fn().mockImplementation(
+      () =>
+        new Promise((_resolve, reject) => {
+          rejectFetch = reject;
+        }),
+    ) as typeof global.fetch;
+    const warn = jest.spyOn(console, "warn").mockImplementation(jest.fn());
+
+    const { unmount } = renderHook(() => useSpotifyConnection("Dev", true));
+    unmount();
+
+    await act(async () => {
+      rejectFetch(new Error("network error"));
+      await Promise.resolve();
+      await Promise.resolve();
+    });
+
+    expect(warn).not.toHaveBeenCalledWith(
+      expect.stringContaining("Spotify init failed"),
+    );
+    warn.mockRestore();
+  });
 });

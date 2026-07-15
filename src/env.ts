@@ -6,11 +6,18 @@ import { createEnv } from "@t3-oss/env-nextjs";
 
 export const env = createEnv({
   /**
+   * Environment variables available on both the client and the server.
+   * `NODE_ENV` lives here (not `server`) so client components — e.g. the dev
+   * breakpoint indicator — can read it without throwing.
+   */
+  shared: {
+    NODE_ENV: z.enum(["development", "test", "production"]),
+  },
+  /**
    * Serverside Environment variables, not available on the client.
    * Will throw if you access these variables on the client.
    */
   server: {
-    NODE_ENV: z.string().min(1),
     SUPABASE_URL: z.string().min(1),
     SUPABASE_ANON_KEY: z.string().min(1),
 
@@ -41,8 +48,13 @@ export const env = createEnv({
     XBOX_API_KEY: z.string().optional(), // OpenXBL (xbl.io) key — enables real Xbox data
     XBOX_GAMERTAG: z.string().optional(),
     XBOX_PROFILE_URL: z.string().optional(),
-    DISCORD_USERNAME: z.string().optional(),
-    DISCORD_PROFILE_URL: z.string().optional(),
+
+    // WhatsApp Cloud API (outbound notifications → Rik's phone).
+    // All optional: when unset, notification sends are skipped, not thrown.
+    WHATSAPP_PHONE_NUMBER_ID: z.string().optional(),
+    WHATSAPP_ACCESS_TOKEN: z.string().optional(), // permanent system-user token
+    WHATSAPP_RECIPIENT: z.string().optional(), // Rik's number, E.164 digits
+    WHATSAPP_GRAPH_VERSION: z.string().default("v21.0"),
   },
   /**
    * Environment variables available on the client (and server).
@@ -86,8 +98,10 @@ export const env = createEnv({
     XBOX_API_KEY: process.env.XBOX_API_KEY,
     XBOX_GAMERTAG: process.env.XBOX_GAMERTAG,
     XBOX_PROFILE_URL: process.env.XBOX_PROFILE_URL,
-    DISCORD_USERNAME: process.env.DISCORD_USERNAME,
-    DISCORD_PROFILE_URL: process.env.DISCORD_PROFILE_URL,
+    WHATSAPP_PHONE_NUMBER_ID: process.env.WHATSAPP_PHONE_NUMBER_ID,
+    WHATSAPP_ACCESS_TOKEN: process.env.WHATSAPP_ACCESS_TOKEN,
+    WHATSAPP_RECIPIENT: process.env.WHATSAPP_RECIPIENT,
+    WHATSAPP_GRAPH_VERSION: process.env.WHATSAPP_GRAPH_VERSION,
     // NOTE: you could set this to process.env.VERCEL_ENV when hosting on Vercel
     NEXT_PUBLIC_ENVIRONMENT:
       process.env.NEXT_PUBLIC_ENVIRONMENT || "development",

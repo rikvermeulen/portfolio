@@ -103,7 +103,7 @@ const Games = ({ sizeKey, profile, platforms, games }: GamesProps) => {
                     aria-haspopup="dialog"
                     onClick={() => setSection(row.section)}
                     type="button"
-                    className="group flex w-full items-center gap-3 px-3 py-2.5 text-left transition-colors hover:bg-white/5 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-white/60"
+                    className="group flex w-full cursor-pointer items-center gap-3 px-3 py-2.5 text-left transition-colors hover:bg-white/5 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-white/60"
                   >
                     <span className="flex size-9 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-white/10">
                       {row.section === "games" && recent ? (
@@ -153,15 +153,24 @@ const Games = ({ sizeKey, profile, platforms, games }: GamesProps) => {
               <li key={platform.id}>
                 <Link
                   href={platform.href}
-                  className="group relative flex items-center gap-3 overflow-hidden rounded-xl px-2.5 py-2 ring-1 ring-white/10 transition hover:ring-white/20 focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:outline-none"
+                  className="group relative flex cursor-pointer items-center gap-3 overflow-hidden rounded-xl px-2.5 py-2 ring-1 ring-white/10 transition hover:ring-white/20 focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:outline-none"
                 >
                   <Glass intensity={1} radius={12} tint="dark" />
                   <span className="relative z-10 flex min-w-0 flex-1 items-center gap-3">
-                    <AppIcon
-                      alt={platform.name}
-                      darkSrc={PLATFORM_APP_ICONS[platform.id].darkSrc}
-                      src={PLATFORM_APP_ICONS[platform.id].src}
-                    />
+                    {platform.image ? (
+                      <Avatar
+                        name={platform.name}
+                        shape="rounded"
+                        size={28}
+                        src={platform.image}
+                      />
+                    ) : (
+                      <AppIcon
+                        alt={platform.name}
+                        darkSrc={PLATFORM_APP_ICONS[platform.id].darkSrc}
+                        src={PLATFORM_APP_ICONS[platform.id].src}
+                      />
+                    )}
                     <span className="flex min-w-0 flex-1 flex-col">
                       <span className="truncate text-sm font-semibold text-white">
                         {platform.name}
@@ -191,7 +200,7 @@ const Games = ({ sizeKey, profile, platforms, games }: GamesProps) => {
                 <li key={game.id}>
                   <Link
                     href={game.href ?? profile.href}
-                    className="group flex items-center gap-3 rounded-xl px-2.5 py-2 transition hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:outline-none"
+                    className="group flex cursor-pointer items-center gap-3 rounded-xl px-2.5 py-2 transition hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:outline-none"
                   >
                     <GameTile game={game} sizeClassName="size-9" />
                     <span className="flex min-w-0 flex-1 flex-col">

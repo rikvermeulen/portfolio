@@ -6,7 +6,7 @@ import { useSharedSpotifyConnection } from "@/contexts/SpotifyConnectionContext/
 import {
   resolveDeviceId,
   startPlaybackUris,
-} from "@/lib/spotify/webPlayback.ts";
+} from "@/vendors/spotify/webPlayback.ts";
 import { act, renderHook } from "@testing-library/react";
 
 import { useSpotifyMusicPlayer } from "./index.ts";
@@ -15,8 +15,8 @@ import { useSpotifyMusicPlayer } from "./index.ts";
 jest.mock("@/contexts/SpotifyConnectionContext/index.ts", () => ({
   useSharedSpotifyConnection: jest.fn(),
 }));
-jest.mock("@/lib/spotify/webPlayback.ts", () => ({
-  ...jest.requireActual("@/lib/spotify/webPlayback.ts"),
+jest.mock("@/vendors/spotify/webPlayback.ts", () => ({
+  ...jest.requireActual("@/vendors/spotify/webPlayback.ts"),
   resolveDeviceId: jest.fn(),
   startPlaybackUris: jest.fn(),
 }));

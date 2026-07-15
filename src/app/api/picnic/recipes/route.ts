@@ -5,7 +5,7 @@ import type { NextRequest } from "next/server";
 import {
   fetchSavedPicnicRecipes,
   toPicnicErrorMessage,
-} from "@/lib/picnic/service.ts";
+} from "@/vendors/picnic/service.ts";
 
 export async function GET(request: NextRequest) {
   try {

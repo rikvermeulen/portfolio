@@ -1,5 +1,5 @@
 import type { FindMeProps } from "./FindMe.types.ts";
-import type { FindMeConditionsSuccessResponse } from "@/lib/findMeConditions/types.ts";
+import type { FindMeConditionsSuccessResponse } from "@/lib/weather/types.ts";
 
 import { FIND_ME_LOCATION } from "./FindMe.const.ts";
 

@@ -76,7 +76,7 @@ describe("getGamesResult", () => {
         }),
     };
     const linkless: GameProvider = {
-      id: "discord",
+      id: "xbox",
       getPlatformLink: () => Promise.resolve(null),
     };
 

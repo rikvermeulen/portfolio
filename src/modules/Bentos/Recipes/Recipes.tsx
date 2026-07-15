@@ -159,7 +159,7 @@ function RecipeStack({ recipes }: RecipeStackProps) {
               disabled={recipes.length <= 1}
               onClick={() => switchRecipe(-1)}
               type="button"
-              className="relative flex size-9 items-center justify-center text-white transition-transform active:scale-90 disabled:opacity-40"
+              className="relative flex size-9 cursor-pointer items-center justify-center text-white transition-transform active:scale-90 disabled:cursor-default disabled:opacity-40"
             >
               <Icon
                 iconClassName="relative size-4 text-white"
@@ -171,7 +171,7 @@ function RecipeStack({ recipes }: RecipeStackProps) {
               disabled={recipes.length <= 1}
               onClick={() => switchRecipe(1)}
               type="button"
-              className="relative flex size-9 items-center justify-center text-white transition-transform active:scale-90 disabled:opacity-40"
+              className="relative flex size-9 cursor-pointer items-center justify-center text-white transition-transform active:scale-90 disabled:cursor-default disabled:opacity-40"
             >
               <Icon
                 iconClassName="relative size-4 text-white"
@@ -182,7 +182,7 @@ function RecipeStack({ recipes }: RecipeStackProps) {
           <Link
             aria-label={`Open ${title}`}
             href={recipeUrl}
-            className="group relative flex size-9 shrink-0 items-center justify-center transition-transform active:scale-90"
+            className="group relative flex size-9 shrink-0 cursor-pointer items-center justify-center transition-transform active:scale-90"
           >
             <Glass interactive radius={999} />
             <Icon iconClassName="relative size-3.5 text-white" name="plus" />

@@ -26,18 +26,16 @@ export const mockGamesProps = {
       name: "Steam",
       handle: "PARADEMON",
       href: "https://steamcommunity.com/id/parademon",
+      image:
+        "https://avatars.steamstatic.com/fef49e7fa7e1997310d705b2a6158ff8dc1cdfeb_full.jpg",
     },
     {
       id: "xbox",
       name: "Xbox",
-      handle: "Parademon117",
+      handle: "Parademon",
       href: "https://account.xbox.com/profile?gt=Parademon117",
-    },
-    {
-      id: "discord",
-      name: "Discord",
-      handle: "parademon",
-      href: "https://discord.com/users/123456789",
+      image:
+        "https://images-eds-ssl.xboxlive.com/image?url=z951ykn43p4FqWbbFvR2Ec.8vbDhj8G2Xe7ZewaisdJ_p1_a3XvfoyfWFOFbCe.png",
     },
   ],
   games: [

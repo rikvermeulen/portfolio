@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 
-import { getFindMeConditionsResult } from "@/lib/findMeConditions/service.ts";
+import { getFindMeConditionsResult } from "@/vendors/openMeteo/service.ts";
 
 import WeatherBadgeView, {
   SOURCE_LABEL,

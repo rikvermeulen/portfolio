@@ -7,7 +7,7 @@ import type { NextRequest } from "next/server";
 import {
   fetchPicnicAuthKey,
   toPicnicErrorMessage,
-} from "@/lib/picnic/service.ts";
+} from "@/vendors/picnic/service.ts";
 import { env } from "@env";
 
 const ADMIN_HEADER = "x-picnic-admin-secret";

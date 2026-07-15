@@ -1,3 +1,5 @@
+import type { Config } from "@svgr/core";
+
 export const svgrOptions = {
   dimensions: false,
   svgoConfig: {
@@ -7,10 +9,10 @@ export const svgrOptions = {
         params: {
           overrides: {
             removeViewBox: false,
+            cleanupIds: false,
           },
         },
-        cleanupIDs: false,
       },
     ],
   },
-};
+} satisfies Config;

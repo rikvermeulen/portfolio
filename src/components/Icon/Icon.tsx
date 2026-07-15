@@ -2,43 +2,49 @@ import { memo } from "react";
 
 import type { IconProps, SvgIconComponent } from "./Icon.types.ts";
 
-import ArrowIcon from "@/assets/icons/arrow.svg";
-import ChevronDownIcon from "@/assets/icons/chevron.down.svg";
-import ChevronUpIcon from "@/assets/icons/chevron.up.svg";
-import DiscordIcon from "@/assets/icons/discord.svg";
-import DogIcon from "@/assets/icons/dog.svg";
-import ExplicitIcon from "@/assets/icons/explicit.svg";
-import HeartIcon from "@/assets/icons/heart.svg";
-import ImagesIcon from "@/assets/icons/images.svg";
-import MapIcon from "@/assets/icons/map.svg";
-import MinusIcon from "@/assets/icons/minus.svg";
-import MuteIcon from "@/assets/icons/mute.svg";
-import NextIcon from "@/assets/icons/next.svg";
-import PauseIcon from "@/assets/icons/pause.svg";
-import PersonsIcon from "@/assets/icons/persons.svg";
-import PlayIcon from "@/assets/icons/play.svg";
-import PlusIcon from "@/assets/icons/plus.svg";
-import RefreshIcon from "@/assets/icons/refresh.svg";
-import SoundIcon from "@/assets/icons/sound.svg";
-import SprayIcon from "@/assets/icons/spray.svg";
-import SteamIcon from "@/assets/icons/steam.svg";
-import TailIcon from "@/assets/icons/tail.svg";
-import TimerIcon from "@/assets/icons/timer.svg";
-import WateringCanIcon from "@/assets/icons/watering-can.svg";
-import WeatherCloudSunIcon from "@/assets/icons/weather-cloud-sun.svg";
-import WeatherCloudIcon from "@/assets/icons/weather-cloud.svg";
-import WeatherFogIcon from "@/assets/icons/weather-fog.svg";
-import WeatherMoonIcon from "@/assets/icons/weather-moon.svg";
-import WeatherRainIcon from "@/assets/icons/weather-rain.svg";
-import WeatherSnowIcon from "@/assets/icons/weather-snow.svg";
-import WeatherSunIcon from "@/assets/icons/weather-sun.svg";
-import WeatherThunderstormIcon from "@/assets/icons/weather-thunderstorm.svg";
-import XboxIcon from "@/assets/icons/xbox.svg";
+import ArrowIcon from "@/assets/icons/arrow.svg?react";
+import BrushIcon from "@/assets/icons/brush.svg?react";
+import CheckIcon from "@/assets/icons/check.svg?react";
+import ChevronDownIcon from "@/assets/icons/chevron.down.svg?react";
+import ChevronUpIcon from "@/assets/icons/chevron.up.svg?react";
+import DogIcon from "@/assets/icons/dog.svg?react";
+import ExplicitIcon from "@/assets/icons/explicit.svg?react";
+import FlowerIcon from "@/assets/icons/flower.svg?react";
+import HeartIcon from "@/assets/icons/heart.svg?react";
+import ImagesIcon from "@/assets/icons/images.svg?react";
+import MapIcon from "@/assets/icons/map.svg?react";
+import MinusIcon from "@/assets/icons/minus.svg?react";
+import MuteIcon from "@/assets/icons/mute.svg?react";
+import NextIcon from "@/assets/icons/next.svg?react";
+import PauseIcon from "@/assets/icons/pause.svg?react";
+import PersonsIcon from "@/assets/icons/persons.svg?react";
+import PlayIcon from "@/assets/icons/play.svg?react";
+import PlusIcon from "@/assets/icons/plus.svg?react";
+import RefreshIcon from "@/assets/icons/refresh.svg?react";
+import SoundIcon from "@/assets/icons/sound.svg?react";
+import SprayIcon from "@/assets/icons/spray.svg?react";
+import SteamIcon from "@/assets/icons/steam.svg?react";
+import TailIcon from "@/assets/icons/tail.svg?react";
+import TimerIcon from "@/assets/icons/timer.svg?react";
+import TrowelIcon from "@/assets/icons/trowel.svg?react";
+import WateringCanIcon from "@/assets/icons/watering-can.svg?react";
+import WeatherCloudSunIcon from "@/assets/icons/weather-cloud-sun.svg?react";
+import WeatherCloudIcon from "@/assets/icons/weather-cloud.svg?react";
+import WeatherFogIcon from "@/assets/icons/weather-fog.svg?react";
+import WeatherMoonIcon from "@/assets/icons/weather-moon.svg?react";
+import WeatherRainIcon from "@/assets/icons/weather-rain.svg?react";
+import WeatherSnowIcon from "@/assets/icons/weather-snow.svg?react";
+import WeatherSunIcon from "@/assets/icons/weather-sun.svg?react";
+import WeatherThunderstormIcon from "@/assets/icons/weather-thunderstorm.svg?react";
+import XboxIcon from "@/assets/icons/xbox.svg?react";
 
 const ICON_COMPONENTS: Record<string, SvgIconComponent> = {
   arrow: ArrowIcon,
+  brush: BrushIcon,
+  check: CheckIcon,
   dog: DogIcon,
   explicit: ExplicitIcon,
+  flower: FlowerIcon,
   heart: HeartIcon,
   images: ImagesIcon,
   map: MapIcon,
@@ -53,10 +59,10 @@ const ICON_COMPONENTS: Record<string, SvgIconComponent> = {
   spray: SprayIcon,
   steam: SteamIcon,
   xbox: XboxIcon,
-  discord: DiscordIcon,
   tail: TailIcon,
   persons: PersonsIcon,
   timer: TimerIcon,
+  trowel: TrowelIcon,
   chevronDown: ChevronDownIcon,
   chevronUp: ChevronUpIcon,
   "watering-can": WateringCanIcon,

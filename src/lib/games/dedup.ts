@@ -1,20 +1,15 @@
 import type { Game } from "./types.ts";
 
-// Edition / platform markers that shouldn't stop two listings of the same game
-// from matching (e.g. "GTA V" vs "GTA V Enhanced (PC)").
-const EDITION_WORDS =
-  /\b(enhanced|remastered?|definitive|reloaded|complete|deluxe|ultimate|anniversary|standard|goty|game of the year|edition)\b/g;
-
 /** Last-played time in seconds, treating "never played" as the oldest. */
 const playedAt = (game: Game): number => game.lastPlayedUnix ?? 0;
 
-/** Loose key for matching the same game across platforms and editions. */
+/**
+ * Loose key for matching the *same* game across platforms: case- and
+ * punctuation-insensitive. Edition/platform variants (e.g. "GTA V" vs "GTA V
+ * Enhanced (PC)") are intentionally kept distinct — they're different releases.
+ */
 export function titleKey(name: string): string {
-  return name
-    .toLowerCase()
-    .replace(/\([^)]*\)/g, " ") // drop "(PC)", "(Windows)", …
-    .replace(EDITION_WORDS, " ")
-    .replace(/[^a-z0-9]+/g, "");
+  return name.toLowerCase().replace(/[^a-z0-9]+/g, "");
 }
 
 /**

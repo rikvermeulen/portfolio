@@ -1,5 +1,5 @@
 import type { BentoSizedProps } from "@/components/Bento/index.ts";
-import type { PodcastEpisode } from "@/lib/spotify/types.ts";
+import type { PodcastEpisode } from "@/lib/music/types.ts";
 
 export type { PodcastEpisode };
 

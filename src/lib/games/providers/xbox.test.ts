@@ -1,6 +1,6 @@
 import { xboxProvider } from "./xbox.ts";
 
-jest.mock("@/lib/xbox/service.ts", () => ({
+jest.mock("@/vendors/xbox/service.ts", () => ({
   getXboxGamesResult: jest.fn(),
   getXboxProfileResult: jest.fn(),
 }));
@@ -17,7 +17,7 @@ jest.mock("@env", () => ({
 }));
 
 const { getXboxGamesResult, getXboxProfileResult } = jest.requireMock(
-  "@/lib/xbox/service.ts",
+  "@/vendors/xbox/service.ts",
 ) as { getXboxGamesResult: jest.Mock; getXboxProfileResult: jest.Mock };
 
 beforeEach(() => {
@@ -33,8 +33,10 @@ describe("xboxProvider.getPlatformLink", () => {
     getXboxProfileResult.mockResolvedValue({
       ok: true,
       data: {
-        gamertag: "LiveTag",
-        href: "https://account.xbox.com/gt=LiveTag",
+        gamertag: "LiveTag1385",
+        displayName: "LiveTag",
+        href: "https://account.xbox.com/gt=LiveTag1385",
+        avatar: "https://images-eds-ssl.xboxlive.com/gamerpic.png",
       },
     });
 
@@ -42,7 +44,8 @@ describe("xboxProvider.getPlatformLink", () => {
       id: "xbox",
       name: "Xbox",
       handle: "LiveTag",
-      href: "https://account.xbox.com/gt=LiveTag",
+      href: "https://account.xbox.com/gt=LiveTag1385",
+      image: "https://images-eds-ssl.xboxlive.com/gamerpic.png",
     });
   });
 

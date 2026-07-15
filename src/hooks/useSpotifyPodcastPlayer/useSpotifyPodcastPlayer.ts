@@ -15,7 +15,7 @@ import {
   resolveDeviceId,
   SPOTIFY_DEVICE_NAME,
   startPlaybackUris,
-} from "@/lib/spotify/webPlayback.ts";
+} from "@/vendors/spotify/webPlayback.ts";
 
 /**
  * Podcast playback over a list of episodes. Episodes are played with their

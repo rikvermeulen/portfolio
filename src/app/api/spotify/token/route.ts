@@ -12,18 +12,27 @@ export async function GET() {
 
   const credentials = btoa(`${SPOTIFY_CLIENT_ID}:${SPOTIFY_CLIENT_SECRET}`);
 
-  const resp = await fetch("https://accounts.spotify.com/api/token", {
-    method: "POST",
-    headers: {
-      Authorization: `Basic ${credentials}`,
-      "Content-Type": "application/x-www-form-urlencoded",
-    },
-    body: new URLSearchParams({
-      grant_type: "refresh_token",
-      refresh_token: SPOTIFY_REFRESH_TOKEN,
-    }),
-    cache: "no-store",
-  });
+  let resp: Response;
+  try {
+    resp = await fetch("https://accounts.spotify.com/api/token", {
+      method: "POST",
+      headers: {
+        Authorization: `Basic ${credentials}`,
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: new URLSearchParams({
+        grant_type: "refresh_token",
+        refresh_token: SPOTIFY_REFRESH_TOKEN,
+      }),
+      cache: "no-store",
+      signal: AbortSignal.timeout(10_000),
+    });
+  } catch {
+    return NextResponse.json(
+      { error: "Token endpoint unreachable" },
+      { status: 504 },
+    );
+  }
 
   if (!resp.ok) {
     return NextResponse.json(

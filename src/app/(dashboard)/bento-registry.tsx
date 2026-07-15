@@ -14,11 +14,6 @@ import {
   bentos,
 } from "@/components/Bento/index.ts";
 import { getGamesResult } from "@/lib/games/index.ts";
-import { getPicnicRecipesResult } from "@/lib/picnic/service.ts";
-import { getPlantaPlantsResult } from "@/lib/planta/service.ts";
-import { getSpotifyPodcastResult } from "@/lib/spotify/podcastService.ts";
-import { getSpotifyMusicResult } from "@/lib/spotify/service.ts";
-import { getPhotosResult } from "@/lib/supabase/service.ts";
 import {
   Category,
   Contact,
@@ -35,6 +30,11 @@ import {
   Recipes,
   WeatherBadge,
 } from "@/modules/Bentos/index.ts";
+import { getPicnicRecipesResult } from "@/vendors/picnic/service.ts";
+import { getPlantaPlantsResult } from "@/vendors/planta/service.ts";
+import { getSpotifyPodcastResult } from "@/vendors/spotify/podcastService.ts";
+import { getSpotifyMusicResult } from "@/vendors/spotify/service.ts";
+import { getPhotosResult } from "@/vendors/supabase/service.ts";
 
 /**
  * A tile rendered immediately with no blocking data fetch — static content, or

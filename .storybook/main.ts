@@ -1,8 +1,13 @@
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-import tailwindcss from "@tailwindcss/postcss";
+import svgr from "vite-plugin-svgr";
+
 import type { StorybookConfig } from "@storybook/nextjs-vite";
+
+import tailwindcss from "@tailwindcss/postcss";
+
+import { svgrOptions } from "../config/webpackLoaders.ts";
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -15,6 +20,7 @@ const config: StorybookConfig = {
   framework: "@storybook/nextjs-vite",
   staticDirs: ["../public"],
   viteFinal: async (config) => {
+    config.plugins = [svgr({ svgrOptions }), ...(config.plugins ?? [])];
     config.resolve = {
       ...config.resolve,
       alias: {

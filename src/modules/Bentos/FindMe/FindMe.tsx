@@ -53,7 +53,7 @@ const FindMe = ({ sizeKey, className, weatherBadge }: FindMeProps) => {
           aria-label="Zoom out"
           onClick={zoomOut}
           type="button"
-          className="relative flex size-9 items-center justify-center text-black transition-transform active:scale-90 dark:text-white"
+          className="relative flex size-9 cursor-pointer items-center justify-center text-black transition-transform active:scale-90 dark:text-white"
         >
           <Icon iconClassName="size-4" name="minus" />
         </button>
@@ -61,7 +61,7 @@ const FindMe = ({ sizeKey, className, weatherBadge }: FindMeProps) => {
           aria-label="Zoom in"
           onClick={zoomIn}
           type="button"
-          className="relative flex size-9 items-center justify-center text-black transition-transform active:scale-90 dark:text-white"
+          className="relative flex size-9 cursor-pointer items-center justify-center text-black transition-transform active:scale-90 dark:text-white"
         >
           <Icon iconClassName="size-4" name="plus" />
         </button>

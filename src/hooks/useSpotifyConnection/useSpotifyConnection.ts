@@ -8,7 +8,7 @@ import type {
   WebPlaybackDevice,
   WebPlaybackError,
   WebPlaybackState,
-} from "@/lib/spotify/webPlayback.ts";
+} from "@/vendors/spotify/webPlayback.ts";
 
 import {
   fetchAccessToken,
@@ -16,7 +16,7 @@ import {
   PLAYBACK_UNAVAILABLE_MESSAGE,
   reportDiagnostic,
   reportEnvironmentDiagnostics,
-} from "@/lib/spotify/webPlayback.ts";
+} from "@/vendors/spotify/webPlayback.ts";
 
 /**
  * Registers a single Spotify Connect device in the browser via the Web Playback
@@ -145,7 +145,13 @@ export function useSpotifyConnection(
       player.connect();
     };
 
-    init();
+    init().catch((error_: unknown) => {
+      if (cancelled) {
+        return;
+      }
+      reportDiagnostic("init-failed", { name, message: String(error_) });
+      console.warn(`Spotify init failed: ${String(error_)}`);
+    });
 
     return () => {
       cancelled = true;

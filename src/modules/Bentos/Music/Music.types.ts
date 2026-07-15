@@ -1,5 +1,5 @@
 import type { BentoSizedProps } from "@/components/Bento/index.ts";
-import type { PlaylistTrack } from "@/lib/spotify/types.ts";
+import type { PlaylistTrack } from "@/lib/music/types.ts";
 
 export type { PlaylistTrack };
 

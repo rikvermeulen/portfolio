@@ -1,5 +1,5 @@
 import type { RecipesProps } from "./Recipes.types.ts";
-import type { PicnicRecipeCard } from "@/lib/picnic/types.ts";
+import type { PicnicRecipeCard } from "@/lib/recipes/types.ts";
 
 export const mockRecipeCards: readonly PicnicRecipeCard[] = [
   {

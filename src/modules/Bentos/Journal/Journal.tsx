@@ -87,7 +87,7 @@ const Journal = ({ sizeKey, className, date }: JournalProps) => {
           aria-label="Copy question"
           onClick={() => void copyQuestion()}
           type="button"
-          className="relative z-10 flex size-9 items-center justify-center overflow-hidden rounded-full text-white"
+          className="relative z-10 flex size-9 cursor-pointer items-center justify-center overflow-hidden rounded-full text-white"
         >
           <Glass {...ACTION_GLASS} />
           <Icon iconClassName="relative z-10 size-4" name="plus" />
@@ -96,7 +96,7 @@ const Journal = ({ sizeKey, className, date }: JournalProps) => {
           aria-label="Show another question"
           onClick={() => setQuestionIndex(getRandomQuestionIndex)}
           type="button"
-          className="relative z-10 flex size-9 items-center justify-center overflow-hidden rounded-full text-white"
+          className="relative z-10 flex size-9 cursor-pointer items-center justify-center overflow-hidden rounded-full text-white"
         >
           <Glass {...ACTION_GLASS} />
           <Icon iconClassName="relative z-10 size-4" name="refresh" />

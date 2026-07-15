@@ -12,7 +12,6 @@ import type {
  *
  * - Steam offers a header profile + games + link.
  * - Xbox offers games + link.
- * - Discord offers only a link.
  *
  * Providers are best-effort: the aggregation service ({@link getGamesResult})
  * swallows a rejected promise from any method and treats it as "nothing to

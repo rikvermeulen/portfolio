@@ -20,7 +20,7 @@ const AudioControls = ({
         onClick={() => onChangeTrack("previous")}
         className={classnames(
           pulsedButton === "previous" && "button",
-          "relative border-none fill-white outline-hidden",
+          "relative cursor-pointer border-none fill-white outline-hidden",
         )}
       >
         <SkipIcon className="relative -top-1 size-[22px]" />
@@ -32,7 +32,7 @@ const AudioControls = ({
         onClick={onPlayOrPause}
         className={classnames(
           pulsedButton === "playPause" && "button",
-          "relative flex h-12 w-12 items-center justify-center overflow-hidden rounded-full text-white",
+          "relative flex h-12 w-12 cursor-pointer items-center justify-center overflow-hidden rounded-full text-white",
         )}
       >
         <Glass
@@ -64,7 +64,7 @@ const AudioControls = ({
         onClick={() => onChangeTrack("next")}
         className={classnames(
           pulsedButton === "next" && "button",
-          "-scale-x-100 border-none fill-white outline-hidden",
+          "-scale-x-100 cursor-pointer border-none fill-white outline-hidden",
         )}
       >
         <SkipIcon className="relative -top-1 size-[22px]" />

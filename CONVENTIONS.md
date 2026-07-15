@@ -58,7 +58,7 @@ There is **no CMS, database, or i18n layer** in this project.
 ### Directory taxonomy & file-naming grammar
 
 - Casing is role-dependent: `components/`, `modules/`, `contexts/` are **PascalCase**;
-  `hooks/`, `utils/`, `lib/` are **camelCase**.
+  `hooks/`, `utils/`, `lib/`, `vendors/` are **camelCase**.
 - A unit named `Foo` uses exactly: `Foo.tsx`/`foo.ts`, `Foo.types.ts`, `Foo.const.ts`
   (constants/static data), `Foo.utils.ts` (local helpers), `Foo.animate.ts` (animation
   logic), `Foo.mock.ts`, `Foo.stories.tsx`, `Foo.test.ts(x)`, and an `index.ts` barrel.
@@ -66,16 +66,43 @@ There is **no CMS, database, or i18n layer** in this project.
 - Components/modules: `default` export. Hooks: **named** export. Props types: `interface XProps`.
 - Contexts: Provider + accessor hook (`useXContext`), `null` default + throw-if-outside-provider.
 
-### Integrations (`src/lib/<vendor>/`)
+### Vendors & domain (`src/vendors/<vendor>/` + `src/lib/<domain>/`)
 
-Each integration follows one template: a **client** (transport only — fetch/SDK, tokens,
-throws a typed error), a **service** (env-gate → cache → client → map wire→domain → return
-`Result<T>`/`StatusResult<T>`), a **types** file, and Zod validation at the wire boundary.
+Third-party integrations are kept fully separate from first-party domain code:
+
+- **`src/vendors/<vendor>/`** — one folder per third party (`steam`, `xbox`, `spotify`,
+  `supabase`, `picnic`, `planta`, `openMeteo`). Strictly transport: a **client**
+  (fetch/SDK, tokens, throws a typed error), a **service** (env-gate → cache → client →
+  _delegate_ wire→domain mapping to `lib/<domain>` → return `Result<T>`/`StatusResult<T>`),
+  and a **types** file holding **wire shapes only**, plus Zod validation at the boundary.
+  Imported via `@/vendors/…`. No domain types, formatters, mappers, or URL builders here.
+- **`src/lib/<domain>/`** — first-party domain code: the shared domain **types** plus every
+  **formatter / mapper / selector / URL builder** that shapes vendor data into UI-ready
+  objects. Examples: `lib/games` (Steam/Xbox mappers, art URLs, dedup, playtime formatting,
+  a provider aggregator over the `steam`/`xbox` vendors), `lib/plants` (selectors + card
+  formatting), `lib/recipes` (extraction, image URLs, card mapper), `lib/music` (track /
+  episode mappers, image picking), `lib/weather` (Open-Meteo condition mapping), `lib/photos`.
+
+Dependency direction:
+
+- **Pure domain shaping** (`types`, mappers, formatters, `dedup`, …) never imports a
+  vendor's `client`/`service` — it only reads a vendor's wire `types` to map them. No env,
+  no I/O.
+- A **vendor service imports its domain** to map wire→domain (e.g. `picnic/service` →
+  `lib/recipes/toRecipeCard`).
+- A domain feature may add a thin **composition/adapter layer** — the aggregator plus its
+  provider adapters (e.g. `lib/games/service.ts` + `lib/games/providers/*`). This layer is
+  the sanctioned place that _does_ import vendor `service`s and read `@env`: each adapter
+  implements the domain's `GameProvider` interface against one vendor, and the aggregator
+  composes them. Keep it thin — mapping/logic stays in the pure files.
+
+`src/lib/{glass,fonts}` are feature/config code, not integrations — exempt from the template.
 Use the shared `Result<T>`/`StatusResult<T>` from `src/types` — do not re-invent the union.
 
 ### Imports
 
 - Cross-unit → `@/…` alias; own siblings → relative `./`. Always explicit `.ts`/`.tsx` extensions.
+- Third-party integrations → `@/vendors/<vendor>/…`; first-party domain/UI → `@/…`.
 - Env is imported from `@env`.
 - Group: third-party → blank line → `@/` internal.
 
