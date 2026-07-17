@@ -16,7 +16,6 @@ const AudioControls = ({
     <div className="m-auto flex w-full max-w-[184px] items-center justify-between">
       <button
         aria-label="Previous song"
-        name="Previous song"
         onClick={() => onChangeTrack("previous")}
         type="button"
         className={classnames(
@@ -28,8 +27,8 @@ const AudioControls = ({
       </button>
 
       <button
-        aria-label="Play / Pause"
-        name="Play / Pause"
+        aria-label={isPlaying ? "Pause" : "Play"}
+        aria-pressed={isPlaying}
         onClick={onPlayOrPause}
         type="button"
         className={classnames(
@@ -62,7 +61,6 @@ const AudioControls = ({
 
       <button
         aria-label="Next song"
-        name="Next song"
         onClick={() => onChangeTrack("next")}
         type="button"
         className={classnames(

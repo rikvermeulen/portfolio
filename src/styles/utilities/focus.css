@@ -1,0 +1,6 @@
+/* Shared keyboard focus indicator. Apply `focus-ring` to any interactive
+   element that needs a visible focus state; it clears the default outline and
+   draws a consistent 2px offset ring on keyboard focus only. */
+.focus-ring {
+  @apply outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ds-blue;
+}

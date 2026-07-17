@@ -33,14 +33,14 @@ const FindMe = ({ sizeKey, className, weatherBadge }: FindMeProps) => {
 
       <div className="pointer-events-none absolute top-0 z-10">
         <Image
-          alt="Cloud"
+          alt=""
           height={267}
           src="/images/cloud.png"
           width={300}
           className="cloud-one h-auto w-auto -translate-x-full -translate-y-32 opacity-90 contrast-125 transition-transform ease-in-out"
         />
         <Image
-          alt="Cloud"
+          alt=""
           height={214}
           src="/images/cloud.png"
           width={240}

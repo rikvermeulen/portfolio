@@ -26,9 +26,10 @@ export default function Hero() {
           </span>
         </h1>
         <p className="max-w-xl text-ds-gray">
-          I’m a Creative Developer based in Heukelum, the Netherlands. I develop
-          full-scale creative digital experiences for some amazing agencies and
-          hugely talented people. <span aria-hidden="true">✨</span>
+          I’m a Creative Developer based in Rotterdam, the Netherlands. I
+          develop full-scale creative digital experiences for some amazing
+          agencies and hugely talented people.{" "}
+          <span aria-hidden="true">✨</span>
         </p>
       </div>
       <div>
@@ -36,6 +37,7 @@ export default function Hero() {
           <span aria-hidden="true">🐙</span> Coding:&nbsp;
           <Link
             href="https://github.com/rikvermeulen"
+            rel="me"
             className="cursor-pointer decoration-1 underline-offset-2 transition-colors hover:text-ds-blue hover:underline"
           >
             @rikvermeulen

@@ -3,14 +3,16 @@ import { Fragment, Suspense } from "react";
 import type { Metadata } from "next";
 
 import { BentoErrorBoundary, BentoSkeleton } from "@/components/Bento/index.ts";
+import Divider from "@/components/Divider/index.ts";
+import { buildPageMetadata, SITE } from "@/lib/seo/index.ts";
 
 import { bentoRegistry } from "./bento-registry.tsx";
 
-export const metadata: Metadata = {
-  title: "Home - Rik Vermeulen Portfolio",
+export const metadata: Metadata = buildPageMetadata({
+  titleAbsolute: SITE.title,
   description:
-    "Rik Vermeulen - Creative Developer based in Rotterdam, the Netherlands. Explore Rik’s digital portfolio and the creative experiences he has developed through the years.",
-};
+    "Rik Vermeulen — Creative Developer based in Rotterdam, the Netherlands. Explore Rik’s digital portfolio and the creative digital experiences he has built over the years.",
+});
 
 /**
  * The dashboard's single composition point. Every tile is declared in
@@ -23,14 +25,7 @@ export default function Home() {
     <>
       {bentoRegistry.map((tile) => {
         if (tile.kind === "divider") {
-          return (
-            <div
-              key={tile.id}
-              id={tile.anchorId}
-              aria-hidden
-              className="bentogrid-section-break scroll-mt-24"
-            />
-          );
+          return <Divider key={tile.id} anchorId={tile.anchorId} />;
         }
 
         if (tile.kind === "static") {

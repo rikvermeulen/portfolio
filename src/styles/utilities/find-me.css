@@ -104,3 +104,14 @@
   animation: findme-marker-breathe 3s ease-in-out infinite;
   will-change: box-shadow;
 }
+
+/* Honour reduced-motion: these are the only always-on, infinite animations in
+   the tile — hold them still rather than looping forever. */
+@media (prefers-reduced-motion: reduce) {
+  .cloud-one,
+  .cloud-two,
+  .findme-marker-ping,
+  .findme-marker-dot {
+    animation: none;
+  }
+}

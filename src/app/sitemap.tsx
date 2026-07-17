@@ -8,13 +8,17 @@ import { env } from "@env";
  * @returns {MetadataRoute.Sitemap}
  */
 
+const LAST_MODIFIED = "2026-07-17";
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const host = env.NEXT_PUBLIC_APP_URL;
 
   return [
     {
       url: `${host}`,
-      lastModified: new Date(),
+      lastModified: LAST_MODIFIED,
+      changeFrequency: "monthly",
+      priority: 1,
     },
   ];
 }

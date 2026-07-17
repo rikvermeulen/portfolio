@@ -100,7 +100,7 @@ const AudioBento = ({
               <Icon iconClassName="w-2.5" name="explicit" />
             )}
           </div>
-          <div className="bento-body relative text-white/70">
+          <div className="bento-body relative text-white">
             {display?.subtitle}
           </div>
         </div>
@@ -113,7 +113,7 @@ const AudioBento = ({
         />
 
         {playbackError && (
-          <p role="alert" className="bento-body mt-2 text-center text-white/70">
+          <p role="alert" className="bento-body mt-2 text-center text-white">
             {playbackError}
           </p>
         )}

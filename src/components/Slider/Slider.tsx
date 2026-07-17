@@ -42,13 +42,11 @@ const Slider = ({
           />
         </div>
 
-        {/* Glass thumb — React Aria owns the thumb's centering transform, so the
-            drag scale lives on an inner wrapper to grow symmetrically about center */}
-        <SliderThumb className="top-1/2 h-4 w-4 outline-none">
+        <SliderThumb className="focus-ring top-1/2 flex size-6 items-center justify-center rounded-full">
           {({ isDragging }) => (
             <div
               className={classnames(
-                "h-full w-full overflow-hidden rounded-full transition-transform duration-150 ease-out",
+                "size-4 overflow-hidden rounded-full transition-transform duration-150 ease-out",
                 isDragging ? "scale-125" : "scale-100",
               )}
             >

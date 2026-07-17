@@ -8,11 +8,12 @@ export default function Header() {
     <header className="py-10">
       <div className="main-container flex w-full justify-between">
         <Link
+          aria-label="Rik Vermeulen — home"
           href="/"
-          className="flex items-center gap-2 justify-self-start text-black dark:text-white"
+          className="focus-ring flex items-center gap-2 justify-self-start rounded-sm text-black dark:text-white"
         >
           <Image
-            alt="logo"
+            alt=""
             height="20"
             src="/images/logo.png"
             width="20"

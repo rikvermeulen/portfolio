@@ -10,7 +10,7 @@ export default function Navigation() {
           <li key={section.id}>
             <a
               href={`#${section.id}`}
-              className="inline-block rounded-2xl transition-transform duration-200 hover:scale-105 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ds-blue"
+              className="focus-ring inline-block rounded-2xl transition-transform duration-200 hover:scale-105"
             >
               <Tag label={section.label} variant={section.variant} />
             </a>

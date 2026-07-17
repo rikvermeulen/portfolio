@@ -19,7 +19,7 @@ const Category = ({ sizeKey, label, tags, className }: CategoryProps) => {
       className={classnames("relative", className)}
     >
       <Image
-        alt="Category folder"
+        alt=""
         height={100}
         priority
         src="/svgs/directory.svg"

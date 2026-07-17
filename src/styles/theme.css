@@ -1,9 +1,12 @@
 @theme {
   /* ── iOS system accents ───────────────────────────────────── */
-  --color-ds-gray: #8e8e93;
+
+  --color-ds-gray: #6b6b70;
   --color-ds-green: #34c759;
   --color-ds-blue: #007aff;
   --color-ds-blue-dark: #0a84ff;
+  --color-ds-red: #ff3b30;
+  --color-ds-red-dark: #ff453a;
   --color-ds-violet: #5801ff;
 
   /* ── Neutrals & surfaces (light / dark) ───────────────────── */
@@ -78,4 +81,12 @@
   --color-ds-tag-pink: #f2deef;
   --color-ds-tag-lavender: #d9c6e8;
   --color-ds-tag-dark: #1c1521;
+}
+
+/* Dark-mode neutral text: lighter gray keeps ≥4.5:1 on dark surfaces
+   (#1c1c1e / #26262a) where the light-mode #6b6b70 would be too dim. */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-ds-gray: #98989d;
+  }
 }

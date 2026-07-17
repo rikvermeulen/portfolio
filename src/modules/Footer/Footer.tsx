@@ -20,7 +20,7 @@ export default function Footer() {
       <div className="content-container flex flex-col gap-10 border-t border-ds-border pt-12 md:flex-row md:justify-between">
         <Link aria-label="Rik Vermeulen — home" href="/" className="w-fit">
           <Image
-            alt="logo"
+            alt=""
             height="24"
             src="/images/logo.png"
             width="24"
@@ -35,6 +35,7 @@ export default function Footer() {
               <li key={name}>
                 <Link
                   href={url}
+                  rel="me"
                   className="cursor-pointer text-ds-gray decoration-1 underline-offset-2 transition-colors hover:text-ds-blue hover:underline"
                 >
                   {name}

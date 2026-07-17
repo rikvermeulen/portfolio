@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useId, useRef } from "react";
+import { useCallback, useId } from "react";
 import { AnimatePresence, motion, useDragControls } from "framer-motion";
 
 import type { DrawerProps } from "./Drawer.types.ts";
 import type { DragControls, PanInfo } from "framer-motion";
 
+import { FocusTrap } from "@/components/FocusTrap/index.ts";
 import Glass from "@/components/Glass/index.ts";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion/index.ts";
 import classnames from "@/utils/classnames/index.ts";
@@ -36,7 +37,9 @@ export default function Drawer({
   const reduceMotion = usePrefersReducedMotion();
   const dragControls = useDragControls();
   const titleId = useId();
-  const close = () => onOpenChange(false);
+  // Memoised so FocusTrap's effect (which depends on onEscape) doesn't tear
+  // down and re-run — and re-steal focus — on every Drawer render.
+  const close = useCallback(() => onOpenChange(false), [onOpenChange]);
 
   const sheetEnter = reduceMotion ? { opacity: 0 } : { y: "100%" };
   const sheetActive = reduceMotion ? { opacity: 1 } : { y: 0 };
@@ -62,6 +65,7 @@ export default function Drawer({
             animate={sheetActive}
             aria-label={header ? title : undefined}
             aria-labelledby={header ? undefined : titleId}
+            aria-modal="true"
             drag="y"
             dragConstraints={{ top: 0, bottom: 0 }}
             dragControls={dragControls}
@@ -71,12 +75,6 @@ export default function Drawer({
             initial={sheetEnter}
             onDragEnd={(_event, info) => {
               if (shouldDismiss(info)) {
-                close();
-              }
-            }}
-            onKeyDown={(event) => {
-              if (event.key === "Escape") {
-                event.stopPropagation();
                 close();
               }
             }}
@@ -93,28 +91,36 @@ export default function Drawer({
               className="pointer-events-none absolute inset-0 bg-black/50"
             />
 
-            <DrawerHandle dragControls={dragControls} onClose={close} />
+            <FocusTrap
+              isActive={isOpen}
+              onEscape={close}
+              className="relative z-10 flex min-h-0 flex-1 flex-col"
+            >
+              <DrawerHandle dragControls={dragControls} onClose={close} />
 
-            {header ? (
-              <div className="relative z-10 shrink-0">{header}</div>
-            ) : (
-              <header className="relative z-10 shrink-0 px-4 pb-2 text-center">
-                <p id={titleId} className="text-sm font-semibold">
-                  {title}
-                </p>
-                {description && (
-                  <p className="mt-0.5 text-xs text-white/50">{description}</p>
-                )}
-              </header>
-            )}
+              {header ? (
+                <div className="shrink-0">{header}</div>
+              ) : (
+                <header className="shrink-0 px-4 pb-2 text-center">
+                  <p id={titleId} className="text-sm font-semibold">
+                    {title}
+                  </p>
+                  {description && (
+                    <p className="mt-0.5 text-xs text-white/50">
+                      {description}
+                    </p>
+                  )}
+                </header>
+              )}
 
-            <div className="relative z-10 min-h-0 flex-1 [scrollbar-width:none] overflow-y-auto px-3 pb-3 [&::-webkit-scrollbar]:hidden">
-              {children}
-            </div>
+              <div className="min-h-0 flex-1 [scrollbar-width:none] overflow-y-auto px-3 pb-3 [&::-webkit-scrollbar]:hidden">
+                {children}
+              </div>
 
-            {footer ? (
-              <footer className="relative z-10 shrink-0 p-3">{footer}</footer>
-            ) : null}
+              {footer ? (
+                <footer className="shrink-0 p-3">{footer}</footer>
+              ) : null}
+            </FocusTrap>
           </motion.dialog>
         </>
       )}
@@ -129,17 +135,8 @@ function DrawerHandle({
   readonly dragControls: DragControls;
   readonly onClose: () => void;
 }) {
-  const ref = useRef<HTMLButtonElement>(null);
-
-  useEffect(() => {
-    // `preventScroll` stops the browser from scrolling the page to bring the
-    // focused handle into view — which otherwise jerks the dashboard up/down.
-    ref.current?.focus({ preventScroll: true });
-  }, []);
-
   return (
     <button
-      ref={ref}
       aria-label="Close"
       onClick={onClose}
       onPointerDown={(event) => dragControls.start(event)}

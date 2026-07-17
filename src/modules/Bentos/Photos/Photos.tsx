@@ -8,6 +8,7 @@ import type { ToggleOption } from "@/components/ToggleGroup/index.ts";
 
 import Bento, { bentos } from "@/components/Bento/index.ts";
 import ToggleGroup from "@/components/ToggleGroup/index.ts";
+import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion/index.ts";
 
 const AUTO_ADVANCE_INTERVAL_MS = 3000 as const;
 const ALBUM_LINK = "https://www.icloud.com/sharedalbum/#B0fGWZuqDFg0VA";
@@ -34,6 +35,7 @@ const ALBUM_ICONS: Record<string, string> = {
 };
 
 const Photos = ({ sizeKey, albums }: PhotosProps) => {
+  const reduceMotion = usePrefersReducedMotion();
   const albumNames = Object.keys(albums);
   const [selectedAlbum, setSelectedAlbum] = useState(albumNames[0] ?? "");
 
@@ -52,8 +54,9 @@ const Photos = ({ sizeKey, albums }: PhotosProps) => {
   };
 
   useEffect(() => {
-    // A single item (or none) has nothing to advance through.
-    if (mediaFiles.length < 2) {
+    // A single item (or none) has nothing to advance through. Under reduced
+    // motion, hold on the first slide — no auto-advancing crossfade.
+    if (mediaFiles.length < 2 || reduceMotion) {
       return;
     }
 
@@ -74,7 +77,7 @@ const Photos = ({ sizeKey, albums }: PhotosProps) => {
     return () => {
       clearInterval(interval);
     };
-  }, [mediaFiles.length, selectedAlbum]);
+  }, [mediaFiles.length, selectedAlbum, reduceMotion]);
 
   return (
     <Bento
@@ -90,6 +93,7 @@ const Photos = ({ sizeKey, albums }: PhotosProps) => {
       {albumNames.length > 1 && (
         <div className="absolute bottom-5 left-1/2 z-20 -translate-x-1/2 translate-y-0 transition-transform duration-300 ease-in-out [@media(hover:hover)]:translate-y-[200%] [@media(hover:hover)]:group-hover:translate-y-0">
           <ToggleGroup
+            ariaLabel="Select photo album"
             onChange={handleAlbumChange}
             options={albumOptions}
             value={selectedAlbum}
@@ -111,7 +115,8 @@ const Photos = ({ sizeKey, albums }: PhotosProps) => {
             {isVideoItem ? (
               <video
                 aria-label={`Video ${index + 1} of ${mediaFiles.length} from ${selectedAlbum} album`}
-                autoPlay
+                autoPlay={!reduceMotion}
+                controls={reduceMotion}
                 loop
                 muted
                 playsInline

@@ -81,6 +81,10 @@ const Contact = ({ sizeKey, className }: ContactProps) => {
       </header>
       <div
         ref={chatRef}
+        aria-label="Conversation with Rik"
+        aria-live="polite"
+        aria-relevant="additions"
+        role="log"
         className="no-scrollbar flex flex-1 flex-col gap-2 overflow-y-auto px-5 pt-20 pb-20"
       >
         <p className="bento-body relative text-center text-ds-gray">
@@ -119,7 +123,7 @@ const Contact = ({ sizeKey, className }: ContactProps) => {
               aria-label={showMenu ? "Close social links" : "Open social links"}
               onClick={() => setShowMenu((open) => !open)}
               type="button"
-              className="relative z-10 flex h-9 w-full shrink-0 cursor-pointer items-center justify-center overflow-hidden transition-[height] duration-300 outline-none group-data-open:h-0"
+              className="focus-ring relative z-10 flex h-9 w-full shrink-0 cursor-pointer items-center justify-center overflow-hidden transition-[height] duration-300 group-data-open:h-0"
             >
               <Icon
                 iconClassName="size-4 transition-[opacity,transform] duration-100 group-data-open:scale-0 group-data-open:opacity-0"
@@ -165,7 +169,7 @@ const Contact = ({ sizeKey, className }: ContactProps) => {
               onFocus={handleFocus}
               placeholder="Type your response here…"
               value={inputValue}
-              className="relative z-10 mx-3 w-full bg-transparent text-sm outline-none disabled:opacity-30"
+              className="focus-ring relative z-10 mx-3 w-full bg-transparent text-sm disabled:opacity-30"
             />
             <button
               aria-label="Send message"

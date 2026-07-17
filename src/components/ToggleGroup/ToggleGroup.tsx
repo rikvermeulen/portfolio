@@ -50,6 +50,7 @@ export default function ToggleGroup<T extends string = string>({
   value,
   onChange,
   className,
+  ariaLabel = "Toggle group",
 }: ToggleGroupProps<T>) {
   const reduceMotion = usePrefersReducedMotion();
   const rootRef = useRef<HTMLDivElement>(null);
@@ -390,7 +391,7 @@ export default function ToggleGroup<T extends string = string>({
       ) : null}
 
       <TabList
-        aria-label="Toggle group"
+        aria-label={ariaLabel}
         className="relative z-10 inline-flex items-center"
       >
         {options.map((option) => (
@@ -402,7 +403,9 @@ export default function ToggleGroup<T extends string = string>({
             id={option.value}
             className={classnames(
               "relative flex min-w-15 cursor-pointer items-center justify-center rounded-full px-2.5 py-1 outline-none",
-              option.value === activeValue ? "text-blue-600" : "text-black",
+              option.value === activeValue
+                ? "text-blue-600"
+                : "text-black dark:text-white",
             )}
           >
             <span className="relative z-10">

@@ -1,14 +1,20 @@
 import type { MetadataRoute } from "next";
 
+import { SITE } from "@/lib/seo/index.ts";
+
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Rik Vermeulen",
-    short_name: "Rik",
-    description: "Creative Developer based in the Netherlands.",
+    id: "/",
+    name: SITE.name,
+    short_name: SITE.shortName,
+    description: SITE.description,
     start_url: "/",
+    scope: "/",
+    lang: "en",
+    categories: ["portfolio", "technology"],
     display: "standalone",
-    background_color: "#fff",
-    theme_color: "#fff",
+    background_color: "#0a0a0a",
+    theme_color: "#0a0a0a",
     icons: [
       {
         src: "/icon.png",

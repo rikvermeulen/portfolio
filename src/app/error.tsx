@@ -14,11 +14,12 @@ export default function Error({
   }, [error]);
 
   return (
-    <div>
-      <h1>Something went wrong!</h1>
+    <main id="main" className="relative z-10 mx-auto w-full max-w-3xl py-24">
+      <h1 className="text-xl">Something went wrong!</h1>
+      <p>An unexpected error occurred. Please try again.</p>
       <button onClick={() => reset()} type="button">
         Try again
       </button>
-    </div>
+    </main>
   );
 }

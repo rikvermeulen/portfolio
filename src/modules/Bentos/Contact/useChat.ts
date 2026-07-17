@@ -108,15 +108,15 @@ const useChat = () => {
       return;
     }
 
-    const error = validateStep(step, inputValue);
+    const validationError = validateStep(step, inputValue);
     playSound("send");
     addMessage("user", inputValue);
     setInputValue("");
 
-    if (error) {
+    if (validationError) {
       after(1000, () => {
         playSound("receive");
-        addMessage("admin", error);
+        addMessage("admin", validationError);
       });
       return;
     }

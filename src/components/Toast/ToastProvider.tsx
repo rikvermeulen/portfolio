@@ -19,9 +19,9 @@ import { toastQueue } from "./toastQueue.ts";
 const ToastProvider = () => (
   <ToastRegion
     queue={toastQueue}
-    className="fixed inset-x-4 top-4 z-9999 outline-none sm:inset-x-auto sm:right-4"
+    className="focus-ring fixed inset-x-4 top-4 z-9999 rounded-2xl sm:inset-x-auto sm:right-4"
   >
-    <ToastList<AppToastContent> className="flex w-full flex-col gap-2.5 sm:w-[22rem]">
+    <ToastList<AppToastContent> className="flex w-full flex-col gap-2.5 sm:w-88">
       {({ toast }) => <Toast toast={toast} />}
     </ToastList>
   </ToastRegion>
