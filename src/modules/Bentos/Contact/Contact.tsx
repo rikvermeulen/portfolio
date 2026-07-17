@@ -70,7 +70,7 @@ const Contact = ({ sizeKey, className }: ContactProps) => {
           width={32}
           className="z-10 rounded-full"
         />
-        <div className="relative -top-1 flex gap-2 rounded-lg px-3 py-1 text-xs">
+        <div className="bento-eyebrow relative -top-1 flex gap-2 rounded-lg px-3 py-1">
           Rik Vermeulen
           <Glass
             intensity={0.5}
@@ -87,7 +87,7 @@ const Contact = ({ sizeKey, className }: ContactProps) => {
         role="log"
         className="no-scrollbar flex flex-1 flex-col gap-2 overflow-y-auto px-5 pt-20 pb-20"
       >
-        <p className="bento-body relative text-center text-ds-gray">
+        <p className="relative text-center text-[10px] text-ds-gray">
           <span className="font-semibold">Today: </span>
           {TODAY}
         </p>
@@ -169,7 +169,7 @@ const Contact = ({ sizeKey, className }: ContactProps) => {
               onFocus={handleFocus}
               placeholder="Type your response here…"
               value={inputValue}
-              className="focus-ring relative z-10 mx-3 w-full bg-transparent text-sm disabled:opacity-30"
+              className="focus-ring bento-body relative z-10 mx-3 w-full bg-transparent disabled:opacity-30"
             />
             <button
               aria-label="Send message"

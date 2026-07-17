@@ -64,10 +64,7 @@ const Journal = ({ sizeKey, className, date }: JournalProps) => {
       app="journal"
       sizes={bentos[sizeKey].sizes}
       surfaceClassName="bg-linear-to-br from-ds-journal-from/95 to-ds-journal-to/95"
-      className={classnames(
-        "flex flex-col justify-between p-5 md:p-6",
-        className,
-      )}
+      className={classnames("flex flex-col justify-between p-5", className)}
     >
       <div
         aria-hidden="true"

@@ -5,7 +5,7 @@ import LiveTime from "@/components/LiveTime/index.ts";
 
 export default function Header() {
   return (
-    <header className="py-10">
+    <header className="mb-10">
       <div className="main-container flex w-full justify-between">
         <Link
           aria-label="Rik Vermeulen — home"

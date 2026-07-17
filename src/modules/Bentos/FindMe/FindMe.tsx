@@ -24,7 +24,7 @@ const FindMe = ({ sizeKey, className, weatherBadge }: FindMeProps) => {
       {hasToken ? (
         <div ref={containerRef} className="findme-map size-full" />
       ) : (
-        <div className="flex size-full items-center justify-center p-6 text-center text-sm text-ds-gray">
+        <div className="bento-body flex size-full items-center justify-center p-6 text-center text-ds-gray">
           Add NEXT_PUBLIC_MAPBOX_TOKEN to enable this map.
         </div>
       )}

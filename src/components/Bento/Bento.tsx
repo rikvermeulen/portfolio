@@ -99,8 +99,8 @@ const Bento = ({
       {icon && (
         <div
           className={classnames(
-            "absolute right-4 z-20",
-            iconPosition === "bottom-right" ? "bottom-4" : "top-4",
+            "absolute right-5 z-20",
+            iconPosition === "bottom-right" ? "bottom-5" : "top-5",
             hasLink &&
               "cursor-pointer transition-transform duration-300 hover:scale-105",
           )}

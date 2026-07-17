@@ -133,7 +133,7 @@ function RecipeStack({ recipes }: RecipeStackProps) {
           </div>
         </motion.div>
       </AnimatePresence>
-      <div className="absolute right-4 bottom-4 left-4 z-10 flex flex-col justify-between gap-2">
+      <div className="absolute right-5 bottom-5 left-5 z-10 flex flex-col justify-between gap-2">
         <div className="bento-body flex flex-col text-white/90">
           {servings != null && (
             <span className="flex items-center gap-1">

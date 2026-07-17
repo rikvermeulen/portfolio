@@ -60,7 +60,7 @@ const Plants = ({ sizeKey, plants }: PlantsProps) => {
                     className="size-14 shrink-0 rounded-2xl object-cover"
                   />
                 ) : (
-                  <div className="flex size-14 shrink-0 items-center justify-center rounded-2xl bg-white/10 text-sm font-semibold text-ds-forest-ink uppercase">
+                  <div className="bento-headline flex size-14 shrink-0 items-center justify-center rounded-2xl bg-white/10 text-ds-forest-ink uppercase">
                     {plant.name.slice(0, 2)}
                   </div>
                 )}

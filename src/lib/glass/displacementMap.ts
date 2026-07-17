@@ -16,6 +16,8 @@
  * is the browser-only painter that rasterises it onto a canvas.
  */
 
+import { RADIUS } from "@/lib/radius/index.ts";
+
 export interface GlassParams {
   /** Corner radius in px. */
   readonly radius: number;
@@ -43,7 +45,7 @@ export interface GlassParams {
  * Default parameters taken verbatim from the Aave demo's controls.
  */
 export const GLASS_DEFAULTS: GlassParams = {
-  radius: 28,
+  radius: RADIUS.tile,
   scale: 0.1,
   depth: 8,
   curvature: 40,

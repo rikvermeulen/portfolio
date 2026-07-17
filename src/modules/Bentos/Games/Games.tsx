@@ -40,7 +40,7 @@ const Games = ({ sizeKey, profile, platforms, games }: GamesProps) => {
       surfaceClassName="bg-linear-to-b from-ds-games-from to-ds-games-to"
       className="relative z-0"
     >
-      <div className="flex size-full flex-col gap-3 p-4">
+      <div className="flex size-full flex-col gap-3 p-5">
         <div className="flex flex-col items-center gap-1.5 text-center">
           <span className="relative inline-block">
             <Avatar
@@ -86,7 +86,7 @@ const Games = ({ sizeKey, profile, platforms, games }: GamesProps) => {
 
         <section className="mt-auto">
           <h3 className="bento-eyebrow mb-2 px-1 text-white/60">Library</h3>
-          <div className="relative overflow-hidden rounded-2xl ring-1 ring-white/10">
+          <div className="relative overflow-hidden rounded-2xl">
             <Glass intensity={1} radius={16} tint="dark" />
             <ul className="relative z-10">
               {MENU_SECTIONS.map((row, index) => (

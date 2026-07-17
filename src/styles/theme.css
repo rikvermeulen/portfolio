@@ -8,6 +8,10 @@
   --color-ds-red: #ff3b30;
   --color-ds-red-dark: #ff453a;
   --color-ds-violet: #5801ff;
+  --radius-field: 0.5rem; /* 8px  — inputs, small chips */
+  --radius-control: 0.75rem; /* 12px — buttons, list rows */
+  --radius-card: 1rem; /* 16px — cards nested inside a tile */
+  --radius-tile: 1.5rem; /* 24px — bento tiles */
 
   /* ── Neutrals & surfaces (light / dark) ───────────────────── */
   --color-ds-surface: #ebeceb;

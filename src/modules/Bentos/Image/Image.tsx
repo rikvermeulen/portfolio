@@ -51,7 +51,7 @@ const Image = ({
         src={src}
         className="object-cover"
       />
-      <p className="bento-body absolute right-4 bottom-4 left-4 z-20 text-white">
+      <p className="bento-body absolute right-5 bottom-5 left-5 z-20 text-white">
         {caption}
       </p>
     </Bento>

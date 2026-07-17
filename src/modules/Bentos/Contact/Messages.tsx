@@ -25,7 +25,7 @@ function MessageBubble({
   return (
     <div
       className={classnames(
-        "relative w-fit max-w-55 rounded-3xl px-3 py-2 text-sm md:max-w-xs",
+        "bento-body relative w-fit max-w-55 rounded-3xl px-3 py-2 md:max-w-xs",
         styles.bubble,
         className,
       )}
