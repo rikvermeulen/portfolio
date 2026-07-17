@@ -182,7 +182,7 @@ function RecipeStack({ recipes }: RecipeStackProps) {
             className="group relative flex size-9 shrink-0 cursor-pointer items-center justify-center transition-transform active:scale-90"
           >
             <Glass interactive radius={999} />
-            <Icon iconClassName="relative size-3.5 text-white" name="plus" />
+            <Icon iconClassName="relative size-3 text-white" name="plus" />
           </Link>
         </div>
       </div>

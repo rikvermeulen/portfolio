@@ -47,9 +47,21 @@ Use semantic naming for colors, spacing, typography, etc. Never use arbitrary va
 5. Typography → use font size/weight/line-height from design system
 6. Shadows/borders → map to design system utilities
 
+## No Inline Styles
+
+- **Never use the `style={{ … }}` prop for styling** — express everything through
+  Tailwind classes (design tokens first). Inline styles bypass the design system,
+  the class-ordering conventions, and Tailwind's responsive/variant tooling.
+- **Only exception:** a value that is genuinely dynamic at runtime and cannot be a
+  static class — e.g. a computed CSS custom property (`style={{ "--progress": pct }}`)
+  or a measured pixel position. Set the _variable_ inline and consume it from a class.
+- To recolor an SVG so it follows `currentColor`, render it inline (a React SVG
+  component) — an `<img>`/`next/image` can't be recolored by CSS.
+
 ## Anti-Patterns
 
 - ❌ `bg-[#3B82F6]` → ✅ `bg-ds-primary` or `bg-[var(--color-primary)]`
+- ❌ `style={{ maskImage: "url(...)" }}` → ✅ inline the SVG, or a `mask-*` utility class
 - ❌ Arbitrary values without design system basis
 - ❌ Mixing Tailwind v3 config patterns in v4 projects
 - ❌ Ignoring Figma constraints (min/max widths, fixed dimensions)

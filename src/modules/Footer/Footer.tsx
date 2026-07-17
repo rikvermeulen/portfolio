@@ -35,7 +35,7 @@ export default function Footer() {
               <li key={name}>
                 <Link
                   href={url}
-                  className="text-ds-gray underline decoration-1 underline-offset-2 transition-colors hover:text-black dark:hover:text-white"
+                  className="cursor-pointer text-ds-gray decoration-1 underline-offset-2 transition-colors hover:text-ds-blue hover:underline"
                 >
                   {name}
                 </Link>

@@ -1,21 +1,21 @@
 /**
  * Bento registry — the single source of truth for tile *order* and *data-fetch
  * wiring*. Each entry declares how a tile is rendered (static vs. async) and,
- * for async tiles, which service supplies its data. The static per-tile
- * definitions (grid sizes + app identity) come from the tile catalog in
+ * for async tiles, which service supplies its data. The static tile *content*
+ * (copy, links, colors, tags) lives in `bento-registry.const.ts`; the per-tile
+ * grid sizes + app identity come from the tile catalog in
  * `@/components/Bento/Bento.const.ts` (re-exported as `bentos`).
  */
 import type {
   AsyncTile,
   AsyncTileConfig,
   BentoTile,
+  DividerTile,
+  StaticTile,
 } from "./bento-registry.types.ts";
+import type { BentoSizeKey } from "@/components/Bento/index.ts";
 
-import {
-  AsyncBento,
-  BentoEmptyState,
-  bentos,
-} from "@/components/Bento/index.ts";
+import { AsyncBento, BentoEmptyState } from "@/components/Bento/index.ts";
 import { getGamesResult } from "@/lib/games/index.ts";
 import {
   Category,
@@ -38,6 +38,12 @@ import { getSpotifyPodcastResult } from "@/vendors/spotify/podcastService.ts";
 import { getSpotifyMusicResult } from "@/vendors/spotify/service.ts";
 import { getPhotosResult } from "@/vendors/supabase/service.ts";
 
+import {
+  categoryContent,
+  imageContent,
+  informationContent,
+} from "./bento-registry.const.ts";
+
 /** Binds a data tile's `T` at definition, erasing it from the registry type. */
 function asyncTile<T>(config: AsyncTileConfig<T>): AsyncTile {
   return {
@@ -56,23 +62,29 @@ function asyncTile<T>(config: AsyncTileConfig<T>): AsyncTile {
   };
 }
 
+/** A static tile: `render` receives the `sizeKey` declared alongside it. */
+function staticTile(
+  id: string,
+  sizeKey: BentoSizeKey,
+  render: (sizeKey: BentoSizeKey) => React.ReactNode,
+): StaticTile {
+  return { kind: "static", id, sizeKey, render };
+}
+
+/** A full-width section spacer; `anchorId` lets Navigation scroll to it. */
+function divider(id: string, anchorId?: string): DividerTile {
+  return { kind: "divider", id, anchorId };
+}
+
 /**
  * Single source of truth for the dashboard grid. Order === visual order (the
  * grid uses `grid-auto-flow: row`, so DOM order is placement). Reordering this
  * array reflows the grid.
  */
 export const bentoRegistry: readonly BentoTile[] = [
-  {
-    kind: "static",
-    id: "category-about",
-    sizeKey: "category",
-    render: (sizeKey) => (
-      <Category
-        sizeKey={sizeKey}
-        tags={[{ label: "About me", variant: "yellow" }]}
-      />
-    ),
-  },
+  staticTile("category-about", "category", (sizeKey) => (
+    <Category sizeKey={sizeKey} {...categoryContent.about} />
+  )),
 
   asyncTile({
     id: "photos",
@@ -106,12 +118,7 @@ export const bentoRegistry: readonly BentoTile[] = [
     ),
   }),
 
-  {
-    kind: "static",
-    id: "contact",
-    sizeKey: "contact",
-    render: (sizeKey) => <Contact sizeKey={sizeKey} />,
-  },
+  staticTile("contact", "contact", (sizeKey) => <Contact sizeKey={sizeKey} />),
 
   asyncTile({
     id: "recipes",
@@ -136,69 +143,37 @@ export const bentoRegistry: readonly BentoTile[] = [
     ),
   }),
 
-  {
-    kind: "static",
-    id: "journal",
-    sizeKey: "journal",
-    render: (sizeKey) => <Journal sizeKey={sizeKey} />,
-  },
+  staticTile("journal", "journal", (sizeKey) => <Journal sizeKey={sizeKey} />),
 
-  {
-    kind: "static",
-    id: "findme",
-    sizeKey: "findme",
-    render: (sizeKey) => (
-      <FindMe sizeKey={sizeKey} weatherBadge={<WeatherBadge />} />
-    ),
-  },
+  staticTile("findme", "findme", (sizeKey) => (
+    <FindMe sizeKey={sizeKey} weatherBadge={<WeatherBadge />} />
+  )),
 
-  { kind: "divider", id: "section-break", anchorId: "work" },
+  divider("section-break", "work"),
 
-  {
-    kind: "static",
-    id: "category-work",
-    sizeKey: "category",
-    render: (sizeKey) => (
-      <Category
-        sizeKey={sizeKey}
-        tags={[
-          { label: "Work", variant: "green" },
-          { label: "2023 - current", variant: "blue" },
-        ]}
-      />
-    ),
-  },
+  staticTile("category-work", "category", (sizeKey) => (
+    <Category sizeKey={sizeKey} {...categoryContent.work} />
+  )),
 
-  {
-    kind: "static",
-    id: "information",
-    sizeKey: "information",
-    render: (sizeKey) => (
-      <Information
-        description="Building polished digital experiences together with a talented team."
-        href="https://greenberry.nl"
-        iconPosition="top-right"
-        iconSrc={bentos.greenberry.icon}
-        linkLabel="Current role"
-        sizeKey={sizeKey}
-        title="Medior Front-end engineer at Greenberry"
-        className="bg-ds-violet text-white"
-      />
-    ),
-  },
+  staticTile("information", "information", (sizeKey) => (
+    <Information sizeKey={sizeKey} {...informationContent.work} />
+  )),
 
-  {
-    kind: "static",
-    id: "image",
-    sizeKey: "image",
-    render: (sizeKey) => (
-      <Image
-        alt="Portrait of Rik Vermeulen"
-        caption="Team moments and product thinking."
-        sizeKey={sizeKey}
-        src="/images/me.jpg"
-        className="bg-ds-mint text-ds-mint-ink"
-      />
-    ),
-  },
+  staticTile("image", "image", (sizeKey) => (
+    <Image sizeKey={sizeKey} {...imageContent.work} />
+  )),
+
+  divider("section-break-education", "education"),
+
+  staticTile("category-education", "category", (sizeKey) => (
+    <Category sizeKey={sizeKey} {...categoryContent.education} />
+  )),
+
+  staticTile("image-education", "image", (sizeKey) => (
+    <Image sizeKey={sizeKey} {...imageContent.education} />
+  )),
+
+  staticTile("information-education", "information", (sizeKey) => (
+    <Information sizeKey={sizeKey} {...informationContent.education} />
+  )),
 ];

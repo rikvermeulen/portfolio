@@ -14,6 +14,7 @@ const Information = ({
   iconAlt = "Information icon",
   iconPosition = "top-right",
   className,
+  surfaceClassName,
 }: InformationProps) => {
   return (
     <Bento
@@ -21,6 +22,7 @@ const Information = ({
       image={iconSrc}
       imageAlt={iconAlt}
       sizes={bentos[sizeKey].sizes}
+      surfaceClassName={surfaceClassName}
       className={classnames(
         "relative flex size-full flex-col justify-between p-5",
         className,
@@ -28,7 +30,7 @@ const Information = ({
     >
       <div className="flex flex-col gap-2">
         <h2 className="bento-title">{title}</h2>
-        <p className="bento-body">{description}</p>
+        <p className="bento-body-large">{description}</p>
       </div>
       <div className="flex">
         <Link

@@ -6,8 +6,8 @@
    Five roles, five sizes:
      display  28/32px  hero feature text
      title    22px     tile heading
-     headline 15px     names / primary row text
-     body     13px     descriptions, subtitles, meta, captions
+     headline 16px     names / primary row text
+     body     14px     descriptions, subtitles, meta, captions
      eyebrow  12px     small label / kicker */
 
 /* Display — oversized feature text (the Journal question). */
@@ -34,14 +34,20 @@
 
 /* Headline — names and primary row text. */
 .bento-headline {
-  font-size: 0.9375rem; /* 15px */
+  font-size: 0.875rem; /* 16px */
   line-height: 1.3;
   font-weight: 600;
 }
 
+.bento-body-large {
+  font-size: 1rem;
+  line-height: 1.4;
+  font-weight: 400;
+}
+
 /* Body — descriptions, subtitles, metadata and captions. */
 .bento-body {
-  font-size: 0.8125rem; /* 13px */
+  font-size: 0.875rem; /* 14px */
   line-height: 1.4;
   font-weight: 400;
 }

@@ -56,7 +56,7 @@ const FindMe = ({ sizeKey, className, weatherBadge }: FindMeProps) => {
           type="button"
           className="relative flex size-9 cursor-pointer items-center justify-center text-black transition-transform active:scale-90 dark:text-white"
         >
-          <Icon iconClassName="size-4" name="minus" />
+          <Icon iconClassName="size-3" name="minus" />
         </button>
         <button
           aria-label="Zoom in"
@@ -64,7 +64,7 @@ const FindMe = ({ sizeKey, className, weatherBadge }: FindMeProps) => {
           type="button"
           className="relative flex size-9 cursor-pointer items-center justify-center text-black transition-transform active:scale-90 dark:text-white"
         >
-          <Icon iconClassName="size-4" name="plus" />
+          <Icon iconClassName="size-3" name="plus" />
         </button>
       </div>
     </Bento>

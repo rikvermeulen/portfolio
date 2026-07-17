@@ -14,4 +14,5 @@ export interface InformationProps extends BentoSizedProps {
   readonly iconAlt?: string;
   readonly iconPosition?: IconPosition;
   readonly className?: string;
+  readonly surfaceClassName?: string;
 }

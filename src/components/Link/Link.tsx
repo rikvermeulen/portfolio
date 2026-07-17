@@ -27,7 +27,7 @@ const Link = ({ children, ...props }: LinkProps) => {
       {...props}
     >
       {showExternalIcon ? (
-        <span className="inline-flex items-center gap-0.5">
+        <span className="inline-flex items-center gap-0.5 underline">
           {children}
           <Icon iconClassName="size-4 shrink-0" name="arrowUpRight" />
         </span>
