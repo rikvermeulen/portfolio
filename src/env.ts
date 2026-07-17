@@ -49,12 +49,10 @@ export const env = createEnv({
     XBOX_GAMERTAG: z.string().optional(),
     XBOX_PROFILE_URL: z.string().optional(),
 
-    // WhatsApp Cloud API (outbound notifications → Rik's phone).
+    // ntfy.sh (outbound push notifications → Rik's phone).
     // All optional: when unset, notification sends are skipped, not thrown.
-    WHATSAPP_PHONE_NUMBER_ID: z.string().optional(),
-    WHATSAPP_ACCESS_TOKEN: z.string().optional(), // permanent system-user token
-    WHATSAPP_RECIPIENT: z.string().optional(), // Rik's number, E.164 digits
-    WHATSAPP_GRAPH_VERSION: z.string().default("v21.0"),
+    NTFY_TOPIC: z.string().optional(), // private/unguessable topic name
+    NTFY_SERVER: z.string().optional(), // optional self-hosted server URL
   },
   /**
    * Environment variables available on the client (and server).
@@ -98,10 +96,8 @@ export const env = createEnv({
     XBOX_API_KEY: process.env.XBOX_API_KEY,
     XBOX_GAMERTAG: process.env.XBOX_GAMERTAG,
     XBOX_PROFILE_URL: process.env.XBOX_PROFILE_URL,
-    WHATSAPP_PHONE_NUMBER_ID: process.env.WHATSAPP_PHONE_NUMBER_ID,
-    WHATSAPP_ACCESS_TOKEN: process.env.WHATSAPP_ACCESS_TOKEN,
-    WHATSAPP_RECIPIENT: process.env.WHATSAPP_RECIPIENT,
-    WHATSAPP_GRAPH_VERSION: process.env.WHATSAPP_GRAPH_VERSION,
+    NTFY_TOPIC: process.env.NTFY_TOPIC,
+    NTFY_SERVER: process.env.NTFY_SERVER,
     // NOTE: you could set this to process.env.VERCEL_ENV when hosting on Vercel
     NEXT_PUBLIC_ENVIRONMENT:
       process.env.NEXT_PUBLIC_ENVIRONMENT || "development",

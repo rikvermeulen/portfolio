@@ -19,7 +19,7 @@
     "picnic:auth": "tsx scripts/picnic-auth.ts",
     "planta:auth": "tsx scripts/planta-auth.ts",
     "spotify:auth": "tsx scripts/spotify-auth.ts",
-    "whatsapp:test": "tsx scripts/whatsapp-test.ts",
+    "notify:test": "tsx scripts/notify-test.ts",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },
