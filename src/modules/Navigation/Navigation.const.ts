@@ -6,7 +6,7 @@ import type { Section } from "./Navigation.types.ts";
  * dashboard (`about` → grid top, `work`/`education` → their section-break dividers).
  */
 export const sections: readonly Section[] = [
-  { id: "about", label: "About me", variant: "yellow" },
-  { id: "work", label: "Work", variant: "green" },
-  { id: "education", label: "Education", variant: "lavender" },
+  { id: "about", label: "About me" },
+  { id: "work", label: "Work" },
+  { id: "education", label: "Education" },
 ];

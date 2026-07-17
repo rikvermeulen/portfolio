@@ -31,13 +31,14 @@ export const Default: Story = {
 
 const variants: TagVariant[] = [
   "neutral",
-  "yellow",
   "green",
-  "blue",
+  "yellow",
   "orange",
-  "pink",
-  "lavender",
+  "red",
+  "purple",
+  "blue",
   "dark",
+  "rested",
 ];
 
 export const FinderColors: Story = {

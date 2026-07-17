@@ -4,6 +4,7 @@ import type { IconProps, SvgIconComponent } from "./Icon.types.ts";
 
 import ArrowUpRightIcon from "@/assets/icons/arrow-up-right.svg?react";
 import ArrowIcon from "@/assets/icons/arrow.svg?react";
+import BellIcon from "@/assets/icons/bell.svg?react";
 import BrushIcon from "@/assets/icons/brush.svg?react";
 import CheckIcon from "@/assets/icons/check.svg?react";
 import ChevronDownIcon from "@/assets/icons/chevron.down.svg?react";
@@ -43,6 +44,7 @@ import XboxIcon from "@/assets/icons/xbox.svg?react";
 const ICON_COMPONENTS: Record<string, SvgIconComponent> = {
   arrow: ArrowIcon,
   arrowUpRight: ArrowUpRightIcon,
+  bell: BellIcon,
   brush: BrushIcon,
   check: CheckIcon,
   dog: DogIcon,

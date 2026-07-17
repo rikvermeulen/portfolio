@@ -41,6 +41,9 @@ Treat these as untrusted inputs until validated:
 - discriminated unions for state machines and variant-rich props
 - exhaustive `switch` statements with a `never` fallback
 - small adapter functions that isolate parsing and validation
+- keeping every `interface`/`type` a unit owns in its type file (`Foo.types.ts`, or
+  `src/types/` when cross-cutting) — never colocated in the component/logic/const file;
+  consumers `import type` what they need
 
 ## Avoid
 

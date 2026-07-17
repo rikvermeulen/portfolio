@@ -23,10 +23,9 @@ const RADIUS = 24;
  * away the chromatic edge fringing. Intensity drives refraction reach.
  */
 const GLASS = {
-  blur: 0,
-  intensity: 2,
+  blur: 20,
+  intensity: 20,
   radius: RADIUS,
-  tint: "none",
 } as const;
 
 /**
@@ -34,22 +33,26 @@ const GLASS = {
  * a squircle app icon (pulled straight from the bento registry), a title,
  * message, and timestamp.
  *
- * Glass lives in a sibling layer outside `.app-toast` so `view-transition-class`
- * does not break `backdrop-filter` / edge refraction. Do not move `<Glass>` back
- * inside the transitioning node.
+ * `.app-toast` (the outer wrapper) is the View Transition node: it carries both
+ * the per-toast `view-transition-name` — which is what actually opts the banner
+ * into the transition — and the shared `.toast` class the enter/exit keyframes
+ * target. The whole banner (glass included) slides in and out as one unit.
  */
 const Toast = ({ toast }: ToastProps) => {
   const { app, title, description, date } = toast.content;
   const identity = bentos[app];
   const timestamp = date ? time.stamp(date) : null;
 
+  // Unique, valid-CSS-ident name per on-screen toast, derived from the key.
+  const viewTransitionName = `toast-${toast.key.replace(/[^\w-]/g, "-")}`;
+
   return (
-    <div className="relative w-full">
+    <div style={{ viewTransitionName }} className="app-toast relative w-full">
       <div className="absolute inset-0 overflow-hidden rounded-3xl shadow-xl">
         <Glass {...GLASS} />
       </div>
 
-      <AriaToast toast={toast} className="app-toast group relative flex w-full">
+      <AriaToast toast={toast} className="group relative flex w-full">
         <div className="relative flex w-full items-center gap-2.5 px-3.5 py-3">
           <AppIcon
             alt={identity.name}

@@ -29,7 +29,7 @@
 
   /* Plants: surface gradient + ink */
   --color-ds-forest-from: #2b552b;
-  --color-ds-forest-to: #18331a;
+  --color-ds-forest-to: #234823;
   --color-ds-forest-ink: #e7edde;
 
   /* Plants: one care-action tint per Planta action type */
@@ -38,7 +38,7 @@
   --color-ds-plant-fertilize: #d8bd6b;
   --color-ds-plant-clean: #c6b795;
   --color-ds-plant-repot: #2f3c4f;
-  --color-ds-plant-done: #8bb04a;
+  --color-ds-plant-done: #172b17;
 
   /* FindMe map */
   --color-ds-map: #dbeefe;
@@ -75,16 +75,18 @@
   --color-ds-stack-1: #525252;
   --color-ds-stack-2: #404040;
 
-  /* ── Category tags: soft pastel chips (dark ink, except `dark`) ── */
+  /* ── Category tags: iOS 27 vivid accents (white ink, except neutral/yellow) ── */
   --color-ds-tag-ink: #2e2a2e;
   --color-ds-tag-cream: #f5e5d0;
-  --color-ds-tag-yellow: #f0cb63;
-  --color-ds-tag-green: #d6ef7c;
-  --color-ds-tag-blue: #b4ccef;
-  --color-ds-tag-orange: #e08a6b;
-  --color-ds-tag-pink: #f2deef;
-  --color-ds-tag-lavender: #d9c6e8;
+  --color-ds-tag-yellow: #fc0;
+  --color-ds-tag-green: #34c759;
+  --color-ds-tag-blue: #08f;
+  --color-ds-tag-orange: #ff8d28;
+  --color-ds-tag-red: #ff383c;
+  --color-ds-tag-purple: #cb30e0;
   --color-ds-tag-dark: #1c1521;
+  --color-ds-tag-rested: #f4f1ea;
+  --color-ds-tag-rested-ink: #2e2a2e;
 }
 
 /* Dark-mode neutral text: lighter gray keeps ≥4.5:1 on dark surfaces
@@ -92,5 +94,7 @@
 @media (prefers-color-scheme: dark) {
   :root {
     --color-ds-gray: #98989d;
+    --color-ds-tag-rested: #2c2c30;
+    --color-ds-tag-rested-ink: #e6e4e0;
   }
 }

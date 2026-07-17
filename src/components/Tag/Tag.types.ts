@@ -1,12 +1,13 @@
 export type TagVariant =
   | "neutral"
-  | "yellow"
   | "green"
-  | "blue"
+  | "yellow"
   | "orange"
-  | "pink"
-  | "lavender"
-  | "dark";
+  | "red"
+  | "purple"
+  | "blue"
+  | "dark"
+  | "rested";
 
 export interface TagProps extends React.HTMLAttributes<HTMLDivElement> {
   readonly label: string;

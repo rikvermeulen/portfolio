@@ -62,6 +62,11 @@ There is **no CMS, database, or i18n layer** in this project.
 - A unit named `Foo` uses exactly: `Foo.tsx`/`foo.ts`, `Foo.types.ts`, `Foo.const.ts`
   (constants/static data), `Foo.utils.ts` (local helpers), `Foo.animate.ts` (animation
   logic), `Foo.mock.ts`, `Foo.stories.tsx`, `Foo.test.ts(x)`, and an `index.ts` barrel.
+- **Type declarations always live in the type file.** Every `interface`/`type` a unit
+  owns goes in `Foo.types.ts` (or `src/types/` when cross-cutting) — never colocated in
+  `Foo.tsx`/`foo.ts`, `Foo.animate.ts`, `Foo.const.ts`, etc. Those files `import type`
+  what they need. Inline-only `type` aliases that never leave a single function body are
+  the sole exception.
 - **Every leaf unit folder has an `index.ts` barrel**, using relative `./Foo.tsx` internal paths.
 - Components/modules: `default` export. Hooks: **named** export. Props types: `interface XProps`.
 - Contexts: Provider + accessor hook (`useXContext`), `null` default + throw-if-outside-provider.

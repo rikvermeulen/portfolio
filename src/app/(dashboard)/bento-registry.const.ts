@@ -29,7 +29,7 @@ export const categoryContent = {
   },
   education: {
     tags: [
-      { label: "Education", variant: "lavender" },
+      { label: "Education", variant: "purple" },
       { label: "2019 - 2023", variant: "blue" },
     ],
   },

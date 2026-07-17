@@ -1,39 +1,27 @@
+"use client";
+
+import { useState } from "react";
 import Image from "next/image";
 
-import type { ActionTile, PlantsProps } from "./Plants.types.ts";
-import type { PlantaCareState } from "@/lib/plants/plantCardFormat.ts";
-import type { PlantaActionType } from "@/vendors/planta/types.ts";
+import type { PlantsProps } from "./Plants.types.ts";
 
 import Bento, { bentos } from "@/components/Bento/index.ts";
+import Drawer from "@/components/Drawer/index.ts";
 import Icon from "@/components/Icon/index.ts";
 import { getPlantaCardStatuses } from "@/lib/plants/plantCardFormat.ts";
+import classnames from "@/utils/classnames/index.ts";
 
-const MAX_VISIBLE_PLANTS = 3 as const;
-
-/** Care action → its tile colour + icon (one tint per action type). */
-const ACTION_TILE: Record<PlantaActionType, ActionTile> = {
-  watering: { bg: "bg-ds-plant-water", icon: "watering-can" },
-  misting: { bg: "bg-ds-plant-mist", icon: "spray" },
-  fertilizing: { bg: "bg-ds-plant-fertilize", icon: "flower" },
-  cleaning: { bg: "bg-ds-plant-clean", icon: "brush" },
-  repotting: { bg: "bg-ds-plant-repot", icon: "trowel" },
-  progressUpdate: { bg: "bg-ds-plant-water", icon: "timer" },
-};
-
-/** Fallback tile when a status has no action (a plant that's simply doing well). */
-const HEALTHY_TILE: ActionTile = { bg: "bg-ds-plant-done", icon: "heart" };
-
-const tileForStatus = (actionType?: PlantaActionType): ActionTile =>
-  actionType ? ACTION_TILE[actionType] : HEALTHY_TILE;
-
-/** A `due` status still needs doing; everything else is up to date → checkmark. */
-const isDone = (state: PlantaCareState): boolean => state !== "due";
-
-const TILE_BASE =
-  "relative flex size-6 shrink-0 items-center justify-center rounded-full text-white";
+import PlantDetail from "./PlantDetail.tsx";
+import {
+  ACTION_TILE,
+  HEALTHY_TILE,
+  MAX_VISIBLE_PLANTS,
+} from "./Plants.const.ts";
+import PlantsNudgeButton from "./PlantsNudgeButton.tsx";
 
 const Plants = ({ sizeKey, plants }: PlantsProps) => {
-  const visiblePlants = plants.slice(0, MAX_VISIBLE_PLANTS);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const selected = plants.find((plant) => plant.id === selectedId) ?? null;
 
   return (
     <Bento
@@ -42,60 +30,76 @@ const Plants = ({ sizeKey, plants }: PlantsProps) => {
       surfaceClassName="bg-linear-to-b from-ds-forest-from to-ds-forest-to"
       className="relative z-0 text-ds-forest-ink"
     >
-      <div className="flex size-full flex-col gap-3 p-5">
+      <div className="flex size-full flex-col justify-around gap-3 p-5">
         <h2 className="bento-title">Plant Care</h2>
-        <ul className="flex flex-1 flex-col gap-2.5">
-          {visiblePlants.map((plant) => {
-            const statuses = getPlantaCardStatuses(plant);
-
-            return (
-              <li key={plant.id} className="flex items-center gap-2">
-                {plant.imageUrl ? (
+        <ul className="flex flex-col gap-2.5">
+          {plants.slice(0, MAX_VISIBLE_PLANTS).map((plant) => (
+            <li key={plant.id}>
+              <button
+                aria-haspopup="dialog"
+                aria-label={`View care details for ${plant.name}`}
+                onClick={() => setSelectedId(plant.id)}
+                type="button"
+                className="flex w-full cursor-pointer items-center gap-2 rounded-2xl text-left focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-white/60"
+              >
+                {plant.imageUrl && (
                   <Image
                     alt={plant.name}
                     height={56}
                     sizes="56px"
                     src={plant.imageUrl}
                     width={56}
-                    className="size-14 shrink-0 rounded-2xl object-cover"
+                    className="size-12 shrink-0 rounded-full object-cover"
                   />
-                ) : (
-                  <div className="bento-headline flex size-14 shrink-0 items-center justify-center rounded-2xl bg-white/10 text-ds-forest-ink uppercase">
-                    {plant.name.slice(0, 2)}
-                  </div>
                 )}
-                <div className="flex min-w-0 flex-col gap-1">
-                  <h3 className="bento-headline truncate">{plant.name}</h3>
-
+                <div className="flex min-w-0 flex-col">
+                  <h3 className="bento-body max-w-38 truncate font-bold">
+                    {plant.name}
+                  </h3>
                   <div className="relative z-10 flex flex-wrap gap-2 p-1">
-                    {statuses.map((status) => {
-                      const tile = tileForStatus(status.actionType);
-                      const done = isDone(status.state);
-                      const key = `${plant.id}-${status.state}-${status.label}`;
-                      const tileClassName = `${TILE_BASE} ${tile.bg}`;
+                    {getPlantaCardStatuses(plant).map((status) => {
+                      const tile = status.actionType
+                        ? ACTION_TILE[status.actionType]
+                        : HEALTHY_TILE;
 
                       return (
-                        <div key={key} className={tileClassName}>
+                        <div
+                          key={`${plant.id}-${status.state}-${status.label}`}
+                          className={classnames(
+                            "relative flex size-5 shrink-0 items-center justify-center rounded-full border-[0.5px] border-white text-white",
+                            tile.bg,
+                          )}
+                        >
                           <Icon
-                            iconClassName="size-3.5"
+                            iconClassName="size-3"
                             label={status.label}
                             name={tile.icon}
                           />
-                          {done ? (
-                            <span className="absolute -right-1 -bottom-1 flex size-3 items-center justify-center rounded-full bg-ds-plant-done text-white ring-2 ring-ds-forest-to">
+                          {status.state !== "due" && (
+                            <span className="absolute -right-1 -bottom-1 flex size-3 items-center justify-center rounded-full border-[0.5px] border-white bg-ds-plant-done p-0.5 text-white">
                               <Icon iconClassName="size-2.5" name="check" />
                             </span>
-                          ) : null}
+                          )}
                         </div>
                       );
                     })}
                   </div>
                 </div>
-              </li>
-            );
-          })}
+              </button>
+            </li>
+          ))}
         </ul>
       </div>
+
+      <PlantsNudgeButton />
+      <Drawer
+        description={selected?.scientificName}
+        isOpen={selected !== null}
+        onOpenChange={(open) => !open && setSelectedId(null)}
+        title={selected?.name ?? "Plant"}
+      >
+        {selected && <PlantDetail plant={selected} />}
+      </Drawer>
     </Bento>
   );
 };

@@ -49,3 +49,5 @@ When it conflicts with `CONVENTIONS.md`, `CONVENTIONS.md` wins.
 - ❌ Third-party integrations under `src/lib/` — they belong in `src/vendors/<vendor>/`
 - ❌ Data formatters/mappers inside a `src/vendors/` folder — they belong in `src/lib/<domain>/`
 - ❌ Assuming Payload/CMS, database, or i18n folders — they don't exist in this repo
+- ❌ `interface`/`type` declarations colocated in a `.tsx`/`.ts`/`.animate.ts`/`.const.ts`
+  file — they belong in the unit's `Foo.types.ts` (or `src/types/` when cross-cutting)

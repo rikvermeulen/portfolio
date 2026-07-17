@@ -67,7 +67,8 @@ When React Compiler is **not** present: use `useCallback`, `useMemo`, and
 - Use discriminated unions for conditional props
 - Define components using the `function` keyword — no `React.FC`
 - Avoid unnecessary client components; wrap client components in Suspense with a fallback when they perform async operations or lazy-load content
-- Define component interfaces and types in `types.ts` or `index.ts` — not in the component file
+- Define every interface and type in the unit's type file (`Foo.types.ts`, or a shared
+  `types.ts`) — never colocated in the component, logic, animation, or const file
 
 ## File Naming & Organization
 

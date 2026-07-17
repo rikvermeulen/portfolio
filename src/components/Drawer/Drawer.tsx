@@ -3,8 +3,11 @@
 import { useCallback, useId } from "react";
 import { AnimatePresence, motion, useDragControls } from "framer-motion";
 
-import type { DrawerProps } from "./Drawer.types.ts";
-import type { DragControls, PanInfo } from "framer-motion";
+import type {
+  DrawerHandleProps,
+  DrawerHeaderProps,
+  DrawerProps,
+} from "./Drawer.types.ts";
 
 import { FocusTrap } from "@/components/FocusTrap/index.ts";
 import Glass from "@/components/Glass/index.ts";
@@ -12,17 +15,8 @@ import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion/index.t
 import { RADIUS } from "@/lib/radius/index.ts";
 import classnames from "@/utils/classnames/index.ts";
 
-const DISMISS_OFFSET = 56;
-const DISMISS_VELOCITY = 480;
-
-const SHEET_SPRING = { type: "spring", stiffness: 420, damping: 40 } as const;
-
-function shouldDismiss({
-  offset,
-  velocity,
-}: Pick<PanInfo, "offset" | "velocity">) {
-  return offset.y > DISMISS_OFFSET || velocity.y > DISMISS_VELOCITY;
-}
+import { getSheetVariants, SHEET_SPRING } from "./Drawer.animate.ts";
+import { DISMISS_OFFSET, DISMISS_VELOCITY } from "./Drawer.const.ts";
 
 /** Contained slide-up sheet. Fills the nearest positioned, overflow-hidden ancestor. */
 export default function Drawer({
@@ -42,17 +36,12 @@ export default function Drawer({
   // down and re-run — and re-steal focus — on every Drawer render.
   const close = useCallback(() => onOpenChange(false), [onOpenChange]);
 
-  const sheetEnter = reduceMotion ? { opacity: 0 } : { y: "100%" };
-  const sheetActive = reduceMotion ? { opacity: 1 } : { y: 0 };
-  const sheetExit = reduceMotion ? { opacity: 0 } : { y: "100%" };
+  const sheet = getSheetVariants(reduceMotion);
 
   return (
     <AnimatePresence>
       {isOpen && (
         <>
-          {/* Transparent catcher: tapping the exposed tile (the peek above the
-              sheet) closes the drawer. No dimming, so the tile behind never
-              animates when the drawer opens. */}
           <button
             aria-label="Close"
             onClick={close}
@@ -63,7 +52,7 @@ export default function Drawer({
 
           <motion.dialog
             key="drawer-sheet"
-            animate={sheetActive}
+            animate={sheet.animate}
             aria-label={header ? title : undefined}
             aria-labelledby={header ? undefined : titleId}
             aria-modal="true"
@@ -72,10 +61,14 @@ export default function Drawer({
             dragControls={dragControls}
             dragElastic={{ top: 0, bottom: 0.5 }}
             dragListener={false}
-            exit={sheetExit}
-            initial={sheetEnter}
+            exit={sheet.exit}
+            initial={sheet.initial}
             onDragEnd={(_event, info) => {
-              if (shouldDismiss(info)) {
+              // Dismiss when dragged far enough or flicked down fast.
+              if (
+                info.offset.y > DISMISS_OFFSET ||
+                info.velocity.y > DISMISS_VELOCITY
+              ) {
                 close();
               }
             }}
@@ -102,24 +95,19 @@ export default function Drawer({
               {header ? (
                 <div className="shrink-0">{header}</div>
               ) : (
-                <header className="shrink-0 px-4 pb-2 text-center">
-                  <p id={titleId} className="text-sm font-semibold">
-                    {title}
-                  </p>
-                  {description && (
-                    <p className="mt-0.5 text-xs text-white/50">
-                      {description}
-                    </p>
-                  )}
-                </header>
+                <DrawerHeader
+                  description={description}
+                  title={title}
+                  titleId={titleId}
+                />
               )}
 
-              <div className="min-h-0 flex-1 [scrollbar-width:none] overflow-y-auto px-3 pb-3 [&::-webkit-scrollbar]:hidden">
+              <div className="min-h-0 flex-1 scrollbar-none overflow-y-auto px-5 pb-4 [&::-webkit-scrollbar]:hidden">
                 {children}
               </div>
 
               {footer ? (
-                <footer className="shrink-0 p-3">{footer}</footer>
+                <footer className="shrink-0 p-5">{footer}</footer>
               ) : null}
             </FocusTrap>
           </motion.dialog>
@@ -129,13 +117,8 @@ export default function Drawer({
   );
 }
 
-function DrawerHandle({
-  dragControls,
-  onClose,
-}: {
-  readonly dragControls: DragControls;
-  readonly onClose: () => void;
-}) {
+/** Grab handle under the top edge — both a drag affordance and a click-to-close target. */
+function DrawerHandle({ dragControls, onClose }: DrawerHandleProps) {
   return (
     <button
       aria-label="Close"
@@ -146,5 +129,19 @@ function DrawerHandle({
     >
       <span className="h-1 w-9 rounded-full bg-white/35 transition-colors group-hover:bg-white/50 group-focus-visible:bg-white/70" />
     </button>
+  );
+}
+
+/** Default title/description block, shown when no custom `header` is supplied. */
+function DrawerHeader({ title, description, titleId }: DrawerHeaderProps) {
+  return (
+    <header className="shrink-0 px-5 pb-4">
+      <p id={titleId} className="text-ds-heading">
+        {title}
+      </p>
+      {description ? (
+        <p className="text-xs text-white/50">{description}</p>
+      ) : null}
+    </header>
   );
 }
