@@ -9,6 +9,7 @@ import type { DragControls, PanInfo } from "framer-motion";
 import { FocusTrap } from "@/components/FocusTrap/index.ts";
 import Glass from "@/components/Glass/index.ts";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion/index.ts";
+import { RADIUS } from "@/lib/radius/index.ts";
 import classnames from "@/utils/classnames/index.ts";
 
 const DISMISS_OFFSET = 56;
@@ -81,11 +82,11 @@ export default function Drawer({
             open
             transition={SHEET_SPRING}
             className={classnames(
-              "absolute inset-x-0 top-4 bottom-0 z-30 m-0 flex size-auto touch-none flex-col overflow-hidden rounded-3xl bg-transparent p-0 text-white shadow-2xl",
+              "absolute inset-x-0 top-4 bottom-0 z-30 m-0 flex size-auto touch-none flex-col overflow-hidden rounded-tile bg-transparent p-0 text-white shadow-2xl",
               className,
             )}
           >
-            <Glass blur={16} intensity={1} radius={24} tint="dark" />
+            <Glass blur={16} intensity={1} radius={RADIUS.tile} tint="dark" />
             <div
               aria-hidden="true"
               className="pointer-events-none absolute inset-0 bg-black/50"

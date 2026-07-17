@@ -16,7 +16,7 @@ export const RADIUS = {
   field: 8,
   control: 12,
   card: 16,
-  tile: 24,
+  tile: 28,
   pill: 999,
 } as const;
 

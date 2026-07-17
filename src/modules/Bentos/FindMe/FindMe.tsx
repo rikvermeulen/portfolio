@@ -7,6 +7,7 @@ import type { FindMeProps } from "./FindMe.types.ts";
 import Bento, { bentos } from "@/components/Bento/index.ts";
 import Glass from "@/components/Glass/index.ts";
 import Icon from "@/components/Icon/index.ts";
+import { RADIUS } from "@/lib/radius/index.ts";
 import classnames from "@/utils/classnames/index.ts";
 
 import { useFindMeMap } from "./useFindMeMap.ts";
@@ -49,7 +50,7 @@ const FindMe = ({ sizeKey, className, weatherBadge }: FindMeProps) => {
       </div>
 
       <div className="group absolute right-5 bottom-5 z-20 flex h-9 overflow-hidden rounded-full">
-        <Glass intensity={2} interactive radius={16} />
+        <Glass intensity={2} interactive radius={RADIUS.pill} />
         <button
           aria-label="Zoom out"
           onClick={zoomOut}

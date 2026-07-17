@@ -11,6 +11,7 @@ import Bento, { bentos } from "@/components/Bento/index.ts";
 import Glass from "@/components/Glass/index.ts";
 import Icon from "@/components/Icon/index.ts";
 import Link from "@/components/Link/index.ts";
+import { RADIUS } from "@/lib/radius/index.ts";
 
 import { cardTransition, cardVariants } from "./Recipes.animate.ts";
 
@@ -150,7 +151,7 @@ function RecipeStack({ recipes }: RecipeStackProps) {
         </div>
         <div className="flex w-full justify-between gap-2">
           <div className="relative flex overflow-hidden rounded-full">
-            <Glass intensity={2} interactive radius={999} />
+            <Glass intensity={2} interactive radius={RADIUS.pill} />
             <button
               aria-label="Previous recipe"
               disabled={recipes.length <= 1}
@@ -181,7 +182,7 @@ function RecipeStack({ recipes }: RecipeStackProps) {
             href={recipeUrl}
             className="group relative flex size-9 shrink-0 cursor-pointer items-center justify-center transition-transform active:scale-90"
           >
-            <Glass interactive radius={999} />
+            <Glass interactive radius={RADIUS.pill} />
             <Icon iconClassName="relative size-3 text-white" name="plus" />
           </Link>
         </div>

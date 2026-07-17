@@ -16,7 +16,7 @@ const Category = ({ sizeKey, label, tags, className }: CategoryProps) => {
   return (
     <Bento
       sizes={bentos[sizeKey].sizes}
-      className={classnames("relative", className)}
+      className={classnames("relative rounded-none!", className)}
     >
       <Image
         alt=""

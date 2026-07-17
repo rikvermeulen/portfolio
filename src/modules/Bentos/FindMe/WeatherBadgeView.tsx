@@ -6,6 +6,7 @@ import type {
 
 import Glass from "@/components/Glass/index.ts";
 import Icon from "@/components/Icon/index.ts";
+import { RADIUS } from "@/lib/radius/index.ts";
 
 export const SOURCE_LABEL = "Weather by Open-Meteo for Rotterdam.";
 
@@ -15,9 +16,9 @@ function WeatherBadgeShell({ ariaLabel, children }: WeatherBadgeShellProps) {
       aria-label={ariaLabel}
       aria-live="polite"
       title={SOURCE_LABEL}
-      className="absolute top-5 left-5 z-20 flex overflow-hidden rounded-lg p-1 text-black dark:bg-black/45 dark:text-white"
+      className="absolute top-5 left-5 z-20 flex overflow-hidden rounded-field p-1 text-black dark:bg-black/45 dark:text-white"
     >
-      <Glass blur={2} intensity={2} radius={8} />
+      <Glass blur={2} intensity={2} radius={RADIUS.field} />
       <div className="bento-body relative flex flex-col">{children}</div>
     </output>
   );
@@ -40,7 +41,7 @@ function WeatherBadgeView({ data }: WeatherBadgeViewProps) {
 
   return (
     <WeatherBadgeShell ariaLabel={ariaLabel}>
-      <div className="flex items-center">
+      <div className="flex items-center gap-0.5">
         <Icon iconClassName="size-4" name={weather.iconName} />
         <span className="font-medium">{`${weather.temperatureCelsius}°`}</span>
       </div>

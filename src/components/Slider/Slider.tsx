@@ -9,6 +9,7 @@ import {
 import type { SliderProps } from "./Slider.types.ts";
 
 import Glass from "@/components/Glass/index.ts";
+import { RADIUS } from "@/lib/radius/index.ts";
 import classnames from "@/utils/classnames/index.ts";
 
 const Slider = ({
@@ -50,7 +51,7 @@ const Slider = ({
                 isDragging ? "scale-125" : "scale-100",
               )}
             >
-              <Glass blur={1} intensity={20} interactive radius={999} />
+              <Glass blur={1} intensity={20} interactive radius={RADIUS.pill} />
             </div>
           )}
         </SliderThumb>

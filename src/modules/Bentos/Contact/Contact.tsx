@@ -10,6 +10,7 @@ import Glass from "@/components/Glass/index.ts";
 import Icon from "@/components/Icon/index.ts";
 import Link from "@/components/Link/index.ts";
 import { useOutsideClick } from "@/hooks/useOutsideClick/index.ts";
+import { RADIUS } from "@/lib/radius/index.ts";
 import { socials } from "@/lib/socials/index.ts";
 import classnames from "@/utils/classnames/index.ts";
 import { time } from "@/utils/datetime/index.ts";
@@ -74,7 +75,7 @@ const Contact = ({ sizeKey, className }: ContactProps) => {
           Rik Vermeulen
           <Glass
             intensity={0.5}
-            radius={10}
+            radius={RADIUS.field}
             className="-z-10 bg-black/10 dark:bg-white/20"
           />
         </div>

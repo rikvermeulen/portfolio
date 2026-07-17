@@ -8,6 +8,7 @@ import type {
 import AppIcon from "@/components/AppIcon/index.ts";
 import Glass from "@/components/Glass/index.ts";
 import Link from "@/components/Link/index.ts";
+import { RADIUS } from "@/lib/radius/index.ts";
 import classnames from "@/utils/classnames/index.ts";
 
 import { bentos } from "./Bento.const.ts";
@@ -83,7 +84,7 @@ const Bento = ({
       data-bento-md={sizes?.md}
       style={{ ...toGridVars(sizes), ...style }}
       className={classnames(
-        "bento-item relative size-full overflow-hidden rounded-3xl",
+        "bento-item relative size-full overflow-hidden rounded-tile",
         className,
       )}
       {...props}
@@ -91,7 +92,7 @@ const Bento = ({
       {surfaceClassName && (
         <Glass
           intensity={1}
-          radius={24}
+          radius={RADIUS.tile}
           tint="none"
           className={classnames("-z-10", surfaceClassName)}
         />

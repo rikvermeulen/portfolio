@@ -7,6 +7,7 @@ import type { ReactElement, ReactNode } from "react";
 
 import Glass from "@/components/Glass/index.ts";
 import { Slot } from "@/components/Slot/index.ts";
+import { RADIUS } from "@/lib/radius/index.ts";
 import classnames from "@/utils/classnames/index.ts";
 
 import {
@@ -62,7 +63,7 @@ const Button = ({
       <Glass
         intensity={2}
         interactive
-        radius={999}
+        radius={RADIUS.pill}
         tint={prominent ? "none" : "adaptive"}
         className="-z-10"
       />

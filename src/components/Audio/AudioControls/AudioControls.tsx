@@ -2,6 +2,7 @@ import type { AudioControlsProps } from "./AudioControls.types.ts";
 
 import Glass from "@/components/Glass/index.ts";
 import Icon from "@/components/Icon/index.ts";
+import { RADIUS } from "@/lib/radius/index.ts";
 import classnames from "@/utils/classnames/index.ts";
 
 import { SkipIcon } from "./SkipIcon.tsx";
@@ -40,7 +41,7 @@ const AudioControls = ({
           blur={12}
           intensity={0.6}
           interactive
-          radius={999}
+          radius={RADIUS.pill}
           tint="light"
         />
         <Icon

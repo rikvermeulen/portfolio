@@ -14,6 +14,7 @@ import Glass from "@/components/Glass/index.ts";
 import Icon from "@/components/Icon/index.ts";
 import Link from "@/components/Link/index.ts";
 import { formatPlaytime } from "@/lib/games/formatPlaytime.ts";
+import { RADIUS } from "@/lib/radius/index.ts";
 import classnames from "@/utils/classnames/index.ts";
 import { compact } from "@/utils/compact/index.ts";
 import { time } from "@/utils/datetime/index.ts";
@@ -87,7 +88,7 @@ const Games = ({ sizeKey, profile, platforms, games }: GamesProps) => {
         <section className="mt-auto">
           <h3 className="bento-eyebrow mb-2 px-1 text-white/60">Library</h3>
           <div className="relative overflow-hidden rounded-2xl">
-            <Glass intensity={1} radius={16} tint="dark" />
+            <Glass intensity={1} radius={RADIUS.card} tint="dark" />
             <ul className="relative z-10">
               {MENU_SECTIONS.map((row, index) => (
                 <li
@@ -150,7 +151,7 @@ const Games = ({ sizeKey, profile, platforms, games }: GamesProps) => {
                   href={platform.href}
                   className="group relative flex cursor-pointer items-center gap-3 overflow-hidden rounded-xl px-2.5 py-2 ring-1 ring-white/10 transition hover:ring-white/20 focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:outline-none"
                 >
-                  <Glass intensity={1} radius={12} tint="dark" />
+                  <Glass intensity={1} radius={RADIUS.control} tint="dark" />
                   <span className="relative z-10 flex min-w-0 flex-1 items-center gap-3">
                     {platform.image ? (
                       <Avatar

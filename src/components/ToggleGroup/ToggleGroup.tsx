@@ -25,6 +25,7 @@ import type {
 import Glass from "@/components/Glass/index.ts";
 import Icon from "@/components/Icon/index.ts";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion/index.ts";
+import { RADIUS } from "@/lib/radius/index.ts";
 import classnames from "@/utils/classnames/index.ts";
 
 const HOVER_SCALE = 1.12;
@@ -359,7 +360,7 @@ export default function ToggleGroup<T extends string = string>({
         className,
       )}
     >
-      <Glass intensity={1} radius={999} tint="adaptive" />
+      <Glass intensity={1} radius={RADIUS.pill} tint="adaptive" />
 
       {activeRect ? (
         <motion.div
@@ -382,7 +383,7 @@ export default function ToggleGroup<T extends string = string>({
           >
             <Glass
               intensity={2}
-              radius={999}
+              radius={RADIUS.pill}
               tint="adaptive"
               className="bg-black/30 dark:bg-white/30"
             />
