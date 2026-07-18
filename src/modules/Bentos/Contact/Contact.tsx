@@ -86,26 +86,29 @@ const Contact = ({ sizeKey, className }: ContactProps) => {
         aria-live="polite"
         aria-relevant="additions"
         role="log"
-        className="no-scrollbar flex flex-1 flex-col gap-2 overflow-y-auto px-5 pt-20 pb-20"
+        className="no-scrollbar flex flex-1 flex-col overflow-y-auto px-5 pt-18 pb-15"
       >
         <p className="relative text-center text-[10px] text-ds-gray">
           <span className="font-semibold">Today: </span>
           {TODAY}
         </p>
 
-        {chat.map((message, index) => (
-          <div
-            key={message.id}
-            className={message.sender === "user" ? "self-end" : undefined}
-          >
-            <ChatMessage
-              isGrouped={
-                index > 0 && chat[index - 1]?.sender === message.sender
-              }
-              message={message}
-            />
-          </div>
-        ))}
+        {chat.map((message, index) => {
+          const isGrouped =
+            index > 0 && chat[index - 1]?.sender === message.sender;
+
+          return (
+            <div
+              key={message.id}
+              className={classnames(
+                message.sender === "user" && "self-end",
+                isGrouped ? "mt-0.5" : "mt-3",
+              )}
+            >
+              <ChatMessage isGrouped={isGrouped} message={message} />
+            </div>
+          );
+        })}
       </div>
 
       <footer className="absolute bottom-5 z-20 flex w-full items-center gap-2 px-5">
@@ -177,7 +180,7 @@ const Contact = ({ sizeKey, className }: ContactProps) => {
               disabled={!canSend}
               type="submit"
               className={classnames(
-                "relative right-2 z-50 shrink-0 rounded-full bg-ds-blue px-2.5 py-1 transition-all duration-300",
+                "relative right-2 z-50 shrink-0 rounded-full bg-ds-blue px-2.5 py-1 text-white transition-all duration-300",
                 canSend
                   ? "scale-100 cursor-pointer opacity-100"
                   : "scale-70 cursor-not-allowed opacity-0",

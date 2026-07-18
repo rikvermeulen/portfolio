@@ -30,9 +30,9 @@ const Plants = ({ sizeKey, plants }: PlantsProps) => {
       surfaceClassName="bg-linear-to-b from-ds-forest-from to-ds-forest-to"
       className="relative z-0 text-ds-forest-ink"
     >
-      <div className="flex size-full flex-col justify-around gap-3 p-5">
+      <div className="flex size-full flex-col gap-3 p-5">
         <h2 className="bento-title">Plant Care</h2>
-        <ul className="flex flex-col gap-2.5">
+        <ul className="flex flex-1 flex-col justify-center gap-2.5">
           {plants.slice(0, MAX_VISIBLE_PLANTS).map((plant) => (
             <li key={plant.id}>
               <button
@@ -53,7 +53,7 @@ const Plants = ({ sizeKey, plants }: PlantsProps) => {
                   />
                 )}
                 <div className="flex min-w-0 flex-col">
-                  <h3 className="bento-body max-w-38 truncate font-bold">
+                  <h3 className="bento-body max-w-42 truncate font-bold">
                     {plant.name}
                   </h3>
                   <div className="relative z-10 flex flex-wrap gap-2 p-1">

@@ -60,7 +60,7 @@ function DeliveryStatus({ active }: { readonly active: boolean }) {
   return (
     <p
       className={classnames(
-        "bento-body mt-1 self-end text-ds-gray transition-[opacity,transform] duration-200",
+        "bento-body mt-1 self-end text-[10px] text-ds-gray transition-[opacity,transform] duration-200",
         isVisible ? "scale-100 opacity-100" : "scale-50 opacity-0",
       )}
     >
@@ -84,15 +84,16 @@ function IncomingMessage({
           className="mt-4 w-8 self-start rounded-full md:w-10"
         />
       )}
-
       <div>
         {!isGrouped && (
-          <p className="bento-body ml-3 text-ds-gray">{CHAT_SENDER.name}</p>
+          <p className="bento-body ml-3 text-[10px] text-ds-gray">
+            {CHAT_SENDER.name}
+          </p>
         )}
         <MessageBubble
           showTail={!isGrouped}
           variant="incoming"
-          className={isGrouped ? "relative -top-3 ml-10 md:ml-12" : undefined}
+          className={isGrouped ? "ml-10 md:ml-12" : undefined}
         >
           {message.text}
         </MessageBubble>
@@ -101,12 +102,19 @@ function IncomingMessage({
   );
 }
 
-function OutgoingMessage({ message }: Pick<ChatMessageProps, "message">) {
+function OutgoingMessage({
+  message,
+  isGrouped,
+}: Pick<ChatMessageProps, "message" | "isGrouped">) {
   const isInitial = message.id.startsWith(INITIAL_MESSAGE_ID_PREFIX);
 
   return (
     <div className="flex w-full flex-col">
-      <MessageBubble variant="outgoing" className="max-w-xs self-end">
+      <MessageBubble
+        showTail={!isGrouped}
+        variant="outgoing"
+        className="max-w-xs self-end"
+      >
         {message.text}
       </MessageBubble>
       <DeliveryStatus active={!isInitial} />
@@ -116,7 +124,7 @@ function OutgoingMessage({ message }: Pick<ChatMessageProps, "message">) {
 
 export function ChatMessage({ message, isGrouped }: ChatMessageProps) {
   if (message.sender === "user") {
-    return <OutgoingMessage message={message} />;
+    return <OutgoingMessage isGrouped={isGrouped} message={message} />;
   }
 
   return <IncomingMessage isGrouped={isGrouped} message={message} />;
