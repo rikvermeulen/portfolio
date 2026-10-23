@@ -23,7 +23,6 @@ const actionPriority: readonly PlantaActionType[] = [
 
 interface NextActionInfo {
   readonly type: PlantaActionType;
-  readonly dateIso: string;
   readonly daysUntil: number;
 }
 
@@ -59,7 +58,7 @@ const getNextAction = (plant: PlantaPlant): NextActionInfo | null => {
     if (daysUntil === null) {
       return;
     }
-    const candidate: NextActionInfo = { type, dateIso, daysUntil };
+    const candidate: NextActionInfo = { type, daysUntil };
 
     if (!earliest || daysUntil < earliest.daysUntil) {
       earliest = candidate;
@@ -107,7 +106,6 @@ export const toPlantaPlantCards = (
         siteName: plant.site?.name,
         imageUrl: plant.image?.url,
         nextActionType: nextAction?.type,
-        nextActionDateIso: nextAction?.dateIso,
         daysUntilNextAction: nextAction?.daysUntil,
         dueCareActionTypes: getDueCareActionTypes(plant),
       };

@@ -1,8 +1,14 @@
+import type { FindMeWeather } from "@/lib/weather/types.ts";
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 
-import { mockFindMeConditions, mockFindMeProps } from "./FindMe.mock.ts";
 import FindMe from "./FindMe.tsx";
 import WeatherBadgeView from "./WeatherBadgeView.tsx";
+
+const mockWeather: FindMeWeather = {
+  temperatureCelsius: 18,
+  conditionLabel: "Cloudy",
+  iconName: "weather-cloud",
+};
 
 const meta = {
   title: "Modules/Bentos/FindMe",
@@ -24,7 +30,8 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    ...mockFindMeProps,
-    weatherBadge: <WeatherBadgeView data={mockFindMeConditions} />,
+    sizeKey: "findme",
+    className: "size-full",
+    weatherBadge: <WeatherBadgeView weather={mockWeather} />,
   },
 };

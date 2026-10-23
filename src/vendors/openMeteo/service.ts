@@ -1,38 +1,22 @@
 import "server-only";
 
-import type {
-  FindMeConditionsErrorResponse,
-  FindMeConditionsSuccessResponse,
-} from "@/lib/weather/types.ts";
+import type { FindMeWeather } from "@/lib/weather/types.ts";
+import type { Result } from "@/types/index.ts";
 
 import { toFindMeWeather } from "@/lib/weather/conditions.ts";
-import { FIND_ME_LOCATION } from "@/modules/Bentos/FindMe/FindMe.const.ts";
 
 import { fetchOpenMeteoForecast } from "./client.ts";
 
 const FIND_ME_CONDITIONS_ERROR = "Unable to load weather right now.";
 
-export const fetchFindMeConditions =
-  async (): Promise<FindMeConditionsSuccessResponse> => {
-    const forecastPayload = await fetchOpenMeteoForecast();
-
-    return {
-      ok: true,
-      location: FIND_ME_LOCATION,
-      weather: toFindMeWeather(forecastPayload),
-      updatedAt: new Date().toISOString(),
-    };
-  };
-
+/** Fetch the current FindMe weather, mapping any failure to a safe error result. */
 export const getFindMeConditionsResult = async (): Promise<
-  FindMeConditionsSuccessResponse | FindMeConditionsErrorResponse
+  Result<FindMeWeather>
 > => {
   try {
-    return await fetchFindMeConditions();
+    const payload = await fetchOpenMeteoForecast();
+    return { ok: true, data: toFindMeWeather(payload) };
   } catch {
-    return {
-      ok: false,
-      error: FIND_ME_CONDITIONS_ERROR,
-    };
+    return { ok: false, errorMessage: FIND_ME_CONDITIONS_ERROR };
   }
 };

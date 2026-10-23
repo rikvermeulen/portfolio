@@ -63,7 +63,7 @@ const PlantDetail = ({ plant }: PlantDetailProps) => {
           {plant.health && (
             <span className="inline-flex items-center gap-1.5 rounded-full bg-black/45 px-2.5 py-1 text-xs font-medium text-white capitalize backdrop-blur-sm">
               <span
-                aria-hidden="true"
+                aria-hidden
                 className={classnames(
                   "size-1.5 rounded-full",
                   healthy ? "bg-ds-plant-done" : "bg-ds-plant-fertilize",
@@ -99,7 +99,7 @@ const PlantDetail = ({ plant }: PlantDetailProps) => {
       )}
 
       <section className="flex flex-col gap-2">
-        <h4 className="bento-eyebrow px-1 text-white/60">Today</h4>
+        <h3 className="bento-eyebrow px-1 text-white/60">Today</h3>
         <ul className="flex flex-col gap-1.5">
           {statuses.map((status) => {
             const tile = status.actionType

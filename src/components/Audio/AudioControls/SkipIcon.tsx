@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useAnimation } from "framer-motion";
+import { motion, useAnimation, useReducedMotion } from "framer-motion";
 
 import type { SkipIconProps } from "./AudioControls.types.ts";
 import type { Variants } from "framer-motion";
@@ -34,8 +34,12 @@ const outVariants: Variants = {
 
 export function SkipIcon({ className }: SkipIconProps) {
   const controls = useAnimation();
+  const prefersReducedMotion = useReducedMotion();
 
   const handleTap = async () => {
+    if (prefersReducedMotion) {
+      return;
+    }
     await controls.start("tap");
     controls.set("initial");
   };

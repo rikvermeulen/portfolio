@@ -1,69 +1,11 @@
 import { z } from "zod";
 
-import type { FindMeWeather, FindMeWeatherIconName } from "./types.ts";
+import type { FindMeWeather } from "./types.ts";
 
-interface WeatherCondition {
-  readonly codes: readonly number[];
-  readonly iconName: FindMeWeatherIconName;
-  readonly label: string;
-  readonly nightIconName: FindMeWeatherIconName | null;
-}
-
-const WEATHER_CONDITIONS: readonly WeatherCondition[] = [
-  {
-    codes: [0],
-    iconName: "weather-sun",
-    label: "Clear",
-    nightIconName: "weather-moon",
-  },
-  {
-    codes: [1, 2],
-    iconName: "weather-cloud-sun",
-    label: "Partly cloudy",
-    nightIconName: null,
-  },
-  {
-    codes: [3],
-    iconName: "weather-cloud",
-    label: "Cloudy",
-    nightIconName: null,
-  },
-  {
-    codes: [45, 48],
-    iconName: "weather-fog",
-    label: "Fog",
-    nightIconName: null,
-  },
-  {
-    codes: [51, 53, 55, 56, 57],
-    iconName: "weather-rain",
-    label: "Drizzle",
-    nightIconName: null,
-  },
-  {
-    codes: [61, 63, 65, 66, 67, 80, 81, 82],
-    iconName: "weather-rain",
-    label: "Rain",
-    nightIconName: null,
-  },
-  {
-    codes: [71, 73, 75, 77, 85, 86],
-    iconName: "weather-snow",
-    label: "Snow",
-    nightIconName: null,
-  },
-  {
-    codes: [95, 96, 99],
-    iconName: "weather-thunderstorm",
-    label: "Thunderstorm",
-    nightIconName: null,
-  },
-] as const;
-
-const UNKNOWN_WEATHER_CONDITION = {
-  iconName: "weather-cloud",
-  label: "Weather",
-} as const;
+import {
+  UNKNOWN_WEATHER_CONDITION,
+  WEATHER_CONDITIONS,
+} from "./conditions.const.ts";
 
 const openMeteoForecastSchema = z.object({
   current: z.object({

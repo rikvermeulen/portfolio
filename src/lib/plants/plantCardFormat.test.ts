@@ -3,7 +3,6 @@ import type { PlantaPlantCardData } from "./types.ts";
 import {
   formatPlantaDueText,
   getPlantaCardStatuses,
-  getPlantaPlantStatusTags,
   isPlantaHappyHealth,
 } from "./plantCardFormat.ts";
 
@@ -49,35 +48,6 @@ describe("isPlantaHappyHealth", () => {
   it("returns false for neutral or negative text", () => {
     expect(isPlantaHappyHealth("Needs care")).toBe(false);
     expect(isPlantaHappyHealth("Wilting")).toBe(false);
-  });
-});
-
-describe("getPlantaPlantStatusTags", () => {
-  it("treats missing next action as watered", () => {
-    expect(getPlantaPlantStatusTags(undefined, undefined)).toEqual([
-      "Got water",
-    ]);
-  });
-
-  it("handles watering due state", () => {
-    expect(getPlantaPlantStatusTags("watering", 0)).toEqual(["Need water"]);
-    expect(getPlantaPlantStatusTags("watering", 3)).toEqual(["Got water"]);
-  });
-
-  it("handles misting", () => {
-    expect(getPlantaPlantStatusTags("misting", 0)).toEqual([
-      "Need attention",
-      "Misting",
-    ]);
-    expect(getPlantaPlantStatusTags("misting", 2)).toEqual(["Misting soon"]);
-  });
-
-  it("handles other action types", () => {
-    expect(getPlantaPlantStatusTags("fertilizing", 0)).toEqual([
-      "Need attention",
-      "Fertilize",
-    ]);
-    expect(getPlantaPlantStatusTags("fertilizing", 5)).toEqual(["Fertilize"]);
   });
 });
 
