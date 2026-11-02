@@ -1,7 +1,22 @@
-import type { SpotifyRecentlyPlayed, SpotifyShowEpisodes } from "./types.ts";
+import { z } from "zod";
+
+import type {
+  SpotifyPlaybackToken,
+  SpotifyRecentlyPlayed,
+  SpotifyShowEpisodes,
+} from "./types.ts";
 
 const SPOTIFY_API_URL = "https://api.spotify.com/v1";
 const SPOTIFY_TOKEN_URL = "https://accounts.spotify.com/api/token";
+
+// The user token is also handed to the browser, so a cached one must outlive
+// the client's own 60s early-refresh by a comfortable margin.
+const USER_TOKEN_MARGIN_MS = 5 * 60 * 1000;
+
+const tokenResponseSchema = z.object({
+  access_token: z.string().min(1),
+  expires_in: z.number().positive(),
+});
 
 let accessToken = "";
 let tokenExpiresAt = 0;
@@ -59,18 +74,16 @@ async function refreshAccessToken(
       refresh_token: refreshToken,
     }),
     cache: "no-store",
+    signal: AbortSignal.timeout(10_000),
   });
 
   if (!response.ok) {
     throw new Error(`Spotify token refresh failed: ${response.status}`);
   }
 
-  const data = (await response.json()) as {
-    access_token: string;
-    expires_in: number;
-  };
+  const data = tokenResponseSchema.parse(await response.json());
   accessToken = data.access_token;
-  tokenExpiresAt = Date.now() + (data.expires_in - 60) * 1000;
+  tokenExpiresAt = Date.now() + data.expires_in * 1000 - USER_TOKEN_MARGIN_MS;
 }
 
 async function getAccessToken(
@@ -83,6 +96,26 @@ async function getAccessToken(
   }
   await refreshAccessToken(clientId, clientSecret, refreshToken);
   return accessToken;
+}
+
+/**
+ * The cached user access token for the browser's Web Playback SDK, with the
+ * seconds until it actually expires. Refreshes against Spotify at most once
+ * per token lifetime per server instance.
+ */
+export async function getPlaybackToken(
+  clientId: string,
+  clientSecret: string,
+  refreshToken: string,
+): Promise<SpotifyPlaybackToken> {
+  const token = await getAccessToken(clientId, clientSecret, refreshToken);
+
+  return {
+    token,
+    expiresIn: Math.floor(
+      (tokenExpiresAt + USER_TOKEN_MARGIN_MS - Date.now()) / 1000,
+    ),
+  };
 }
 
 export async function fetchRecentlyPlayed(

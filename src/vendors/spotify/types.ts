@@ -28,3 +28,10 @@ export interface SpotifyEpisode {
 export interface SpotifyShowEpisodes {
   readonly items: readonly SpotifyEpisode[];
 }
+
+/** Access token handed to the browser's Web Playback SDK. */
+export interface SpotifyPlaybackToken {
+  readonly token: string;
+  /** Seconds until the token actually expires. */
+  readonly expiresIn: number;
+}

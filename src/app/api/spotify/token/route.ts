@@ -1,53 +1,33 @@
 import { NextResponse } from "next/server";
 
-import { env } from "@env";
+import type { NextRequest } from "next/server";
 
-export async function GET() {
-  const { SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET, SPOTIFY_REFRESH_TOKEN } =
-    env;
+import { getSpotifyPlaybackTokenResult } from "@/vendors/spotify/service.ts";
 
-  if (!SPOTIFY_REFRESH_TOKEN) {
-    return NextResponse.json({ error: "Not configured" }, { status: 500 });
-  }
+// The token is a live credential: never let a CDN or browser cache keep it.
+const NO_STORE = { "Cache-Control": "no-store, private" };
 
-  const credentials = btoa(`${SPOTIFY_CLIENT_ID}:${SPOTIFY_CLIENT_SECRET}`);
-
-  let resp: Response;
-  try {
-    resp = await fetch("https://accounts.spotify.com/api/token", {
-      method: "POST",
-      headers: {
-        Authorization: `Basic ${credentials}`,
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-      body: new URLSearchParams({
-        grant_type: "refresh_token",
-        refresh_token: SPOTIFY_REFRESH_TOKEN,
-      }),
-      cache: "no-store",
-      signal: AbortSignal.timeout(10_000),
-    });
-  } catch {
+/**
+ * Access token for the in-page Web Playback SDK. The SDK runs in the visitor's
+ * browser, so the token is visitor-readable by design; this route only stops
+ * other sites from fetching it and keeps Spotify calls to one per token life.
+ */
+export async function GET(request: NextRequest) {
+  // Browsers always send Sec-Fetch-Site on fetch; only our own page may ask.
+  if (request.headers.get("sec-fetch-site") !== "same-origin") {
     return NextResponse.json(
-      { error: "Token endpoint unreachable" },
-      { status: 504 },
+      { error: "Forbidden" },
+      { status: 403, headers: NO_STORE },
     );
   }
 
-  if (!resp.ok) {
+  const result = await getSpotifyPlaybackTokenResult();
+  if (!result.ok) {
     return NextResponse.json(
-      { error: "Token refresh failed" },
-      { status: 502 },
+      { error: result.errorMessage },
+      { status: 502, headers: NO_STORE },
     );
   }
 
-  const data = (await resp.json()) as {
-    access_token: string;
-    expires_in: number;
-  };
-
-  return NextResponse.json({
-    token: data.access_token,
-    expiresIn: data.expires_in,
-  });
+  return NextResponse.json(result.data, { headers: NO_STORE });
 }

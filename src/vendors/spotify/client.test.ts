@@ -1,6 +1,7 @@
 // Module-level token variables must be reset between tests.
 let fetchRecentlyPlayed: typeof import("./client.ts").fetchRecentlyPlayed;
 let fetchShowEpisodes: typeof import("./client.ts").fetchShowEpisodes;
+let getPlaybackToken: typeof import("./client.ts").getPlaybackToken;
 
 const createJsonResponse = (payload: unknown, status = 200): Response =>
   new Response(JSON.stringify(payload), {
@@ -46,6 +47,7 @@ beforeEach(async () => {
   const client = await import("./client.ts");
   fetchRecentlyPlayed = client.fetchRecentlyPlayed;
   fetchShowEpisodes = client.fetchShowEpisodes;
+  getPlaybackToken = client.getPlaybackToken;
 });
 
 describe("fetchRecentlyPlayed", () => {
@@ -175,5 +177,38 @@ describe("fetchShowEpisodes", () => {
       String(c[0]).includes("accounts.spotify.com"),
     );
     expect(tokenCalls).toHaveLength(1);
+  });
+});
+
+describe("getPlaybackToken", () => {
+  it("returns the token with its real remaining lifetime", async () => {
+    jest.spyOn(globalThis, "fetch").mockResolvedValueOnce(makeTokenResponse());
+
+    const result = await getPlaybackToken("cid", "csecret", "rtoken");
+
+    expect(result.token).toBe("test-access-token");
+    expect(result.expiresIn).toBeGreaterThan(3590);
+    expect(result.expiresIn).toBeLessThanOrEqual(3600);
+  });
+
+  it("serves repeat requests from the cache", async () => {
+    const fetchMock = jest
+      .spyOn(globalThis, "fetch")
+      .mockResolvedValueOnce(makeTokenResponse());
+
+    await getPlaybackToken("cid", "csecret", "rtoken");
+    await getPlaybackToken("cid", "csecret", "rtoken");
+
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+  });
+
+  it("rejects a malformed token response", async () => {
+    jest
+      .spyOn(globalThis, "fetch")
+      .mockResolvedValueOnce(createJsonResponse({ access_token: "" }));
+
+    await expect(
+      getPlaybackToken("cid", "csecret", "rtoken"),
+    ).rejects.toThrow();
   });
 });

@@ -14,7 +14,7 @@ export async function submitContact(
     return { ok: false };
   }
 
-  // Best-effort: a WhatsApp hiccup must never make the form look broken to the
+  // Best-effort: an ntfy hiccup must never make the form look broken to the
   // visitor, so failures are logged and we still report success.
   try {
     const sent = await notifyContactSubmission(
@@ -23,7 +23,7 @@ export async function submitContact(
     );
 
     if (!sent.ok && !sent.skipped) {
-      console.error("Contact WhatsApp send failed:", sent.error);
+      console.error("Contact ntfy send failed:", sent.error);
     }
   } catch (error) {
     console.error("Contact submission notification failed:", error);

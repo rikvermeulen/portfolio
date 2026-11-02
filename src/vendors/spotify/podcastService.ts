@@ -1,3 +1,5 @@
+import { unstable_rethrow } from "next/navigation";
+
 import type { PodcastData } from "@/lib/music/types.ts";
 import type { Result } from "@/types/index.ts";
 
@@ -27,6 +29,8 @@ export async function getSpotifyPodcastResult(): Promise<Result<PodcastData>> {
 
     return { ok: true, data: { episodes } };
   } catch (error) {
+    // Let Next's dynamic-render signal through instead of logging it as a failure.
+    unstable_rethrow(error);
     console.error("[podcast] getSpotifyPodcastResult failed:", error);
     return { ok: false, errorMessage: "Could not load episodes right now" };
   }

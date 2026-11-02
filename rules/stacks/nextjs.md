@@ -1,9 +1,9 @@
 # Stack: Next.js App Router (this repo)
 
 Concrete folder mapping for **rikvermeulen.com** — a single-page bento-grid
-dashboard. Next.js 16 App Router, React 19, TypeScript 5.9, Tailwind 4.
+dashboard. Next.js 16 App Router, React 19, TypeScript 6, Tailwind 4.
 **No CMS, no database ORM, no i18n, no server-side migrations.** Live data
-comes from third-party HTTP/SDK integrations under `src/lib/<vendor>/`.
+comes from third-party HTTP/SDK integrations under `src/vendors/<vendor>/`.
 
 This file expresses `clean-architecture.md` in this project's actual structure.
 When it conflicts with `CONVENTIONS.md`, `CONVENTIONS.md` wins.
@@ -20,7 +20,7 @@ When it conflicts with `CONVENTIONS.md`, `CONVENTIONS.md` wins.
 | `src/contexts/` | Application | React contexts (Provider + `useXContext` accessor) |
 | `src/vendors/<vendor>/` | Infrastructure | Third-party integrations, one folder per vendor. Transport only: client (fetch/SDK) + service (env-gate → cache → _delegate mapping to_ `lib/<domain>` → `Result<T>`) + **wire-shape** types + Zod schema. Imported via `@/vendors/…`. No domain types/formatters/mappers |
 | `src/lib/<domain>/` | Domain | First-party domain code: shared domain types + every formatter/mapper/URL-builder that shapes vendor data for the UI (e.g. `games`, `plants`, `recipes`, `music`, `weather`, `photos`). **These live here, never in a vendor folder.** A domain may aggregate several vendors behind an interface |
-| `src/lib/{glass,fonts}/` | — | Feature/config code, **not** integrations — exempt from the integration template |
+| `src/lib/{glass,fonts,radius}/` | — | Feature/config code, **not** integrations — exempt from the integration template |
 | `src/utils/` | Domain-ish / pure | Project-agnostic helpers, no env, no business logic |
 | `src/types/` | Domain | Cross-cutting shared types (`Result<T>`, `StatusResult<T>`) |
 
