@@ -2,6 +2,7 @@ import type { MusicProps } from "./Music.types.ts";
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 
 import { BentoEmptyState } from "@/components/Bento/index.ts";
+import { SpotifyConnectionProvider } from "@/contexts/SpotifyConnectionContext/index.ts";
 
 import Music from "./Music.tsx";
 
@@ -35,7 +36,9 @@ const meta = {
     (Story) => (
       <div className="flex min-h-screen items-center justify-center bg-neutral-100 p-10">
         <div className="size-80">
-          <Story />
+          <SpotifyConnectionProvider>
+            <Story />
+          </SpotifyConnectionProvider>
         </div>
       </div>
     ),

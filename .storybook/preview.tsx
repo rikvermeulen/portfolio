@@ -1,6 +1,5 @@
 import type { Preview } from "@storybook/nextjs-vite";
 
-import { SpotifyConnectionProvider } from "@/contexts/SpotifyConnectionContext/index.ts";
 import { fontInter } from "@/lib/fonts/fonts.ts";
 
 import "@/styles/globals.css";
@@ -9,9 +8,7 @@ const preview: Preview = {
   decorators: [
     (Story) => (
       <div className={`${fontInter.variable} font-inter antialiased`}>
-        <SpotifyConnectionProvider>
-          <Story />
-        </SpotifyConnectionProvider>
+        <Story />
       </div>
     ),
   ],

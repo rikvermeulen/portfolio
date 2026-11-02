@@ -58,11 +58,6 @@ export function useSpotifyConnection(
     return fetchFreshToken();
   }, [fetchFreshToken]);
 
-  // Stable (useCallback), captured in a ref so the connect effect stays keyed
-  // only to [name, enabled] and never reconnects the player on unrelated
-  // re-renders.
-  const fetchFreshTokenRef = useRef(fetchFreshToken);
-
   useEffect(() => {
     if (!enabled) {
       return;
@@ -74,7 +69,7 @@ export function useSpotifyConnection(
     const init = async () => {
       reportDiagnostic("init-start", { name });
       reportEnvironmentDiagnostics();
-      await fetchFreshTokenRef.current();
+      await fetchFreshToken();
       await loadWebPlaybackSdk();
       reportDiagnostic("sdk-loaded", { name, hasSpotify: !!window.Spotify });
       if (cancelled || !window.Spotify) {
@@ -84,7 +79,9 @@ export function useSpotifyConnection(
       player = new window.Spotify.Player({
         name,
         getOAuthToken: (cb) => {
-          fetchFreshTokenRef.current().then(cb);
+          fetchFreshToken().then(cb, (error_: unknown) => {
+            console.warn(`Spotify token refresh failed: ${String(error_)}`);
+          });
         },
         volume: 0.5,
       });
@@ -157,7 +154,7 @@ export function useSpotifyConnection(
       cancelled = true;
       player?.disconnect();
     };
-  }, [name, enabled]);
+  }, [name, enabled, fetchFreshToken]); // fetchFreshToken is stable (useCallback [])
 
   const activate = useCallback(() => {
     playerRef.current?.activateElement();

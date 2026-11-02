@@ -19,9 +19,6 @@ export const HEALTHY_TILE: ActionTile = {
   icon: "heart",
 };
 
-/** Nudge endpoint — pushes a summary of the plants a visitor flagged to Rik. */
-export const NUDGE_ENDPOINT = "/api/planta/remind";
-
 /** Toast the visitor sees the moment they press the button (optimistic). */
 export const NUDGE_TOAST = {
   title: "Thanks for the nudge!",

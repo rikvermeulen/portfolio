@@ -32,7 +32,7 @@ There is **no CMS, database, or i18n layer** in this project.
 - `src/vendors`: third-party transport per vendor (steam, xbox, spotify, supabase, picnic, planta, openMeteo, ntfy) — see "Vendors & domain" below
 - `src/lib`: first-party domain code (games, plants, recipes, music, weather, photos, notifications, seo, socials) plus feature/config modules `glass`, `fonts` and `radius`
 - `src/utils`: pure, project-agnostic helpers — no env, no business logic (`classnames`, `datetime`, `debounce`, `isExternalUrl`, `playSound`, `getSecurityHeaders`)
-- `src/types`: cross-cutting shared types only (`Result<T>`, `StatusResult<T>`)
+- `src/types`: cross-cutting shared types only (`Result<T>`)
 - `src/styles`, `src/assets`: design-system styles and static assets
 - `config/`: app config consumed by `next.config.ts` (`responseHeaders.ts`, `webpackLoaders.ts`)
 - `scripts/`: one-off auth helpers (`spotify-auth.ts`, `picnic-auth.ts`, `planta-auth.ts`) and `notify-test.ts`
@@ -81,7 +81,7 @@ Third-party integrations are kept fully separate from first-party domain code:
 - **`src/vendors/<vendor>/`** — one folder per third party (`steam`, `xbox`, `spotify`,
   `supabase`, `picnic`, `planta`, `openMeteo`, `ntfy`). Strictly transport: a **client**
   (fetch/SDK, tokens, throws a typed error), a **service** (env-gate → cache → client →
-  _delegate_ wire→domain mapping to `lib/<domain>` → return `Result<T>`/`StatusResult<T>`),
+  _delegate_ wire→domain mapping to `lib/<domain>` → return `Result<T>`),
   and a **types** file holding **wire shapes only**, plus Zod validation at the boundary.
   Imported via `@/vendors/…`. No domain types, formatters, mappers, or URL builders here.
 - **`src/lib/<domain>/`** — first-party domain code: the shared domain **types** plus every
@@ -105,7 +105,7 @@ Dependency direction:
   composes them. Keep it thin — mapping/logic stays in the pure files.
 
 `src/lib/{glass,fonts,radius}` are feature/config code, not integrations — exempt from the template.
-Use the shared `Result<T>`/`StatusResult<T>` from `src/types` — do not re-invent the union.
+Use the shared `Result<T>` from `src/types` — do not re-invent the union.
 
 ### Imports
 
@@ -151,7 +151,7 @@ Use the shared `Result<T>`/`StatusResult<T>` from `src/types` — do not re-inve
 
 - Vercel, Node `24.x`. No CI: the husky hooks below are the only automated gate.
 - Go-live checklist and serverless limits (Planta token rotation, the public
-  `/api/planta/remind` cooldown) live in `README.md` → "Deploying (Vercel)".
+  Plants remind action cooldown) live in `README.md` → "Deploying (Vercel)".
 - Dev-only code must stay out of the production bundle: gate on `NODE_ENV` and
   load dev tools with a dynamic `import()` (see `src/instrumentation-client.ts`).
 

@@ -1,10 +1,6 @@
 import "server-only";
 
-import type {
-  PlantaPaginatedResponse,
-  PlantaPlant,
-  PlantaTokenSet,
-} from "./types.ts";
+import type { PlantaPlant, PlantaTokenSet } from "./types.ts";
 
 import { env } from "@env";
 
@@ -13,12 +9,9 @@ import { getPlantaTokens, setPlantaTokens } from "./tokenStore.ts";
 
 const API_V1_ENDPOINT = "https://public.planta-api.com/v1";
 
-/** Prevents infinite pagination if the API repeats cursors. */
-const MAX_PLANT_PAGES = 50 as const;
 const DEFAULT_RATE_LIMIT_RETRY_DELAY_MS = 1000 as const;
 
 interface RequestOptions {
-  readonly params?: Record<string, string>;
   readonly json?: Record<string, unknown>;
   readonly retryAttempt?: number;
 }
@@ -27,9 +20,6 @@ interface PlantaResponse<TData> {
   readonly data?: TData;
   readonly message?: string;
   readonly errorType?: string;
-  readonly pagination?: {
-    readonly nextPage?: string | null;
-  };
   readonly status?: number;
 }
 
@@ -69,73 +59,20 @@ export class PlantaClient {
     this.onTokensChanged?.(tokens);
   }
 
-  public async getPlants(options?: {
-    readonly cursor?: string;
-    readonly fetchAll?: boolean;
-    readonly maxPlants?: number;
-  }): Promise<PlantaPaginatedResponse> {
-    let cursor = options?.cursor ?? null;
-    const fetchAll = options?.fetchAll ?? true;
-    const maxPlants =
-      options?.maxPlants && options.maxPlants > 0
-        ? Math.floor(options.maxPlants)
-        : null;
-    const plants: PlantaPlant[] = [];
-    let pageCount = 0;
-
-    while (true) {
-      pageCount += 1;
-
-      /* istanbul ignore next — safety guard against infinite pagination (50+ pages) */
-      if (pageCount > MAX_PLANT_PAGES) {
-        break;
-      }
-
-      const result = await this.request<PlantaPlant[]>("GET", "/addedPlants", {
-        params: cursor ? { cursor } : undefined,
-      });
-      const pagePlants = result.data ?? [];
-
-      if (maxPlants !== null) {
-        const remaining = maxPlants - plants.length;
-        /* istanbul ignore else — remaining is always >0; reachedMaxPlants exits the loop before it can reach ≤0 */
-        if (remaining > 0) {
-          plants.push(...pagePlants.slice(0, remaining));
-        }
-      } else {
-        plants.push(...pagePlants);
-      }
-
-      const nextPage = result.pagination?.nextPage ?? null;
-      const reachedMaxPlants = maxPlants !== null && plants.length >= maxPlants;
-
-      if (reachedMaxPlants || !fetchAll || !nextPage) {
-        return { plants, cursor: nextPage };
-      }
-
-      if (nextPage === cursor) {
-        break;
-      }
-
-      cursor = nextPage;
-    }
-
-    return { plants, cursor };
-  }
-
-  public async getPlant(plantId: string): Promise<PlantaPlant> {
-    const result = await this.request<PlantaPlant>(
-      "GET",
-      `/addedPlants/${plantId}`,
-    );
-    return result.data ?? ({ id: plantId } as PlantaPlant);
+  /** First page of the user's plants (the dashboard only shows a handful). */
+  public async getPlants(): Promise<readonly PlantaPlant[]> {
+    const result = await this.request<PlantaPlant[]>("GET", "/addedPlants");
+    return result.data ?? [];
   }
 
   private async ensureAuthorized(): Promise<void> {
-    if (this.isAccessTokenValid()) {
-      return;
+    if (!this.isAccessTokenValid()) {
+      await this.reauthorize();
     }
+  }
 
+  /** Refresh token first; fall back to the one-time auth code if refresh is rejected. */
+  private async reauthorize(): Promise<void> {
     if (this.tokens?.refreshToken) {
       try {
         await this.refreshTokens();
@@ -239,18 +176,10 @@ export class PlantaClient {
       );
     }
 
-    const url = new URL(`${API_V1_ENDPOINT}${path}`);
-
-    if (options?.params) {
-      Object.entries(options.params).forEach(([key, value]) => {
-        url.searchParams.set(key, value);
-      });
-    }
-
     let response: Response;
 
     try {
-      response = await fetch(url.toString(), {
+      response = await fetch(`${API_V1_ENDPOINT}${path}`, {
         method,
         headers,
         body: options?.json ? JSON.stringify(options.json) : undefined,
@@ -258,7 +187,7 @@ export class PlantaClient {
         signal: AbortSignal.timeout(15_000),
       });
     } catch (error) {
-      if (error instanceof Error && error.name === "AbortError") {
+      if (error instanceof Error && error.name === "TimeoutError") {
         throw new PlantaError("Planta request timed out.");
       }
 
@@ -306,28 +235,12 @@ export class PlantaClient {
       }
 
       if (response.status === 401 || errorType === "unauthorized") {
-        if (retryOnUnauthorized) {
-          if (this.tokens?.refreshToken) {
-            try {
-              await this.refreshTokens();
-              return this.request(method, path, options, requireAuth, false);
-            } catch (error) {
-              if (
-                !(error instanceof PlantaUnauthorizedError) ||
-                !this.authCode
-              ) {
-                throw error;
-              }
-            }
-          }
-
-          if (this.authCode) {
-            await this.authorize(this.authCode);
-            return this.request(method, path, options, requireAuth, false);
-          }
+        if (!retryOnUnauthorized) {
+          throw new PlantaUnauthorizedError(message);
         }
 
-        throw new PlantaUnauthorizedError(message);
+        await this.reauthorize();
+        return this.request(method, path, options, requireAuth, false);
       }
 
       throw new PlantaError(`${errorType}: ${message}`);

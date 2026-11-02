@@ -1,49 +1,30 @@
 "use client";
 
 import type { MusicProps } from "./Music.types.ts";
+import type { AudioBentoDisplay } from "@/components/Audio/AudioBento/index.ts";
+import type { PlaylistTrack } from "@/lib/music/types.ts";
 
-import AudioBento from "@/components/Audio/AudioBento/index.ts";
-import { useSpotifyPlayer } from "@/hooks/useSpotifyPlayer/index.ts";
+import SpotifyAudioBento from "@/components/Audio/SpotifyAudioBento/index.ts";
 
-const Music = ({ sizeKey, tracks }: MusicProps) => {
-  const {
-    isPlaying,
-    currentIndex,
-    volume,
-    error,
-    togglePlay,
-    goToNext,
-    goToPrevious,
-    setVolume,
-  } = useSpotifyPlayer(tracks, "track");
+const toDisplay = (track: PlaylistTrack): AudioBentoDisplay => ({
+  image: track.albumArtUrl,
+  title: track.name,
+  subtitle: track.artist,
+  alt: track.albumName || "No album",
+  explicit: track.explicit,
+});
 
-  const track = tracks[currentIndex];
-  const display = track
-    ? {
-        image: track.albumArtUrl,
-        title: track.name,
-        subtitle: track.artist,
-        alt: track.albumName || "No album",
-        explicit: track.explicit,
-      }
-    : null;
-
+function Music({ sizeKey, tracks }: MusicProps) {
   return (
-    <AudioBento
+    <SpotifyAudioBento
       app="music"
-      display={display}
-      isPlaying={isPlaying}
-      onChangeTrack={(direction) =>
-        direction === "next" ? goToNext() : goToPrevious()
-      }
-      onPlayOrPause={togglePlay}
-      onVolumeChange={setVolume}
-      playbackError={error}
+      items={tracks}
+      kind="track"
       sizeKey={sizeKey}
       surfaceClassName="bg-linear-to-b from-ds-music-from to-ds-music-to"
-      volume={volume}
+      toDisplay={toDisplay}
     />
   );
-};
+}
 
 export default Music;

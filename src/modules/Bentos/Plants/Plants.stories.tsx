@@ -7,6 +7,7 @@ import Plants from "./Plants.tsx";
 
 const mockPlantsProps = {
   sizeKey: "plants",
+  onRemind: async () => ({ ok: true }),
   plants: [
     {
       id: "plant-1",

@@ -4,6 +4,7 @@
 
 import { useSharedSpotifyConnection } from "@/contexts/SpotifyConnectionContext/index.ts";
 import {
+  PLAYBACK_RETRY_MESSAGE,
   resolveDeviceId,
   startPlaybackUris,
 } from "@/vendors/spotify/webPlayback.ts";
@@ -414,5 +415,23 @@ describe("useSpotifyPlayer — episode mode", () => {
     expect(mockStartPlayback).toHaveBeenCalledWith("tok", "dev-1", [
       "spotify:episode:episode-2",
     ]);
+  });
+
+  it("surfaces a retry message when the token request rejects", async () => {
+    jest.spyOn(console, "warn").mockImplementation(() => undefined);
+    mockUseConnection.mockReturnValue(
+      fakeConnection({
+        getValidToken: jest.fn().mockRejectedValue(new Error("token 500")),
+      }),
+    );
+
+    const { result } = renderHook(() => useSpotifyPlayer(TRACKS, "track"));
+    await act(async () => {
+      result.current.togglePlay();
+      await flushAsync();
+    });
+
+    expect(result.current.error).toBe(PLAYBACK_RETRY_MESSAGE);
+    expect(mockStartPlayback).not.toHaveBeenCalled();
   });
 });

@@ -7,24 +7,15 @@ import type {
 
 import { toPlantaPlantCards } from "@/lib/plants/selectors.ts";
 
-import {
-  createPlantaClientFromEnv,
-  PlantaError,
-  PlantaUnauthorizedError,
-} from "./client.ts";
+import { createPlantaClientFromEnv } from "./client.ts";
 
 const MAX_PLANTS_TO_FETCH = 6 as const;
 
 export const fetchPlantaPlantsData = async (): Promise<PlantaPlantsData> => {
-  const client = createPlantaClientFromEnv();
-  const { plants } = await client.getPlants({
-    fetchAll: false,
-    maxPlants: MAX_PLANTS_TO_FETCH,
-  });
+  const plants = await createPlantaClientFromEnv().getPlants();
 
   return {
-    rawPlants: plants,
-    plantCards: toPlantaPlantCards(plants),
+    plantCards: toPlantaPlantCards(plants.slice(0, MAX_PLANTS_TO_FETCH)),
   };
 };
 
@@ -41,26 +32,6 @@ const getCachedPlantaPlantsData = unstable_cache(
   { revalidate: 1800, tags: ["planta"] },
 );
 
-export const toPlantaErrorMessage = (error: unknown): string => {
-  if (error instanceof PlantaUnauthorizedError) {
-    return "Planta authentication failed. Your refresh token or auth code was rejected by Planta.";
-  }
-
-  if (error instanceof PlantaError) {
-    return error.message;
-  }
-
-  return "Unable to load Planta plants right now.";
-};
-
-export const toPlantaStatusCode = (error: unknown): 401 | 500 => {
-  if (error instanceof PlantaUnauthorizedError) {
-    return 401;
-  }
-
-  return 500;
-};
-
 export const getPlantaPlantsResult = async (): Promise<PlantaPlantsResult> => {
   try {
     const data = await getCachedPlantaPlantsData();
@@ -68,21 +39,17 @@ export const getPlantaPlantsResult = async (): Promise<PlantaPlantsResult> => {
     if (data.plantCards.length === 0) {
       return {
         ok: false,
-        statusCode: 500,
         errorMessage: "No Planta plants available right now.",
       };
     }
 
-    return {
-      ok: true,
-      statusCode: 200,
-      data,
-    };
+    return { ok: true, data };
   } catch (error) {
+    // Upstream messages stay in the logs; visitors get a fixed message.
+    console.error("Planta plants failed:", error);
     return {
       ok: false,
-      statusCode: toPlantaStatusCode(error),
-      errorMessage: toPlantaErrorMessage(error),
+      errorMessage: "Unable to load Planta plants right now.",
     };
   }
 };

@@ -122,6 +122,10 @@ export function useSpotifyPlayer<T extends SpotifyPlayable>(
       }
       setPlayError(null);
       setSelectedIndex(index);
+    } catch (error) {
+      // Token or device lookup failed (network, token route) — surface, don't reject unhandled.
+      console.warn(`Spotify play failed: ${String(error)}`);
+      setPlayError(PLAYBACK_RETRY_MESSAGE);
     } finally {
       isPendingRef.current = false;
     }

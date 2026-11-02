@@ -119,6 +119,35 @@ describe("useSpotifyConnection", () => {
     expect(cb).toHaveBeenCalledWith("fresh-token");
   });
 
+  it("warns instead of rejecting when the SDK's token refresh fails", async () => {
+    mockToken();
+    const player = buildMockPlayer();
+    const PlayerMock = installSpotify(player);
+    const warn = jest
+      .spyOn(console, "warn")
+      .mockImplementation(() => undefined);
+
+    renderHook(() => useSpotifyConnection("Dev", true));
+    await flush();
+
+    global.fetch = jest
+      .fn()
+      .mockResolvedValue({ ok: false, status: 500 }) as typeof global.fetch;
+    const options = PlayerMock.mock.calls[0]?.[0] as {
+      getOAuthToken: (cb: (t: string) => void) => void;
+    };
+    const cb = jest.fn();
+    await act(async () => {
+      options.getOAuthToken(cb);
+      await flush();
+    });
+
+    expect(cb).not.toHaveBeenCalled();
+    expect(warn).toHaveBeenCalledWith(
+      expect.stringContaining("Spotify token refresh failed"),
+    );
+  });
+
   it("mirrors player_state_changed.paused and ignores null state", async () => {
     mockToken();
     const player = buildMockPlayer();
