@@ -13,7 +13,7 @@ let lastSentAt = 0;
  * Owner reminder: derive every plant that's due right now (server-side, never
  * trusting the client) and push a single summary to Rik's phone.
  */
-export async function remindRik(): Promise<{ ok: boolean }> {
+export async function remindMe(): Promise<{ ok: boolean }> {
   if (Date.now() - lastSentAt < COOLDOWN_MS) {
     return { ok: true };
   }

@@ -32,7 +32,7 @@ import {
   Recipes,
   WeatherBadge,
 } from "@/modules/Bentos/index.ts";
-import { remindRik } from "@/modules/Bentos/Plants/Plants.actions.ts";
+import { remindMe } from "@/modules/Bentos/Plants/Plants.actions.ts";
 import { getPicnicRecipesResult } from "@/vendors/picnic/service.ts";
 import { getPlantaPlantsResult } from "@/vendors/planta/service.ts";
 import { getSpotifyPodcastResult } from "@/vendors/spotify/podcastService.ts";
@@ -99,7 +99,7 @@ export const bentoRegistry: readonly BentoTile[] = [
     sizeKey: "plants",
     load: getPlantaPlantsResult,
     render: (data, sizeKey) => (
-      <Plants onRemind={remindRik} plants={data.plantCards} sizeKey={sizeKey} />
+      <Plants onRemind={remindMe} plants={data.plantCards} sizeKey={sizeKey} />
     ),
   }),
 
