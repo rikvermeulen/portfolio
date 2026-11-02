@@ -107,7 +107,7 @@ export const bentoRegistry: readonly BentoTile[] = [
     id: "music",
     sizeKey: "music",
     load: getSpotifyMusicResult,
-    render: (data, sizeKey) => <Music sizeKey={sizeKey} tracks={data.tracks} />,
+    render: (data, sizeKey) => <Music sizeKey={sizeKey} source={data} />,
   }),
 
   asyncTile({

@@ -1,5 +1,7 @@
 import {
   deduplicateByTrackId,
+  toMusicPlaylist,
+  toNowPlayingTrack,
   toPlaylistTrack,
   toPodcastEpisode,
 } from "./mappers.ts";
@@ -53,6 +55,55 @@ describe("toPodcastEpisode", () => {
       name: "Episode 1",
       imageUrl: "https://img/ep.jpg",
       explicit: true,
+    });
+  });
+});
+
+describe("toMusicPlaylist", () => {
+  it("keeps id and name and picks the tile-sized cover", () => {
+    expect(
+      toMusicPlaylist({
+        id: "pl-1",
+        name: "R&B",
+        images: [{ url: "large.jpg" }, { url: "medium.jpg" }],
+      }),
+    ).toEqual({ id: "pl-1", name: "R&B", imageUrl: "large.jpg" });
+  });
+});
+
+describe("toNowPlayingTrack", () => {
+  it("returns null when the SDK reports no track", () => {
+    expect(toNowPlayingTrack(undefined)).toBeNull();
+    expect(toNowPlayingTrack({ name: "No uri" })).toBeNull();
+  });
+
+  it("maps name, first artist, album and cover", () => {
+    expect(
+      toNowPlayingTrack({
+        uri: "spotify:track:1",
+        name: "Song",
+        artists: [{ name: "Artist" }, { name: "Feat" }],
+        album: {
+          name: "Album",
+          images: [{ url: "big.jpg" }, { url: "mid.jpg" }],
+        },
+      }),
+    ).toEqual({
+      uri: "spotify:track:1",
+      name: "Song",
+      artist: "Artist",
+      albumName: "Album",
+      imageUrl: "big.jpg",
+    });
+  });
+
+  it("falls back when optional SDK fields are missing", () => {
+    expect(toNowPlayingTrack({ uri: "spotify:track:1" })).toEqual({
+      uri: "spotify:track:1",
+      name: "",
+      artist: "Unknown artist",
+      albumName: "",
+      imageUrl: null,
     });
   });
 });

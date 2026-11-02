@@ -2,6 +2,7 @@ import { z } from "zod";
 
 import type {
   SpotifyPlaybackToken,
+  SpotifyPlaylist,
   SpotifyRecentlyPlayed,
   SpotifyShowEpisodes,
 } from "./types.ts";
@@ -164,4 +165,42 @@ export async function fetchShowEpisodes(
   }
 
   return response.json() as Promise<SpotifyShowEpisodes>;
+}
+
+const playlistSchema = z.object({
+  id: z.string().min(1),
+  name: z.string(),
+  images: z
+    .array(
+      z.object({ url: z.string(), width: z.number().nullable().optional() }),
+    )
+    .nullable(),
+});
+
+/**
+ * Public playlist metadata (name + cover). Readable for any playlist with an
+ * app token; its track list is not (403 unless the token's user owns it), so
+ * the player plays the playlist as a whole via its context URI instead.
+ */
+export async function fetchPlaylist(
+  playlistId: string,
+  clientId: string,
+  clientSecret: string,
+): Promise<SpotifyPlaylist> {
+  const token = await getClientCredentialsToken(clientId, clientSecret);
+
+  const url = new URL(`${SPOTIFY_API_URL}/playlists/${playlistId}`);
+  url.searchParams.set("fields", "id,name,images");
+
+  const response = await fetch(url.toString(), {
+    headers: { Authorization: `Bearer ${token}` },
+    next: { revalidate: 3600 },
+  });
+
+  if (!response.ok) {
+    throw new Error(`Spotify playlist fetch failed: ${response.status}`);
+  }
+
+  const playlist = playlistSchema.parse(await response.json());
+  return { ...playlist, images: playlist.images ?? [] };
 }

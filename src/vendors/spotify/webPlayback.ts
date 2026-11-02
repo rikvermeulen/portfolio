@@ -39,17 +39,35 @@ export interface WebPlaybackError {
   readonly message: string;
 }
 
+/** Subset of the SDK's current-track object this app relies on. */
+export interface WebPlaybackTrack {
+  readonly uri?: string;
+  readonly name?: string;
+  readonly artists?: readonly { readonly name: string }[];
+  readonly album?: {
+    readonly name?: string;
+    readonly images?: readonly {
+      readonly url: string;
+      readonly width?: number | null;
+    }[];
+  };
+}
+
 /** Subset of the `player_state_changed` payload this app relies on. */
 export interface WebPlaybackState {
   readonly paused: boolean;
   readonly position: number;
   readonly duration: number;
+  /** What is playing as a whole (a playlist), when started via `context_uri`. */
+  readonly context?: { readonly uri?: string | null };
   readonly track_window?: {
-    readonly current_track?: {
-      readonly uri?: string;
-    };
+    readonly current_track?: WebPlaybackTrack;
   };
 }
+
+/** Body of `PUT /me/player/play`: explicit track/episode URIs, or a whole playlist. */
+export type PlaybackTarget =
+  { readonly uris: readonly string[] } | { readonly context_uri: string };
 
 export interface SpotifyPlayer {
   connect: () => Promise<boolean>;
@@ -58,6 +76,8 @@ export interface SpotifyPlayer {
   pause: () => Promise<void>;
   resume: () => Promise<void>;
   setVolume: (volume: number) => Promise<void>;
+  nextTrack: () => Promise<void>;
+  previousTrack: () => Promise<void>;
   // Must be called from within a user gesture on autoplay-restricted browsers
   // (Safari/iOS) before starting playback.
   activateElement: () => Promise<void>;
@@ -105,11 +125,21 @@ export async function fetchAccessToken(): Promise<AccessToken> {
 
 let mockPlaybackStateListener: ((state: WebPlaybackState) => void) | null =
   null;
-let mockCurrentUri: string | null = null;
+let mockCurrentTrack: WebPlaybackTrack | null = null;
+let mockContextUri: string | null = null;
+let mockTrackNumber = 1;
 let mockIsPaused = true;
 
+/** A playlist's track as the SDK would report it (the API can't list them for us). */
+const mockPlaylistTrack = (n: number): WebPlaybackTrack => ({
+  uri: `spotify:track:mock-playlist-${n}`,
+  name: `Playlist track ${n}`,
+  artists: [{ name: "Mock artist" }],
+  album: { name: "Mock album", images: [] },
+});
+
 function emitMockPlaybackState(): void {
-  if (!mockCurrentUri) {
+  if (!mockCurrentTrack) {
     return;
   }
 
@@ -117,8 +147,19 @@ function emitMockPlaybackState(): void {
     paused: mockIsPaused,
     position: 0,
     duration: 180_000,
-    track_window: { current_track: { uri: mockCurrentUri } },
+    context: { uri: mockContextUri },
+    track_window: { current_track: mockCurrentTrack },
   });
+}
+
+/** Mock skip: only a playlist context has a next/previous track to move to. */
+function skipMockTrack(step: 1 | -1): Promise<void> {
+  if (mockContextUri) {
+    mockTrackNumber = Math.max(1, mockTrackNumber + step);
+    mockCurrentTrack = mockPlaylistTrack(mockTrackNumber);
+  }
+  emitMockPlaybackState();
+  return Promise.resolve();
 }
 
 /**
@@ -169,6 +210,8 @@ function installMockSdk(): void {
           return Promise.resolve();
         },
         setVolume: () => Promise.resolve(),
+        nextTrack: () => skipMockTrack(1),
+        previousTrack: () => skipMockTrack(-1),
         activateElement: () => Promise.resolve(),
       };
     } as unknown as new (options: SpotifyPlayerInit) => SpotifyPlayer,
@@ -313,21 +356,31 @@ export async function resolveDeviceId(
  * backoff (verified live: transfer 204 → play 204 succeeds on a registered
  * device; the 404s come from stale ids or propagation lag).
  *
- * Works for both `spotify:track:` and `spotify:episode:` URIs (verified against
- * the live API). Note that `spotify:episode:` is only playable via `uris` — it
- * returns 400 "Non supported context uri" if passed as `context_uri`.
+ * `target` is either `uris` (works for `spotify:track:` and `spotify:episode:`,
+ * verified against the live API) or a playlist `context_uri`. Episodes are only
+ * playable via `uris` — as `context_uri` they return 400 "Non supported context
+ * uri". A playlist context needs no read access to its tracks, so it also plays
+ * playlists owned by another account.
  *
  * Returns the raw Response of the last play attempt.
  */
-export async function startPlaybackUris(
+export async function startPlayback(
   token: string,
   deviceId: string,
-  uris: readonly string[],
+  target: PlaybackTarget,
   retryDelaysMs: readonly number[] = [0, 1000, 3000],
 ): Promise<Response> {
   if (isMockSdkRequested()) {
-    mockCurrentUri = uris[0] ?? null;
     mockIsPaused = false;
+    mockTrackNumber = 1;
+    if ("context_uri" in target) {
+      mockContextUri = target.context_uri;
+      mockCurrentTrack = mockPlaylistTrack(mockTrackNumber);
+    } else {
+      mockContextUri = null;
+      const [uri] = target.uris;
+      mockCurrentTrack = uri ? { uri } : null;
+    }
     emitMockPlaybackState();
     return new Response(null, { status: 204 });
   }
@@ -350,7 +403,7 @@ export async function startPlaybackUris(
 
     resp = await fetch(
       `https://api.spotify.com/v1/me/player/play?device_id=${deviceId}`,
-      { method: "PUT", headers, body: JSON.stringify({ uris }) },
+      { method: "PUT", headers, body: JSON.stringify(target) },
     );
     if (resp.status !== 404) {
       return resp;

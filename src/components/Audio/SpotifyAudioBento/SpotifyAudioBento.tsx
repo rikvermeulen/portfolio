@@ -22,7 +22,7 @@ function SpotifyAudioBento<T extends SpotifyPlayable>({
   return (
     <AudioBento
       {...bentoProps}
-      display={item ? toDisplay(item) : null}
+      display={item ? toDisplay(item, player.nowPlaying) : null}
       isPlaying={player.isPlaying}
       onChangeTrack={handleChangeTrack}
       onPlayOrPause={player.togglePlay}

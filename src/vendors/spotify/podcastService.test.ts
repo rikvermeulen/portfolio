@@ -48,7 +48,7 @@ describe("getSpotifyPodcastResult", () => {
       expect(result.data.episodes[0]?.id).toBe("ep-1");
       expect(result.data.episodes[0]?.name).toBe("Intro");
       expect(result.data.episodes[0]?.imageUrl).toBe(
-        "https://img.example.com/medium.jpg",
+        "https://img.example.com/large.jpg",
       );
     }
   });

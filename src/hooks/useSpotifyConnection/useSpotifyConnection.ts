@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import type { SpotifyConnection } from "./useSpotifyConnection.types.ts";
+import type { NowPlayingTrack } from "@/lib/music/types.ts";
 import type {
   SpotifyPlayer,
   WebPlaybackDevice,
@@ -10,6 +11,7 @@ import type {
   WebPlaybackState,
 } from "@/vendors/spotify/webPlayback.ts";
 
+import { toNowPlayingTrack } from "@/lib/music/mappers.ts";
 import {
   fetchAccessToken,
   loadWebPlaybackSdk,
@@ -34,7 +36,8 @@ export function useSpotifyConnection(
 ): SpotifyConnection {
   const [deviceId, setDeviceId] = useState<string | null>(null);
   const [isPaused, setIsPaused] = useState(true);
-  const [currentUri, setCurrentUri] = useState<string | null>(null);
+  const [nowPlaying, setNowPlaying] = useState<NowPlayingTrack | null>(null);
+  const [contextUri, setContextUri] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [player, setPlayer] = useState<SpotifyPlayer | null>(null);
   // Cache the token with its expiry so REST callers never use a stale one.
@@ -104,7 +107,10 @@ export function useSpotifyConnection(
         }
         const playbackState = state as WebPlaybackState;
         setIsPaused(playbackState.paused);
-        setCurrentUri(playbackState.track_window?.current_track?.uri ?? null);
+        setNowPlaying(
+          toNowPlayingTrack(playbackState.track_window?.current_track),
+        );
+        setContextUri(playbackState.context?.uri ?? null);
       });
       player.addListener("autoplay_failed", () => {
         console.warn("Spotify autoplay failed: user gesture required");
@@ -164,7 +170,9 @@ export function useSpotifyConnection(
     deviceId,
     isReady: deviceId !== null,
     isPaused,
-    currentUri,
+    currentUri: nowPlaying?.uri ?? null,
+    contextUri,
+    nowPlaying,
     error,
     player,
     getValidToken,

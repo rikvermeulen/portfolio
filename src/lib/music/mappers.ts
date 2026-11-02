@@ -1,8 +1,15 @@
-import type { PlaylistTrack, PodcastEpisode } from "./types.ts";
+import type {
+  MusicPlaylist,
+  NowPlayingTrack,
+  PlaylistTrack,
+  PodcastEpisode,
+} from "./types.ts";
 import type {
   SpotifyEpisode,
+  SpotifyPlaylist,
   SpotifyRecentlyPlayedItem,
 } from "@/vendors/spotify/types.ts";
+import type { WebPlaybackTrack } from "@/vendors/spotify/webPlayback.ts";
 
 import { pickSpotifyImage } from "./image.ts";
 
@@ -42,5 +49,30 @@ export function toPodcastEpisode(episode: SpotifyEpisode): PodcastEpisode {
     name: episode.name,
     imageUrl: pickSpotifyImage(episode.images),
     explicit: episode.explicit,
+  };
+}
+
+/** Map Spotify playlist metadata to the domain playlist shape. */
+export function toMusicPlaylist(playlist: SpotifyPlaylist): MusicPlaylist {
+  return {
+    id: playlist.id,
+    name: playlist.name,
+    imageUrl: pickSpotifyImage(playlist.images),
+  };
+}
+
+/** Map the SDK's current track to the domain shape; `null` when nothing is loaded. */
+export function toNowPlayingTrack(
+  track: WebPlaybackTrack | undefined,
+): NowPlayingTrack | null {
+  if (!track?.uri) {
+    return null;
+  }
+  return {
+    uri: track.uri,
+    name: track.name ?? "",
+    artist: track.artists?.[0]?.name ?? "Unknown artist",
+    albumName: track.album?.name ?? "",
+    imageUrl: pickSpotifyImage(track.album?.images ?? []),
   };
 }

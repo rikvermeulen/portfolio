@@ -2,6 +2,7 @@
 let fetchRecentlyPlayed: typeof import("./client.ts").fetchRecentlyPlayed;
 let fetchShowEpisodes: typeof import("./client.ts").fetchShowEpisodes;
 let getPlaybackToken: typeof import("./client.ts").getPlaybackToken;
+let fetchPlaylist: typeof import("./client.ts").fetchPlaylist;
 
 const createJsonResponse = (payload: unknown, status = 200): Response =>
   new Response(JSON.stringify(payload), {
@@ -48,6 +49,7 @@ beforeEach(async () => {
   fetchRecentlyPlayed = client.fetchRecentlyPlayed;
   fetchShowEpisodes = client.fetchShowEpisodes;
   getPlaybackToken = client.getPlaybackToken;
+  fetchPlaylist = client.fetchPlaylist;
 });
 
 describe("fetchRecentlyPlayed", () => {
@@ -210,5 +212,66 @@ describe("getPlaybackToken", () => {
     await expect(
       getPlaybackToken("cid", "csecret", "rtoken"),
     ).rejects.toThrow();
+  });
+});
+
+describe("fetchPlaylist", () => {
+  it("fetches name and cover with a client-credentials token", async () => {
+    const fetchMock = jest
+      .spyOn(globalThis, "fetch")
+      .mockResolvedValueOnce(makeTokenResponse())
+      .mockResolvedValueOnce(
+        createJsonResponse({
+          id: "pl-1",
+          name: "R&B",
+          images: [{ url: "https://img.example.com/cover.jpg" }],
+        }),
+      );
+
+    const playlist = await fetchPlaylist("pl-1", "cid", "csecret");
+
+    expect(fetchMock.mock.calls[1]?.[0]).toContain(
+      "/playlists/pl-1?fields=id%2Cname%2Cimages",
+    );
+    expect(playlist).toEqual({
+      id: "pl-1",
+      name: "R&B",
+      images: [{ url: "https://img.example.com/cover.jpg" }],
+    });
+  });
+
+  it("treats a null images field as no cover", async () => {
+    jest
+      .spyOn(globalThis, "fetch")
+      .mockResolvedValueOnce(makeTokenResponse())
+      .mockResolvedValueOnce(
+        createJsonResponse({ id: "pl-1", name: "R&B", images: null }),
+      );
+
+    await expect(fetchPlaylist("pl-1", "cid", "csecret")).resolves.toEqual({
+      id: "pl-1",
+      name: "R&B",
+      images: [],
+    });
+  });
+
+  it("throws when the playlist endpoint returns non-ok", async () => {
+    jest
+      .spyOn(globalThis, "fetch")
+      .mockResolvedValueOnce(makeTokenResponse())
+      .mockResolvedValueOnce(createJsonResponse({ error: "not found" }, 404));
+
+    await expect(fetchPlaylist("pl-1", "cid", "csecret")).rejects.toThrow(
+      "Spotify playlist fetch failed: 404",
+    );
+  });
+
+  it("rejects a payload that is not a playlist", async () => {
+    jest
+      .spyOn(globalThis, "fetch")
+      .mockResolvedValueOnce(makeTokenResponse())
+      .mockResolvedValueOnce(createJsonResponse({ unexpected: true }));
+
+    await expect(fetchPlaylist("pl-1", "cid", "csecret")).rejects.toThrow();
   });
 });
