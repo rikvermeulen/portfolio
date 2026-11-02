@@ -40,7 +40,6 @@ const buttonClass =
 const fieldClass = "w-full rounded border border-ds-border px-3 py-2";
 
 const meta = {
-  title: "Components/FocusTrap",
   component: FocusTrap,
   parameters: {
     docs: {

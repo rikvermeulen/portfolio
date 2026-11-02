@@ -5,7 +5,6 @@ import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import Drawer from "./Drawer.tsx";
 
 const meta = {
-  title: "Components/Drawer",
   component: Drawer,
   parameters: { layout: "centered" },
 } satisfies Meta<typeof Drawer>;

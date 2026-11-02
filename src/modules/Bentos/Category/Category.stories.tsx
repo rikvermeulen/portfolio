@@ -4,7 +4,6 @@ import { mockCategoryProps } from "./Category.mock.ts";
 import Category from "./Category.tsx";
 
 const meta = {
-  title: "Modules/Bentos/Category",
   component: Category,
   parameters: { layout: "fullscreen" },
   decorators: [

@@ -3,6 +3,8 @@
  */
 import "@testing-library/jest-dom";
 
+import { createRef } from "react";
+
 import { render } from "@testing-library/react";
 
 import { Slot } from "./index.ts";
@@ -27,19 +29,15 @@ describe("Slot", () => {
   });
 
   it("should forward ref to child element", () => {
-    let node: HTMLDivElement | null = null;
+    const ref = createRef<HTMLElement>();
 
     render(
-      <Slot
-        ref={(el) => {
-          node = el as HTMLDivElement | null;
-        }}
-      >
+      <Slot ref={ref}>
         <div>Child content</div>
       </Slot>,
     );
 
-    expect(node).toBeInstanceOf(HTMLDivElement);
+    expect(ref.current).toBeInstanceOf(HTMLDivElement);
   });
 
   it("should handle single child element correctly", () => {

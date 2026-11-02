@@ -16,12 +16,12 @@ services in `src/lib/<vendor>/`.
 - Data/validation: **Zod 4** + `@t3-oss/env-nextjs`; `@supabase/supabase-js`; `picnic-api`; `mapbox-gl`
 - Testing: **Jest 30** only (jsdom) — 100% coverage gate on `src/{utils,lib,hooks}`
 - Tooling: husky (git hooks), react-scan (dev perf overlay), ESLint, Stylelint, Prettier
-- Runtime: **Node >=22.11** (see `.nvmrc`)
+- Runtime: **Node 24** (pinned in `.nvmrc`)
 
 ## Getting started
 
 ```bash
-nvm use                 # Node 22.11+
+nvm use                 # Node 24 (.nvmrc)
 npm install
 cp .env.example .env    # then fill in the values you need (see below)
 npm run dev             # http://localhost:3000

@@ -11,7 +11,6 @@ import AdaptiveText from "./AdaptiveText.tsx";
  * per-glyph gradient — and should match the band it currently sits over.
  */
 const meta: Meta<typeof AdaptiveText> = {
-  title: "Components/AdaptiveText",
   component: AdaptiveText,
   parameters: { layout: "fullscreen" },
 };

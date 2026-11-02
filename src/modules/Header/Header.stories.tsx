@@ -4,7 +4,6 @@ import { mockHeaderProps } from "./Header.mock.ts";
 import Header from "./Header.tsx";
 
 const meta = {
-  title: "Modules/Header",
   component: Header,
   parameters: { layout: "fullscreen" },
 } satisfies Meta<typeof Header>;

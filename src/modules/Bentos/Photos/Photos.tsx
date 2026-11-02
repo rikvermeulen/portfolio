@@ -44,7 +44,9 @@ const Photos = ({ sizeKey, albums }: PhotosProps) => {
   useEffect(() => {
     // Nothing to advance through with a single slide, and reduced-motion users
     // hold on the first one — no auto-advancing cross-fade.
-    if (reduceMotion || media.length < 2) return;
+    if (reduceMotion || media.length < 2) {
+      return;
+    }
 
     // The album just (re)mounted at index 0 via JSX; sync the ref so the first
     // advance moves off the correct slide.

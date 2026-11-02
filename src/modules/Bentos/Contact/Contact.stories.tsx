@@ -3,7 +3,6 @@ import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import Contact from "./Contact.tsx";
 
 const meta = {
-  title: "Modules/Bentos/Contact",
   component: Contact,
   parameters: { layout: "fullscreen" },
   decorators: [

@@ -35,7 +35,14 @@ export const fetchSavedPicnicRecipes = async (options?: {
 }): Promise<PicnicRecipesResult> => {
   const client = createPicnicClientFromEnv();
   const authKey = await ensurePicnicAuth(client);
-  const cookbookPage = await client.recipe.getCookbookPage();
+  // v5 made recipe.getCookbookPage private; this is the same request it wrapped
+  const page = await client.app.getPage("cookbook-page-content");
+  if (page.format !== "fusion") {
+    throw new PicnicError(
+      "Picnic served the cookbook page as RSC; saved-recipe extraction needs an update.",
+    );
+  }
+  const cookbookPage = page.page;
   const rawRecipes: readonly PicnicRecipe[] = extractSavedRecipes(cookbookPage);
 
   const withOptionalNode = options?.includeNodeId?.trim().length

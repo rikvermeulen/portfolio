@@ -15,7 +15,6 @@ const appEntries = Object.values(bentos).filter(
 );
 
 const meta = {
-  title: "Components/AppIcon",
   component: AppIcon,
   decorators: [
     (Story) => (

@@ -1,5 +1,6 @@
 "use client";
 
+/* eslint-disable @eslint-react/immutability -- framer-motion controls/MotionValues are mutated imperatively by design, never during render */
 import { motion, useAnimation, useReducedMotion } from "framer-motion";
 
 import type { SkipIconProps } from "./AudioControls.types.ts";

@@ -1,5 +1,6 @@
 "use client";
 
+/* eslint-disable @eslint-react/immutability -- framer-motion controls/MotionValues are mutated imperatively by design, never during render */
 import {
   useCallback,
   useEffect,

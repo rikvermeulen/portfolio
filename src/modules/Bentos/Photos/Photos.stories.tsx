@@ -3,7 +3,6 @@ import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import Photos from "./Photos.tsx";
 
 const meta = {
-  title: "Modules/Bentos/Photos",
   component: Photos,
   parameters: { layout: "fullscreen" },
   decorators: [

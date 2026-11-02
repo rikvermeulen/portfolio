@@ -6,7 +6,7 @@ import {
   toPicnicErrorMessage,
 } from "./service.ts";
 
-const mockGetCookbookPage = jest.fn();
+const mockGetPage = jest.fn();
 const mockEnsurePicnicAuth = jest.fn();
 const mockCreatePicnicClientFromEnv = jest.fn();
 
@@ -48,10 +48,13 @@ jest.mock("@env", () => ({
 describe("fetchSavedPicnicRecipes", () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    mockGetCookbookPage.mockResolvedValue({ page: "cookbook-data" });
+    mockGetPage.mockResolvedValue({
+      format: "fusion",
+      page: { page: "cookbook-data" },
+    });
     mockEnsurePicnicAuth.mockResolvedValue("auth-key-123");
     mockCreatePicnicClientFromEnv.mockReturnValue({
-      recipe: { getCookbookPage: mockGetCookbookPage },
+      app: { getPage: mockGetPage },
     });
   });
 
@@ -68,15 +71,24 @@ describe("fetchSavedPicnicRecipes", () => {
     const result = await fetchSavedPicnicRecipes();
     expect(result.authKey).toBe("auth-key-123");
   });
+
+  it("throws PicnicError when the cookbook page is not served as fusion", async () => {
+    mockGetPage.mockResolvedValue({ format: "rsc", content: "" });
+
+    await expect(fetchSavedPicnicRecipes()).rejects.toBeInstanceOf(PicnicError);
+  });
 });
 
 describe("fetchSavedPicnicRecipes — includeNodeId option", () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    mockGetCookbookPage.mockResolvedValue({ page: "cookbook-data" });
+    mockGetPage.mockResolvedValue({
+      format: "fusion",
+      page: { page: "cookbook-data" },
+    });
     mockEnsurePicnicAuth.mockResolvedValue("auth-key-123");
     mockCreatePicnicClientFromEnv.mockReturnValue({
-      recipe: { getCookbookPage: mockGetCookbookPage },
+      app: { getPage: mockGetPage },
     });
   });
 
@@ -140,10 +152,13 @@ describe("fetchSavedPicnicRecipes — includeNodeId option", () => {
 describe("fetchSavedPicnicRecipes — country code", () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    mockGetCookbookPage.mockResolvedValue({ page: "cookbook-data" });
+    mockGetPage.mockResolvedValue({
+      format: "fusion",
+      page: { page: "cookbook-data" },
+    });
     mockEnsurePicnicAuth.mockResolvedValue("auth-key-123");
     mockCreatePicnicClientFromEnv.mockReturnValue({
-      recipe: { getCookbookPage: mockGetCookbookPage },
+      app: { getPage: mockGetPage },
     });
   });
 
@@ -162,7 +177,7 @@ describe("fetchPicnicAuthKey", () => {
   beforeEach(() => {
     jest.clearAllMocks();
     mockCreatePicnicClientFromEnv.mockReturnValue({
-      recipe: { getCookbookPage: mockGetCookbookPage },
+      app: { getPage: mockGetPage },
     });
   });
 
@@ -212,10 +227,10 @@ describe("toPicnicErrorMessage", () => {
 describe("getPicnicRecipesResult", () => {
   beforeEach(() => {
     mockCreatePicnicClientFromEnv.mockReturnValue({
-      recipe: { getCookbookPage: mockGetCookbookPage },
+      app: { getPage: mockGetPage },
     });
     mockEnsurePicnicAuth.mockResolvedValue("auth-key");
-    mockGetCookbookPage.mockResolvedValue({});
+    mockGetPage.mockResolvedValue({ format: "fusion", page: {} });
   });
 
   it("returns ok:true with recipeCards on success", async () => {
@@ -233,7 +248,7 @@ describe("getPicnicRecipesResult", () => {
       extractSavedRecipes: jest.Mock;
     };
     extractSavedRecipes.mockReturnValueOnce([]);
-    mockGetCookbookPage.mockResolvedValue({ recipes: {} });
+    mockGetPage.mockResolvedValue({ format: "fusion", page: { recipes: {} } });
     const result = await getPicnicRecipesResult();
     expect(result.ok).toBe(false);
     if (!result.ok) {
@@ -242,7 +257,7 @@ describe("getPicnicRecipesResult", () => {
   });
 
   it("returns ok:false with errorMessage when fetchSavedPicnicRecipes throws", async () => {
-    mockGetCookbookPage.mockRejectedValue(new Error("network failure"));
+    mockGetPage.mockRejectedValue(new Error("network failure"));
     const result = await getPicnicRecipesResult();
     expect(result.ok).toBe(false);
     if (!result.ok) {

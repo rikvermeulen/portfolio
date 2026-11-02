@@ -3,7 +3,6 @@ import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import Avatar from "./Avatar.tsx";
 
 const meta = {
-  title: "Components/Avatar",
   component: Avatar,
   parameters: { layout: "centered" },
 } satisfies Meta<typeof Avatar>;

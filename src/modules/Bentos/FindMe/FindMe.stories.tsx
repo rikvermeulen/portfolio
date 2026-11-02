@@ -11,7 +11,6 @@ const mockWeather: FindMeWeather = {
 };
 
 const meta = {
-  title: "Modules/Bentos/FindMe",
   component: FindMe,
   parameters: { layout: "fullscreen" },
   decorators: [

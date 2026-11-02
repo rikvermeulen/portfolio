@@ -6,7 +6,6 @@ import { mockGamesProps } from "./Games.mock.ts";
 import Games from "./Games.tsx";
 
 const meta = {
-  title: "Modules/Bentos/Games",
   component: Games,
   parameters: { layout: "fullscreen" },
   decorators: [

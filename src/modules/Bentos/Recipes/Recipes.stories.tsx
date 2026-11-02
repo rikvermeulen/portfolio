@@ -10,7 +10,6 @@ import {
 import Recipes from "./Recipes.tsx";
 
 const meta = {
-  title: "Modules/Bentos/Recipes",
   component: Recipes,
   parameters: { layout: "fullscreen" },
   decorators: [

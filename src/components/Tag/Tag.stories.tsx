@@ -5,7 +5,6 @@ import { mockTagProps } from "./Tag.mock.ts";
 import Tag from "./Tag.tsx";
 
 const meta = {
-  title: "Components/Tag",
   component: Tag,
   decorators: [
     (Story) => (

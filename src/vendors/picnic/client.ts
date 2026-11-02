@@ -13,11 +13,6 @@ export class PicnicError extends Error {
 
 type PicnicApiClient = InstanceType<typeof PicnicClient>;
 
-interface LoginResponse {
-  readonly authKey: string;
-  readonly second_factor_authentication_required: boolean;
-}
-
 const getCountryCode = (): "NL" | "DE" => env.PICNIC_COUNTRY_CODE ?? "NL";
 
 /** Creates a Picnic API client configured from environment variables. */
@@ -51,12 +46,12 @@ export const ensurePicnicAuth = async (
     );
   }
 
-  const loginResult = (await client.auth.login(
+  const loginResult = await client.auth.login(
     env.PICNIC_EMAIL,
     env.PICNIC_PASSWORD,
-  )) as LoginResponse;
+  );
 
-  if (loginResult.second_factor_authentication_required) {
+  if (loginResult.secondFactorAuthenticationRequired) {
     throw new PicnicError(
       "Picnic 2FA is required. Create/use PICNIC_AUTH_KEY from an authenticated session.",
     );

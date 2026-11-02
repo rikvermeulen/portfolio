@@ -4,7 +4,6 @@ import { mockGlassProps } from "./Glass.mock.ts";
 import Glass from "./Glass.tsx";
 
 const meta = {
-  title: "Components/Glass",
   component: Glass,
   parameters: {
     layout: "fullscreen",

@@ -4,7 +4,6 @@ import { mockInformationProps } from "./Information.mock.ts";
 import Information from "./Information.tsx";
 
 const meta = {
-  title: "Modules/Bentos/Information",
   component: Information,
   parameters: { layout: "fullscreen" },
   decorators: [

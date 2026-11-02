@@ -3,7 +3,6 @@ import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import Navigation from "./Navigation.tsx";
 
 const meta = {
-  title: "Modules/Navigation",
   component: Navigation,
   parameters: { layout: "fullscreen" },
   decorators: [

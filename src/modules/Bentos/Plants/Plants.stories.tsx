@@ -41,7 +41,6 @@ const mockPlantsProps = {
 } satisfies PlantsProps;
 
 const meta = {
-  title: "Modules/Bentos/Plants",
   component: Plants,
   parameters: { layout: "fullscreen" },
   decorators: [

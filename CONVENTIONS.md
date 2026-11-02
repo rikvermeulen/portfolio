@@ -10,14 +10,14 @@ There is **no CMS, database, or i18n layer** in this project.
 
 ## Stack
 
-- Next.js 16, React 19, TypeScript 5.9 (React Compiler enabled via `babel-plugin-react-compiler` + `reactCompiler: true`)
+- Next.js 16, React 19, TypeScript 6 (React Compiler enabled via `babel-plugin-react-compiler` + `reactCompiler: true`)
 - Tailwind CSS 4 (v4, configured via the `@tailwindcss/postcss` plugin — there is **no** `tailwind.config` file)
 - Storybook 10 (`@storybook/nextjs-vite`)
 - Animation: GSAP 3 (`@gsap/react`, lazily loaded) + framer-motion 12
 - Data/validation: Zod 4 + `@t3-oss/env-nextjs`; `@supabase/supabase-js`; `picnic-api`; `mapbox-gl`
 - Testing: **Jest 30 only** (jsdom). No Vitest — `vite` is present only as Storybook's transitive builder.
 - Tooling: husky (git hooks), react-scan (dev perf overlay), ESLint (`@greenberry/linting-config`), Stylelint, Prettier
-- Runtime: Node `>=22.11` (`.nvmrc`)
+- Runtime: Node 24 (`.nvmrc` exact pin, `engines` `24.x` for Vercel)
 
 ## Structure
 

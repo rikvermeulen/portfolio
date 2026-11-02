@@ -18,7 +18,6 @@ jest.mock("@/components/Glass/index.ts", () => ({
 
 const mockReduceMotion = jest.fn(() => false);
 jest.mock("@/hooks/usePrefersReducedMotion/index.ts", () => ({
-  // eslint-disable-next-line @eslint-react/no-unnecessary-use-prefix -- mocks the real hook by name
   usePrefersReducedMotion: () => mockReduceMotion(),
 }));
 

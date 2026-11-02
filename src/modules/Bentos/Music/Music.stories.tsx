@@ -29,7 +29,6 @@ const mockMusicProps = {
 } satisfies MusicProps;
 
 const meta = {
-  title: "Modules/Bentos/Music",
   component: Music,
   parameters: { layout: "fullscreen" },
   decorators: [

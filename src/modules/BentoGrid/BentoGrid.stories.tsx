@@ -6,7 +6,6 @@ import { mockBentoGridProps } from "./BentoGrid.mock.ts";
 import BentoGrid from "./BentoGrid.tsx";
 
 const meta = {
-  title: "Modules/BentoGrid",
   component: BentoGrid,
   parameters: { layout: "fullscreen" },
 } satisfies Meta<typeof BentoGrid>;
