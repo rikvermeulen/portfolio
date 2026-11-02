@@ -4,7 +4,6 @@ import { mockTWBreakpointIndicatorProps } from "./TWBreakpointIndicator.mock.ts"
 import TWBreakpointIndicator from "./TWBreakpointIndicator.tsx";
 
 const meta = {
-  title: "Components/Dev/TWBreakpointIndicator",
   component: TWBreakpointIndicator,
   parameters: { layout: "fullscreen" },
 } satisfies Meta<typeof TWBreakpointIndicator>;

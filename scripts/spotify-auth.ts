@@ -1,4 +1,4 @@
-/* eslint-disable no-process-env */
+/* eslint-disable no-restricted-properties -- validated env module / standalone scripts read process.env directly */
 
 import { exec } from "node:child_process";
 import { randomUUID } from "node:crypto";

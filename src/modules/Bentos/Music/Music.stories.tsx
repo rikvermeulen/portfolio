@@ -1,12 +1,34 @@
+import type { MusicProps } from "./Music.types.ts";
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 
 import { BentoEmptyState } from "@/components/Bento/index.ts";
 
-import { mockMusicProps } from "./Music.mock.ts";
 import Music from "./Music.tsx";
 
+const mockMusicProps = {
+  sizeKey: "music",
+  tracks: [
+    {
+      id: "mock-1",
+      name: "Creepin'",
+      artist: "Metro Boomin",
+      albumName: "HEROES & VILLAINS",
+      albumArtUrl:
+        "https://i.scdn.co/image/ab67616d00001e0267d6c6a76afe5b0c9a0cc2f0",
+      explicit: true,
+    },
+    {
+      id: "mock-2",
+      name: "Flowers",
+      artist: "Miley Cyrus",
+      albumName: "Endless Summer Vacation",
+      albumArtUrl: null,
+      explicit: false,
+    },
+  ],
+} satisfies MusicProps;
+
 const meta = {
-  title: "Modules/Bentos/Music",
   component: Music,
   parameters: { layout: "fullscreen" },
   decorators: [

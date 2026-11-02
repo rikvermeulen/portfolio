@@ -1,12 +1,46 @@
+import type { PlantsProps } from "./Plants.types.ts";
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 
 import { BentoEmptyState } from "@/components/Bento/index.ts";
 
-import { mockPlantsProps } from "./Plants.mock.ts";
 import Plants from "./Plants.tsx";
 
+const mockPlantsProps = {
+  sizeKey: "plants",
+  plants: [
+    {
+      id: "plant-1",
+      name: "Monstera",
+      scientificName: "Monstera deliciosa",
+      health: "needs attention",
+      siteName: "Living room",
+      imageUrl: "/images/icons/light/planta.png",
+      dueCareActionTypes: ["watering"],
+      nextActionType: "fertilizing",
+      daysUntilNextAction: 5,
+    },
+    {
+      id: "plant-2",
+      name: "Calathea",
+      scientificName: "Calathea orbifolia",
+      health: "happy",
+      siteName: "Studio",
+      nextActionType: "misting",
+      daysUntilNextAction: 3,
+    },
+    {
+      id: "plant-3",
+      name: "Pilea",
+      scientificName: "Pilea peperomioides",
+      health: "thriving",
+      siteName: "Kitchen",
+      nextActionType: "repotting",
+      daysUntilNextAction: 12,
+    },
+  ],
+} satisfies PlantsProps;
+
 const meta = {
-  title: "Modules/Bentos/Plants",
   component: Plants,
   parameters: { layout: "fullscreen" },
   decorators: [

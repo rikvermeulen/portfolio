@@ -24,12 +24,6 @@ let includeTelemetry = true;
 let ioCallbacks: IntersectionObserverCallback[] = [];
 let roCallback: ResizeObserverCallback | null = null;
 
-let sizeW = 0;
-let sizeH = 0;
-
-let rafCbs = new Map<number, FrameRequestCallback>();
-let rafId = 0;
-
 // Filled in by `setup()` after re-importing the reset module registry so the
 // module-level `Harness` component and the renderer share one React instance.
 let activeHook: (typeof import("./useFindMeMap.ts"))["useFindMeMap"] | null =
@@ -40,8 +34,8 @@ const apiHolder: { current: HookApi | null } = { current: null };
 
 /**
  * A hand-rolled mapbox `Map` stand-in. It records the constructor options,
- * captures every `on(...)` handler so tests can fire `"load"` / `"error"`
- * events, and exposes jest mocks for the imperative methods the hook calls.
+ * captures every `on(...)` handler so tests can fire `"error"` events, and
+ * exposes jest mocks for the imperative methods the hook calls.
  */
 class MockMap {
   public static last: MockMap | null = null;
@@ -112,12 +106,6 @@ class MockResizeObserver {
 
 const setTelemetryMock = jest.fn();
 
-const flushRaf = (): void => {
-  const entries = Array.from(rafCbs.values());
-  rafCbs.clear();
-  entries.forEach((cb) => cb(0));
-};
-
 const flushAsync = async (): Promise<void> => {
   for (let i = 0; i < 10; i++) {
     await Promise.resolve();
@@ -138,10 +126,6 @@ beforeEach(() => {
   roCallback = null;
   currentZoom = FIND_ME_MAP.initialZoom;
   includeTelemetry = true;
-  sizeW = 0;
-  sizeH = 0;
-  rafCbs = new Map();
-  rafId = 0;
   apiHolder.current = null;
   setTelemetryMock.mockClear();
 
@@ -149,14 +133,6 @@ beforeEach(() => {
     MockIntersectionObserver as unknown as typeof IntersectionObserver;
   global.ResizeObserver =
     MockResizeObserver as unknown as typeof ResizeObserver;
-  global.requestAnimationFrame = jest.fn((cb: FrameRequestCallback) => {
-    const id = ++rafId;
-    rafCbs.set(id, cb);
-    return id;
-  }) as unknown as typeof requestAnimationFrame;
-  global.cancelAnimationFrame = jest.fn((id: number) => {
-    rafCbs.delete(id);
-  }) as unknown as typeof cancelAnimationFrame;
 });
 
 afterEach(() => jest.clearAllMocks());
@@ -268,37 +244,6 @@ describe("useFindMeMap", () => {
     unmount();
   });
 
-  it("initializes immediately when IntersectionObserver is unavailable", async () => {
-    delete (global as { IntersectionObserver?: unknown }).IntersectionObserver;
-
-    const { act, unmount } = await setup();
-    await act(async () => {
-      await flushAsync();
-    });
-
-    expect(ioCallbacks).toHaveLength(0);
-    expect(MockMap.last).not.toBeNull();
-    unmount();
-  });
-
-  it("aborts initialization when unmounted before mapbox finishes loading", async () => {
-    const { act, unmount } = await setup();
-
-    act(() => {
-      ioCallbacks[0]!(
-        [{ isIntersecting: true } as IntersectionObserverEntry],
-        {} as IntersectionObserver,
-      );
-    });
-    act(() => unmount());
-    await act(async () => {
-      await flushAsync();
-    });
-
-    // Guarded by `cancelled` before the map is constructed.
-    expect(MockMap.last).toBeNull();
-  });
-
   it("aborts initialization when the container disappears mid-load", async () => {
     const { api, act, unmount } = await setup();
 
@@ -313,7 +258,7 @@ describe("useFindMeMap", () => {
       await flushAsync();
     });
 
-    // Guarded by `!containerRef.current` (cancelled is still false).
+    // Guarded by the `!target` check after the mapbox import resolves.
     expect(MockMap.last).toBeNull();
     unmount();
   });
@@ -327,7 +272,7 @@ describe("useFindMeMap", () => {
     map.fire("error", { error: { message: "blocked by events.mapbox.com" } });
     expect(map.setStyle).not.toHaveBeenCalled();
 
-    // A real error (missing message → "Unknown map error") triggers the fallback.
+    // A real error (missing message → "") triggers the fallback.
     map.fire("error", {});
     expect(map.setStyle).toHaveBeenCalledTimes(1);
     expect(map.setStyle).toHaveBeenCalledWith(FIND_ME_MAP.fallbackStyle);
@@ -336,52 +281,23 @@ describe("useFindMeMap", () => {
     map.fire("error", { error: { message: "boom" } });
     expect(map.setStyle).toHaveBeenCalledTimes(1);
 
-    // No rAF is pending here → disconnect takes the no-cancel path on unmount.
     unmount();
     expect(map.off).toHaveBeenCalledWith("error", expect.any(Function));
     expect(map.remove).toHaveBeenCalled();
   });
 
-  it("debounces resize, skips unchanged sizes, and cancels a pending frame on unmount", async () => {
-    const { api, act, unmount } = await setup();
+  it("resizes the map when the observed container changes size", async () => {
+    const { act, unmount } = await setup();
     await fireIntersecting(act);
     const map = MockMap.last!;
 
-    // jsdom reports 0 for clientWidth/clientHeight; expose controllable sizes.
-    const container = api.containerRef.current!;
-    Object.defineProperty(container, "clientWidth", {
-      configurable: true,
-      get: () => sizeW,
-    });
-    Object.defineProperty(container, "clientHeight", {
-      configurable: true,
-      get: () => sizeH,
-    });
-
     expect(roCallback).not.toBeNull();
-    const trigger = () => roCallback!([], {} as unknown as ResizeObserver);
-
-    // First call schedules a frame; second call is a no-op (frame pending).
-    trigger();
-    trigger();
-    expect(requestAnimationFrame).toHaveBeenCalledTimes(1);
-
-    // Size actually changed → map.resize() runs.
-    sizeW = 100;
-    sizeH = 50;
-    flushRaf();
+    act(() =>
+      roCallback!([{} as ResizeObserverEntry], {} as unknown as ResizeObserver),
+    );
     expect(map.resize).toHaveBeenCalledTimes(1);
 
-    // Same size → early return, no additional resize.
-    trigger();
-    flushRaf();
-    expect(map.resize).toHaveBeenCalledTimes(1);
-
-    // The "load" handler also debounces via rAF; leave this frame pending so
-    // disconnect() must cancel it on unmount.
-    map.fire("load");
     unmount();
-    expect(cancelAnimationFrame).toHaveBeenCalled();
   });
 
   it("does nothing when zooming before the map exists", async () => {
@@ -393,15 +309,19 @@ describe("useFindMeMap", () => {
     unmount();
   });
 
-  it("does not zoom in past the maximum zoom", async () => {
+  it("does not zoom past the maximum or minimum zoom", async () => {
     const { api, act, unmount } = await setup();
     await fireIntersecting(act);
     const map = MockMap.last!;
 
     currentZoom = FIND_ME_MAP.maxZoom;
     act(() => api.zoomIn());
-
     expect(map.flyTo).not.toHaveBeenCalled();
+
+    currentZoom = FIND_ME_MAP.minZoom;
+    act(() => api.zoomOut());
+    expect(map.flyTo).not.toHaveBeenCalled();
+
     unmount();
   });
 

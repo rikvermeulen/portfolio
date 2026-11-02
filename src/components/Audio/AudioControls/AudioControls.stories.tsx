@@ -7,7 +7,6 @@ import {
 import AudioControls from "./AudioControls.tsx";
 
 const meta = {
-  title: "Components/AudioControls",
   component: AudioControls,
   parameters: { layout: "centered" },
   decorators: [

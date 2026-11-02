@@ -1,8 +1,4 @@
-import {
-  extractSavedRecipeIds,
-  extractSavedRecipes,
-  findFusionNodeById,
-} from "./extract.ts";
+import { extractSavedRecipeIds, extractSavedRecipes } from "./extract.ts";
 
 // ─── Additional helpers ────────────────────────────────────────────────────────
 
@@ -195,59 +191,6 @@ describe("extractSavedRecipeIds", () => {
     };
 
     expect(extractSavedRecipeIds(payload)).toContain("fallback-id");
-  });
-});
-
-// ─── findFusionNodeById ────────────────────────────────────────────────────────
-
-describe("findFusionNodeById", () => {
-  it("returns the node with a matching id", () => {
-    const payload = {
-      children: [
-        { id: "other-node", title: "Other" },
-        { id: "target-node", title: "My Recipe", name: null },
-      ],
-    };
-
-    const node = findFusionNodeById(payload, "target-node");
-
-    expect(node).not.toBeNull();
-    expect(node?.id).toBe("target-node");
-    expect(node?.title).toBe("My Recipe");
-  });
-
-  it("uses name as a title fallback", () => {
-    const payload = { id: "n1", name: "Named Recipe" };
-
-    expect(findFusionNodeById(payload, "n1")?.title).toBe("Named Recipe");
-  });
-
-  it("uses label as a title fallback when title and name are absent", () => {
-    const payload = { id: "n1", label: "Labelled Recipe" };
-
-    expect(findFusionNodeById(payload, "n1")?.title).toBe("Labelled Recipe");
-  });
-
-  it('falls back to "Untitled recipe" when no title-like field is present', () => {
-    const payload = { id: "n1" };
-
-    expect(findFusionNodeById(payload, "n1")?.title).toBe("Untitled recipe");
-  });
-
-  it("returns null when the node is not found", () => {
-    expect(findFusionNodeById({ id: "other" }, "missing")).toBeNull();
-  });
-
-  it("returns null for an empty payload", () => {
-    expect(findFusionNodeById({}, "anything")).toBeNull();
-  });
-
-  it("searches nested arrays", () => {
-    const payload = {
-      nested: [[{ id: "deep", title: "Deep Recipe" }]],
-    };
-
-    expect(findFusionNodeById(payload, "deep")?.id).toBe("deep");
   });
 });
 
@@ -496,21 +439,5 @@ describe("extractSavedRecipes — parseRecipeTile title fallback", () => {
     // The green title is the fallback title (the non-min, non-special entry via second find)
     expect(recipes[0]?.id).toBe("color-recipe");
     expect(recipes[0]?.title).toContain("Green Title");
-  });
-});
-
-// ─── findFusionNodeById — early-exit when already found ───────────────────────
-
-describe("findFusionNodeById — early-exit when already found", () => {
-  it("stops visiting siblings after the target is found (covers visit early-return path)", () => {
-    const payload = {
-      children: [
-        { id: "target-first", title: "Found First" },
-        { id: "sibling", title: "Sibling" },
-      ],
-    };
-
-    const node = findFusionNodeById(payload, "target-first");
-    expect(node?.id).toBe("target-first");
   });
 });

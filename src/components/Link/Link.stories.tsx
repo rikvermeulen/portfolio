@@ -4,7 +4,6 @@ import { mockLinkProps } from "./Link.mock.ts";
 import Link from "./Link.tsx";
 
 const meta = {
-  title: "Components/Link",
   component: Link,
 } satisfies Meta<typeof Link>;
 

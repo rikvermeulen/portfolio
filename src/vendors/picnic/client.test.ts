@@ -80,7 +80,7 @@ describe("ensurePicnicAuth", () => {
     mockEnv.PICNIC_PASSWORD = "password";
     mockLogin.mockResolvedValue({
       authKey: "fresh-key",
-      second_factor_authentication_required: false,
+      secondFactorAuthenticationRequired: false,
     });
 
     const client = createPicnicClientFromEnv();
@@ -103,7 +103,7 @@ describe("ensurePicnicAuth", () => {
     mockEnv.PICNIC_PASSWORD = "password";
     mockLogin.mockResolvedValue({
       authKey: null,
-      second_factor_authentication_required: true,
+      secondFactorAuthenticationRequired: true,
     });
 
     const client = createPicnicClientFromEnv();
@@ -118,7 +118,7 @@ describe("ensurePicnicAuth", () => {
     mockEnv.PICNIC_PASSWORD = "password";
     mockLogin.mockResolvedValue({
       authKey: null,
-      second_factor_authentication_required: false,
+      secondFactorAuthenticationRequired: false,
     });
 
     const client = createPicnicClientFromEnv();

@@ -45,7 +45,7 @@ describe("FocusTrap", () => {
     it("passes custom className to container element", () => {
       const { container } = render(
         <FocusTrap className="custom-class">
-          <button>Button</button>
+          <button type="button">Button</button>
         </FocusTrap>,
       );
 
@@ -56,7 +56,7 @@ describe("FocusTrap", () => {
     it("renders children correctly", () => {
       const { getByText } = render(
         <FocusTrap>
-          <button>Test Button</button>
+          <button type="button">Test Button</button>
         </FocusTrap>,
       );
 
@@ -66,7 +66,7 @@ describe("FocusTrap", () => {
     it("renders with data-element attribute", () => {
       const { container } = render(
         <FocusTrap>
-          <button>Button</button>
+          <button type="button">Button</button>
         </FocusTrap>,
       );
 
@@ -84,9 +84,9 @@ describe("FocusTrap", () => {
     it("does not trap focus when isActive is false", () => {
       const { getByText } = render(
         <div>
-          <button>Outside Button</button>
+          <button type="button">Outside Button</button>
           <FocusTrap isActive={false}>
-            <button>Inside Button</button>
+            <button type="button">Inside Button</button>
           </FocusTrap>
         </div>,
       );
@@ -99,10 +99,10 @@ describe("FocusTrap", () => {
     it("traps focus when isActive is true", async () => {
       const { getByText, container } = render(
         <div>
-          <button>Outside Button</button>
+          <button type="button">Outside Button</button>
           <FocusTrap isActive>
-            <button>Inside Button 1</button>
-            <button>Inside Button 2</button>
+            <button type="button">Inside Button 1</button>
+            <button type="button">Inside Button 2</button>
           </FocusTrap>
         </div>,
       );
@@ -131,9 +131,9 @@ describe("FocusTrap", () => {
     it("restores focus when deactivated", async () => {
       const { getByText, rerender } = render(
         <div>
-          <button>Outside Button</button>
+          <button type="button">Outside Button</button>
           <FocusTrap isActive={false}>
-            <button>Inside Button</button>
+            <button type="button">Inside Button</button>
           </FocusTrap>
         </div>,
       );
@@ -145,9 +145,9 @@ describe("FocusTrap", () => {
       // Activate focus trap
       rerender(
         <div>
-          <button>Outside Button</button>
+          <button type="button">Outside Button</button>
           <FocusTrap isActive>
-            <button>Inside Button</button>
+            <button type="button">Inside Button</button>
           </FocusTrap>
         </div>,
       );
@@ -160,9 +160,9 @@ describe("FocusTrap", () => {
       // Deactivate focus trap
       rerender(
         <div>
-          <button>Outside Button</button>
+          <button type="button">Outside Button</button>
           <FocusTrap isActive={false}>
-            <button>Inside Button</button>
+            <button type="button">Inside Button</button>
           </FocusTrap>
         </div>,
       );
@@ -186,8 +186,8 @@ describe("FocusTrap", () => {
     it("auto-focuses first element when disableAutoFocus is false", async () => {
       const { getByText } = render(
         <FocusTrap disableAutoFocus={false} isActive>
-          <button>First Button</button>
-          <button>Second Button</button>
+          <button type="button">First Button</button>
+          <button type="button">Second Button</button>
         </FocusTrap>,
       );
 
@@ -200,8 +200,8 @@ describe("FocusTrap", () => {
     it("does not auto-focus when disableAutoFocus is true", async () => {
       const { getByText } = render(
         <FocusTrap disableAutoFocus isActive>
-          <button>First Button</button>
-          <button>Second Button</button>
+          <button type="button">First Button</button>
+          <button type="button">Second Button</button>
         </FocusTrap>,
       );
 
@@ -227,7 +227,7 @@ describe("FocusTrap", () => {
       const handleEscape = jest.fn();
       const { container } = render(
         <FocusTrap isActive onEscape={handleEscape}>
-          <button>Button</button>
+          <button type="button">Button</button>
         </FocusTrap>,
       );
 
@@ -241,7 +241,7 @@ describe("FocusTrap", () => {
       const handleEscape = jest.fn();
       const { container } = render(
         <FocusTrap isActive onEscape={handleEscape}>
-          <button>Button</button>
+          <button type="button">Button</button>
         </FocusTrap>,
       );
 
@@ -256,7 +256,7 @@ describe("FocusTrap", () => {
     it("does not throw when onEscape is not provided", () => {
       const { container } = render(
         <FocusTrap isActive>
-          <button>Button</button>
+          <button type="button">Button</button>
         </FocusTrap>,
       );
 
@@ -276,8 +276,8 @@ describe("FocusTrap", () => {
     it("uses default selectors when not provided", async () => {
       const { getByText } = render(
         <FocusTrap isActive>
-          <button>Button</button>
-          <a href="#test">Link</a>
+          <button type="button">Button</button>
+          <a href="#test">Test anchor</a>
           <input type="text" />
         </FocusTrap>,
       );
@@ -291,11 +291,12 @@ describe("FocusTrap", () => {
     it("uses custom selectors when provided", async () => {
       const { getByTestId } = render(
         <FocusTrap focusableSelectors={['[data-focusable="true"]']} isActive>
-          <button>Button</button>
+          <button type="button">Button</button>
           <button
             data-focusable="true"
             data-testid="custom-focusable"
             tabIndex={0}
+            type="button"
           >
             Custom Focusable
           </button>
@@ -331,8 +332,10 @@ describe("FocusTrap", () => {
     it("excludes disabled elements from focus trap", async () => {
       const { getByText } = render(
         <FocusTrap isActive>
-          <button disabled>Disabled Button</button>
-          <button>Enabled Button</button>
+          <button disabled type="button">
+            Disabled Button
+          </button>
+          <button type="button">Enabled Button</button>
         </FocusTrap>,
       );
 
@@ -349,8 +352,10 @@ describe("FocusTrap", () => {
       const { getByText } = render(
         <FocusTrap isActive>
           {/* eslint-disable-next-line jsx-a11y/no-aria-hidden-on-focusable -- fixture: asserts aria-hidden elements are excluded from the trap */}
-          <button aria-hidden="true">Hidden Button</button>
-          <button>Visible Button</button>
+          <button aria-hidden="true" type="button">
+            Hidden Button
+          </button>
+          <button type="button">Visible Button</button>
         </FocusTrap>,
       );
 
@@ -367,9 +372,9 @@ describe("FocusTrap", () => {
       const { getByText } = render(
         <FocusTrap isActive>
           <div aria-hidden="true">
-            <button>Button in Hidden Parent</button>
+            <button type="button">Button in Hidden Parent</button>
           </div>
-          <button>Visible Button</button>
+          <button type="button">Visible Button</button>
         </FocusTrap>,
       );
 
@@ -385,8 +390,10 @@ describe("FocusTrap", () => {
     it("excludes elements with tabindex=-1 from focus trap", async () => {
       const { getByText } = render(
         <FocusTrap isActive>
-          <button tabIndex={-1}>Tabindex -1 Button</button>
-          <button>Normal Button</button>
+          <button tabIndex={-1} type="button">
+            Tabindex -1 Button
+          </button>
+          <button type="button">Normal Button</button>
         </FocusTrap>,
       );
 
@@ -422,9 +429,9 @@ describe("FocusTrap", () => {
     it("does not restore focus if previous element is not in document", async () => {
       const { getByText, rerender, unmount } = render(
         <div>
-          <button>Button</button>
+          <button type="button">Button</button>
           <FocusTrap isActive={false}>
-            <button>Inside Button</button>
+            <button type="button">Inside Button</button>
           </FocusTrap>
         </div>,
       );
@@ -436,9 +443,9 @@ describe("FocusTrap", () => {
       // Activate trap
       rerender(
         <div>
-          <button>Button</button>
+          <button type="button">Button</button>
           <FocusTrap isActive>
-            <button>Inside Button</button>
+            <button type="button">Inside Button</button>
           </FocusTrap>
         </div>,
       );
@@ -455,7 +462,7 @@ describe("FocusTrap", () => {
       const { container: newContainer } = render(
         <div>
           <FocusTrap isActive={false}>
-            <button>Inside Button</button>
+            <button type="button">Inside Button</button>
           </FocusTrap>
         </div>,
       );
@@ -469,9 +476,9 @@ describe("FocusTrap", () => {
     it("restores focus to the opener when unmounted while still active", async () => {
       const { getByText, rerender } = render(
         <div>
-          <button>Outside Button</button>
+          <button type="button">Outside Button</button>
           <FocusTrap isActive={false}>
-            <button>Inside Button</button>
+            <button type="button">Inside Button</button>
           </FocusTrap>
         </div>,
       );
@@ -483,9 +490,9 @@ describe("FocusTrap", () => {
       // Activate: captures the opener as previous focus, moves focus inside.
       rerender(
         <div>
-          <button>Outside Button</button>
+          <button type="button">Outside Button</button>
           <FocusTrap isActive>
-            <button>Inside Button</button>
+            <button type="button">Inside Button</button>
           </FocusTrap>
         </div>,
       );
@@ -497,7 +504,7 @@ describe("FocusTrap", () => {
       // (mirrors a drawer that unmounts on close). The opener stays mounted.
       rerender(
         <div>
-          <button>Outside Button</button>
+          <button type="button">Outside Button</button>
         </div>,
       );
       await waitFor(() => {

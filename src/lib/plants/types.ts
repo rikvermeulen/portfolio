@@ -10,7 +10,6 @@ export interface PlantaPlantCardData {
   readonly siteName?: string;
   readonly imageUrl?: string;
   readonly nextActionType?: PlantaActionType;
-  readonly nextActionDateIso?: string;
   readonly daysUntilNextAction?: number;
   readonly dueCareActionTypes?: readonly PlantaActionType[];
 }

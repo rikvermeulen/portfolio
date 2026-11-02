@@ -5,8 +5,8 @@ import AudioBento from "./AudioBento.tsx";
 
 // AudioBento is presentational; stories render it with fully-typed mock props
 // (player state + no-op handlers) supplied by the containers at runtime.
-const meta: Meta = {
-  title: "Components/AudioBento",
+const meta: Meta<typeof AudioBento> = {
+  component: AudioBento,
   parameters: { layout: "fullscreen" },
   decorators: [
     (Story) => (

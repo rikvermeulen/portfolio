@@ -4,7 +4,6 @@ import { mockBentoProps } from "./Bento.mock.ts";
 import Bento from "./Bento.tsx";
 
 const meta = {
-  title: "Components/Bento",
   component: Bento,
   parameters: { layout: "fullscreen" },
   decorators: [

@@ -4,7 +4,6 @@ import { mockLiveTimeProps } from "./LiveTime.mock.ts";
 import LiveTime from "./LiveTime.tsx";
 
 const meta = {
-  title: "Components/LiveTime",
   component: LiveTime,
 } satisfies Meta<typeof LiveTime>;
 

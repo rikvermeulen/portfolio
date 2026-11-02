@@ -10,6 +10,7 @@ import Glass from "@/components/Glass/index.ts";
 import Icon from "@/components/Icon/index.ts";
 import Link from "@/components/Link/index.ts";
 import { useOutsideClick } from "@/hooks/useOutsideClick/index.ts";
+import { useResizeObserver } from "@/hooks/useResizeObserver/index.ts";
 import { RADIUS } from "@/lib/radius/index.ts";
 import { socials } from "@/lib/socials/index.ts";
 import classnames from "@/utils/classnames/index.ts";
@@ -28,11 +29,102 @@ const GLASS = {
   className: "bg-black/10 dark:bg-white/10",
 };
 
-const Contact = ({ sizeKey, className }: ContactProps) => {
-  const [showMenu, setShowMenu] = useState(false);
-  const chatRef = useRef<HTMLDivElement>(null);
-  const menuRef = useRef<HTMLDivElement>(null);
+/**
+ * Icon button that expands into the list of social links. Owns its own open
+ * state, closes on outside-click and Escape, and sizes the expanded panel to
+ * fit its content via CSS vars measured from the list.
+ */
+function SocialMenu() {
+  const [open, setOpen] = useState(false);
+  const rootRef = useRef<HTMLDivElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+  const listRef = useRef<HTMLUListElement>(null);
+  const toggleRef = useRef<HTMLButtonElement>(null);
 
+  useOutsideClick(rootRef, () => setOpen(false), open);
+
+  // Close on Escape and return focus to the toggle (Esc anywhere while open).
+  useEffect(() => {
+    if (!open) {
+      return;
+    }
+
+    const handleKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setOpen(false);
+        toggleRef.current?.focus();
+      }
+    };
+    document.addEventListener("keydown", handleKey);
+    return () => document.removeEventListener("keydown", handleKey);
+  }, [open]);
+
+  // Size the expanded panel to fit the list content, via CSS vars it reads.
+  useResizeObserver(listRef, ({ target }) => {
+    panelRef.current?.style.setProperty("--menu-w", `${target.scrollWidth}px`);
+    panelRef.current?.style.setProperty("--menu-h", `${target.scrollHeight}px`);
+  });
+
+  return (
+    <div
+      ref={rootRef}
+      data-open={open || undefined}
+      className="group relative size-9 shrink-0"
+    >
+      <div
+        ref={panelRef}
+        className="absolute bottom-0 left-0 z-50 flex size-9 flex-col-reverse overflow-hidden rounded-[1.125rem] transition-[height,width,border-radius] duration-300 ease-in-out group-data-open:h-(--menu-h,11rem) group-data-open:w-(--menu-w,13rem) group-data-open:rounded-2xl group-data-open:shadow-lg"
+      >
+        <Glass
+          {...GLASS}
+          className="bg-black/10 group-data-open:backdrop-blur-sm! dark:bg-white/10"
+        />
+        <button
+          ref={toggleRef}
+          aria-controls="social-links"
+          aria-expanded={open}
+          aria-label={open ? "Close social links" : "Open social links"}
+          onClick={() => setOpen((value) => !value)}
+          type="button"
+          className="focus-ring relative z-10 flex h-9 w-full shrink-0 cursor-pointer items-center justify-center overflow-hidden transition-[height] duration-300 group-data-open:h-0"
+        >
+          <Icon
+            iconClassName="size-4 transition-[opacity,transform] duration-100 group-data-open:scale-0 group-data-open:opacity-0"
+            name="plus"
+          />
+        </button>
+        <ul
+          ref={listRef}
+          id="social-links"
+          aria-label="Social links"
+          inert={!open}
+          className="relative z-10 w-max py-1.5 opacity-0 transition-opacity duration-200 group-data-open:pointer-events-auto group-data-open:opacity-100"
+        >
+          {socials.map(({ name, icon, url }) => (
+            <li key={name}>
+              <Link
+                href={url}
+                className="flex cursor-pointer items-center gap-3 px-3 py-2"
+              >
+                <Image
+                  alt={name}
+                  height={24}
+                  src={`/images/icons/socials/${icon}.png`}
+                  width={24}
+                  className="rounded-xl"
+                />
+                <span className="bento-headline whitespace-nowrap">{name}</span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  );
+}
+
+const Contact = ({ sizeKey, className }: ContactProps) => {
+  const chatRef = useRef<HTMLDivElement>(null);
   const {
     chat,
     inputValue,
@@ -44,8 +136,6 @@ const Contact = ({ sizeKey, className }: ContactProps) => {
   } = useChat();
 
   const canSend = hasEnoughText(inputValue) && !isDisabled;
-
-  useOutsideClick(menuRef, () => setShowMenu(false), showMenu);
 
   useEffect(() => {
     chatRef.current?.scrollTo({
@@ -80,6 +170,7 @@ const Contact = ({ sizeKey, className }: ContactProps) => {
           />
         </div>
       </header>
+
       <div
         ref={chatRef}
         aria-label="Conversation with Rik"
@@ -112,52 +203,7 @@ const Contact = ({ sizeKey, className }: ContactProps) => {
       </div>
 
       <footer className="absolute bottom-5 z-20 flex w-full items-center gap-2 px-5">
-        <div
-          ref={menuRef}
-          data-open={showMenu || undefined}
-          className="group relative size-9 shrink-0"
-        >
-          <div className="absolute bottom-0 left-0 z-50 flex h-9 w-9 flex-col-reverse overflow-hidden rounded-[1.125rem] transition-[height,width,border-radius] duration-300 ease-in-out group-data-open:h-43 group-data-open:w-52 group-data-open:rounded-2xl group-data-open:shadow-lg">
-            <Glass
-              {...GLASS}
-              className="bg-black/10 group-data-open:backdrop-blur-sm! dark:bg-white/10"
-            />
-            <button
-              aria-expanded={showMenu}
-              aria-label={showMenu ? "Close social links" : "Open social links"}
-              onClick={() => setShowMenu((open) => !open)}
-              type="button"
-              className="focus-ring relative z-10 flex h-9 w-full shrink-0 cursor-pointer items-center justify-center overflow-hidden transition-[height] duration-300 group-data-open:h-0"
-            >
-              <Icon
-                iconClassName="size-4 transition-[opacity,transform] duration-100 group-data-open:scale-0 group-data-open:opacity-0"
-                name="plus"
-              />
-            </button>
-            <ul
-              aria-label="Social links"
-              className="relative z-10 py-1.5 opacity-0 transition-opacity duration-200 group-data-open:pointer-events-auto group-data-open:opacity-100"
-            >
-              {socials.map(({ name, icon, url }) => (
-                <li key={name}>
-                  <Link
-                    href={url}
-                    className="flex cursor-pointer items-center gap-3 px-3 py-2"
-                  >
-                    <Image
-                      alt={name}
-                      height={24}
-                      src={`/images/icons/socials/${icon}.png`}
-                      width={24}
-                      className="rounded-xl"
-                    />
-                    <span className="bento-headline">{name}</span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
+        <SocialMenu />
 
         {!isDone && (
           <form
@@ -169,7 +215,7 @@ const Contact = ({ sizeKey, className }: ContactProps) => {
             <input
               aria-label="Message input"
               disabled={isDisabled}
-              onChange={(e) => setInputValue(e.target.value)}
+              onChange={(event) => setInputValue(event.target.value)}
               onFocus={handleFocus}
               placeholder="Type your response here…"
               value={inputValue}

@@ -43,36 +43,6 @@ export const isPlantaHappyHealth = (health?: string): boolean => {
   return HAPPY_HEALTH_KEYWORDS.some((keyword) => normalized.includes(keyword));
 };
 
-const isDueOrOverdue = (daysUntilNextAction?: number): boolean => {
-  return daysUntilNextAction !== undefined && daysUntilNextAction <= 0;
-};
-
-/**
- * Short status labels for the plant care card (water, attention, etc.).
- */
-export const getPlantaPlantStatusTags = (
-  nextActionType: PlantaActionType | undefined,
-  daysUntilNextAction: number | undefined,
-): readonly string[] => {
-  if (!nextActionType) {
-    return ["Got water"];
-  }
-
-  const due = isDueOrOverdue(daysUntilNextAction);
-
-  if (nextActionType === "watering") {
-    return due ? ["Need water"] : ["Got water"];
-  }
-
-  if (nextActionType === "misting") {
-    return due ? ["Need attention", "Misting"] : ["Misting soon"];
-  }
-
-  const label = actionLabels[nextActionType];
-
-  return due ? ["Need attention", label] : [label];
-};
-
 /** Care states surfaced on a plant card status chip. */
 export type PlantaCareState = "due" | "scheduled" | "healthy";
 

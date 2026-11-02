@@ -1,4 +1,4 @@
-/* eslint-disable no-process-env */
+/* eslint-disable no-restricted-properties -- validated env module / standalone scripts read process.env directly */
 
 // Note :relative import paths needed because this is included in next.config.ts
 import type {

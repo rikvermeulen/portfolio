@@ -13,7 +13,6 @@ import Button from "./Button.tsx";
  * `asChild`.
  */
 const meta = {
-  title: "Components/Button",
   component: Button,
   parameters: {
     layout: "centered",

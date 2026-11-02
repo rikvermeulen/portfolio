@@ -6,7 +6,6 @@ import { mockSliderProps } from "./Slider.mock.ts";
 import Slider from "./Slider.tsx";
 
 const meta = {
-  title: "Components/Slider",
   component: Slider,
   parameters: { layout: "centered" },
   decorators: [

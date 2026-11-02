@@ -12,9 +12,18 @@ import { svgrOptions } from "../config/webpackLoaders.ts";
 const dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const config: StorybookConfig = {
+  // titles come from the folder path (CSF3 auto-title), prefixed per root
   stories: [
-    "../src/components/**/*.stories.@(ts|tsx)",
-    "../src/modules/**/*.stories.@(ts|tsx)",
+    {
+      directory: "../src/components",
+      files: "**/*.stories.@(ts|tsx)",
+      titlePrefix: "Components",
+    },
+    {
+      directory: "../src/modules",
+      files: "**/*.stories.@(ts|tsx)",
+      titlePrefix: "Modules",
+    },
   ],
   addons: ["@storybook/addon-a11y", "@storybook/addon-docs"],
   framework: "@storybook/nextjs-vite",

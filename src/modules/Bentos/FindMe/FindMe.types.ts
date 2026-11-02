@@ -1,19 +1,23 @@
 import type { BentoSizedProps } from "@/components/Bento/index.ts";
-import type { FindMeConditionsSuccessResponse } from "@/lib/weather/types.ts";
+import type {
+  FindMeWeather,
+  FindMeWeatherIconName,
+} from "@/lib/weather/types.ts";
 
 export interface FindMeProps extends BentoSizedProps {
   readonly className?: string;
   /**
-   * The weather badge, fetched on the server and streamed in via `<Suspense>`.
-   * Passed as a slot so the interactive map renders immediately while the
-   * conditions resolve independently — no client-side loading/error state.
+   * Weather badge, fetched on the server and streamed in via `<Suspense>`. Passed
+   * as a slot so the interactive map renders immediately while the conditions
+   * resolve independently — the client tile owns no loading/error state.
    */
   readonly weatherBadge?: React.ReactNode;
 }
 
-export interface WeatherBadgeShellProps {
+export interface WeatherBadgeProps {
   readonly ariaLabel: string;
-  readonly children: React.ReactNode;
+  readonly iconName: FindMeWeatherIconName;
+  readonly label: string;
 }
 
 export interface WeatherBadgePlaceholderProps {
@@ -21,5 +25,5 @@ export interface WeatherBadgePlaceholderProps {
 }
 
 export interface WeatherBadgeViewProps {
-  readonly data: FindMeConditionsSuccessResponse;
+  readonly weather: FindMeWeather;
 }

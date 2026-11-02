@@ -4,7 +4,6 @@ import { mockSkeletonCardProps } from "./SkeletonCard.mock.ts";
 import SkeletonCard from "./SkeletonCard.tsx";
 
 const meta = {
-  title: "Components/SkeletonCard",
   component: SkeletonCard,
 } satisfies Meta<typeof SkeletonCard>;
 

@@ -65,6 +65,7 @@ const Glass = ({
   // The paint flag is a ref, not state, so revealing the filter costs no
   // re-render; read during render only to keep it across an incidental
   // (prop-change) re-render. Non-refracting glass never paints.
+  // eslint-disable-next-line @eslint-react/refs -- intentional, see above
   const painted = paintedRef.current;
   const backdropFilter = glassBackdropFilter(
     refracts && painted,

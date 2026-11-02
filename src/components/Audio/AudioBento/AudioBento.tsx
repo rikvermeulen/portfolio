@@ -1,10 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Image from "next/image";
 
 import type { AudioBentoProps } from "./AudioBento.types.ts";
-import type { PulsedButton } from "@/components/Audio/AudioControls/index.ts";
 
 import AudioControls from "@/components/Audio/AudioControls/index.ts";
 import Bento, { bentos } from "@/components/Bento/index.ts";
@@ -13,13 +11,12 @@ import Slider from "@/components/Slider/index.ts";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion/usePrefersReducedMotion.ts";
 import classnames from "@/utils/classnames/index.ts";
 
-const PULSE_DURATION_MS = 600;
 const FALLBACK_IMAGE = "/images/no-album.png";
 
 /**
- * Presentational Spotify-backed audio tile. Owns the pulse animation, blurred
- * backdrop and transport layout only; the Music and Podcast containers supply
- * player state (via their own hooks) and the handlers wired below.
+ * Presentational Spotify-backed audio tile. Owns the blurred backdrop and
+ * transport layout only; the Music and Podcast containers supply player state
+ * (via their own hooks) and the handlers wired below.
  */
 const AudioBento = ({
   display,
@@ -34,26 +31,6 @@ const AudioBento = ({
   onVolumeChange,
 }: AudioBentoProps) => {
   const prefersReducedMotion = usePrefersReducedMotion();
-  const [pulsedButton, setPulsedButton] = useState<PulsedButton>(null);
-
-  useEffect(() => {
-    if (!pulsedButton) {
-      return;
-    }
-    const id = setTimeout(() => setPulsedButton(null), PULSE_DURATION_MS);
-    return () => clearTimeout(id);
-  }, [pulsedButton]);
-
-  const handlePlayOrPause = () => {
-    onPlayOrPause();
-    setPulsedButton("playPause");
-  };
-
-  const handleChangeTrack = (direction: "previous" | "next") => {
-    onChangeTrack(direction);
-    setPulsedButton(direction);
-  };
-
   const image = display?.image ?? FALLBACK_IMAGE;
 
   return (
@@ -65,7 +42,7 @@ const AudioBento = ({
     >
       {/* Blurred art backdrop */}
       <div
-        aria-hidden="true"
+        aria-hidden
         style={{ backgroundImage: `url(${image})` }}
         className={classnames(
           "absolute inset-0 z-0 h-full w-full bg-cover contrast-[0.90] transition-opacity duration-500 ease-in-out",
@@ -92,24 +69,25 @@ const AudioBento = ({
           />
         </div>
 
-        {/* Item info */}
-        <div className="mt-2 flex flex-col text-white">
+        {/* Now playing */}
+        <div
+          aria-atomic
+          aria-live="polite"
+          className="mt-2 flex flex-col text-white"
+        >
           <div className="flex items-center gap-2">
             <p className="bento-headline line-clamp-1">{display?.title}</p>
             {display?.explicit && (
-              <Icon iconClassName="w-2.5" name="explicit" />
+              <Icon iconClassName="w-2.5" label="Explicit" name="explicit" />
             )}
           </div>
-          <div className="bento-body relative text-white">
-            {display?.subtitle}
-          </div>
+          <p className="bento-body relative text-white">{display?.subtitle}</p>
         </div>
 
         <AudioControls
           isPlaying={isPlaying}
-          onChangeTrack={handleChangeTrack}
-          onPlayOrPause={handlePlayOrPause}
-          pulsedButton={pulsedButton}
+          onChangeTrack={onChangeTrack}
+          onPlayOrPause={onPlayOrPause}
         />
 
         {playbackError && (

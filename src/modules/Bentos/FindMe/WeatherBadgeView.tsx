@@ -1,6 +1,6 @@
 import type {
   WeatherBadgePlaceholderProps,
-  WeatherBadgeShellProps,
+  WeatherBadgeProps,
   WeatherBadgeViewProps,
 } from "./FindMe.types.ts";
 
@@ -10,7 +10,8 @@ import { RADIUS } from "@/lib/radius/index.ts";
 
 export const SOURCE_LABEL = "Weather by Open-Meteo for Rotterdam.";
 
-function WeatherBadgeShell({ ariaLabel, children }: WeatherBadgeShellProps) {
+/** Glass pill that renders a weather icon and label; shared by every badge state. */
+function WeatherBadge({ ariaLabel, iconName, label }: WeatherBadgeProps) {
   return (
     <output
       aria-label={ariaLabel}
@@ -19,33 +20,31 @@ function WeatherBadgeShell({ ariaLabel, children }: WeatherBadgeShellProps) {
       className="absolute top-5 left-5 z-20 flex overflow-hidden rounded-field p-1 text-black dark:bg-black/45 dark:text-white"
     >
       <Glass blur={2} intensity={2} radius={RADIUS.field} />
-      <div className="bento-body relative flex flex-col">{children}</div>
+      <div className="bento-body relative flex items-center gap-0.5">
+        <Icon iconClassName="size-4" name={iconName} />
+        <span className="font-medium">{label}</span>
+      </div>
     </output>
   );
 }
 
+/** Shown while the weather is loading or after a fetch failure. */
 export function WeatherBadgePlaceholder({
   ariaLabel,
 }: WeatherBadgePlaceholderProps) {
   return (
-    <WeatherBadgeShell ariaLabel={ariaLabel}>
-      <Icon iconClassName="size-4" name="weather-cloud" />
-      <span>--°</span>
-    </WeatherBadgeShell>
+    <WeatherBadge ariaLabel={ariaLabel} iconName="weather-cloud" label="--°" />
   );
 }
 
-function WeatherBadgeView({ data }: WeatherBadgeViewProps) {
-  const { weather } = data;
-  const ariaLabel = `${weather.conditionLabel}, ${weather.temperatureCelsius} degrees Celsius. ${SOURCE_LABEL}`;
-
+/** The resolved weather badge, rendered from server-fetched conditions. */
+function WeatherBadgeView({ weather }: WeatherBadgeViewProps) {
   return (
-    <WeatherBadgeShell ariaLabel={ariaLabel}>
-      <div className="flex items-center gap-0.5">
-        <Icon iconClassName="size-4" name={weather.iconName} />
-        <span className="font-medium">{`${weather.temperatureCelsius}°`}</span>
-      </div>
-    </WeatherBadgeShell>
+    <WeatherBadge
+      ariaLabel={`${weather.conditionLabel}, ${weather.temperatureCelsius} degrees Celsius. ${SOURCE_LABEL}`}
+      iconName={weather.iconName}
+      label={`${weather.temperatureCelsius}°`}
+    />
   );
 }
 

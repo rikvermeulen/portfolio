@@ -10,31 +10,32 @@ There is **no CMS, database, or i18n layer** in this project.
 
 ## Stack
 
-- Next.js 16, React 19, TypeScript 5.9 (React Compiler enabled via `babel-plugin-react-compiler` + `reactCompiler: true`)
+- Next.js 16, React 19, TypeScript 6 (React Compiler enabled via `babel-plugin-react-compiler` + `reactCompiler: true`)
 - Tailwind CSS 4 (v4, configured via the `@tailwindcss/postcss` plugin — there is **no** `tailwind.config` file)
 - Storybook 10 (`@storybook/nextjs-vite`)
 - Animation: GSAP 3 (`@gsap/react`, lazily loaded) + framer-motion 12
 - Data/validation: Zod 4 + `@t3-oss/env-nextjs`; `@supabase/supabase-js`; `picnic-api`; `mapbox-gl`
 - Testing: **Jest 30 only** (jsdom). No Vitest — `vite` is present only as Storybook's transitive builder.
 - Tooling: husky (git hooks), react-scan (dev perf overlay), ESLint (`@greenberry/linting-config`), Stylelint, Prettier
-- Runtime: Node `>=22.11` (`.nvmrc`)
+- Runtime: Node 24 (`.nvmrc` exact pin, `engines` `24.x` for Vercel)
 
 ## Structure
 
 - `src/app/(dashboard)`: the dashboard route — `layout.tsx` wraps children in `BentoGrid`,
   `page.tsx` maps the registry, `bento-registry.tsx` is the single source of truth for tile order/wiring
-- `src/app/api/*`: HTTP routes (spotify/token, planta/plants, picnic/{auth/key,image,recipes}, dev-diagnostics). The contact form submits via the `submitContact` server action, not an API route
+- `src/app/api/*`: HTTP routes (spotify/token, planta/{plants,remind,nudge}, picnic/{auth/key,image}, dev-diagnostics). The contact form submits via the `submitContact` server action, not an API route
 - `src/components`: generic, reusable UI primitives (folder-per-component, PascalCase). Includes the
   Bento grid infrastructure in `components/Bento/` (`Bento`, `AsyncBento`, `BentoGrid`, `BentoSkeleton`, `BentoErrorBoundary`); the audio tile family in `components/Audio/` (`AudioBento`, `AudioControls`); `AppIcon` in `components/AppIcon/`
 - `src/modules`: feature blocks (`Bentos/*` — the 13 concrete tiles — and `Navigation/*`)
 - `src/hooks`: React hooks (folder-per-hook, camelCase `useX`, named export)
 - `src/contexts`: React contexts (Provider + accessor hook)
-- `src/lib`: project-aware domain code + third-party integrations (Spotify, Steam, Planta, Picnic, Supabase, Open-Meteo) plus feature modules `glass` and `fonts`
+- `src/vendors`: third-party transport per vendor (steam, xbox, spotify, supabase, picnic, planta, openMeteo, ntfy) — see "Vendors & domain" below
+- `src/lib`: first-party domain code (games, plants, recipes, music, weather, photos, notifications, seo, socials) plus feature/config modules `glass`, `fonts` and `radius`
 - `src/utils`: pure, project-agnostic helpers — no env, no business logic (`classnames`, `datetime`, `debounce`, `isExternalUrl`, `playSound`, `getSecurityHeaders`)
 - `src/types`: cross-cutting shared types only (`Result<T>`, `StatusResult<T>`)
 - `src/styles`, `src/assets`: design-system styles and static assets
 - `config/`: app config consumed by `next.config.ts` (`responseHeaders.ts`, `webpackLoaders.ts`)
-- `scripts/`: one-off auth helpers (`spotify-auth.ts`, `picnic-auth.ts`)
+- `scripts/`: one-off auth helpers (`spotify-auth.ts`, `picnic-auth.ts`, `planta-auth.ts`) and `notify-test.ts`
 
 ## Scripts
 
@@ -50,6 +51,8 @@ There is **no CMS, database, or i18n layer** in this project.
 | `npm run test:watch`      | Run Jest in watch mode                              |
 | `npm run spotify:auth`    | Local OAuth helper to mint a Spotify refresh token  |
 | `npm run picnic:auth`     | Interactive Picnic login (SMS 2FA) to mint auth key |
+| `npm run planta:auth`     | Exchange a Planta app code for the token set        |
+| `npm run notify:test`     | Send a test ntfy push notification                  |
 | `npm run storybook`       | Start Storybook                                     |
 | `npm run build-storybook` | Build the static Storybook                          |
 
@@ -76,7 +79,7 @@ There is **no CMS, database, or i18n layer** in this project.
 Third-party integrations are kept fully separate from first-party domain code:
 
 - **`src/vendors/<vendor>/`** — one folder per third party (`steam`, `xbox`, `spotify`,
-  `supabase`, `picnic`, `planta`, `openMeteo`). Strictly transport: a **client**
+  `supabase`, `picnic`, `planta`, `openMeteo`, `ntfy`). Strictly transport: a **client**
   (fetch/SDK, tokens, throws a typed error), a **service** (env-gate → cache → client →
   _delegate_ wire→domain mapping to `lib/<domain>` → return `Result<T>`/`StatusResult<T>`),
   and a **types** file holding **wire shapes only**, plus Zod validation at the boundary.
@@ -101,7 +104,7 @@ Dependency direction:
   implements the domain's `GameProvider` interface against one vendor, and the aggregator
   composes them. Keep it thin — mapping/logic stays in the pure files.
 
-`src/lib/{glass,fonts}` are feature/config code, not integrations — exempt from the template.
+`src/lib/{glass,fonts,radius}` are feature/config code, not integrations — exempt from the template.
 Use the shared `Result<T>`/`StatusResult<T>` from `src/types` — do not re-invent the union.
 
 ### Imports
@@ -137,12 +140,20 @@ Use the shared `Result<T>`/`StatusResult<T>` from `src/types` — do not re-inve
 ## Testing
 
 - Jest is the only test runner. `jest.config.ts` enforces **100% coverage** on
-  `src/{utils,lib,hooks}` plus module pure logic (`src/modules/**/*.{utils,validation}.ts`);
+  `src/{utils,lib,vendors,hooks}` plus module pure logic (`src/modules/**/*.{utils,validation}.ts`);
   re-export `index.ts` barrels are excluded from collection. Unreachable defensive fallbacks
   (e.g. `?? 0` behind `noUncheckedIndexedAccess`) use `/* istanbul ignore next — reason */`.
 - Module-private **hooks** with real logic (`useChat`, `useFindMe*`) are not yet gated; give
   them co-located tests, or move them to `src/hooks/` (gated) once reused.
 - Storybook stories double as visual/interaction documentation for components and modules.
+
+## Deployment
+
+- Vercel, Node `24.x`. No CI: the husky hooks below are the only automated gate.
+- Go-live checklist and serverless limits (Planta token rotation, the public
+  `/api/planta/remind` cooldown) live in `README.md` → "Deploying (Vercel)".
+- Dev-only code must stay out of the production bundle: gate on `NODE_ENV` and
+  load dev tools with a dynamic `import()` (see `src/instrumentation-client.ts`).
 
 ## Git hooks (husky)
 

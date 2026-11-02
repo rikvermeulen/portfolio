@@ -10,23 +10,10 @@ import Bento, { bentos } from "@/components/Bento/index.ts";
 import ToggleGroup from "@/components/ToggleGroup/index.ts";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion/index.ts";
 
-const AUTO_ADVANCE_INTERVAL_MS = 3000 as const;
+const AUTO_ADVANCE_INTERVAL_MS = 3000;
 const ALBUM_LINK = "https://www.icloud.com/sharedalbum/#B0fGWZuqDFg0VA";
 
-const isVideoFile = (url: string): boolean => url.endsWith(".mp4");
-
-const getNextMediaIndex = (currentIndex: number, totalCount: number): number =>
-  (currentIndex + 1) % totalCount;
-
-/**
- * Photos component that displays a rotating gallery of photos and videos
- * from multiple albums with auto-advance functionality
- *
- * @param props - Component props containing album data
- * @returns A link element containing the photo gallery
- */
-const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
-
+/** Album name → icon shown in the album toggle. */
 const ALBUM_ICONS: Record<string, string> = {
   apps: "images",
   map: "map",
@@ -34,50 +21,49 @@ const ALBUM_ICONS: Record<string, string> = {
   dog: "dog",
 };
 
+const isVideo = (url: string) => url.endsWith(".mp4");
+const capitalize = (value: string) =>
+  value.charAt(0).toUpperCase() + value.slice(1);
+
 const Photos = ({ sizeKey, albums }: PhotosProps) => {
   const reduceMotion = usePrefersReducedMotion();
+
   const albumNames = Object.keys(albums);
   const [selectedAlbum, setSelectedAlbum] = useState(albumNames[0] ?? "");
+  const media = albums[selectedAlbum] ?? [];
 
   const slideRef = useRef<(HTMLDivElement | null)[]>([]);
   const activeIndexRef = useRef(0);
-
-  const mediaFiles = albums[selectedAlbum] ?? [];
 
   const albumOptions: readonly ToggleOption[] = albumNames.map((name) => ({
     value: name,
     label: capitalize(name),
     icon: ALBUM_ICONS[name],
   }));
-  const handleAlbumChange = (album: string) => {
-    setSelectedAlbum(album);
-  };
 
   useEffect(() => {
-    // A single item (or none) has nothing to advance through. Under reduced
-    // motion, hold on the first slide — no auto-advancing crossfade.
-    if (mediaFiles.length < 2 || reduceMotion) {
+    // Nothing to advance through with a single slide, and reduced-motion users
+    // hold on the first one — no auto-advancing cross-fade.
+    if (reduceMotion || media.length < 2) {
       return;
     }
 
-    // The album (media set) just (re)mounted at index 0 via JSX; keep the ref
-    // in sync so the first advance moves off the correct slide.
+    // The album just (re)mounted at index 0 via JSX; sync the ref so the first
+    // advance moves off the correct slide.
     activeIndexRef.current = 0;
 
-    const interval = setInterval(() => {
-      const items = slideRef.current;
-      const previous = activeIndexRef.current;
-      const next = getNextMediaIndex(previous, mediaFiles.length);
+    const timer = setInterval(() => {
+      const slides = slideRef.current;
+      const current = activeIndexRef.current;
+      const next = (current + 1) % media.length;
 
-      items[previous]?.removeAttribute("data-active");
-      items[next]?.setAttribute("data-active", "true");
+      slides[current]?.removeAttribute("data-active");
+      slides[next]?.setAttribute("data-active", "true");
       activeIndexRef.current = next;
     }, AUTO_ADVANCE_INTERVAL_MS);
 
-    return () => {
-      clearInterval(interval);
-    };
-  }, [mediaFiles.length, selectedAlbum, reduceMotion]);
+    return () => clearInterval(timer);
+  }, [selectedAlbum, media.length, reduceMotion]);
 
   return (
     <Bento
@@ -90,52 +76,50 @@ const Photos = ({ sizeKey, albums }: PhotosProps) => {
       <div className="absolute top-5 left-5 z-20 text-white">
         <h2 className="bento-title">My Memories</h2>
       </div>
+
       {albumNames.length > 1 && (
-        <div className="absolute bottom-5 left-1/2 z-20 -translate-x-1/2 translate-y-0 transition-transform duration-300 ease-in-out [@media(hover:hover)]:translate-y-[200%] [@media(hover:hover)]:group-hover:translate-y-0">
+        <div className="absolute bottom-5 left-1/2 z-20 -translate-x-1/2 transition-transform duration-300 ease-in-out [@media(hover:hover)]:translate-y-[200%] [@media(hover:hover)]:group-hover:translate-y-0">
           <ToggleGroup
             ariaLabel="Select photo album"
-            onChange={handleAlbumChange}
+            onChange={setSelectedAlbum}
             options={albumOptions}
             value={selectedAlbum}
           />
         </div>
       )}
-      {mediaFiles.map((mediaUrl, index) => {
-        const isVideoItem = isVideoFile(mediaUrl);
 
-        return (
-          <div
-            key={mediaUrl}
-            ref={(element) => {
-              slideRef.current[index] = element;
-            }}
-            data-active={index === 0 ? true : undefined}
-            className="absolute inset-0 opacity-0 transition-opacity duration-500 ease-in-out data-active:opacity-100"
-          >
-            {isVideoItem ? (
-              <video
-                aria-label={`Video ${index + 1} of ${mediaFiles.length} from ${selectedAlbum} album`}
-                autoPlay={!reduceMotion}
-                controls={reduceMotion}
-                loop
-                muted
-                playsInline
-                src={mediaUrl}
-                className="size-full object-cover"
-              />
-            ) : (
-              <Image
-                alt={`Photo ${index + 1} of ${mediaFiles.length} from ${selectedAlbum} album`}
-                height={348}
-                priority={index === 0}
-                src={mediaUrl}
-                width={348}
-                className="size-full object-cover"
-              />
-            )}
-          </div>
-        );
-      })}
+      {media.map((url, index) => (
+        <div
+          key={url}
+          ref={(element) => {
+            slideRef.current[index] = element;
+          }}
+          aria-hidden
+          data-active={index === 0 || undefined}
+          className="absolute inset-0 opacity-0 transition-opacity duration-500 ease-in-out data-active:opacity-100"
+        >
+          {isVideo(url) ? (
+            <video
+              autoPlay={!reduceMotion}
+              loop
+              muted
+              playsInline
+              preload="metadata"
+              src={url}
+              className="size-full object-cover"
+            />
+          ) : (
+            <Image
+              alt=""
+              fill
+              priority={index === 0}
+              sizes="(min-width: 768px) 25vw, 348px"
+              src={url}
+              className="object-cover"
+            />
+          )}
+        </div>
+      ))}
     </Bento>
   );
 };

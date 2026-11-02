@@ -1,10 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 
-import { mockContactProps } from "./Contact.mock.ts";
 import Contact from "./Contact.tsx";
 
 const meta = {
-  title: "Modules/Bentos/Contact",
   component: Contact,
   parameters: { layout: "fullscreen" },
   decorators: [
@@ -22,5 +20,5 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-  args: mockContactProps,
+  args: { sizeKey: "contact" },
 };

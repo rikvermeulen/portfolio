@@ -1,4 +1,4 @@
-/* eslint-disable no-process-env */
+/* eslint-disable no-restricted-properties -- validated env module / standalone scripts read process.env directly */
 
 import { z } from "zod";
 
@@ -87,9 +87,7 @@ export const env = createEnv({
     PICNIC_PASSWORD: process.env.PICNIC_PASSWORD,
     PICNIC_AUTH_KEY: process.env.PICNIC_AUTH_KEY,
     PICNIC_COUNTRY_CODE: process.env.PICNIC_COUNTRY_CODE as
-      | "NL"
-      | "DE"
-      | undefined,
+      "NL" | "DE" | undefined,
     PICNIC_AUTH_ADMIN_SECRET: process.env.PICNIC_AUTH_ADMIN_SECRET,
     STEAM_API_KEY: process.env.STEAM_API_KEY,
     STEAM_ID: process.env.STEAM_ID,

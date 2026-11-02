@@ -4,24 +4,24 @@ Personal portfolio — a single-page **bento-grid dashboard**. A Next.js app tha
 responsive grid of "bento" tiles, several of which pull live data from third-party
 integrations (Spotify, Steam, Planta, Picnic, Supabase, Open-Meteo).
 
-There is **no CMS, database, or i18n layer** — tiles read directly from typed integration
-services in `src/lib/<vendor>/`.
+There is **no CMS, database, or i18n layer** — tiles read from typed integration services
+in `src/vendors/<vendor>/`, shaped into UI-ready data by domain code in `src/lib/<domain>/`.
 
 ## Stack
 
-- **Next.js 16** / **React 19** / **TypeScript 5.9** (React Compiler enabled in production)
+- **Next.js 16** / **React 19** / **TypeScript 6** (React Compiler enabled in production)
 - **Tailwind CSS 4** via `@tailwindcss/postcss` (no `tailwind.config` file)
 - **Storybook 10** (`@storybook/nextjs-vite`)
 - Animation: **GSAP 3** (lazily loaded) + **framer-motion 12**
 - Data/validation: **Zod 4** + `@t3-oss/env-nextjs`; `@supabase/supabase-js`; `picnic-api`; `mapbox-gl`
-- Testing: **Jest 30** only (jsdom) — 100% coverage gate on `src/{utils,lib,hooks}`
+- Testing: **Jest 30** only (jsdom) — 100% coverage gate on `src/{utils,lib,vendors,hooks}`
 - Tooling: husky (git hooks), react-scan (dev perf overlay), ESLint, Stylelint, Prettier
-- Runtime: **Node >=22.11** (see `.nvmrc`)
+- Runtime: **Node 24** (pinned in `.nvmrc`)
 
 ## Getting started
 
 ```bash
-nvm use                 # Node 22.11+
+nvm use                 # Node 24 (.nvmrc)
 npm install
 cp .env.example .env    # then fill in the values you need (see below)
 npm run dev             # http://localhost:3000
@@ -37,6 +37,8 @@ Everything else is optional — tiles whose optional env vars are absent degrade
 ```bash
 npm run spotify:auth    # local OAuth helper → SPOTIFY_REFRESH_TOKEN
 npm run picnic:auth     # interactive Picnic login (SMS 2FA) → PICNIC_AUTH_KEY
+npm run planta:auth     # exchange a Planta app code → PLANTA_* tokens + .planta-tokens.local.json
+npm run notify:test     # send a test push via ntfy (needs NTFY_TOPIC)
 ```
 
 ## Scripts
@@ -53,6 +55,8 @@ npm run picnic:auth     # interactive Picnic login (SMS 2FA) → PICNIC_AUTH_KEY
 | `npm run test:watch`      | Jest in watch mode                                 |
 | `npm run spotify:auth`    | Mint a Spotify refresh token                       |
 | `npm run picnic:auth`     | Mint a Picnic auth key                             |
+| `npm run planta:auth`     | Mint Planta tokens                                 |
+| `npm run notify:test`     | Send a test ntfy push                              |
 | `npm run storybook`       | Start Storybook on :6006                           |
 | `npm run build-storybook` | Build static Storybook                             |
 
@@ -61,12 +65,13 @@ npm run picnic:auth     # interactive Picnic login (SMS 2FA) → PICNIC_AUTH_KEY
 ```
 src/
   app/(dashboard)/   dashboard route — bento-registry.tsx is the single source of tile wiring
-  app/api/*          HTTP routes (spotify/token, planta, find-me, picnic, dev-diagnostics)
+  app/api/*          HTTP routes (spotify/token, planta/{plants,remind,nudge}, picnic/*, dev-diagnostics)
   components/        generic reusable UI primitives + Bento grid infra (folder-per-component)
   modules/           feature blocks — Bentos/* (the concrete tiles) and Navigation/*
   hooks/             React hooks (folder-per-hook, named exports)
   contexts/          React contexts (Provider + accessor hook)
-  lib/               project-aware domain code + third-party integration clients/services
+  vendors/           third-party transport: client + service + wire types per vendor
+  lib/               first-party domain code: types, mappers, formatters per domain
   utils/             pure, project-agnostic helpers (no env, no business logic)
   types/             cross-cutting shared types (Result<T>, StatusResult<T>)
   styles/ assets/    design-system styles and static assets
@@ -91,3 +96,39 @@ See [`.env.example`](.env.example). Required to boot: `NEXT_PUBLIC_APP_URL`,
 `NEXT_PUBLIC_ENVIRONMENT`, `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `SPOTIFY_CLIENT_ID`,
 `SPOTIFY_CLIENT_SECRET`. Everything else is optional. The required/optional split is
 enforced by Zod in [`src/env.ts`](src/env.ts).
+
+## Deploying (Vercel)
+
+Hosted on Vercel, Node `24.x` (`engines`). There is no CI — the husky hooks
+(`pre-commit`: lint + type-check, `pre-push`: tests) are the gate, so run
+`npm run build` locally before pushing to `main`.
+
+Go-live checklist:
+
+1. **Env vars** — set every value from `.env.example` you use in the Vercel
+   project (Production). `NEXT_PUBLIC_APP_URL` **must** be
+   `https://rikvermeulen.com`: it falls back to `http://localhost:3000`, which
+   would leak into `metadataBase`, canonical URLs, `robots.txt` and `sitemap.xml`.
+   `NEXT_PUBLIC_ENVIRONMENT=production`.
+2. **Secrets stay server-side** — only `NEXT_PUBLIC_*` vars reach the browser.
+   `NTFY_TOPIC` acts as a password; pick an unguessable one.
+3. **Dev-only routes** — `/api/dev-diagnostics` and `/api/picnic/auth/key`
+   no-op / 404 outside `NODE_ENV=development`.
+4. **Domain** — add `rikvermeulen.com` (+ `www` redirect) in Vercel → Domains.
+5. **Smoke test** the production URL: every tile renders (or degrades), OG image
+   at `/opengraph-image`, `robots.txt`, `sitemap.xml`, security headers present.
+
+Known limits on serverless:
+
+- **Planta** rotates its refresh token on every refresh. The rotated token is
+  persisted to `.planta-tokens.local.json` locally, but Vercel's filesystem is
+  read-only, so each cold instance re-seeds from the env token. Once that token
+  has been rotated away, the Plants tile errors until the env vars are re-minted.
+- **Spotify playback** runs the Web Playback SDK in the visitor's browser under
+  Rik's Premium account, so `/api/spotify/token` has to hand that account's
+  access token to the page. It refuses cross-site callers (`Sec-Fetch-Site`),
+  is never cached, and reuses one token per hour per instance. The token stays
+  readable in devtools, and when two visitors press play at once, the last one
+  takes over the stream.
+- `/api/planta/remind` is public; it has a per-instance 30-minute cooldown. Add a
+  Vercel Firewall rate-limit rule if pushes still get spammed.

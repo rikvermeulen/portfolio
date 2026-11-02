@@ -4,7 +4,6 @@ import { mockJournalProps } from "./Journal.mock.ts";
 import Journal from "./Journal.tsx";
 
 const meta = {
-  title: "Modules/Bentos/Journal",
   component: Journal,
   parameters: { layout: "fullscreen" },
   decorators: [

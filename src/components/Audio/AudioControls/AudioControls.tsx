@@ -9,7 +9,6 @@ import { SkipIcon } from "./SkipIcon.tsx";
 
 const AudioControls = ({
   isPlaying,
-  pulsedButton,
   onPlayOrPause,
   onChangeTrack,
 }: AudioControlsProps) => {
@@ -19,10 +18,7 @@ const AudioControls = ({
         aria-label="Previous song"
         onClick={() => onChangeTrack("previous")}
         type="button"
-        className={classnames(
-          pulsedButton === "previous" && "button",
-          "relative cursor-pointer border-none fill-white outline-hidden",
-        )}
+        className="relative cursor-pointer border-none fill-white outline-hidden"
       >
         <SkipIcon className="relative -top-1 size-[22px]" />
       </button>
@@ -32,10 +28,7 @@ const AudioControls = ({
         aria-pressed={isPlaying}
         onClick={onPlayOrPause}
         type="button"
-        className={classnames(
-          pulsedButton === "playPause" && "button",
-          "relative flex h-12 w-12 cursor-pointer items-center justify-center overflow-hidden rounded-full text-white",
-        )}
+        className="relative flex h-12 w-12 cursor-pointer items-center justify-center overflow-hidden rounded-full text-white"
       >
         <Glass
           blur={12}
@@ -64,10 +57,7 @@ const AudioControls = ({
         aria-label="Next song"
         onClick={() => onChangeTrack("next")}
         type="button"
-        className={classnames(
-          pulsedButton === "next" && "button",
-          "-scale-x-100 cursor-pointer border-none fill-white outline-hidden",
-        )}
+        className="-scale-x-100 cursor-pointer border-none fill-white outline-hidden"
       >
         <SkipIcon className="relative -top-1 size-[22px]" />
       </button>

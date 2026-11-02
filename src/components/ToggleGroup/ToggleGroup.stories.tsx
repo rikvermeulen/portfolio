@@ -6,7 +6,6 @@ import { mockAlbumOptions, mockTabOptions } from "./ToggleGroup.mock.ts";
 import ToggleGroup from "./ToggleGroup.tsx";
 
 const meta = {
-  title: "Components/ToggleGroup",
   component: ToggleGroup,
   parameters: { layout: "fullscreen" },
   decorators: [

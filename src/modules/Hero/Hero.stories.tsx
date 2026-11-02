@@ -4,7 +4,6 @@ import { mockHeroProps } from "./Hero.mock.ts";
 import Hero from "./Hero.tsx";
 
 const meta = {
-  title: "Modules/Hero",
   component: Hero,
   parameters: { layout: "fullscreen" },
   decorators: [

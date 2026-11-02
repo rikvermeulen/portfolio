@@ -6,7 +6,6 @@ import { mockPodcastProps } from "./Podcast.mock.ts";
 import Podcast from "./Podcast.tsx";
 
 const meta = {
-  title: "Modules/Bentos/Podcast",
   component: Podcast,
   parameters: { layout: "fullscreen" },
   decorators: [

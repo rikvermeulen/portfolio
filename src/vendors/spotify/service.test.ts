@@ -1,7 +1,11 @@
-import { getSpotifyMusicResult } from "./service.ts";
+import {
+  getSpotifyMusicResult,
+  getSpotifyPlaybackTokenResult,
+} from "./service.ts";
 
 jest.mock("./client.ts", () => ({
   fetchRecentlyPlayed: jest.fn(),
+  getPlaybackToken: jest.fn(),
 }));
 
 const mockEnv = {
@@ -16,8 +20,11 @@ jest.mock("@env", () => ({
   },
 }));
 
-const { fetchRecentlyPlayed } = jest.requireMock("./client.ts") as {
+const { fetchRecentlyPlayed, getPlaybackToken } = jest.requireMock(
+  "./client.ts",
+) as {
   fetchRecentlyPlayed: jest.Mock;
+  getPlaybackToken: jest.Mock;
 };
 
 const makeItem = (id: string, name = "Track") => ({
@@ -154,6 +161,42 @@ describe("getSpotifyMusicResult", () => {
     await expect(getSpotifyMusicResult()).resolves.toMatchObject({
       ok: false,
       errorMessage: "Could not load your music right now",
+    });
+  });
+});
+
+describe("getSpotifyPlaybackTokenResult", () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+    mockEnv.SPOTIFY_REFRESH_TOKEN = "refresh-token";
+  });
+
+  it("returns ok:false when SPOTIFY_REFRESH_TOKEN is not set", async () => {
+    mockEnv.SPOTIFY_REFRESH_TOKEN = undefined;
+
+    await expect(getSpotifyPlaybackTokenResult()).resolves.toEqual({
+      ok: false,
+      errorMessage: "Spotify is not configured",
+    });
+    expect(getPlaybackToken).not.toHaveBeenCalled();
+  });
+
+  it("returns the playback token on success", async () => {
+    getPlaybackToken.mockResolvedValue({ token: "tok", expiresIn: 3000 });
+
+    await expect(getSpotifyPlaybackTokenResult()).resolves.toEqual({
+      ok: true,
+      data: { token: "tok", expiresIn: 3000 },
+    });
+  });
+
+  it("returns ok:false when the refresh throws", async () => {
+    jest.spyOn(console, "error").mockImplementation(() => undefined);
+    getPlaybackToken.mockRejectedValue(new Error("boom"));
+
+    await expect(getSpotifyPlaybackTokenResult()).resolves.toEqual({
+      ok: false,
+      errorMessage: "Token refresh failed",
     });
   });
 });

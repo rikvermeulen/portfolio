@@ -8,30 +8,16 @@ export type FindMeWeatherIconName =
   | "weather-sun"
   | "weather-thunderstorm";
 
-export interface FindMeLocation {
-  readonly label: string;
-  readonly latitude: number;
-  readonly longitude: number;
-}
-
 export interface FindMeWeather {
   readonly temperatureCelsius: number;
   readonly conditionLabel: string;
   readonly iconName: FindMeWeatherIconName;
 }
 
-export interface FindMeConditionsSuccessResponse {
-  readonly ok: true;
-  readonly location: FindMeLocation;
-  readonly weather: FindMeWeather;
-  readonly updatedAt: string;
+export interface WeatherCondition {
+  readonly codes: readonly number[];
+  readonly iconName: FindMeWeatherIconName;
+  readonly label: string;
+  /** Icon to prefer at night; falls back to `iconName` when omitted. */
+  readonly nightIconName?: FindMeWeatherIconName;
 }
-
-export interface FindMeConditionsErrorResponse {
-  readonly ok: false;
-  readonly error: string;
-}
-
-export type FindMeConditionsResponse =
-  | FindMeConditionsSuccessResponse
-  | FindMeConditionsErrorResponse;

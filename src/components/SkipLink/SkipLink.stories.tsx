@@ -8,7 +8,6 @@ import SkipLink from "./SkipLink.tsx";
  * inspected; Tab to it in the canvas to see the real reveal behaviour.
  */
 const meta = {
-  title: "Components/SkipLink",
   component: SkipLink,
   parameters: {
     docs: {

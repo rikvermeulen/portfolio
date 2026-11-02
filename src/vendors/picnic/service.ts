@@ -2,17 +2,13 @@ import "server-only";
 
 import { unstable_cache } from "next/cache";
 
-import type { PicnicRecipe, PicnicRecipesResult } from "./types.ts";
 import type {
   PicnicRecipeCard,
   PicnicRecipeCardsData,
 } from "@/lib/recipes/types.ts";
 import type { Result } from "@/types/index.ts";
 
-import {
-  extractSavedRecipes,
-  findFusionNodeById,
-} from "@/lib/recipes/extract.ts";
+import { extractSavedRecipes } from "@/lib/recipes/extract.ts";
 import { toRecipeCard } from "@/lib/recipes/toRecipeCard.ts";
 import { env } from "@env";
 
@@ -23,40 +19,26 @@ import {
 } from "./client.ts";
 
 /**
- * Fetches the current user's saved Picnic recipes and returns them in two
- * forms: raw (as extracted from the API) and as UI-ready cards with proxied
- * image URLs.
- *
- * @param options.includeNodeId - If provided, an additional Fusion node is
- *   looked up by ID and appended to the result (useful for dev/debug).
+ * Fetches the current user's saved Picnic recipes as UI-ready cards with
+ * proxied image URLs.
  */
-export const fetchSavedPicnicRecipes = async (options?: {
-  readonly includeNodeId?: string;
-}): Promise<PicnicRecipesResult> => {
+export const fetchSavedPicnicRecipes = async (): Promise<
+  readonly PicnicRecipeCard[]
+> => {
   const client = createPicnicClientFromEnv();
-  const authKey = await ensurePicnicAuth(client);
-  const cookbookPage = await client.recipe.getCookbookPage();
-  const rawRecipes: readonly PicnicRecipe[] = extractSavedRecipes(cookbookPage);
-
-  const withOptionalNode = options?.includeNodeId?.trim().length
-    ? (() => {
-        const node = findFusionNodeById(cookbookPage, options.includeNodeId!);
-        if (!node || rawRecipes.some((r) => r.id === node.id)) {
-          return rawRecipes;
-        }
-        return [...rawRecipes, node];
-      })()
-    : rawRecipes;
-
+  await ensurePicnicAuth(client);
+  // v5 made recipe.getCookbookPage private; this is the same request it wrapped
+  const page = await client.app.getPage("cookbook-page-content");
+  if (page.format !== "fusion") {
+    throw new PicnicError(
+      "Picnic served the cookbook page as RSC; saved-recipe extraction needs an update.",
+    );
+  }
   const countryCode = env.PICNIC_COUNTRY_CODE === "DE" ? "de" : "nl";
 
-  return {
-    rawRecipes: withOptionalNode,
-    recipeCards: withOptionalNode.map((recipe) =>
-      toRecipeCard(recipe, countryCode),
-    ),
-    authKey,
-  };
+  return extractSavedRecipes(page.page).map((recipe) =>
+    toRecipeCard(recipe, countryCode),
+  );
 };
 
 /**
@@ -102,8 +84,7 @@ export const toPicnicErrorMessage = (error: unknown): string => {
  */
 const getCachedPicnicRecipeCards = unstable_cache(
   async (): Promise<readonly PicnicRecipeCard[]> => {
-    const { recipeCards } = await fetchSavedPicnicRecipes();
-    return recipeCards;
+    return fetchSavedPicnicRecipes();
   },
   ["picnic-saved-recipes"],
   { revalidate: 3600, tags: ["picnic"] },

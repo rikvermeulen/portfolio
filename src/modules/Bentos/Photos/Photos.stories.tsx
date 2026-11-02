@@ -1,10 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 
-import { mockPhotosProps } from "./Photos.mock.ts";
 import Photos from "./Photos.tsx";
 
 const meta = {
-  title: "Modules/Bentos/Photos",
   component: Photos,
   parameters: { layout: "fullscreen" },
   decorators: [
@@ -22,5 +20,13 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-  args: mockPhotosProps,
+  args: {
+    sizeKey: "photos",
+    albums: {
+      apps: ["/images/me.jpg", "/images/profile.png"],
+      map: ["/images/cloud.png"],
+      heart: ["/images/profile.png"],
+      dog: ["/images/no-album.png"],
+    },
+  },
 };

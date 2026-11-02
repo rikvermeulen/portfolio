@@ -4,7 +4,6 @@ import { mockImageProps } from "./Image.mock.ts";
 import Image from "./Image.tsx";
 
 const meta = {
-  title: "Modules/Bentos/Image",
   component: Image,
   parameters: { layout: "fullscreen" },
   decorators: [

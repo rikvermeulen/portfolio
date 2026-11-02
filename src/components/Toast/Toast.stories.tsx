@@ -9,8 +9,8 @@ import { notify } from "./toastQueue.ts";
  * the site-wide `ToastProvider` plus trigger buttons. Click one to fire a
  * macOS-style banner into the top-right stack.
  */
-const meta: Meta = {
-  title: "Components/Toast",
+const meta: Meta<typeof ToastProvider> = {
+  component: ToastProvider,
   parameters: { layout: "fullscreen" },
 };
 

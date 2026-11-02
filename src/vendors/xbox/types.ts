@@ -40,6 +40,5 @@ export interface XboxTitle {
 export interface XboxTitleHistoryResponse {
   readonly titles?: readonly XboxTitle[];
   readonly content?:
-    | readonly XboxTitle[]
-    | { readonly titles?: readonly XboxTitle[] };
+    readonly XboxTitle[] | { readonly titles?: readonly XboxTitle[] };
 }
