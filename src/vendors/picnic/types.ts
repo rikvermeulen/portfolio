@@ -1,5 +1,3 @@
-import type { PicnicRecipeCard } from "@/lib/recipes/types.ts";
-
 /** Country code used by the Picnic storefront API. */
 export type PicnicCountryCode = "nl" | "de";
 
@@ -27,12 +25,4 @@ export interface PicnicRecipe {
   readonly totalMinutes?: number;
   /** Raw accessibility label used internally to derive `servings` / `totalMinutes`. */
   readonly accessibilityLabel?: string;
-}
-
-// Service payload: raw recipes + their UI cards (domain type from `lib/recipes`).
-export interface PicnicRecipesResult {
-  readonly rawRecipes: readonly PicnicRecipe[];
-  readonly recipeCards: readonly PicnicRecipeCard[];
-  /** The auth key used for this request. `null` when not available. */
-  readonly authKey?: string | null;
 }

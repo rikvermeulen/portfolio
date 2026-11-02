@@ -23,7 +23,7 @@ There is **no CMS, database, or i18n layer** in this project.
 
 - `src/app/(dashboard)`: the dashboard route — `layout.tsx` wraps children in `BentoGrid`,
   `page.tsx` maps the registry, `bento-registry.tsx` is the single source of truth for tile order/wiring
-- `src/app/api/*`: HTTP routes (spotify/token, planta/{plants,remind,nudge}, picnic/{auth/key,image,recipes}, dev-diagnostics). The contact form submits via the `submitContact` server action, not an API route
+- `src/app/api/*`: HTTP routes (spotify/token, planta/{plants,remind,nudge}, picnic/{auth/key,image}, dev-diagnostics). The contact form submits via the `submitContact` server action, not an API route
 - `src/components`: generic, reusable UI primitives (folder-per-component, PascalCase). Includes the
   Bento grid infrastructure in `components/Bento/` (`Bento`, `AsyncBento`, `BentoGrid`, `BentoSkeleton`, `BentoErrorBoundary`); the audio tile family in `components/Audio/` (`AudioBento`, `AudioControls`); `AppIcon` in `components/AppIcon/`
 - `src/modules`: feature blocks (`Bentos/*` — the 13 concrete tiles — and `Navigation/*`)

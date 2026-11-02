@@ -22,10 +22,13 @@ export async function POST() {
   if (Date.now() - lastSentAt < COOLDOWN_MS) {
     return NextResponse.json({ ok: true, throttled: true });
   }
+  // Claim the slot now so concurrent clicks are throttled; release it on failure.
+  const previousSentAt = lastSentAt;
   lastSentAt = Date.now();
 
   const result = await getPlantaPlantsResult();
   if (!result.ok) {
+    lastSentAt = previousSentAt;
     return NextResponse.json({ ok: false }, { status: 502 });
   }
 
@@ -47,6 +50,7 @@ export async function POST() {
   const sent = await notifyPlantSummary(duePlants, new Date().toISOString());
 
   if (!sent.ok && !sent.skipped) {
+    lastSentAt = previousSentAt;
     return NextResponse.json({ ok: false }, { status: 502 });
   }
 

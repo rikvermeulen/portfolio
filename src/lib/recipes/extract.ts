@@ -73,55 +73,6 @@ function findNodeRawById(
   return null;
 }
 
-/**
- * Finds a Fusion page node by its `id` and returns it as a minimal
- * {@link PicnicRecipe}. Returns `null` when the node is not found.
- */
-export function findFusionNodeById(
-  payload: unknown,
-  nodeId: string,
-): PicnicRecipe | null {
-  let found: PicnicRecipe | null = null;
-
-  const visit = (value: unknown): void => {
-    if (found) {
-      return;
-    }
-
-    if (Array.isArray(value)) {
-      value.forEach(visit);
-      return;
-    }
-
-    if (!isRecord(value)) {
-      return;
-    }
-
-    if (value.id === nodeId) {
-      found = {
-        id: nodeId,
-        title:
-          readString(value.title) ??
-          readString(value.name) ??
-          readString(value.label) ??
-          "Untitled recipe",
-        subtitle:
-          readString(value.subtitle) ??
-          readString(value.description) ??
-          readString(value.text),
-        deeplink: readString(value.target) ?? readString(value.deeplink),
-        savedAt: readString(value.saved_at),
-      };
-      return;
-    }
-
-    Object.values(value).forEach(visit);
-  };
-
-  visit(payload);
-  return found;
-}
-
 // ─── ID extraction ─────────────────────────────────────────────────────────────
 
 function collectRecipeIds(value: unknown, recipeIds: Set<string>): void {
