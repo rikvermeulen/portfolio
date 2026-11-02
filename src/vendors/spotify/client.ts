@@ -4,7 +4,7 @@ import type {
   SpotifyPlaybackToken,
   SpotifyPlaylist,
   SpotifyRecentlyPlayed,
-  SpotifyShowEpisodes,
+  SpotifyShow,
 } from "./types.ts";
 
 const SPOTIFY_API_URL = "https://api.spotify.com/v1";
@@ -142,18 +142,45 @@ export async function fetchRecentlyPlayed(
   return response.json() as Promise<SpotifyRecentlyPlayed>;
 }
 
-export async function fetchShowEpisodes(
+const imageSchema = z.object({
+  url: z.string(),
+  width: z.number().nullable().optional(),
+});
+
+const showSchema = z.object({
+  id: z.string().min(1),
+  name: z.string(),
+  episodes: z.object({
+    // Spotify lists an unavailable episode as `null`.
+    items: z.array(
+      z
+        .object({
+          id: z.string().min(1),
+          name: z.string(),
+          explicit: z.boolean(),
+          release_date: z.string(),
+          images: z.array(imageSchema),
+        })
+        .nullable(),
+    ),
+  }),
+});
+
+/**
+ * A show's name with its newest episodes (newest first), in one request.
+ * `GET /shows?ids=` (several shows at once) is 403 for this app, so callers
+ * fetch per show.
+ */
+export async function fetchShow(
   showId: string,
   clientId: string,
   clientSecret: string,
   market = "NL",
-  limit = 20,
-): Promise<SpotifyShowEpisodes> {
+): Promise<SpotifyShow> {
   const token = await getClientCredentialsToken(clientId, clientSecret);
 
-  const url = new URL(`${SPOTIFY_API_URL}/shows/${showId}/episodes`);
+  const url = new URL(`${SPOTIFY_API_URL}/shows/${showId}`);
   url.searchParams.set("market", market);
-  url.searchParams.set("limit", String(limit));
 
   const response = await fetch(url.toString(), {
     headers: { Authorization: `Bearer ${token}` },
@@ -161,20 +188,21 @@ export async function fetchShowEpisodes(
   });
 
   if (!response.ok) {
-    throw new Error(`Spotify show episodes fetch failed: ${response.status}`);
+    throw new Error(`Spotify show fetch failed: ${response.status}`);
   }
 
-  return response.json() as Promise<SpotifyShowEpisodes>;
+  const show = showSchema.parse(await response.json());
+  return {
+    id: show.id,
+    name: show.name,
+    episodes: show.episodes.items.filter((episode) => episode !== null),
+  };
 }
 
 const playlistSchema = z.object({
   id: z.string().min(1),
   name: z.string(),
-  images: z
-    .array(
-      z.object({ url: z.string(), width: z.number().nullable().optional() }),
-    )
-    .nullable(),
+  images: z.array(imageSchema).nullable(),
 });
 
 /**

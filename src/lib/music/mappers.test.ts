@@ -44,15 +44,20 @@ describe("deduplicateByTrackId", () => {
 describe("toPodcastEpisode", () => {
   it("maps an episode with its image", () => {
     expect(
-      toPodcastEpisode({
-        id: "e1",
-        name: "Episode 1",
-        images: [{ url: "https://img/ep.jpg" }],
-        explicit: true,
-      }),
+      toPodcastEpisode(
+        {
+          id: "e1",
+          name: "Episode 1",
+          images: [{ url: "https://img/ep.jpg" }],
+          explicit: true,
+          release_date: "2026-10-24",
+        },
+        "Developer Tea",
+      ),
     ).toEqual({
       id: "e1",
       name: "Episode 1",
+      showName: "Developer Tea",
       imageUrl: "https://img/ep.jpg",
       explicit: true,
     });

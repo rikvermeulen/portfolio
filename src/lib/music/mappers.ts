@@ -43,10 +43,14 @@ export function deduplicateByTrackId(
 }
 
 /** Map a Spotify show episode to the domain podcast-episode shape. */
-export function toPodcastEpisode(episode: SpotifyEpisode): PodcastEpisode {
+export function toPodcastEpisode(
+  episode: SpotifyEpisode,
+  showName: string,
+): PodcastEpisode {
   return {
     id: episode.id,
     name: episode.name,
+    showName,
     imageUrl: pickSpotifyImage(episode.images),
     explicit: episode.explicit,
   };

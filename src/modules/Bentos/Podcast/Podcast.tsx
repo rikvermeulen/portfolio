@@ -9,7 +9,7 @@ import SpotifyAudioBento from "@/components/Audio/SpotifyAudioBento/index.ts";
 const toDisplay = (episode: PodcastEpisode): AudioBentoDisplay => ({
   image: episode.imageUrl,
   title: episode.name,
-  subtitle: "Podcast",
+  subtitle: episode.showName,
   alt: episode.name || "No episode",
   explicit: episode.explicit,
 });

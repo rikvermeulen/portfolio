@@ -387,7 +387,7 @@ describe("useSpotifyPlayer — track mode", () => {
 });
 
 describe("useSpotifyPlayer — episode mode", () => {
-  it("sends a single episode URI (not a rotated list)", async () => {
+  it("queues episodes like tracks, starting at the selected one", async () => {
     mockUseConnection.mockReturnValue(fakeConnection());
 
     const { result } = renderHook(() => useSpotifyPlayer(EPISODES, "episode"));
@@ -397,7 +397,7 @@ describe("useSpotifyPlayer — episode mode", () => {
     });
 
     expect(mockStartPlayback).toHaveBeenCalledWith("tok", "dev-1", {
-      uris: ["spotify:episode:episode-1"],
+      uris: ["spotify:episode:episode-1", "spotify:episode:episode-2"],
     });
   });
 
@@ -429,7 +429,7 @@ describe("useSpotifyPlayer — episode mode", () => {
     });
 
     expect(mockStartPlayback).toHaveBeenCalledWith("tok", "dev-1", {
-      uris: ["spotify:episode:episode-2"],
+      uris: ["spotify:episode:episode-2", "spotify:episode:episode-1"],
     });
   });
 

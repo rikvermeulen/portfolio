@@ -34,12 +34,9 @@ function toPlaybackTarget(
   if (kind === "playlist") {
     return { context_uri: itemUri };
   }
-  if (kind === "episode") {
-    return { uris: [itemUri] };
-  }
   return {
     uris: [...items.slice(index), ...items.slice(0, index)].map(
-      (entry) => `${URI_PREFIX.track}${entry.id}`,
+      (entry) => `${URI_PREFIX[kind]}${entry.id}`,
     ),
   };
 }
@@ -47,10 +44,9 @@ function toPlaybackTarget(
 /**
  * The single Spotify player for the page's one Web Playback device. `kind`
  * selects the content scheme and how the play payload is built:
- * - `"track"` sends the whole list rotated to start at the selected index, so
- *   the SDK auto-advances the queue;
- * - `"episode"` sends a single episode URI (a `spotify:episode:` `context_uri`
- *   returns 400 "Non supported context uri", verified against the live API);
+ * - `"track"` and `"episode"` send the whole list rotated to start at the
+ *   selected index, so the SDK auto-advances the queue (episodes only play via
+ *   `uris`: as `context_uri` they return 400 "Non supported context uri");
  * - `"playlist"` plays one playlist (`items[0]`) as a whole via `context_uri`.
  *   Its tracks can't be listed for a playlist another account owns, so the SDK
  *   reports what plays (`nowPlaying`) and skips move through the SDK.

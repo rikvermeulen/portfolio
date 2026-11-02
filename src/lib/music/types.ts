@@ -15,6 +15,7 @@ export interface PlaylistTrack {
 export interface PodcastEpisode {
   readonly id: string;
   readonly name: string;
+  readonly showName: string;
   readonly imageUrl: string | null;
   readonly explicit: boolean;
 }

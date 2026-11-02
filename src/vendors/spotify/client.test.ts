@@ -1,6 +1,6 @@
 // Module-level token variables must be reset between tests.
 let fetchRecentlyPlayed: typeof import("./client.ts").fetchRecentlyPlayed;
-let fetchShowEpisodes: typeof import("./client.ts").fetchShowEpisodes;
+let fetchShow: typeof import("./client.ts").fetchShow;
 let getPlaybackToken: typeof import("./client.ts").getPlaybackToken;
 let fetchPlaylist: typeof import("./client.ts").fetchPlaylist;
 
@@ -29,16 +29,23 @@ const makeRecentlyPlayedResponse = () =>
     ],
   });
 
-const makeEpisodesResponse = () =>
+// An unavailable episode comes back as `null` and is dropped.
+const makeShowResponse = () =>
   createJsonResponse({
-    items: [
-      {
-        id: "ep-1",
-        name: "Episode 1",
-        images: [],
-        explicit: false,
-      },
-    ],
+    id: "show-id",
+    name: "Developer Tea",
+    episodes: {
+      items: [
+        {
+          id: "ep-1",
+          name: "Episode 1",
+          images: [],
+          explicit: false,
+          release_date: "2026-10-24",
+        },
+        null,
+      ],
+    },
   });
 
 beforeEach(async () => {
@@ -47,7 +54,7 @@ beforeEach(async () => {
 
   const client = await import("./client.ts");
   fetchRecentlyPlayed = client.fetchRecentlyPlayed;
-  fetchShowEpisodes = client.fetchShowEpisodes;
+  fetchShow = client.fetchShow;
   getPlaybackToken = client.getPlaybackToken;
   fetchPlaylist = client.fetchPlaylist;
 });
@@ -117,31 +124,42 @@ describe("fetchRecentlyPlayed", () => {
   });
 });
 
-describe("fetchShowEpisodes", () => {
-  it("fetches a client-credentials token then fetches episodes", async () => {
+describe("fetchShow", () => {
+  it("fetches name and newest episodes with a client-credentials token", async () => {
     const fetchMock = jest
       .spyOn(globalThis, "fetch")
       .mockResolvedValueOnce(makeTokenResponse())
-      .mockResolvedValueOnce(makeEpisodesResponse());
+      .mockResolvedValueOnce(makeShowResponse());
 
-    const result = await fetchShowEpisodes("show-id", "cid", "csecret");
+    const show = await fetchShow("show-id", "cid", "csecret");
 
     expect(fetchMock).toHaveBeenCalledTimes(2);
     expect(fetchMock.mock.calls[0]?.[0]).toContain("accounts.spotify.com");
-    expect(fetchMock.mock.calls[1]?.[0]).toContain("/shows/show-id/episodes");
-    expect(result.items).toHaveLength(1);
+    expect(fetchMock.mock.calls[1]?.[0]).toContain("/shows/show-id?market=NL");
+    expect(show).toEqual({
+      id: "show-id",
+      name: "Developer Tea",
+      episodes: [
+        {
+          id: "ep-1",
+          name: "Episode 1",
+          images: [],
+          explicit: false,
+          release_date: "2026-10-24",
+        },
+      ],
+    });
   });
 
-  it("includes market and limit params", async () => {
+  it("passes the market", async () => {
     const fetchMock = jest
       .spyOn(globalThis, "fetch")
       .mockResolvedValueOnce(makeTokenResponse())
-      .mockResolvedValueOnce(makeEpisodesResponse());
+      .mockResolvedValueOnce(makeShowResponse());
 
-    await fetchShowEpisodes("show-id", "cid", "csecret", "DE", 5);
+    await fetchShow("show-id", "cid", "csecret", "DE");
 
     expect(fetchMock.mock.calls[1]?.[0]).toContain("market=DE");
-    expect(fetchMock.mock.calls[1]?.[0]).toContain("limit=5");
   });
 
   it("throws when the client-credentials token request fails", async () => {
@@ -149,31 +167,40 @@ describe("fetchShowEpisodes", () => {
       .spyOn(globalThis, "fetch")
       .mockResolvedValue(createJsonResponse({ error: "invalid_client" }, 400));
 
-    await expect(
-      fetchShowEpisodes("show-id", "cid", "csecret"),
-    ).rejects.toThrow("Spotify client credentials failed: 400");
+    await expect(fetchShow("show-id", "cid", "csecret")).rejects.toThrow(
+      "Spotify client credentials failed: 400",
+    );
   });
 
-  it("throws when the episodes endpoint returns non-ok", async () => {
+  it("throws when the show endpoint returns non-ok", async () => {
     jest
       .spyOn(globalThis, "fetch")
       .mockResolvedValueOnce(makeTokenResponse())
       .mockResolvedValueOnce(createJsonResponse({ error: "not found" }, 404));
 
-    await expect(
-      fetchShowEpisodes("show-id", "cid", "csecret"),
-    ).rejects.toThrow("Spotify show episodes fetch failed: 404");
+    await expect(fetchShow("show-id", "cid", "csecret")).rejects.toThrow(
+      "Spotify show fetch failed: 404",
+    );
+  });
+
+  it("rejects a payload that is not a show", async () => {
+    jest
+      .spyOn(globalThis, "fetch")
+      .mockResolvedValueOnce(makeTokenResponse())
+      .mockResolvedValueOnce(createJsonResponse({ unexpected: true }));
+
+    await expect(fetchShow("show-id", "cid", "csecret")).rejects.toThrow();
   });
 
   it("reuses the cached CC token on a second call", async () => {
     const fetchMock = jest
       .spyOn(globalThis, "fetch")
       .mockResolvedValueOnce(makeTokenResponse())
-      .mockResolvedValueOnce(makeEpisodesResponse())
-      .mockResolvedValueOnce(makeEpisodesResponse());
+      .mockResolvedValueOnce(makeShowResponse())
+      .mockResolvedValueOnce(makeShowResponse());
 
-    await fetchShowEpisodes("show-id", "cid", "csecret");
-    await fetchShowEpisodes("show-id", "cid", "csecret");
+    await fetchShow("show-id", "cid", "csecret");
+    await fetchShow("show-id", "cid", "csecret");
 
     const tokenCalls = fetchMock.mock.calls.filter((c) =>
       String(c[0]).includes("accounts.spotify.com"),

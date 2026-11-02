@@ -29,10 +29,15 @@ export interface SpotifyEpisode {
   readonly name: string;
   readonly images: readonly SpotifyImage[];
   readonly explicit: boolean;
+  /** `YYYY`, `YYYY-MM` or `YYYY-MM-DD` — sorts correctly as a string. */
+  readonly release_date: string;
 }
 
-export interface SpotifyShowEpisodes {
-  readonly items: readonly SpotifyEpisode[];
+export interface SpotifyShow {
+  readonly id: string;
+  readonly name: string;
+  /** Newest first; unavailable episodes already dropped. */
+  readonly episodes: readonly SpotifyEpisode[];
 }
 
 export interface SpotifyPlaylist {
