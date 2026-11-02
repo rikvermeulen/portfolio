@@ -8,58 +8,129 @@
   @apply mx-auto w-full max-w-5xl;
 }
 
+/* The grid's width source: `100cqw` and the `@container` tiers below measure
+   the space the grid may fill, not the viewport. */
+.bentogrid-container {
+  container-type: inline-size;
+}
+
+/*
+ * Fixed tile scope at every width: a square tile is never smaller than 270px
+ * (except a single column on a narrower phone) and never larger than 340px.
+ * Pixels, not rem: the root font is fluid (15–20px), so rem limits would still
+ * let tiles grow with the screen.
+ *
+ * Everything zooms with the tile: gaps (and so the space between sections) are
+ * multiples of the tile em (tile / 19), like the tile content, so the bento is
+ * the same picture at every width. A row of n tiles with a gap of g tile em is
+ * n + (n − 1) × g / 19 tiles wide (--bento-factor); that sets the tile size,
+ * the max grid width, and the tier thresholds: a tier adds a tile per row the
+ * moment one more fits at the minimum, width >= 270px × factor. Container
+ * queries can't read variables, so the tiers below spell those numbers out.
+ * Rows are as tall as columns are wide, so every tile keeps its aspect ratio.
+ */
 .bentogrid {
+  --bento-tile-max: 340px;
+  --bento-per-row: 1;
+  --bento-cols: 4;
+  --bento-gap-scale: 0.75;
+  --bento-row-gaps: calc((var(--bento-per-row) - 1) * var(--bento-gap-scale));
+  --bento-factor: calc(var(--bento-per-row) + var(--bento-row-gaps) / 19);
+  --bento-cap: calc(var(--bento-tile-max) * var(--bento-factor));
+  --bento-w: min(100cqw, var(--bento-cap));
+  --bento-unit: calc(var(--bento-w) / var(--bento-factor));
+  --bento-gap: calc(var(--bento-unit) * var(--bento-gap-scale) / 19);
+  --bento-gaps: calc((var(--bento-cols) - 1) * var(--bento-gap));
+  --bento-row: calc((var(--bento-w) - var(--bento-gaps)) / var(--bento-cols));
+
   display: grid;
   grid-auto-flow: row;
-
-  --bento-cols: var(--bento-columns-base, 4);
-  --bento-gap: var(--bento-gap-base, 0.75rem);
-  --bento-cap: 340px;
-
   grid-template-columns: repeat(var(--bento-cols), minmax(0, 1fr));
+  grid-auto-rows: var(--bento-row);
   gap: var(--bento-gap);
-  grid-auto-rows: min(
-    var(--bento-row-height-base, 8rem),
-    calc((var(--bento-cap) - 3 * var(--bento-gap)) / 4)
-  );
   width: 100%;
   max-width: var(--bento-cap);
   margin-inline: auto;
 }
 
-@media (width >= 48rem) {
+/* 2 per row, gap 1 tile em: 270 × (2 + 1/19) = 554.2 → 555px.
+   Tiles use their desktop (`lg`) span from here. */
+@container (width >= 555px) {
   .bentogrid {
-    --bento-cols: var(--bento-columns-md, 8);
-    --bento-gap: var(--bento-gap-md, 1rem);
-    --bento-cap: 720px;
-
-    grid-auto-rows: min(
-      var(--bento-row-height-md, var(--bento-row-height-base, 8rem)),
-      calc((var(--bento-cap) - 7 * var(--bento-gap)) / 8)
-    );
+    --bento-per-row: 2;
+    --bento-cols: 6;
+    --bento-gap-scale: 1;
   }
 }
 
-@media (width >= 80rem) {
+/* 3 per row, gap 1.25 tile em: 270 × (3 + 2.5/19) = 845.5 → 846px. */
+@container (width >= 846px) {
   .bentogrid {
-    --bento-cols: var(--bento-columns-lg, 12);
-    --bento-gap: var(--bento-gap-lg, 1.25rem);
-
-    grid-auto-rows: var(
-      --bento-row-current,
-      var(
-        --bento-row-height-lg,
-        var(--bento-row-height-md, var(--bento-row-height-base, 8rem))
-      )
-    );
-    max-width: none;
-    margin-inline: 0;
+    --bento-per-row: 3;
+    --bento-cols: 9;
+    --bento-gap-scale: 1.25;
   }
 }
 
+/* 4 per row, gap 1.25 tile em: 270 × (4 + 3.75/19) = 1133.3 → 1134px. */
+@container (width >= 1134px) {
+  .bentogrid {
+    --bento-per-row: 4;
+    --bento-cols: 12;
+  }
+}
+
+/* The tile order is laid out for 4 per row; with 2–3 per row a wide tile
+   would leave a hole, so let later tiles backfill it. 4 per row keeps its order. */
+@container (555px <= width < 1134px) {
+  .bentogrid {
+    grid-auto-flow: row dense;
+  }
+}
+
+/* Outside a tile the "tile em" is just the root font (stories, toasts). */
+:root {
+  --tile-em: 1rem;
+}
+
+/*
+ * Tile content zooms with its tile. One tile em is 1/19 of the square tile
+ * (--bento-unit), ≈16.6px on a 315px desktop tile. Inside a tile every Tailwind
+ * size token and the bento type ramp resolve against it instead of the fluid
+ * root font, so a tile looks identical at every width, only bigger or smaller.
+ * Lengths, not `em`: an em would compound through nested font sizes.
+ */
 .bento-item {
+  --tile-em: calc(var(--bento-unit) / 19);
+  --spacing: calc(var(--tile-em) * 0.25);
+  --text-xs: calc(var(--tile-em) * 0.75);
+  --text-sm: calc(var(--tile-em) * 0.875);
+  --text-base: var(--tile-em);
+  --text-lg: calc(var(--tile-em) * 1.125);
+  --text-xl: calc(var(--tile-em) * 1.25);
+  --text-2xl: calc(var(--tile-em) * 1.5);
+  --text-3xl: calc(var(--tile-em) * 1.875);
+  --text-4xl: calc(var(--tile-em) * 2.25);
+  --radius-xs: calc(var(--tile-em) * 0.125);
+  --radius-sm: calc(var(--tile-em) * 0.25);
+  --radius-md: calc(var(--tile-em) * 0.375);
+  --radius-lg: calc(var(--tile-em) * 0.5);
+  --radius-xl: calc(var(--tile-em) * 0.75);
+  --radius-2xl: var(--tile-em);
+  --radius-3xl: calc(var(--tile-em) * 1.5);
+  --radius-4xl: calc(var(--tile-em) * 2);
+  --radius-field: calc(var(--tile-em) * 0.5);
+  --radius-control: calc(var(--tile-em) * 0.75);
+  --radius-card: var(--tile-em);
+  --radius-tile: calc(var(--tile-em) * 1.75);
+  --container-xs: calc(var(--tile-em) * 20);
+  --container-sm: calc(var(--tile-em) * 24);
+  --container-md: calc(var(--tile-em) * 28);
+  --container-xl: calc(var(--tile-em) * 36);
+
   grid-column: span var(--bento-col-base, 1);
   grid-row: span var(--bento-row-base, 1);
+  font-size: var(--tile-em);
 }
 
 .bentogrid > [data-bento-item] {
@@ -68,27 +139,26 @@
   overflow: hidden;
 }
 
-.bentogrid-section-break {
-  grid-column: 1 / -1;
-  height: 0.5rem;
+/* Each section is its own grid (so backfilling never crosses sections); the
+   space between two sections is one empty grid row with a gap on each side. */
+.bentogrid-container + .bentogrid-container .bentogrid {
+  margin-top: calc(var(--bento-gap) * 2 + var(--bento-row));
 }
 
-@media (width >= 48rem) {
-  .bentogrid-section-break {
-    height: 0.875rem;
+/* 2–3 per row: a wide tile (Messages, Journal) is one square tile, like on a
+   phone. A full-width tile would need both columns level, and the 2-row folder
+   banner at a section's start never lets them be, so it would leave a hole. */
+@container (555px <= width < 1134px) {
+  .bento-item {
+    grid-column: span var(--bento-col-mid, var(--bento-col-base, 1));
+    grid-row: span var(--bento-row-mid, var(--bento-row-base, 1));
   }
 }
 
-@media (width >= 48rem) {
+/* 4 per row: every tile in its desktop span. */
+@container (width >= 1134px) {
   .bento-item {
-    grid-column: span var(--bento-col-md, var(--bento-col-base, 1));
-    grid-row: span var(--bento-row-md, var(--bento-row-base, 1));
-  }
-}
-
-@media (width >= 80rem) {
-  .bento-item {
-    grid-column: span var(--bento-col-lg, var(--bento-col-md, 1));
-    grid-row: span var(--bento-row-lg, var(--bento-row-md, 1));
+    grid-column: span var(--bento-col-lg, var(--bento-col-base, 1));
+    grid-row: span var(--bento-row-lg, var(--bento-row-base, 1));
   }
 }

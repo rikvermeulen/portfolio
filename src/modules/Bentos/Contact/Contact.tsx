@@ -73,7 +73,7 @@ function SocialMenu() {
     >
       <div
         ref={panelRef}
-        className="absolute bottom-0 left-0 z-50 flex size-9 flex-col-reverse overflow-hidden rounded-[1.125rem] transition-[height,width,border-radius] duration-300 ease-in-out group-data-open:h-(--menu-h,11rem) group-data-open:w-(--menu-w,13rem) group-data-open:rounded-2xl group-data-open:shadow-lg"
+        className="absolute bottom-0 left-0 z-50 flex size-9 flex-col-reverse overflow-hidden rounded-[calc(var(--tile-em)*1.125)] transition-[height,width,border-radius] duration-300 ease-in-out group-data-open:h-(--menu-h,11rem) group-data-open:w-(--menu-w,13rem) group-data-open:rounded-2xl group-data-open:shadow-lg"
       >
         <Glass
           {...GLASS}
@@ -111,7 +111,7 @@ function SocialMenu() {
                   height={24}
                   src={`/images/icons/socials/${icon}.png`}
                   width={24}
-                  className="rounded-xl"
+                  className="size-6 rounded-xl"
                 />
                 <span className="bento-headline whitespace-nowrap">{name}</span>
               </Link>
@@ -159,7 +159,7 @@ const Contact = ({ sizeKey, className }: ContactProps) => {
           height={32}
           src="/images/profile.png"
           width={32}
-          className="z-10 rounded-full"
+          className="z-10 size-8 rounded-full"
         />
         <div className="bento-eyebrow relative -top-1 flex gap-2 rounded-lg px-3 py-1">
           Rik Vermeulen
@@ -179,7 +179,7 @@ const Contact = ({ sizeKey, className }: ContactProps) => {
         role="log"
         className="no-scrollbar flex flex-1 flex-col overflow-y-auto px-5 pt-18 pb-15"
       >
-        <p className="relative text-center text-[10px] text-ds-gray">
+        <p className="relative text-center text-[length:calc(var(--tile-em)*0.625)] text-ds-gray">
           <span className="font-semibold">Today: </span>
           {TODAY}
         </p>

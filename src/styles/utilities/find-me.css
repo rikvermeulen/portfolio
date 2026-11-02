@@ -44,11 +44,11 @@
 @keyframes findme-marker-breathe {
   0%,
   100% {
-    box-shadow: inset 0 0 0 0.25rem white;
+    box-shadow: inset 0 0 0 calc(var(--tile-em) * 0.25) white;
   }
 
   50% {
-    box-shadow: inset 0 0 0 0.3rem white;
+    box-shadow: inset 0 0 0 calc(var(--tile-em) * 0.3) white;
   }
 }
 
@@ -73,8 +73,8 @@
 .findme-marker {
   position: relative;
   display: flex;
-  height: 1.5rem;
-  width: 1.5rem;
+  height: calc(var(--tile-em) * 1.5);
+  width: calc(var(--tile-em) * 1.5);
   align-items: center;
   justify-content: center;
 }
@@ -82,8 +82,8 @@
 .findme-marker-ping {
   position: absolute;
   display: inline-flex;
-  height: 1.5rem;
-  width: 1.5rem;
+  height: calc(var(--tile-em) * 1.5);
+  width: calc(var(--tile-em) * 1.5);
   border-radius: 9999px;
   background-color: var(--color-ds-blue);
   opacity: 0.75;
@@ -94,8 +94,8 @@
 .findme-marker-dot {
   position: relative;
   display: inline-flex;
-  height: 1.5rem;
-  width: 1.5rem;
+  height: calc(var(--tile-em) * 1.5);
+  width: calc(var(--tile-em) * 1.5);
   border-radius: 9999px;
   background-color: var(--color-ds-blue);
   box-shadow:

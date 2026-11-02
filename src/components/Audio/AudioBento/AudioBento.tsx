@@ -64,7 +64,7 @@ const AudioBento = ({
             width={108}
             className={classnames(
               !prefersReducedMotion && (isPlaying ? "pop-up" : "pop-down"),
-              "aspect-square scale-100 rounded-md object-cover drop-shadow-md transition-transform duration-300 ease-in-out",
+              "aspect-square size-27 scale-100 rounded-md object-cover drop-shadow-md transition-transform duration-300 ease-in-out",
             )}
           />
         </div>

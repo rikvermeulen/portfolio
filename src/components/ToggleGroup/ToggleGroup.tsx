@@ -418,7 +418,7 @@ export default function ToggleGroup<T extends string = string>({
                     label={option.label}
                     name={option.icon}
                   />
-                  <span className="-mt-px text-[8px] font-medium">
+                  <span className="-mt-px text-[length:calc(var(--tile-em)*0.5)] font-medium">
                     {option.label}
                   </span>
                 </span>

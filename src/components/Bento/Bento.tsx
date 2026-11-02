@@ -19,20 +19,24 @@ const toSpan = (value?: BentoBoxSize): GridSpan => {
   return col && row ? { col, row } : { col: 1, row: 1 };
 };
 
+/** One tile is 3×3 cells; anything wider is a wide tile (e.g. 6×3). */
+const TILE_SPAN = 3;
+
 /**
- * Responsive grid spans as CSS custom properties. Each breakpoint falls back to
- * the next smaller one, so `md`/`lg` are optional (base → md → lg cascade).
+ * Grid spans as CSS custom properties: `base` for 1 tile per row, `lg` for 4
+ * per row (falls back to `base`), and `mid` for 2–3 per row — `lg`, except a
+ * wide tile becomes one square tile there, so the grid fills without holes.
  */
 const toGridVars = (sizes?: ResponsiveBentoSize): React.CSSProperties => {
   const base = toSpan(sizes?.base);
-  const md = toSpan(sizes?.md ?? sizes?.base);
-  const lg = toSpan(sizes?.lg ?? sizes?.md ?? sizes?.base);
+  const lg = toSpan(sizes?.lg ?? sizes?.base);
+  const isWide = lg.col > TILE_SPAN;
 
   return {
     "--bento-col-base": base.col,
     "--bento-row-base": base.row,
-    "--bento-col-md": md.col,
-    "--bento-row-md": md.row,
+    "--bento-col-mid": isWide ? TILE_SPAN : lg.col,
+    "--bento-row-mid": isWide ? TILE_SPAN : lg.row,
     "--bento-col-lg": lg.col,
     "--bento-row-lg": lg.row,
   } as React.CSSProperties;
@@ -81,7 +85,6 @@ const Bento = ({
       data-bento-base={sizes?.base}
       data-bento-item
       data-bento-lg={sizes?.lg}
-      data-bento-md={sizes?.md}
       style={{ ...toGridVars(sizes), ...style }}
       className={classnames(
         "bento-item relative size-full overflow-hidden rounded-tile",

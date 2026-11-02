@@ -1,14 +1,16 @@
 /* Bento typography scale.
    A small semantic vocabulary so every tile shares one type ramp. Each class
    fully owns size, line-height, weight, tracking and casing — apply exactly one
-   per text element and keep colour/truncation/layout as inline Tailwind.
+   per text element and keep colour/truncation/layout as inline Tailwind. Sizes
+   are multiples of --tile-em, so text zooms with its tile; the px values below
+   are at a 1em = 16px tile (1rem outside a tile).
 
    Six roles across five sizes. `headline` and `body` deliberately share 14px:
    this is the iOS convention where an emphasised row label and body text match
    in size and differ only in weight — so `headline` reading smaller than
    `body-large` is intentional, not a gap in the ramp.
 
-     display     28/32px  700  hero feature text (the Journal question)
+     display     32px     700  hero feature text (the Journal question)
      title       24px     600  a tile's primary heading
      body-large  16px     400  lead descriptions / intro copy
      headline    14px     600  names and primary row text (emphasised body)
@@ -17,21 +19,15 @@
 
 /* Display — oversized feature text (the Journal question). */
 .bento-display {
-  font-size: 1.75rem; /* 28px */
+  font-size: calc(var(--tile-em) * 2);
   line-height: 1.1;
   font-weight: 700;
   letter-spacing: -0.02em;
 }
 
-@media (width >= 48rem) {
-  .bento-display {
-    font-size: 2rem; /* 32px */
-  }
-}
-
 /* Title — a tile's primary heading. */
 .bento-title {
-  font-size: 1.5rem; /* 24px */
+  font-size: calc(var(--tile-em) * 1.5);
   line-height: 1.2;
   font-weight: 600;
   letter-spacing: -0.01em;
@@ -39,28 +35,28 @@
 
 /* Body-large — lead descriptions / intro copy. */
 .bento-body-large {
-  font-size: 1rem; /* 16px */
+  font-size: var(--tile-em);
   line-height: 1.4;
   font-weight: 400;
 }
 
 /* Headline — names and primary row text (emphasised body; same size as body). */
 .bento-headline {
-  font-size: 0.875rem; /* 14px */
+  font-size: calc(var(--tile-em) * 0.875);
   line-height: 1.3;
   font-weight: 600;
 }
 
 /* Body — descriptions, subtitles, metadata and captions. */
 .bento-body {
-  font-size: 0.875rem; /* 14px */
+  font-size: calc(var(--tile-em) * 0.875);
   line-height: 1.4;
   font-weight: 400;
 }
 
 /* Eyebrow — small label / section header (kicker). */
 .bento-eyebrow {
-  font-size: 0.75rem; /* 12px */
+  font-size: calc(var(--tile-em) * 0.75);
   line-height: 1;
   font-weight: 600;
 }

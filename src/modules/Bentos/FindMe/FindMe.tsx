@@ -13,8 +13,18 @@ import classnames from "@/utils/classnames/index.ts";
 import { useFindMeMap } from "./useFindMeMap.ts";
 
 const CLOUDS = [
-  { className: "cloud-one", width: 300, height: 267, opacity: "opacity-90" },
-  { className: "cloud-two", width: 240, height: 214, opacity: "opacity-80" },
+  {
+    className: "cloud-one w-[calc(var(--tile-em)*18.75)]",
+    width: 300,
+    height: 267,
+    opacity: "opacity-90",
+  },
+  {
+    className: "cloud-two w-[calc(var(--tile-em)*15)]",
+    width: 240,
+    height: 214,
+    opacity: "opacity-80",
+  },
 ] as const;
 
 const FindMe = ({ sizeKey, className, weatherBadge }: FindMeProps) => {
@@ -55,7 +65,7 @@ const FindMe = ({ sizeKey, className, weatherBadge }: FindMeProps) => {
             className={classnames(
               cloudClassName,
               opacity,
-              "h-auto w-auto -translate-x-full -translate-y-32 contrast-125 transition-transform ease-in-out",
+              "h-auto -translate-x-full -translate-y-32 contrast-125 transition-transform ease-in-out",
             )}
           />
         ))}

@@ -72,7 +72,7 @@ function staticTile(
   return { kind: "static", id, sizeKey, render };
 }
 
-/** A full-width section spacer; `anchorId` lets Navigation scroll to it. */
+/** Starts a new section (its own grid); `anchorId` lets Navigation scroll to it. */
 function divider(id: string, anchorId?: string): DividerTile {
   return { kind: "divider", id, anchorId };
 }

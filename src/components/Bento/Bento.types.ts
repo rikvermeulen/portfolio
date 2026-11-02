@@ -9,9 +9,9 @@ export interface GridSpan {
   readonly row: number;
 }
 
+/** `base` = 1 tile per row; `lg` = 2–4 per row (a wide `lg` tile is square at 2–3 per row). */
 export interface ResponsiveBentoSize {
   readonly base: BentoBoxSize;
-  readonly md?: BentoBoxSize;
   readonly lg?: BentoBoxSize;
 }
 
