@@ -8,6 +8,7 @@ import { GLASS_DEFAULTS } from "@/lib/glass/displacementMap.ts";
 import classnames from "@/utils/classnames/index.ts";
 
 import {
+  glowStyle,
   hotspotStyle,
   illuminateStyle,
   rimStyle,
@@ -122,6 +123,7 @@ const Glass = ({
           />
         </>
       )}
+      <span style={glowStyle(radius)} className="absolute inset-0" />
       <span style={rimStyle(radius)} className="absolute inset-0" />
     </div>
   );
