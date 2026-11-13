@@ -10,5 +10,8 @@ create table if not exists public.planta_tokens (
 );
 
 -- RLS on with no policies: only the service-role key (server-side) can read or
--- write the tokens; the anon key used elsewhere gets nothing.
+-- write the tokens; the anon key used elsewhere gets nothing. The revoke drops
+-- Supabase's default table grants too, so access doesn't rest on RLS alone.
+-- Tokens are stored in plaintext: acceptable for this single-user site.
 alter table public.planta_tokens enable row level security;
+revoke all on public.planta_tokens from anon, authenticated;

@@ -41,17 +41,21 @@ interface PlantaClientOptions {
   readonly tokens?: PlantaTokenSet;
   readonly authCode?: string;
   readonly onTokensChanged?: (tokens: PlantaTokenSet) => Promise<void>;
+  /** Re-reads the shared store, to pick up a rotation made by another runtime. */
+  readonly reloadTokens?: () => Promise<PlantaTokenSet | null>;
 }
 
 export class PlantaClient {
   private tokens: PlantaTokenSet | null;
   private readonly authCode?: string;
   private readonly onTokensChanged?: (tokens: PlantaTokenSet) => Promise<void>;
+  private readonly reloadTokens?: () => Promise<PlantaTokenSet | null>;
 
   public constructor(options: PlantaClientOptions) {
     this.tokens = options.tokens ?? null;
     this.authCode = options.authCode;
     this.onTokensChanged = options.onTokensChanged;
+    this.reloadTokens = options.reloadTokens;
   }
 
   private async setTokens(tokens: PlantaTokenSet): Promise<void> {
@@ -78,7 +82,13 @@ export class PlantaClient {
         await this.refreshTokens();
         return;
       } catch (error) {
-        if (!(error instanceof PlantaUnauthorizedError) || !this.authCode) {
+        if (!(error instanceof PlantaUnauthorizedError)) {
+          throw error;
+        }
+        if (await this.adoptRotatedTokens()) {
+          return;
+        }
+        if (!this.authCode) {
           throw error;
         }
       }
@@ -92,6 +102,27 @@ export class PlantaClient {
     throw new PlantaUnauthorizedError(
       "Missing Planta credentials. Set PLANTA_REFRESH_TOKEN or PLANTA_AUTH_CODE.",
     );
+  }
+
+  /**
+   * A rejected refresh token may just mean another runtime rotated it after we
+   * loaded it: take the newer stored pair (refreshing it if its access token
+   * has expired too). False when the store holds nothing newer.
+   */
+  private async adoptRotatedTokens(): Promise<boolean> {
+    const stored = await this.reloadTokens?.();
+    if (
+      !stored?.refreshToken ||
+      stored.refreshToken === this.tokens?.refreshToken
+    ) {
+      return false;
+    }
+
+    this.tokens = stored;
+    if (!this.isAccessTokenValid()) {
+      await this.refreshTokens();
+    }
+    return true;
   }
 
   private async authorize(code: string): Promise<void> {
@@ -255,5 +286,6 @@ export const createPlantaClientFromEnv = async (): Promise<PlantaClient> => {
     tokens: (await loadPlantaTokens()) ?? undefined,
     authCode: env.PLANTA_AUTH_CODE,
     onTokensChanged: savePlantaTokens,
+    reloadTokens: loadPlantaTokens,
   });
 };

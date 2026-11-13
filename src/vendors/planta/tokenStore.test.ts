@@ -136,7 +136,7 @@ describe("Planta token store", () => {
     mockUpsert.mockResolvedValue({ error: { message: "permission denied" } });
 
     await expect(savePlantaTokens({ accessToken: "a" })).rejects.toThrow(
-      "Planta token save failed: permission denied",
+      "Rotated Planta token could not be saved (permission denied)",
     );
   });
 });

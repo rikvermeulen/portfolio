@@ -54,13 +54,19 @@ export async function loadPlantaTokens(): Promise<PlantaTokenSet | null> {
   return row ? fromPlantaTokenRow(row) : seedFromEnv();
 }
 
-/** Persists a (rotated) token pair; throws so a lost rotation is never silent. */
+/**
+ * Persists a (rotated) token pair. Planta has already invalidated the previous
+ * refresh token by now, so a failed save loses the rotation: the stored row is
+ * dead until re-minted. Throws loudly with that recovery step.
+ */
 export async function savePlantaTokens(tokens: PlantaTokenSet): Promise<void> {
   const { error } = await createSupabaseAdminClient()
     .from(PLANTA_TOKEN_TABLE)
     .upsert(toPlantaTokenRow(tokens));
 
   if (error) {
-    throw new Error(`Planta token save failed: ${error.message}`);
+    throw new Error(
+      `Rotated Planta token could not be saved (${error.message}); the stored token is now invalid, re-run \`npm run planta:auth <code>\`.`,
+    );
   }
 }

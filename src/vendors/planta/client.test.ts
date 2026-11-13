@@ -802,4 +802,96 @@ describe("Planta client", () => {
     );
     expect(authorizeCalls).toHaveLength(1);
   });
+
+  describe("when another runtime rotated the token after this one loaded it", () => {
+    const jsonResponse = (body: unknown, status = 200) =>
+      new Response(JSON.stringify(body), {
+        status,
+        headers: { "content-type": "application/json" },
+      });
+
+    const mockPlanta = (freshAccessToken: string) =>
+      jest.spyOn(globalThis, "fetch").mockImplementation((input, init) => {
+        const url = String(input);
+        if (url.endsWith("/auth/refreshToken")) {
+          const { refreshToken } = JSON.parse(String(init?.body)) as {
+            refreshToken: string;
+          };
+          return Promise.resolve(
+            refreshToken === "newer-refresh"
+              ? jsonResponse({
+                  data: {
+                    accessToken: freshAccessToken,
+                    refreshToken: "newest-refresh",
+                  },
+                })
+              : jsonResponse(
+                  { errorType: "unauthorized", message: "rotated" },
+                  401,
+                ),
+          );
+        }
+        return Promise.resolve(jsonResponse({ data: [{ id: "p1" }] }));
+      });
+
+    beforeEach(() => {
+      mockEnv.PLANTA_ACCESS_TOKEN = createUnsignedJwt({ exp: 1 });
+      mockEnv.PLANTA_REFRESH_TOKEN = "stale-refresh";
+    });
+
+    it("adopts the newer stored pair instead of failing", async () => {
+      const validAccess = createUnsignedJwt({
+        exp: Math.floor(Date.now() / 1000) + 3600,
+      });
+      const fetchMock = mockPlanta(validAccess);
+      const client = await createPlantaClientFromEnv();
+      mockTokenRow = {
+        access_token: validAccess,
+        refresh_token: "newer-refresh",
+        token_type: "Bearer",
+      };
+
+      await expect(client.getPlants()).resolves.toEqual([{ id: "p1" }]);
+      expect(
+        new Headers(fetchMock.mock.calls.at(-1)?.[1]?.headers).get(
+          "Authorization",
+        ),
+      ).toBe(`Bearer ${validAccess}`);
+    });
+
+    it("rethrows a non-auth refresh failure without consulting the store", async () => {
+      jest
+        .spyOn(globalThis, "fetch")
+        .mockResolvedValue(
+          jsonResponse({ errorType: "server_error", message: "boom" }, 500),
+        );
+      const client = await createPlantaClientFromEnv();
+      mockTokenRow = {
+        access_token: "unused",
+        refresh_token: "newer-refresh",
+        token_type: "Bearer",
+      };
+
+      await expect(client.getPlants()).rejects.toThrow("server_error: boom");
+    });
+
+    it("refreshes the newer stored pair when its access token expired too", async () => {
+      const freshAccess = createUnsignedJwt({
+        exp: Math.floor(Date.now() / 1000) + 3600,
+      });
+      mockPlanta(freshAccess);
+      const client = await createPlantaClientFromEnv();
+      mockTokenRow = {
+        access_token: createUnsignedJwt({ exp: 1 }),
+        refresh_token: "newer-refresh",
+        token_type: "Bearer",
+      };
+
+      await expect(client.getPlants()).resolves.toEqual([{ id: "p1" }]);
+      expect(mockTokenRow).toMatchObject({
+        access_token: freshAccess,
+        refresh_token: "newest-refresh",
+      });
+    });
+  });
 });
