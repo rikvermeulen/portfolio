@@ -68,13 +68,13 @@ describe("getGitLabActivityResult", () => {
     expect(GITLAB_PROFILE_URL).toBe("https://gitlab.com/rikvermeulen97");
   });
 
-  it("treats a response without paging headers as a single page", async () => {
+  it("returns a safe error instead of undercounting without a page count", async () => {
     const fetchMock = jest
       .spyOn(globalThis, "fetch")
       .mockResolvedValueOnce(new Response("[]", { status: 200 }));
 
     await expect(getGitLabActivityResult(TODAY)).resolves.toMatchObject({
-      ok: true,
+      ok: false,
     });
     expect(fetchMock).toHaveBeenCalledTimes(1);
   });

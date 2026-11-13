@@ -36,8 +36,12 @@ export async function fetchGitLabEventPage(
     throw new Error(`GitLab events request failed with ${response.status}`);
   }
 
-  return {
-    events: await response.json(),
-    totalPages: Number(response.headers.get("x-total-pages") ?? 1),
-  };
+  // GitLab drops this header past 10,000 results; paging on a guess would undercount.
+  const pagesHeader = response.headers.get("x-total-pages");
+  const totalPages = Number(pagesHeader);
+  if (pagesHeader === null || !Number.isInteger(totalPages)) {
+    throw new Error("GitLab events response has no page count");
+  }
+
+  return { events: await response.json(), totalPages };
 }

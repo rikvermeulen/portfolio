@@ -76,6 +76,8 @@ const GitLab = ({ sizeKey, breakdown, href }: GitLabProps) => {
   };
 
   const highlight = (share: ContributionShare | null) => {
+    // A pending hover intent must not override a later focus/blur.
+    clearTimeout(intentRef.current);
     const root = rootRef.current;
     if (!root || share?.kind === activeRef.current?.kind) {
       return;
