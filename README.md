@@ -37,7 +37,7 @@ Everything else is optional — tiles whose optional env vars are absent degrade
 ```bash
 npm run spotify:auth    # local OAuth helper → SPOTIFY_REFRESH_TOKEN
 npm run picnic:auth     # interactive Picnic login (SMS 2FA) → PICNIC_AUTH_KEY
-npm run planta:auth     # exchange a Planta app code → PLANTA_* tokens + .planta-tokens.local.json
+npm run planta:auth     # exchange a Planta app code → token row in Supabase (planta_tokens)
 npm run notify:test     # send a test push via ntfy (needs NTFY_TOPIC)
 ```
 
@@ -120,10 +120,12 @@ Go-live checklist:
 
 Known limits on serverless:
 
-- **Planta** rotates its refresh token on every refresh. The rotated token is
-  persisted to `.planta-tokens.local.json` locally, but Vercel's filesystem is
-  read-only, so each cold instance re-seeds from the env token. Once that token
-  has been rotated away, the Plants tile errors until the env vars are re-minted.
+- **Planta** rotates its refresh token on every refresh, so local dev and every
+  Vercel instance share one token row in Supabase (`planta_tokens`, migration in
+  `supabase/migrations/`), written with `SUPABASE_SERVICE_ROLE_KEY`. Env tokens
+  only seed an empty table. If the row's token is ever rejected, re-mint with
+  `npm run planta:auth <code>`. Two instances refreshing at the same instant can
+  still race; the loser's request fails until the next load reads the new row.
 - **Spotify playback** runs the Web Playback SDK in the visitor's browser under
   Rik's Premium account, so `/api/spotify/token` has to hand that account's
   access token to the page. It refuses cross-site callers (`Sec-Fetch-Site`),

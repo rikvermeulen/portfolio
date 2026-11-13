@@ -4,29 +4,25 @@ import type { PlantaTokenSet } from "./types.ts";
 
 import { env } from "@env";
 
+import { createSupabaseAdminClient } from "../supabase/admin.ts";
 import {
-  readPersistedTokens,
-  writePersistedTokens,
-} from "./tokenPersistence.ts";
+  fromPlantaTokenRow,
+  PLANTA_TOKEN_ROW_ID,
+  PLANTA_TOKEN_TABLE,
+  plantaTokenRowSchema,
+  toPlantaTokenRow,
+} from "./tokenRow.ts";
 
 /**
- * Process-level cache of the current Planta token set.
+ * Durable store for the Planta token pair: one Supabase row shared by local
+ * dev and every serverless instance.
  *
  * Planta rotates the refresh token on every refresh and its auth code is
- * single-use, yet tokens previously lived only on the short-lived
- * `PlantaClient` instance. Every cache miss (dev-server restart, the 30-min
- * plants revalidation, a fresh serverless instance) therefore rebuilt a client
- * from env and re-ran the auth waterfall — burning the one-time auth code or
- * replaying an already-rotated refresh token — which quickly gets the account
- * rate-limited/blocked.
- *
- * This module keeps the latest tokens in memory for the lifetime of the server
- * process, seeded from env on first read. The auth code is then exchanged at
- * most once per process and rotated refresh tokens are retained.
+ * single-use, so a token kept per process (or in a file a read-only serverless
+ * filesystem can't write) goes stale as soon as any other runtime refreshes.
+ * Reading the row on every client creation means each refresh starts from the
+ * latest rotation, wherever it happened. Env tokens only seed the first run.
  */
-let cachedTokens: PlantaTokenSet | null = null;
-let seeded = false;
-
 const seedFromEnv = (): PlantaTokenSet | null => {
   const hasAccessToken = Boolean(env.PLANTA_ACCESS_TOKEN);
   const hasRefreshToken = Boolean(env.PLANTA_REFRESH_TOKEN);
@@ -42,24 +38,35 @@ const seedFromEnv = (): PlantaTokenSet | null => {
   };
 };
 
-export const getPlantaTokens = (): PlantaTokenSet | null => {
-  if (!seeded) {
-    // Durable file (freshest rotated token) wins over the possibly-stale env.
-    cachedTokens = readPersistedTokens() ?? seedFromEnv();
-    seeded = true;
+/** The stored token pair, or the env seed when nothing is stored yet. */
+export async function loadPlantaTokens(): Promise<PlantaTokenSet | null> {
+  const { data, error } = await createSupabaseAdminClient()
+    .from(PLANTA_TOKEN_TABLE)
+    .select("access_token, refresh_token, token_type")
+    .eq("id", PLANTA_TOKEN_ROW_ID)
+    .maybeSingle();
+
+  if (error) {
+    throw new Error(`Planta token load failed: ${error.message}`);
   }
 
-  return cachedTokens;
-};
+  const row = plantaTokenRowSchema.nullable().parse(data);
+  return row ? fromPlantaTokenRow(row) : seedFromEnv();
+}
 
-export const setPlantaTokens = (tokens: PlantaTokenSet): void => {
-  cachedTokens = tokens;
-  seeded = true;
-  writePersistedTokens(tokens);
-};
+/**
+ * Persists a (rotated) token pair. Planta has already invalidated the previous
+ * refresh token by now, so a failed save loses the rotation: the stored row is
+ * dead until re-minted. Throws loudly with that recovery step.
+ */
+export async function savePlantaTokens(tokens: PlantaTokenSet): Promise<void> {
+  const { error } = await createSupabaseAdminClient()
+    .from(PLANTA_TOKEN_TABLE)
+    .upsert(toPlantaTokenRow(tokens));
 
-/** Test-only: clears the in-memory cache so env is re-read on next access. */
-export const resetPlantaTokens = (): void => {
-  cachedTokens = null;
-  seeded = false;
-};
+  if (error) {
+    throw new Error(
+      `Rotated Planta token could not be saved (${error.message}); the stored token is now invalid, re-run \`npm run planta:auth <code>\`.`,
+    );
+  }
+}
