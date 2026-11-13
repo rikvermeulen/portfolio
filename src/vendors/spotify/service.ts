@@ -4,22 +4,47 @@ import type { SpotifyPlaybackToken } from "./types.ts";
 import type { SpotifyMusicData } from "@/lib/music/types.ts";
 import type { Result } from "@/types/index.ts";
 
-import { deduplicateByTrackId, toPlaylistTrack } from "@/lib/music/mappers.ts";
+import {
+  deduplicateByTrackId,
+  toMusicPlaylist,
+  toPlaylistTrack,
+} from "@/lib/music/mappers.ts";
 import { env } from "@env";
 
-import { fetchRecentlyPlayed, getPlaybackToken } from "./client.ts";
+import {
+  fetchPlaylist,
+  fetchRecentlyPlayed,
+  getPlaybackToken,
+} from "./client.ts";
 
 export async function getSpotifyMusicResult(): Promise<
   Result<SpotifyMusicData>
 > {
-  const { SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET, SPOTIFY_REFRESH_TOKEN } =
-    env;
+  const {
+    SPOTIFY_CLIENT_ID,
+    SPOTIFY_CLIENT_SECRET,
+    SPOTIFY_REFRESH_TOKEN,
+    SPOTIFY_PLAYLIST_ID,
+  } = env;
 
+  // Playback always needs the user token, also for a playlist.
   if (!SPOTIFY_REFRESH_TOKEN) {
     return { ok: false, errorMessage: "Spotify is not configured" };
   }
 
   try {
+    if (SPOTIFY_PLAYLIST_ID) {
+      const playlist = await fetchPlaylist(
+        SPOTIFY_PLAYLIST_ID,
+        SPOTIFY_CLIENT_ID,
+        SPOTIFY_CLIENT_SECRET,
+      );
+      return {
+        ok: true,
+        data: { kind: "playlist", playlist: toMusicPlaylist(playlist) },
+      };
+    }
+
     const recentlyPlayed = await fetchRecentlyPlayed(
       SPOTIFY_CLIENT_ID,
       SPOTIFY_CLIENT_SECRET,
@@ -34,7 +59,7 @@ export async function getSpotifyMusicResult(): Promise<
       return { ok: false, errorMessage: "No recent tracks found" };
     }
 
-    return { ok: true, data: { tracks } };
+    return { ok: true, data: { kind: "tracks", tracks } };
   } catch (error) {
     // Let Next's dynamic-render signal through instead of logging it as a failure.
     unstable_rethrow(error);

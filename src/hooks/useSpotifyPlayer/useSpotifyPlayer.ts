@@ -7,6 +7,7 @@ import type {
   SpotifyPlayerKind,
   UseSpotifyPlayerReturn,
 } from "./useSpotifyPlayer.types.ts";
+import type { PlaybackTarget } from "@/vendors/spotify/webPlayback.ts";
 
 import { useSharedSpotifyConnection } from "@/contexts/SpotifyConnectionContext/index.ts";
 import {
@@ -15,23 +16,42 @@ import {
   reportDiagnostic,
   resolveDeviceId,
   SPOTIFY_DEVICE_NAME,
-  startPlaybackUris,
+  startPlayback,
 } from "@/vendors/spotify/webPlayback.ts";
 
 const URI_PREFIX: Record<SpotifyPlayerKind, string> = {
   track: "spotify:track:",
   episode: "spotify:episode:",
+  playlist: "spotify:playlist:",
 };
+
+function toPlaybackTarget(
+  kind: SpotifyPlayerKind,
+  items: readonly SpotifyPlayable[],
+  index: number,
+  itemUri: string,
+): PlaybackTarget {
+  if (kind === "playlist") {
+    return { context_uri: itemUri };
+  }
+  return {
+    uris: [...items.slice(index), ...items.slice(0, index)].map(
+      (entry) => `${URI_PREFIX[kind]}${entry.id}`,
+    ),
+  };
+}
 
 /**
  * The single Spotify player for the page's one Web Playback device. `kind`
  * selects the content scheme and how the play payload is built:
- * - `"track"` sends the whole list rotated to start at the selected index, so
- *   the SDK auto-advances the queue;
- * - `"episode"` sends a single episode URI (a `spotify:episode:` `context_uri`
- *   returns 400 "Non supported context uri", verified against the live API).
+ * - `"track"` and `"episode"` send the whole list rotated to start at the
+ *   selected index, so the SDK auto-advances the queue (episodes only play via
+ *   `uris`: as `context_uri` they return 400 "Non supported context uri");
+ * - `"playlist"` plays one playlist (`items[0]`) as a whole via `context_uri`.
+ *   Its tracks can't be listed for a playlist another account owns, so the SDK
+ *   reports what plays (`nowPlaying`) and skips move through the SDK.
  * Everything else — SDK-authoritative play state, follow-on-auto-advance,
- * selection, skip, volume, error handling — is identical across both.
+ * selection, skip, volume, error handling — is identical across all three.
  */
 export function useSpotifyPlayer<T extends SpotifyPlayable>(
   items: readonly T[],
@@ -47,11 +67,19 @@ export function useSpotifyPlayer<T extends SpotifyPlayable>(
   const uriPrefix = URI_PREFIX[kind];
 
   // The SDK's paused state is authoritative — derive rather than track our own.
-  const isMatchingUri = connection.currentUri?.startsWith(uriPrefix) ?? false;
+  // A playlist is "ours" by its context; tracks/episodes by their own URI.
+  const isPlaylist = kind === "playlist";
+  const isMatchingUri = isPlaylist
+    ? connection.contextUri === `${uriPrefix}${items[0]?.id}`
+    : (connection.currentUri?.startsWith(uriPrefix) ?? false);
   const isPlaying = isMatchingUri && !connection.isPaused;
-  const playbackIndex = items.findIndex(
-    (item) => `${uriPrefix}${item.id}` === connection.currentUri,
-  );
+  const playbackIndex = isPlaylist
+    ? isMatchingUri
+      ? 0
+      : -1
+    : items.findIndex(
+        (item) => `${uriPrefix}${item.id}` === connection.currentUri,
+      );
 
   // Follow the SDK's auto-advances so pausing (or skipping while paused)
   // continues from the item that was actually playing. Adjusting state during
@@ -91,19 +119,18 @@ export function useSpotifyPlayer<T extends SpotifyPlayable>(
           connection.deviceId,
           SPOTIFY_DEVICE_NAME,
         )) ?? connection.deviceId;
-      const uris =
-        kind === "track"
-          ? [...items.slice(index), ...items.slice(0, index)].map(
-              (entry) => `${uriPrefix}${entry.id}`,
-            )
-          : [`${uriPrefix}${item.id}`];
+      const itemUri = `${uriPrefix}${item.id}`;
       reportDiagnostic("play-attempt", {
         name: SPOTIFY_DEVICE_NAME,
         cachedId: connection.deviceId,
         resolvedId: deviceId,
-        uri: `${uriPrefix}${item.id}`,
+        uri: itemUri,
       });
-      const resp = await startPlaybackUris(token, deviceId, uris);
+      const resp = await startPlayback(
+        token,
+        deviceId,
+        toPlaybackTarget(kind, items, index, itemUri),
+      );
       reportDiagnostic("play-result", {
         name: SPOTIFY_DEVICE_NAME,
         status: resp.status,
@@ -122,6 +149,10 @@ export function useSpotifyPlayer<T extends SpotifyPlayable>(
       }
       setPlayError(null);
       setSelectedIndex(index);
+    } catch (error) {
+      // Token or device lookup failed (network, token route) — surface, don't reject unhandled.
+      console.warn(`Spotify play failed: ${String(error)}`);
+      setPlayError(PLAYBACK_RETRY_MESSAGE);
     } finally {
       isPendingRef.current = false;
     }
@@ -143,6 +174,13 @@ export function useSpotifyPlayer<T extends SpotifyPlayable>(
   // Skipping only moves the selection unless something is already playing —
   // changing items should never start audio on its own.
   function goToNext() {
+    // A playlist's tracks live in the SDK, so skip there (only once it's loaded).
+    if (isPlaylist) {
+      if (isMatchingUri) {
+        connection.player?.nextTrack();
+      }
+      return;
+    }
     const next = (currentIndex + 1) % items.length;
     if (isPlaying) {
       playAtIndex(next);
@@ -152,6 +190,12 @@ export function useSpotifyPlayer<T extends SpotifyPlayable>(
   }
 
   function goToPrevious() {
+    if (isPlaylist) {
+      if (isMatchingUri) {
+        connection.player?.previousTrack();
+      }
+      return;
+    }
     const previous = (currentIndex - 1 + items.length) % items.length;
     if (isPlaying) {
       playAtIndex(previous);
@@ -169,6 +213,7 @@ export function useSpotifyPlayer<T extends SpotifyPlayable>(
     isPlaying,
     isReady: connection.isReady,
     currentIndex,
+    nowPlaying: isPlaylist && isMatchingUri ? connection.nowPlaying : null,
     volume,
     error: playError ?? connection.error,
     togglePlay,

@@ -43,8 +43,3 @@ export interface PlantaPlant {
   };
   readonly actions?: Partial<Record<PlantaActionType, PlantaActionState>>;
 }
-
-export interface PlantaPaginatedResponse {
-  readonly plants: readonly PlantaPlant[];
-  readonly cursor: string | null;
-}

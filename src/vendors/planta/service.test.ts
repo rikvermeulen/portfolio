@@ -1,74 +1,32 @@
-import { PlantaError, PlantaUnauthorizedError } from "./client.ts";
-import {
-  fetchPlantaPlantsData,
-  getPlantaPlantsResult,
-  toPlantaErrorMessage,
-  toPlantaStatusCode,
-} from "./service.ts";
+import { fetchPlantaPlantsData, getPlantaPlantsResult } from "./service.ts";
 
 jest.mock("next/cache", () => ({
   unstable_cache: (fn: () => Promise<unknown>) => fn,
 }));
 
-jest.mock("./client.ts", () => {
-  return {
-    createPlantaClientFromEnv: jest.fn(),
-    PlantaError: class PlantaError extends Error {
-      public constructor(message: string) {
-        super(message);
-        this.name = "PlantaError";
-      }
-    },
-    PlantaUnauthorizedError: class PlantaUnauthorizedError extends Error {
-      public constructor(message: string) {
-        super(message);
-        this.name = "PlantaUnauthorizedError";
-      }
-    },
-  };
-});
+jest.mock("./client.ts", () => ({
+  createPlantaClientFromEnv: jest.fn(),
+}));
 
 const { createPlantaClientFromEnv } = jest.requireMock("./client.ts") as {
   createPlantaClientFromEnv: jest.Mock;
 };
 
+const mockPlants = (getPlants: jest.Mock) =>
+  createPlantaClientFromEnv.mockReturnValue({ getPlants });
+
 describe("Planta service", () => {
   beforeEach(() => {
     jest.clearAllMocks();
-  });
-
-  it("returns a structured unauthorized result", async () => {
-    createPlantaClientFromEnv.mockReturnValue({
-      getPlants: jest
-        .fn()
-        .mockRejectedValue(
-          new PlantaUnauthorizedError(
-            "You are not authorized to make this request",
-          ),
-        ),
-    });
-
-    await expect(getPlantaPlantsResult()).resolves.toEqual({
-      ok: false,
-      statusCode: 401,
-      errorMessage:
-        "Planta authentication failed. Your refresh token or auth code was rejected by Planta.",
-    });
+    jest.spyOn(console, "error").mockImplementation(() => undefined);
   });
 
   it("returns mapped data on success", async () => {
-    createPlantaClientFromEnv.mockReturnValue({
-      getPlants: jest.fn().mockResolvedValue({
-        plants: [
-          {
-            id: "plant-1",
-            names: {
-              custom: "Monstera",
-            },
-          },
-        ],
-      }),
-    });
+    mockPlants(
+      jest
+        .fn()
+        .mockResolvedValue([{ id: "plant-1", names: { custom: "Monstera" } }]),
+    );
 
     const result = await getPlantaPlantsResult();
 
@@ -78,69 +36,37 @@ describe("Planta service", () => {
     }
   });
 
-  it("keeps explicit Planta errors readable", () => {
-    expect(
-      toPlantaErrorMessage(new PlantaError("Planta request timed out.")),
-    ).toBe("Planta request timed out.");
-  });
-
-  it("returns the fallback string for a plain Error (not a PlantaError)", () => {
-    expect(toPlantaErrorMessage(new Error("network failure"))).toBe(
-      "Unable to load Planta plants right now.",
+  it("caps the dashboard at 6 plants", async () => {
+    mockPlants(
+      jest
+        .fn()
+        .mockResolvedValue(
+          Array.from({ length: 8 }, (_, index) => ({ id: `plant-${index}` })),
+        ),
     );
-  });
-
-  it("returns the fallback string for non-Error values", () => {
-    expect(toPlantaErrorMessage("some string")).toBe(
-      "Unable to load Planta plants right now.",
-    );
-    expect(toPlantaErrorMessage(42)).toBe(
-      "Unable to load Planta plants right now.",
-    );
-  });
-
-  it("returns 401 for PlantaUnauthorizedError", () => {
-    expect(toPlantaStatusCode(new PlantaUnauthorizedError("auth"))).toBe(401);
-  });
-
-  it("returns 500 for a generic PlantaError", () => {
-    expect(toPlantaStatusCode(new PlantaError("boom"))).toBe(500);
-  });
-
-  it("fetchPlantaPlantsData returns rawPlants and plantCards", async () => {
-    createPlantaClientFromEnv.mockReturnValue({
-      getPlants: jest.fn().mockResolvedValue({
-        plants: [{ id: "direct-plant", names: { custom: "DirectPlant" } }],
-      }),
-    });
 
     const data = await fetchPlantaPlantsData();
 
-    expect(data.rawPlants[0]?.id).toBe("direct-plant");
-    expect(data.plantCards[0]?.name).toBe("DirectPlant");
+    expect(data.plantCards).toHaveLength(6);
   });
 
   it("returns ok:false when no plants are configured", async () => {
-    createPlantaClientFromEnv.mockReturnValue({
-      getPlants: jest.fn().mockResolvedValue({ plants: [] }),
-    });
+    mockPlants(jest.fn().mockResolvedValue([]));
 
     await expect(getPlantaPlantsResult()).resolves.toEqual({
       ok: false,
-      statusCode: 500,
       errorMessage: "No Planta plants available right now.",
     });
   });
 
-  it("returns a 500 result when a non-unauthorized error is thrown", async () => {
-    createPlantaClientFromEnv.mockReturnValue({
-      getPlants: jest.fn().mockRejectedValue(new PlantaError("timeout")),
-    });
+  it("logs the upstream error and returns a fixed message", async () => {
+    const error = new Error("unauthorized: token rejected");
+    mockPlants(jest.fn().mockRejectedValue(error));
 
-    await expect(getPlantaPlantsResult()).resolves.toMatchObject({
+    await expect(getPlantaPlantsResult()).resolves.toEqual({
       ok: false,
-      statusCode: 500,
-      errorMessage: "timeout",
+      errorMessage: "Unable to load Planta plants right now.",
     });
+    expect(console.error).toHaveBeenCalledWith("Planta plants failed:", error);
   });
 });

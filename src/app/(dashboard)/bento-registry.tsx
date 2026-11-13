@@ -32,6 +32,7 @@ import {
   Recipes,
   WeatherBadge,
 } from "@/modules/Bentos/index.ts";
+import { remindMe } from "@/modules/Bentos/Plants/Plants.actions.ts";
 import { getPicnicRecipesResult } from "@/vendors/picnic/service.ts";
 import { getPlantaPlantsResult } from "@/vendors/planta/service.ts";
 import { getSpotifyPodcastResult } from "@/vendors/spotify/podcastService.ts";
@@ -71,7 +72,7 @@ function staticTile(
   return { kind: "static", id, sizeKey, render };
 }
 
-/** A full-width section spacer; `anchorId` lets Navigation scroll to it. */
+/** Starts a new section (its own grid); `anchorId` lets Navigation scroll to it. */
 function divider(id: string, anchorId?: string): DividerTile {
   return { kind: "divider", id, anchorId };
 }
@@ -98,7 +99,7 @@ export const bentoRegistry: readonly BentoTile[] = [
     sizeKey: "plants",
     load: getPlantaPlantsResult,
     render: (data, sizeKey) => (
-      <Plants plants={data.plantCards} sizeKey={sizeKey} />
+      <Plants onRemind={remindMe} plants={data.plantCards} sizeKey={sizeKey} />
     ),
   }),
 
@@ -106,7 +107,7 @@ export const bentoRegistry: readonly BentoTile[] = [
     id: "music",
     sizeKey: "music",
     load: getSpotifyMusicResult,
-    render: (data, sizeKey) => <Music sizeKey={sizeKey} tracks={data.tracks} />,
+    render: (data, sizeKey) => <Music sizeKey={sizeKey} source={data} />,
   }),
 
   asyncTile({

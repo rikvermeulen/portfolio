@@ -1,5 +1,7 @@
 import {
   deduplicateByTrackId,
+  toMusicPlaylist,
+  toNowPlayingTrack,
   toPlaylistTrack,
   toPodcastEpisode,
 } from "./mappers.ts";
@@ -42,17 +44,71 @@ describe("deduplicateByTrackId", () => {
 describe("toPodcastEpisode", () => {
   it("maps an episode with its image", () => {
     expect(
-      toPodcastEpisode({
-        id: "e1",
-        name: "Episode 1",
-        images: [{ url: "https://img/ep.jpg" }],
-        explicit: true,
-      }),
+      toPodcastEpisode(
+        {
+          id: "e1",
+          name: "Episode 1",
+          images: [{ url: "https://img/ep.jpg" }],
+          explicit: true,
+          release_date: "2026-10-24",
+        },
+        "Developer Tea",
+      ),
     ).toEqual({
       id: "e1",
       name: "Episode 1",
+      showName: "Developer Tea",
       imageUrl: "https://img/ep.jpg",
       explicit: true,
+    });
+  });
+});
+
+describe("toMusicPlaylist", () => {
+  it("keeps id and name and picks the tile-sized cover", () => {
+    expect(
+      toMusicPlaylist({
+        id: "pl-1",
+        name: "R&B",
+        images: [{ url: "large.jpg" }, { url: "medium.jpg" }],
+      }),
+    ).toEqual({ id: "pl-1", name: "R&B", imageUrl: "large.jpg" });
+  });
+});
+
+describe("toNowPlayingTrack", () => {
+  it("returns null when the SDK reports no track", () => {
+    expect(toNowPlayingTrack(undefined)).toBeNull();
+    expect(toNowPlayingTrack({ name: "No uri" })).toBeNull();
+  });
+
+  it("maps name, first artist, album and cover", () => {
+    expect(
+      toNowPlayingTrack({
+        uri: "spotify:track:1",
+        name: "Song",
+        artists: [{ name: "Artist" }, { name: "Feat" }],
+        album: {
+          name: "Album",
+          images: [{ url: "big.jpg" }, { url: "mid.jpg" }],
+        },
+      }),
+    ).toEqual({
+      uri: "spotify:track:1",
+      name: "Song",
+      artist: "Artist",
+      albumName: "Album",
+      imageUrl: "big.jpg",
+    });
+  });
+
+  it("falls back when optional SDK fields are missing", () => {
+    expect(toNowPlayingTrack({ uri: "spotify:track:1" })).toEqual({
+      uri: "spotify:track:1",
+      name: "",
+      artist: "Unknown artist",
+      albumName: "",
+      imageUrl: null,
     });
   });
 });

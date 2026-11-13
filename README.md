@@ -73,7 +73,7 @@ src/
   vendors/           third-party transport: client + service + wire types per vendor
   lib/               first-party domain code: types, mappers, formatters per domain
   utils/             pure, project-agnostic helpers (no env, no business logic)
-  types/             cross-cutting shared types (Result<T>, StatusResult<T>)
+  types/             cross-cutting shared types (Result<T>)
   styles/ assets/    design-system styles and static assets
 config/              app config consumed by next.config.ts
 scripts/             one-off auth helpers
@@ -130,5 +130,6 @@ Known limits on serverless:
   is never cached, and reuses one token per hour per instance. The token stays
   readable in devtools, and when two visitors press play at once, the last one
   takes over the stream.
-- `/api/planta/remind` is public; it has a per-instance 30-minute cooldown. Add a
-  Vercel Firewall rate-limit rule if pushes still get spammed.
+- The Plants "remind" server action (`Plants.actions.ts`) is publicly callable; it
+  has a per-instance 30-minute cooldown. Add a Vercel Firewall rate-limit rule if
+  pushes still get spammed.

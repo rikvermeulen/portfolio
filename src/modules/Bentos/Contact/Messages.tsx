@@ -25,7 +25,7 @@ function MessageBubble({
   return (
     <div
       className={classnames(
-        "bento-body relative w-fit max-w-55 rounded-3xl px-3 py-2 md:max-w-xs",
+        "bento-body relative w-fit max-w-xs rounded-3xl px-3 py-2",
         styles.bubble,
         className,
       )}
@@ -60,7 +60,7 @@ function DeliveryStatus({ active }: { readonly active: boolean }) {
   return (
     <p
       className={classnames(
-        "bento-body mt-1 self-end text-[10px] text-ds-gray transition-[opacity,transform] duration-200",
+        "bento-body mt-1 self-end text-[length:calc(var(--tile-em)*0.625)] text-ds-gray transition-[opacity,transform] duration-200",
         isVisible ? "scale-100 opacity-100" : "scale-50 opacity-0",
       )}
     >
@@ -81,12 +81,12 @@ function IncomingMessage({
           height={40}
           src={CHAT_SENDER.avatarSrc}
           width={40}
-          className="mt-4 w-8 self-start rounded-full md:w-10"
+          className="mt-4 w-10 self-start rounded-full"
         />
       )}
       <div>
         {!isGrouped && (
-          <p className="bento-body ml-3 text-[10px] text-ds-gray">
+          <p className="bento-body ml-3 text-[length:calc(var(--tile-em)*0.625)] text-ds-gray">
             {CHAT_SENDER.name}
           </p>
         )}

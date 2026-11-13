@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 
-import type { PlantsProps } from "./Plants.types.ts";
+import type { NudgeButtonProps, PlantsProps } from "./Plants.types.ts";
 
 import Bento, { bentos } from "@/components/Bento/index.ts";
 import Drawer from "@/components/Drawer/index.ts";
@@ -18,7 +18,6 @@ import {
   ACTION_TILE,
   HEALTHY_TILE,
   MAX_VISIBLE_PLANTS,
-  NUDGE_ENDPOINT,
   NUDGE_TOAST,
 } from "./Plants.const.ts";
 
@@ -28,7 +27,7 @@ import {
  * notification hiccup must never make the button feel broken, so failures are
  * logged and the toast stays.
  */
-function NudgeButton() {
+function NudgeButton({ onRemind }: NudgeButtonProps) {
   const [pending, setPending] = useState(false);
 
   const nudgeRik = async () => {
@@ -36,9 +35,9 @@ function NudgeButton() {
     notify({ app: "plants", ...NUDGE_TOAST });
 
     try {
-      const response = await fetch(NUDGE_ENDPOINT, { method: "POST" });
-      if (!response.ok) {
-        console.error("Plant nudge failed:", response.status);
+      const { ok } = await onRemind();
+      if (!ok) {
+        console.error("Plant nudge failed");
       }
     } catch (error) {
       console.error("Plant nudge request failed:", error);
@@ -61,7 +60,7 @@ function NudgeButton() {
   );
 }
 
-const Plants = ({ sizeKey, plants }: PlantsProps) => {
+const Plants = ({ sizeKey, plants, onRemind }: PlantsProps) => {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const selected = plants.find((plant) => plant.id === selectedId) ?? null;
 
@@ -133,7 +132,7 @@ const Plants = ({ sizeKey, plants }: PlantsProps) => {
         </ul>
       </div>
 
-      <NudgeButton />
+      <NudgeButton onRemind={onRemind} />
       <Drawer
         description={selected?.scientificName}
         isOpen={selected !== null}

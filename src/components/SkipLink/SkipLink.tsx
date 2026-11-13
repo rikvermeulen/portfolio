@@ -1,3 +1,6 @@
+"use client";
+
+// Client so Button's asChild receives a real <a> element; from a server parent it arrives as an RSC reference and falls back to <button> (hydration mismatch).
 import type { SkipLinkProps } from "./SkipLink.types.ts";
 
 import Button from "@/components/Button/index.ts";

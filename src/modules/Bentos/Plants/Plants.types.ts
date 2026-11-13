@@ -4,7 +4,11 @@ import type { PlantaPlantCardData } from "@/lib/plants/types.ts";
 
 export interface PlantsProps extends BentoSizedProps {
   readonly plants: readonly PlantaPlantCardData[];
+  /** Server action that pushes the due-plants summary to Rik (`Plants.actions.ts`). */
+  readonly onRemind: () => Promise<{ ok: boolean }>;
 }
+
+export type NudgeButtonProps = Pick<PlantsProps, "onRemind">;
 
 export interface PlantDetailProps {
   readonly plant: PlantaPlantCardData;

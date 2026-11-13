@@ -26,11 +26,11 @@ export interface AsyncTile {
   readonly render: () => React.ReactNode;
 }
 
-/** The full-width spacer between the "About me" and "Work" sections. */
+/** Starts a new section (its own grid) in the registry list. */
 export interface DividerTile {
   readonly kind: "divider";
   readonly id: string;
-  /** Optional DOM `id` set on the rendered spacer so Navigation can scroll to it. */
+  /** DOM `id` on the section grid so Navigation can scroll to it. */
   readonly anchorId?: string;
 }
 

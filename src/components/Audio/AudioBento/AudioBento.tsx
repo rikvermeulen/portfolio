@@ -55,16 +55,16 @@ const AudioBento = ({
       {/* Content */}
       <div className="relative z-10 h-full p-5">
         {/* Art */}
-        <div className="flex h-34 w-full items-center justify-center">
+        <div className="flex h-30 w-full items-center justify-center">
           <Image
             alt={display?.alt ?? "No media"}
-            height={124}
+            height={108}
             priority
             src={image}
-            width={124}
+            width={108}
             className={classnames(
               !prefersReducedMotion && (isPlaying ? "pop-up" : "pop-down"),
-              "aspect-square scale-100 rounded-md object-cover drop-shadow-md transition-transform duration-300 ease-in-out",
+              "aspect-square size-27 scale-100 rounded-md object-cover drop-shadow-md transition-transform duration-300 ease-in-out",
             )}
           />
         </div>
@@ -73,7 +73,7 @@ const AudioBento = ({
         <div
           aria-atomic
           aria-live="polite"
-          className="mt-2 flex flex-col text-white"
+          className="mt-2 mb-3 flex flex-col text-white"
         >
           <div className="flex items-center gap-2">
             <p className="bento-headline line-clamp-1">{display?.title}</p>

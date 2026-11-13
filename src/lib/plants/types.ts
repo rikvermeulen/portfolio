@@ -1,5 +1,5 @@
-import type { StatusResult } from "@/types/index.ts";
-import type { PlantaActionType, PlantaPlant } from "@/vendors/planta/types.ts";
+import type { Result } from "@/types/index.ts";
+import type { PlantaActionType } from "@/vendors/planta/types.ts";
 
 /** A plant shaped for the Plants module UI. */
 export interface PlantaPlantCardData {
@@ -15,8 +15,7 @@ export interface PlantaPlantCardData {
 }
 
 export interface PlantaPlantsData {
-  readonly rawPlants: readonly PlantaPlant[];
   readonly plantCards: readonly PlantaPlantCardData[];
 }
 
-export type PlantaPlantsResult = StatusResult<PlantaPlantsData>;
+export type PlantaPlantsResult = Result<PlantaPlantsData>;

@@ -1,49 +1,68 @@
 "use client";
 
 import type { MusicProps } from "./Music.types.ts";
+import type { AudioBentoDisplay } from "@/components/Audio/AudioBento/index.ts";
+import type {
+  MusicPlaylist,
+  NowPlayingTrack,
+  PlaylistTrack,
+} from "@/lib/music/types.ts";
 
-import AudioBento from "@/components/Audio/AudioBento/index.ts";
-import { useSpotifyPlayer } from "@/hooks/useSpotifyPlayer/index.ts";
+import SpotifyAudioBento from "@/components/Audio/SpotifyAudioBento/index.ts";
 
-const Music = ({ sizeKey, tracks }: MusicProps) => {
-  const {
-    isPlaying,
-    currentIndex,
-    volume,
-    error,
-    togglePlay,
-    goToNext,
-    goToPrevious,
-    setVolume,
-  } = useSpotifyPlayer(tracks, "track");
+const SURFACE_CLASS_NAME = "bg-linear-to-b from-ds-music-from to-ds-music-to";
 
-  const track = tracks[currentIndex];
-  const display = track
+const toTrackDisplay = (track: PlaylistTrack): AudioBentoDisplay => ({
+  image: track.albumArtUrl,
+  title: track.name,
+  subtitle: track.artist,
+  alt: track.albumName || "No album",
+  explicit: track.explicit,
+});
+
+/** The playlist's cover until it plays, then the track the player reports. */
+const toPlaylistDisplay = (
+  playlist: MusicPlaylist,
+  nowPlaying: NowPlayingTrack | null,
+): AudioBentoDisplay =>
+  nowPlaying
     ? {
-        image: track.albumArtUrl,
-        title: track.name,
-        subtitle: track.artist,
-        alt: track.albumName || "No album",
-        explicit: track.explicit,
+        image: nowPlaying.imageUrl ?? playlist.imageUrl,
+        title: nowPlaying.name,
+        subtitle: nowPlaying.artist,
+        alt: nowPlaying.albumName || playlist.name,
       }
-    : null;
+    : {
+        image: playlist.imageUrl,
+        title: playlist.name,
+        subtitle: "Playlist",
+        alt: playlist.name,
+      };
+
+function Music({ sizeKey, source }: MusicProps) {
+  if (source.kind === "playlist") {
+    return (
+      <SpotifyAudioBento
+        app="music"
+        items={[source.playlist]}
+        kind="playlist"
+        sizeKey={sizeKey}
+        surfaceClassName={SURFACE_CLASS_NAME}
+        toDisplay={toPlaylistDisplay}
+      />
+    );
+  }
 
   return (
-    <AudioBento
+    <SpotifyAudioBento
       app="music"
-      display={display}
-      isPlaying={isPlaying}
-      onChangeTrack={(direction) =>
-        direction === "next" ? goToNext() : goToPrevious()
-      }
-      onPlayOrPause={togglePlay}
-      onVolumeChange={setVolume}
-      playbackError={error}
+      items={source.tracks}
+      kind="track"
       sizeKey={sizeKey}
-      surfaceClassName="bg-linear-to-b from-ds-music-from to-ds-music-to"
-      volume={volume}
+      surfaceClassName={SURFACE_CLASS_NAME}
+      toDisplay={toTrackDisplay}
     />
   );
-};
+}
 
 export default Music;

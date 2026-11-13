@@ -8,64 +8,64 @@
  */
 export const bentos = {
   contact: {
-    sizes: { base: "4x4", md: "8x4", lg: "6x3" },
+    sizes: { base: "4x4", lg: "6x3" },
     name: "Messages",
     icon: "/images/icons/light/messages.png",
     darkIcon: "/images/icons/dark/messages.png",
   },
   journal: {
-    sizes: { base: "4x4", md: "8x4", lg: "6x3" },
+    sizes: { base: "4x4", lg: "6x3" },
     name: "Journal",
     icon: "/images/icons/light/journal.png",
     darkIcon: "/images/icons/dark/journal.png",
   },
   photos: {
-    sizes: { base: "4x4", md: "4x4", lg: "3x3" },
+    sizes: { base: "4x4", lg: "3x3" },
     name: "Photos",
     icon: "/images/icons/light/photos.png",
     darkIcon: "/images/icons/dark/photos.png",
   },
   plants: {
-    sizes: { base: "4x4", md: "4x4", lg: "3x3" },
+    sizes: { base: "4x4", lg: "3x3" },
     name: "Planta",
     icon: "/images/icons/light/planta.png",
     darkIcon: "/images/icons/dark/planta.png",
   },
   recipes: {
-    sizes: { base: "4x4", md: "4x4", lg: "3x3" },
+    sizes: { base: "4x4", lg: "3x3" },
     name: "Picnic",
     icon: "/images/icons/light/picnic.png",
     darkIcon: "/images/icons/dark/picnic.png",
   },
   category: {
-    sizes: { base: "4x3", md: "4x3", lg: "3x2" },
+    sizes: { base: "4x3", lg: "3x2" },
   },
   information: {
-    sizes: { base: "4x4", md: "4x2", lg: "3x3" },
+    sizes: { base: "4x4", lg: "3x3" },
   },
   image: {
-    sizes: { base: "4x4", md: "4x3", lg: "3x3" },
+    sizes: { base: "4x4", lg: "3x3" },
   },
   findme: {
-    sizes: { base: "4x4", md: "4x3", lg: "3x3" },
+    sizes: { base: "4x4", lg: "3x3" },
     name: "Find Me",
     icon: "/images/icons/light/findme.png",
     darkIcon: "/images/icons/dark/findme.png",
   },
   music: {
-    sizes: { base: "4x4", md: "4x4", lg: "3x3" },
+    sizes: { base: "4x4", lg: "3x3" },
     name: "Music",
     icon: "/images/icons/light/music.png",
     darkIcon: "/images/icons/dark/music.png",
   },
   podcast: {
-    sizes: { base: "4x4", md: "4x4", lg: "3x3" },
+    sizes: { base: "4x4", lg: "3x3" },
     name: "Podcasts",
     icon: "/images/icons/light/podcast.png",
     darkIcon: "/images/icons/dark/podcast.png",
   },
   games: {
-    sizes: { base: "4x4", md: "4x4", lg: "3x3" },
+    sizes: { base: "4x4", lg: "3x3" },
     name: "Steam",
     icon: "/images/icons/light/games.png",
     darkIcon: "/images/icons/dark/games.png",

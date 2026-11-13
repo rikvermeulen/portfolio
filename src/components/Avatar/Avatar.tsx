@@ -15,7 +15,7 @@ const SHAPE = {
 /**
  * Avatar — a square image that degrades to the name's initial when no source is
  * given or the image fails to load. Theme-aware (works on light or dark
- * surfaces) and sized in pixels so it stays crisp with `next/image`.
+ * surfaces). Sized in tile em so it zooms with its bento tile.
  */
 export default function Avatar({
   name,
@@ -26,10 +26,12 @@ export default function Avatar({
 }: AvatarProps) {
   const [failed, setFailed] = useState(false);
   const showImage = Boolean(src) && !failed;
+  // `size` is px at a 16px tile em, so the avatar zooms with its bento tile.
+  const edge = `calc(var(--tile-em) * ${size / 16})`;
 
   return (
     <span
-      style={{ width: size, height: size }}
+      style={{ width: edge, height: edge }}
       className={classnames(
         "[container-type:size] relative inline-flex shrink-0 items-center justify-center overflow-hidden bg-black/6 ring-1 ring-black/10 dark:bg-white/10 dark:ring-white/15",
         SHAPE[shape],

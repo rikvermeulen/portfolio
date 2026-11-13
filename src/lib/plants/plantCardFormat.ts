@@ -1,4 +1,5 @@
 import type { PlantaPlantCardData } from "./types.ts";
+import type { DuePlant } from "@/lib/notifications/index.ts";
 import type { PlantaActionType } from "@/vendors/planta/types.ts";
 
 import { actionLabels } from "./selectors.ts";
@@ -106,3 +107,18 @@ export const getPlantaCardStatuses = (
 
   return statuses;
 };
+
+/** Plants with care due right now, each with its lowercase action labels ("watering"). */
+export const getDuePlants = (
+  plants: readonly PlantaPlantCardData[],
+): readonly DuePlant[] =>
+  plants
+    .map((plant) => ({
+      name: plant.name,
+      actions: getPlantaCardStatuses(plant).flatMap((status) =>
+        status.state === "due" && status.actionType
+          ? [actionLabels[status.actionType].toLowerCase()]
+          : [],
+      ),
+    }))
+    .filter((plant) => plant.actions.length > 0);

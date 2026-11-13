@@ -10,7 +10,7 @@ import {
   reportDiagnostic,
   reportEnvironmentDiagnostics,
   resolveDeviceId,
-  startPlaybackUris,
+  startPlayback,
   WEB_PLAYBACK_SDK_SRC,
 } from "./webPlayback.ts";
 
@@ -137,9 +137,9 @@ describe("loadWebPlaybackSdk mock seam (?spotify-mock)", () => {
       })),
     });
 
-    const playResponse = await startPlaybackUris("tok", "mock-device", [
-      "spotify:track:track-1",
-    ]);
+    const playResponse = await startPlayback("tok", "mock-device", {
+      uris: ["spotify:track:track-1"],
+    });
     expect(playResponse.status).toBe(204);
     expect(global.fetch).not.toHaveBeenCalled();
     expect(stateChanged).toHaveBeenLastCalledWith(
@@ -168,8 +168,74 @@ describe("loadWebPlaybackSdk mock seam (?spotify-mock)", () => {
     expect(player.disconnect()).toBeUndefined();
 
     await expect(
-      startPlaybackUris("tok", "mock-device", []),
+      startPlayback("tok", "mock-device", { uris: [] }),
     ).resolves.toHaveProperty("status", 204);
+  });
+
+  it("simulates a playlist context: reports its track and skips through it", async () => {
+    window.history.replaceState(null, "", "/?spotify-mock");
+    await loadWebPlaybackSdk();
+    const SpotifyPlayer = window.Spotify?.Player;
+    if (!SpotifyPlayer) {
+      throw new Error("mock SDK was not installed");
+    }
+    const player = new SpotifyPlayer({
+      name: "Playlist Tile",
+      getOAuthToken: () => undefined,
+      volume: 0.5,
+    });
+    Object.defineProperty(globalThis, "Response", {
+      configurable: true,
+      value: jest.fn((_body, init: { status: number }) => ({
+        ok: init.status >= 200 && init.status < 300,
+        status: init.status,
+      })),
+    });
+    const stateChanged = jest.fn();
+    player.addListener("player_state_changed", stateChanged);
+
+    await startPlayback("tok", "mock-device", {
+      context_uri: "spotify:playlist:pl-1",
+    });
+    expect(stateChanged).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        context: { uri: "spotify:playlist:pl-1" },
+        track_window: {
+          current_track: expect.objectContaining({
+            uri: "spotify:track:mock-playlist-1",
+            name: "Playlist track 1",
+          }),
+        },
+      }),
+    );
+
+    await player.nextTrack();
+    expect(stateChanged).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        track_window: {
+          current_track: expect.objectContaining({ name: "Playlist track 2" }),
+        },
+      }),
+    );
+    await player.previousTrack();
+    await player.previousTrack(); // never below the first track
+    expect(stateChanged).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        track_window: {
+          current_track: expect.objectContaining({ name: "Playlist track 1" }),
+        },
+      }),
+    );
+
+    // Outside a playlist there's nothing to skip to; state just re-emits.
+    await startPlayback("tok", "mock-device", { uris: ["spotify:track:t1"] });
+    await player.nextTrack();
+    expect(stateChanged).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        context: { uri: null },
+        track_window: { current_track: { uri: "spotify:track:t1" } },
+      }),
+    );
   });
 
   it("injects the real script when the flag is absent", async () => {
@@ -355,7 +421,7 @@ describe("resolveDeviceId", () => {
   });
 });
 
-describe("startPlaybackUris", () => {
+describe("startPlayback", () => {
   const transferUrl = "https://api.spotify.com/v1/me/player";
   const playUrl = "https://api.spotify.com/v1/me/player/play?device_id=dev-1";
 
@@ -363,7 +429,9 @@ describe("startPlaybackUris", () => {
     const fetchSpy = jest.fn().mockResolvedValue({ ok: true, status: 204 });
     global.fetch = fetchSpy as typeof global.fetch;
 
-    const resp = await startPlaybackUris("tok", "dev-1", ["spotify:track:123"]);
+    const resp = await startPlayback("tok", "dev-1", {
+      uris: ["spotify:track:123"],
+    });
 
     // 1) Transfer to activate the freshly-registered SDK device.
     expect(fetchSpy).toHaveBeenNthCalledWith(
@@ -402,10 +470,10 @@ describe("startPlaybackUris", () => {
     });
     global.fetch = fetchSpy as typeof global.fetch;
 
-    const resp = await startPlaybackUris(
+    const resp = await startPlayback(
       "tok",
       "dev-1",
-      ["spotify:track:123"],
+      { uris: ["spotify:track:123"] },
       [0, 1],
     );
 
@@ -418,10 +486,10 @@ describe("startPlaybackUris", () => {
       .fn()
       .mockResolvedValue({ ok: false, status: 404 }) as typeof global.fetch;
 
-    const resp = await startPlaybackUris(
+    const resp = await startPlayback(
       "tok",
       "dev-1",
-      ["spotify:track:123"],
+      { uris: ["spotify:track:123"] },
       [0, 0],
     );
 
@@ -437,7 +505,9 @@ describe("startPlaybackUris", () => {
     });
     global.fetch = fetchSpy as typeof global.fetch;
 
-    const resp = await startPlaybackUris("tok", "dev-1", ["spotify:track:123"]);
+    const resp = await startPlayback("tok", "dev-1", {
+      uris: ["spotify:track:123"],
+    });
 
     expect(resp.status).toBe(204);
   });

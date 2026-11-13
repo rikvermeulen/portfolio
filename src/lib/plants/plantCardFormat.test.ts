@@ -2,6 +2,7 @@ import type { PlantaPlantCardData } from "./types.ts";
 
 import {
   formatPlantaDueText,
+  getDuePlants,
   getPlantaCardStatuses,
   isPlantaHappyHealth,
 } from "./plantCardFormat.ts";
@@ -113,5 +114,16 @@ describe("getPlantaCardStatuses", () => {
     expect(getPlantaCardStatuses(card({ health: "steady" }))).toEqual([
       { state: "healthy", label: "All done" },
     ]);
+  });
+});
+
+describe("getDuePlants", () => {
+  it("keeps only plants with care due, with lowercase action labels", () => {
+    expect(
+      getDuePlants([
+        card({ dueCareActionTypes: ["misting", "watering"] }),
+        card({ id: "plant-2", name: "Ficus", nextActionType: "watering" }),
+      ]),
+    ).toEqual([{ name: "Monstera", actions: ["water", "mist"] }]);
   });
 });

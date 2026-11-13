@@ -4,6 +4,7 @@ import {
 } from "./service.ts";
 
 jest.mock("./client.ts", () => ({
+  fetchPlaylist: jest.fn(),
   fetchRecentlyPlayed: jest.fn(),
   getPlaybackToken: jest.fn(),
 }));
@@ -12,6 +13,7 @@ const mockEnv = {
   SPOTIFY_CLIENT_ID: "client-id",
   SPOTIFY_CLIENT_SECRET: "client-secret",
   SPOTIFY_REFRESH_TOKEN: undefined as string | undefined,
+  SPOTIFY_PLAYLIST_ID: undefined as string | undefined,
 };
 
 jest.mock("@env", () => ({
@@ -20,12 +22,12 @@ jest.mock("@env", () => ({
   },
 }));
 
-const { fetchRecentlyPlayed, getPlaybackToken } = jest.requireMock(
-  "./client.ts",
-) as {
-  fetchRecentlyPlayed: jest.Mock;
-  getPlaybackToken: jest.Mock;
-};
+const { fetchPlaylist, fetchRecentlyPlayed, getPlaybackToken } =
+  jest.requireMock("./client.ts") as {
+    fetchPlaylist: jest.Mock;
+    fetchRecentlyPlayed: jest.Mock;
+    getPlaybackToken: jest.Mock;
+  };
 
 const makeItem = (id: string, name = "Track") => ({
   track: {
@@ -48,6 +50,45 @@ describe("getSpotifyMusicResult", () => {
   beforeEach(() => {
     jest.clearAllMocks();
     mockEnv.SPOTIFY_REFRESH_TOKEN = "refresh-token";
+    mockEnv.SPOTIFY_PLAYLIST_ID = undefined;
+  });
+
+  it("returns the playlist instead of recently played when SPOTIFY_PLAYLIST_ID is set", async () => {
+    mockEnv.SPOTIFY_PLAYLIST_ID = "pl-1";
+    fetchPlaylist.mockResolvedValue({
+      id: "pl-1",
+      name: "R&B",
+      images: [{ url: "https://img.example.com/cover.jpg" }],
+    });
+
+    await expect(getSpotifyMusicResult()).resolves.toEqual({
+      ok: true,
+      data: {
+        kind: "playlist",
+        playlist: {
+          id: "pl-1",
+          name: "R&B",
+          imageUrl: "https://img.example.com/cover.jpg",
+        },
+      },
+    });
+    expect(fetchPlaylist).toHaveBeenCalledWith(
+      "pl-1",
+      "client-id",
+      "client-secret",
+    );
+    expect(fetchRecentlyPlayed).not.toHaveBeenCalled();
+  });
+
+  it("returns ok:false when the playlist fetch throws", async () => {
+    jest.spyOn(console, "error").mockImplementation(() => undefined);
+    mockEnv.SPOTIFY_PLAYLIST_ID = "pl-1";
+    fetchPlaylist.mockRejectedValue(new Error("404"));
+
+    await expect(getSpotifyMusicResult()).resolves.toEqual({
+      ok: false,
+      errorMessage: "Could not load your music right now",
+    });
   });
 
   it("returns ok:false when SPOTIFY_REFRESH_TOKEN is not set", async () => {
@@ -68,11 +109,11 @@ describe("getSpotifyMusicResult", () => {
     const result = await getSpotifyMusicResult();
 
     expect(result.ok).toBe(true);
-    if (result.ok) {
+    if (result.ok && result.data.kind === "tracks") {
       expect(result.data.tracks[0]?.id).toBe("track-1");
       expect(result.data.tracks[0]?.name).toBe("Night Owl");
       expect(result.data.tracks[0]?.albumArtUrl).toBe(
-        "https://img.example.com/2.jpg",
+        "https://img.example.com/1.jpg",
       );
     }
   });
@@ -94,7 +135,7 @@ describe("getSpotifyMusicResult", () => {
     });
 
     const result = await getSpotifyMusicResult();
-    if (result.ok) {
+    if (result.ok && result.data.kind === "tracks") {
       expect(result.data.tracks[0]?.albumArtUrl).toBe(
         "https://img.example.com/only.jpg",
       );
@@ -109,7 +150,7 @@ describe("getSpotifyMusicResult", () => {
     const result = await getSpotifyMusicResult();
 
     expect(result.ok).toBe(true);
-    if (result.ok) {
+    if (result.ok && result.data.kind === "tracks") {
       expect(result.data.tracks).toHaveLength(2);
     }
   });
@@ -122,7 +163,7 @@ describe("getSpotifyMusicResult", () => {
     });
 
     const result = await getSpotifyMusicResult();
-    if (result.ok) {
+    if (result.ok && result.data.kind === "tracks") {
       expect(result.data.tracks[0]?.artist).toBe("Unknown artist");
     }
   });
@@ -150,7 +191,7 @@ describe("getSpotifyMusicResult", () => {
     });
 
     const result = await getSpotifyMusicResult();
-    if (result.ok) {
+    if (result.ok && result.data.kind === "tracks") {
       expect(result.data.tracks[0]?.albumArtUrl).toBeNull();
     }
   });

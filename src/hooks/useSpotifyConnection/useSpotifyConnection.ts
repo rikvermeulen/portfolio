@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import type { SpotifyConnection } from "./useSpotifyConnection.types.ts";
+import type { NowPlayingTrack } from "@/lib/music/types.ts";
 import type {
   SpotifyPlayer,
   WebPlaybackDevice,
@@ -10,6 +11,7 @@ import type {
   WebPlaybackState,
 } from "@/vendors/spotify/webPlayback.ts";
 
+import { toNowPlayingTrack } from "@/lib/music/mappers.ts";
 import {
   fetchAccessToken,
   loadWebPlaybackSdk,
@@ -34,7 +36,8 @@ export function useSpotifyConnection(
 ): SpotifyConnection {
   const [deviceId, setDeviceId] = useState<string | null>(null);
   const [isPaused, setIsPaused] = useState(true);
-  const [currentUri, setCurrentUri] = useState<string | null>(null);
+  const [nowPlaying, setNowPlaying] = useState<NowPlayingTrack | null>(null);
+  const [contextUri, setContextUri] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [player, setPlayer] = useState<SpotifyPlayer | null>(null);
   // Cache the token with its expiry so REST callers never use a stale one.
@@ -58,11 +61,6 @@ export function useSpotifyConnection(
     return fetchFreshToken();
   }, [fetchFreshToken]);
 
-  // Stable (useCallback), captured in a ref so the connect effect stays keyed
-  // only to [name, enabled] and never reconnects the player on unrelated
-  // re-renders.
-  const fetchFreshTokenRef = useRef(fetchFreshToken);
-
   useEffect(() => {
     if (!enabled) {
       return;
@@ -74,7 +72,7 @@ export function useSpotifyConnection(
     const init = async () => {
       reportDiagnostic("init-start", { name });
       reportEnvironmentDiagnostics();
-      await fetchFreshTokenRef.current();
+      await fetchFreshToken();
       await loadWebPlaybackSdk();
       reportDiagnostic("sdk-loaded", { name, hasSpotify: !!window.Spotify });
       if (cancelled || !window.Spotify) {
@@ -84,7 +82,9 @@ export function useSpotifyConnection(
       player = new window.Spotify.Player({
         name,
         getOAuthToken: (cb) => {
-          fetchFreshTokenRef.current().then(cb);
+          fetchFreshToken().then(cb, (error_: unknown) => {
+            console.warn(`Spotify token refresh failed: ${String(error_)}`);
+          });
         },
         volume: 0.5,
       });
@@ -107,7 +107,10 @@ export function useSpotifyConnection(
         }
         const playbackState = state as WebPlaybackState;
         setIsPaused(playbackState.paused);
-        setCurrentUri(playbackState.track_window?.current_track?.uri ?? null);
+        setNowPlaying(
+          toNowPlayingTrack(playbackState.track_window?.current_track),
+        );
+        setContextUri(playbackState.context?.uri ?? null);
       });
       player.addListener("autoplay_failed", () => {
         console.warn("Spotify autoplay failed: user gesture required");
@@ -157,7 +160,7 @@ export function useSpotifyConnection(
       cancelled = true;
       player?.disconnect();
     };
-  }, [name, enabled]);
+  }, [name, enabled, fetchFreshToken]); // fetchFreshToken is stable (useCallback [])
 
   const activate = useCallback(() => {
     playerRef.current?.activateElement();
@@ -167,7 +170,9 @@ export function useSpotifyConnection(
     deviceId,
     isReady: deviceId !== null,
     isPaused,
-    currentUri,
+    currentUri: nowPlaying?.uri ?? null,
+    contextUri,
+    nowPlaying,
     error,
     player,
     getValidToken,

@@ -26,6 +26,8 @@ export const env = createEnv({
     SPOTIFY_CLIENT_SECRET: z.string().min(1),
     SPOTIFY_REFRESH_TOKEN: z.string().optional(),
     SPOTIFY_MARKET: z.string().optional(),
+    SPOTIFY_PLAYLIST_ID: z.string().optional(),
+    SPOTIFY_PODCAST_SHOW_IDS: z.string().optional(),
 
     // Planta
     PLANTA_AUTH_CODE: z.string().optional(),
@@ -79,6 +81,8 @@ export const env = createEnv({
     SPOTIFY_CLIENT_SECRET: process.env.SPOTIFY_CLIENT_SECRET,
     SPOTIFY_REFRESH_TOKEN: process.env.SPOTIFY_REFRESH_TOKEN,
     SPOTIFY_MARKET: process.env.SPOTIFY_MARKET,
+    SPOTIFY_PLAYLIST_ID: process.env.SPOTIFY_PLAYLIST_ID,
+    SPOTIFY_PODCAST_SHOW_IDS: process.env.SPOTIFY_PODCAST_SHOW_IDS,
     PLANTA_AUTH_CODE: process.env.PLANTA_AUTH_CODE,
     PLANTA_ACCESS_TOKEN: process.env.PLANTA_ACCESS_TOKEN,
     PLANTA_REFRESH_TOKEN: process.env.PLANTA_REFRESH_TOKEN,

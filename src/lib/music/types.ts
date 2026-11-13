@@ -15,13 +15,31 @@ export interface PlaylistTrack {
 export interface PodcastEpisode {
   readonly id: string;
   readonly name: string;
+  readonly showName: string;
   readonly imageUrl: string | null;
   readonly explicit: boolean;
 }
 
-export interface SpotifyMusicData {
-  readonly tracks: readonly PlaylistTrack[];
+/** The track the browser player reports as playing (e.g. inside a playlist). */
+export interface NowPlayingTrack {
+  readonly uri: string;
+  readonly name: string;
+  readonly artist: string;
+  readonly albumName: string;
+  readonly imageUrl: string | null;
 }
+
+/** A playlist played as a whole (its track list isn't readable for other owners). */
+export interface MusicPlaylist {
+  readonly id: string;
+  readonly name: string;
+  readonly imageUrl: string | null;
+}
+
+/** What the Music tile plays: recently played tracks, or one playlist. */
+export type SpotifyMusicData =
+  | { readonly kind: "tracks"; readonly tracks: readonly PlaylistTrack[] }
+  | { readonly kind: "playlist"; readonly playlist: MusicPlaylist };
 
 export interface PodcastData {
   readonly episodes: readonly PodcastEpisode[];

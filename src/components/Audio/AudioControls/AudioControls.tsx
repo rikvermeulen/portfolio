@@ -13,14 +13,14 @@ const AudioControls = ({
   onChangeTrack,
 }: AudioControlsProps) => {
   return (
-    <div className="m-auto flex w-full max-w-[184px] items-center justify-between">
+    <div className="m-auto flex w-full max-w-[calc(var(--tile-em)*11.5)] items-center justify-between">
       <button
         aria-label="Previous song"
         onClick={() => onChangeTrack("previous")}
         type="button"
         className="relative cursor-pointer border-none fill-white outline-hidden"
       >
-        <SkipIcon className="relative -top-1 size-[22px]" />
+        <SkipIcon className="relative -top-1 size-[calc(var(--tile-em)*1.375)]" />
       </button>
 
       <button
@@ -59,7 +59,7 @@ const AudioControls = ({
         type="button"
         className="-scale-x-100 cursor-pointer border-none fill-white outline-hidden"
       >
-        <SkipIcon className="relative -top-1 size-[22px]" />
+        <SkipIcon className="relative -top-1 size-[calc(var(--tile-em)*1.375)]" />
       </button>
     </div>
   );
