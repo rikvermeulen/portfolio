@@ -22,6 +22,7 @@ import {
   Contact,
   FindMe,
   Games,
+  GitLab,
   Image,
   Information,
   Journal,
@@ -33,6 +34,8 @@ import {
   WeatherBadge,
 } from "@/modules/Bentos/index.ts";
 import { remindMe } from "@/modules/Bentos/Plants/Plants.actions.ts";
+import { GITLAB_PROFILE_URL } from "@/vendors/gitlab/client.ts";
+import { getGitLabActivityResult } from "@/vendors/gitlab/service.ts";
 import { getPicnicRecipesResult } from "@/vendors/picnic/service.ts";
 import { getPlantaPlantsResult } from "@/vendors/planta/service.ts";
 import { getSpotifyPodcastResult } from "@/vendors/spotify/podcastService.ts";
@@ -163,6 +166,19 @@ export const bentoRegistry: readonly BentoTile[] = [
   staticTile("image", "image", (sizeKey) => (
     <Image sizeKey={sizeKey} {...imageContent.work} />
   )),
+
+  asyncTile({
+    id: "gitlab",
+    sizeKey: "gitlab",
+    load: getGitLabActivityResult,
+    render: (breakdown, sizeKey) => (
+      <GitLab
+        breakdown={breakdown}
+        href={GITLAB_PROFILE_URL}
+        sizeKey={sizeKey}
+      />
+    ),
+  }),
 
   divider("section-break-education", "education"),
 
