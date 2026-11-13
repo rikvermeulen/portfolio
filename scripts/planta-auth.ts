@@ -4,7 +4,12 @@ import { stdout as output } from "node:process";
 
 import { config } from "dotenv";
 
-import { writePersistedTokens } from "../src/vendors/planta/tokenPersistence.ts";
+import { createClient } from "@supabase/supabase-js";
+
+import {
+  PLANTA_TOKEN_TABLE,
+  toPlantaTokenRow,
+} from "../src/vendors/planta/tokenRow.ts";
 
 config({ path: new URL("../.env.local", import.meta.url).pathname });
 config({ path: new URL("../.env", import.meta.url).pathname });
@@ -24,6 +29,13 @@ interface PlantaTokenResponse {
 const main = async () => {
   // Accept the code from the CLI (`npm run planta:auth <code>`) or env.
   const code = (process.argv[2] ?? process.env.PLANTA_AUTH_CODE ?? "").trim();
+  const { SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY } = process.env;
+
+  if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
+    throw new Error(
+      "Set SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY in .env: the tokens are stored in Supabase.",
+    );
+  }
 
   if (!code) {
     throw new Error(
@@ -55,24 +67,31 @@ const main = async () => {
 
   const { accessToken, refreshToken, tokenType } = payload.data;
 
-  // Seed the durable token cache so the app uses these immediately and
-  // overwrites any stale (rotated-out) token left over from a previous run.
-  writePersistedTokens({
-    accessToken,
-    refreshToken,
-    tokenType: tokenType ?? "Bearer",
-  });
+  // Overwrite the shared token row: local dev and every Vercel instance read
+  // it, so a stale (rotated-out) token from a previous run can't come back.
+  const { error } = await createClient(
+    SUPABASE_URL,
+    SUPABASE_SERVICE_ROLE_KEY,
+    {
+      auth: { persistSession: false },
+    },
+  )
+    .from(PLANTA_TOKEN_TABLE)
+    .upsert(
+      toPlantaTokenRow({
+        accessToken,
+        refreshToken,
+        tokenType: tokenType ?? "Bearer",
+      }),
+    );
+
+  if (error) {
+    throw new Error(`Could not store the tokens in Supabase: ${error.message}`);
+  }
 
   output.write(
-    "\nSuccess — wrote .planta-tokens.local.json (the durable cache the app reads).\n",
-  );
-  output.write("As a backup you can also set these in .env:\n\n");
-  output.write(`PLANTA_ACCESS_TOKEN="${accessToken}"\n`);
-  output.write(`PLANTA_REFRESH_TOKEN="${refreshToken ?? ""}"\n`);
-  output.write(`PLANTA_TOKEN_TYPE="${tokenType ?? "Bearer"}"\n\n`);
-  output.write(
-    "Rotated refresh tokens are now written back to that file, so a dev-server " +
-      "restart no longer resurrects a dead token. Restart the dev server to pick this up.\n",
+    `\nSuccess: stored the Planta tokens in Supabase (${PLANTA_TOKEN_TABLE}).\n` +
+      "Local dev and Vercel both pick them up on their next plants load.\n",
   );
 };
 

@@ -13,7 +13,7 @@ const { createPlantaClientFromEnv } = jest.requireMock("./client.ts") as {
 };
 
 const mockPlants = (getPlants: jest.Mock) =>
-  createPlantaClientFromEnv.mockReturnValue({ getPlants });
+  createPlantaClientFromEnv.mockResolvedValue({ getPlants });
 
 describe("Planta service", () => {
   beforeEach(() => {

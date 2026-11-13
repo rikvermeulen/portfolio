@@ -5,7 +5,7 @@ import type { PlantaPlant, PlantaTokenSet } from "./types.ts";
 import { env } from "@env";
 
 import { isAccessTokenValid } from "./auth.ts";
-import { getPlantaTokens, setPlantaTokens } from "./tokenStore.ts";
+import { loadPlantaTokens, savePlantaTokens } from "./tokenStore.ts";
 
 const API_V1_ENDPOINT = "https://public.planta-api.com/v1";
 
@@ -40,13 +40,13 @@ export class PlantaUnauthorizedError extends PlantaError {
 interface PlantaClientOptions {
   readonly tokens?: PlantaTokenSet;
   readonly authCode?: string;
-  readonly onTokensChanged?: (tokens: PlantaTokenSet) => void;
+  readonly onTokensChanged?: (tokens: PlantaTokenSet) => Promise<void>;
 }
 
 export class PlantaClient {
   private tokens: PlantaTokenSet | null;
   private readonly authCode?: string;
-  private readonly onTokensChanged?: (tokens: PlantaTokenSet) => void;
+  private readonly onTokensChanged?: (tokens: PlantaTokenSet) => Promise<void>;
 
   public constructor(options: PlantaClientOptions) {
     this.tokens = options.tokens ?? null;
@@ -54,9 +54,9 @@ export class PlantaClient {
     this.onTokensChanged = options.onTokensChanged;
   }
 
-  private setTokens(tokens: PlantaTokenSet): void {
+  private async setTokens(tokens: PlantaTokenSet): Promise<void> {
     this.tokens = tokens;
-    this.onTokensChanged?.(tokens);
+    await this.onTokensChanged?.(tokens);
   }
 
   /** First page of the user's plants (the dashboard only shows a handful). */
@@ -111,7 +111,7 @@ export class PlantaClient {
       );
     }
 
-    this.setTokens({
+    await this.setTokens({
       accessToken: result.data.accessToken,
       refreshToken: result.data.refreshToken,
       tokenType: result.data.tokenType ?? "Bearer",
@@ -140,7 +140,7 @@ export class PlantaClient {
       );
     }
 
-    this.setTokens({
+    await this.setTokens({
       accessToken: result.data.accessToken,
       refreshToken: result.data.refreshToken ?? this.tokens.refreshToken,
       tokenType: result.data.tokenType ?? this.tokens.tokenType ?? "Bearer",
@@ -250,10 +250,10 @@ export class PlantaClient {
   }
 }
 
-export const createPlantaClientFromEnv = (): PlantaClient => {
+export const createPlantaClientFromEnv = async (): Promise<PlantaClient> => {
   return new PlantaClient({
-    tokens: getPlantaTokens() ?? undefined,
+    tokens: (await loadPlantaTokens()) ?? undefined,
     authCode: env.PLANTA_AUTH_CODE,
-    onTokensChanged: setPlantaTokens,
+    onTokensChanged: savePlantaTokens,
   });
 };
