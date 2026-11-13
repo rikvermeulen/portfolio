@@ -8,7 +8,7 @@ import { GLASS_DEFAULTS } from "@/lib/glass/displacementMap.ts";
 import classnames from "@/utils/classnames/index.ts";
 
 import {
-  GLOW_SHADOW,
+  glowStyle,
   hotspotStyle,
   illuminateStyle,
   rimStyle,
@@ -76,7 +76,6 @@ const Glass = ({
 
   const rootStyle: React.CSSProperties = {
     borderRadius: radius,
-    boxShadow: GLOW_SHADOW,
     backdropFilter,
     WebkitBackdropFilter: backdropFilter,
     // Gentle squish on press, like the native material compressing under touch.
@@ -124,6 +123,7 @@ const Glass = ({
           />
         </>
       )}
+      <span style={glowStyle(radius)} className="absolute inset-0" />
       <span style={rimStyle(radius)} className="absolute inset-0" />
     </div>
   );
