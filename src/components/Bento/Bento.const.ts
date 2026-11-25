@@ -70,6 +70,12 @@ export const bentos = {
     icon: "/images/icons/light/games.png",
     darkIcon: "/images/icons/dark/games.png",
   },
+  gitlab: {
+    sizes: { base: "4x4", lg: "3x3" },
+    name: "GitLab",
+    icon: "/images/icons/light/gitlab.png",
+    darkIcon: "/images/icons/dark/gitlab.png",
+  },
   greenberry: {
     name: "Greenberry",
     icon: "/images/icons/light/greenberry.png",

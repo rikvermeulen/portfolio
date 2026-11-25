@@ -13,6 +13,9 @@
   --radius-card: 1rem; /* 16px — cards nested inside a tile */
   --radius-tile: 1.75rem; /* 28px — bento tiles */
 
+  /* iOS-style deceleration: quick to respond, long soft settle (`ease-fluid`). */
+  --ease-fluid: cubic-bezier(0.32, 0.72, 0, 1);
+
   /* ── Neutrals & surfaces (light / dark) ───────────────────── */
   --color-ds-surface: #ebeceb;
   --color-ds-surface-dark: #1c1c1e;

@@ -48,6 +48,9 @@ export const env = createEnv({
     STEAM_API_KEY: z.string().optional(),
     STEAM_ID: z.string().optional(),
 
+    // GitLab: fine-grained PAT with User → Event → Read (contribution calendar)
+    GITLAB_TOKEN: z.string().optional(),
+
     // Other gaming profiles (links visitors can add / follow)
     XBOX_API_KEY: z.string().optional(), // OpenXBL (xbl.io) key — enables real Xbox data
     XBOX_GAMERTAG: z.string().optional(),
@@ -98,6 +101,7 @@ export const env = createEnv({
     PICNIC_AUTH_ADMIN_SECRET: process.env.PICNIC_AUTH_ADMIN_SECRET,
     STEAM_API_KEY: process.env.STEAM_API_KEY,
     STEAM_ID: process.env.STEAM_ID,
+    GITLAB_TOKEN: process.env.GITLAB_TOKEN,
     XBOX_API_KEY: process.env.XBOX_API_KEY,
     XBOX_GAMERTAG: process.env.XBOX_GAMERTAG,
     XBOX_PROFILE_URL: process.env.XBOX_PROFILE_URL,
