@@ -61,12 +61,6 @@ export const informationContent = {
 
 /** Source + framing for each `Image` tile. */
 export const imageContent = {
-  work: {
-    src: "/images/me.jpg",
-    alt: "Portrait of Rik Vermeulen",
-    caption: "Team moments and product thinking.",
-    className: "bg-ds-mint text-ds-mint-ink",
-  },
   education: {
     src: "/images/school/hogeschool-rotterdam-logo.svg",
     alt: "Hogeschool Rotterdam logo",
