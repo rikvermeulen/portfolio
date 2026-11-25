@@ -160,10 +160,6 @@ export const bentoRegistry: readonly BentoTile[] = [
     <Information sizeKey={sizeKey} {...informationContent.work} />
   )),
 
-  staticTile("image", "image", (sizeKey) => (
-    <Image sizeKey={sizeKey} {...imageContent.work} />
-  )),
-
   divider("section-break-education", "education"),
 
   staticTile("category-education", "category", (sizeKey) => (
