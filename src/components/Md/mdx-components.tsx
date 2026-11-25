@@ -7,10 +7,14 @@ import {
   CustomH4,
   CustomH5,
   CustomH6,
-} from "@/components/Md/CustomHeading";
+} from "@/components/Md/CustomHeading.tsx";
 import CustomImage from "@/components/Md/CustomImage";
-import { CustomLI, CustomOL, CustomP } from "@/components/Md/CustomRichText";
-import { useMDXComponent } from "next-contentlayer-temp/hooks";
+import {
+  CustomLI,
+  CustomOL,
+  CustomP,
+} from "@/components/Md/CustomRichText.tsx";
+import { useMDXComponent } from "next-contentlayer2/hooks";
 
 const components = {
   h1: CustomH1,
@@ -32,5 +36,9 @@ interface MdxProps {
 export function Mdx({ code }: MdxProps) {
   const Component = useMDXComponent(code);
 
-  return <Component components={components as any} />;
+  return (
+    <Component
+      components={components as Record<string, React.ComponentType<unknown>>}
+    />
+  );
 }

@@ -21,7 +21,7 @@ const Music: React.FC<MusicProps> = ({
   playlist = EMPTY_PLAYLIST,
   className,
 }) => {
-  const [playlistTracks, setPlaylistTracks] = useState<IPlaylistItem[]>([]);
+  const [playlistTracks, setPlaylistTracks] = useState([]);
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
   const [pulsedButton, setPulsedButton] = useState<
     null | "playPause" | "previous" | "next"
