@@ -163,10 +163,6 @@ export const bentoRegistry: readonly BentoTile[] = [
     <Information sizeKey={sizeKey} {...informationContent.work} />
   )),
 
-  staticTile("image", "image", (sizeKey) => (
-    <Image sizeKey={sizeKey} {...imageContent.work} />
-  )),
-
   asyncTile({
     id: "gitlab",
     sizeKey: "gitlab",

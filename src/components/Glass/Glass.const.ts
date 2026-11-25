@@ -10,11 +10,16 @@ export const TINT_CLASSES: Record<GlassTint, string> = {
   adaptive: "bg-white/50 dark:bg-black/30",
 };
 
-// Specular edge highlight, precomputed once from the constant angle.
-const ANGLE_RAD = (GLASS_DEFAULTS.specularAngle * Math.PI) / 180;
-const EDGE_X = Math.cos(ANGLE_RAD).toFixed(2);
-const EDGE_Y = Math.sin(ANGLE_RAD).toFixed(2);
-const EDGE_SIDE = (GLASS_DEFAULTS.edgeHighlight * 0.6).toFixed(2);
+// Specular rim gradient, precomputed once from the constant light angle: the
+// lit corner faces the light, the far corner catches a softer bounce.
+const RIM_ANGLE = GLASS_DEFAULTS.specularAngle + 90;
+const RIM_LIT = (GLASS_DEFAULTS.edgeHighlight + 0.3).toFixed(2);
+const RIM_BOUNCE = GLASS_DEFAULTS.edgeHighlight.toFixed(2);
+const RIM_SIDE = (GLASS_DEFAULTS.edgeHighlight * 0.35).toFixed(2);
+const RIM_GRADIENT = `linear-gradient(${RIM_ANGLE}deg, rgba(255,255,255,${RIM_LIT}), rgba(255,255,255,${RIM_SIDE}) 30%, rgba(255,255,255,${RIM_SIDE}) 70%, rgba(255,255,255,${RIM_BOUNCE}))`;
+// Keeps only the rim span's padding ring: a gradient border that follows radius.
+const RING_MASK =
+  "linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0)";
 
 /**
  * Pointer-following specular hotspot: a soft pool of light gathered under the
@@ -38,12 +43,17 @@ export const illuminateStyle = (radius: number): React.CSSProperties => ({
   display: "none",
 });
 
-/** Rim light: bright ring + directional top-left catch + gentle inner glow. */
+/** Soft inner glow, above the tint. */
+export const glowStyle = (radius: number): React.CSSProperties => ({
+  borderRadius: radius,
+  boxShadow: `inset 0 0 8px rgba(255,255,255,${GLASS_DEFAULTS.glow})`,
+});
+
+/** Rim light: a 1px specular ring, brightest on the lit and opposite corner. */
 export const rimStyle = (radius: number): React.CSSProperties => ({
   borderRadius: radius,
-  boxShadow: [
-    `inset 0 0 0 0.5px rgba(255,255,255,${GLASS_DEFAULTS.edgeHighlight})`,
-    `inset ${EDGE_X}px ${EDGE_Y}px 2px rgba(255,255,255,${EDGE_SIDE})`,
-    `inset 0 0 8px rgba(255,255,255,${GLASS_DEFAULTS.glow})`,
-  ].join(", "),
+  padding: 1,
+  background: RIM_GRADIENT,
+  mask: RING_MASK,
+  maskComposite: "exclude",
 });

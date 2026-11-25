@@ -5,7 +5,7 @@ import type { PlantaPlant, PlantaTokenSet } from "./types.ts";
 import { env } from "@env";
 
 import { isAccessTokenValid } from "./auth.ts";
-import { getPlantaTokens, setPlantaTokens } from "./tokenStore.ts";
+import { loadPlantaTokens, savePlantaTokens } from "./tokenStore.ts";
 
 const API_V1_ENDPOINT = "https://public.planta-api.com/v1";
 
@@ -40,23 +40,27 @@ export class PlantaUnauthorizedError extends PlantaError {
 interface PlantaClientOptions {
   readonly tokens?: PlantaTokenSet;
   readonly authCode?: string;
-  readonly onTokensChanged?: (tokens: PlantaTokenSet) => void;
+  readonly onTokensChanged?: (tokens: PlantaTokenSet) => Promise<void>;
+  /** Re-reads the shared store, to pick up a rotation made by another runtime. */
+  readonly reloadTokens?: () => Promise<PlantaTokenSet | null>;
 }
 
 export class PlantaClient {
   private tokens: PlantaTokenSet | null;
   private readonly authCode?: string;
-  private readonly onTokensChanged?: (tokens: PlantaTokenSet) => void;
+  private readonly onTokensChanged?: (tokens: PlantaTokenSet) => Promise<void>;
+  private readonly reloadTokens?: () => Promise<PlantaTokenSet | null>;
 
   public constructor(options: PlantaClientOptions) {
     this.tokens = options.tokens ?? null;
     this.authCode = options.authCode;
     this.onTokensChanged = options.onTokensChanged;
+    this.reloadTokens = options.reloadTokens;
   }
 
-  private setTokens(tokens: PlantaTokenSet): void {
+  private async setTokens(tokens: PlantaTokenSet): Promise<void> {
     this.tokens = tokens;
-    this.onTokensChanged?.(tokens);
+    await this.onTokensChanged?.(tokens);
   }
 
   /** First page of the user's plants (the dashboard only shows a handful). */
@@ -78,7 +82,13 @@ export class PlantaClient {
         await this.refreshTokens();
         return;
       } catch (error) {
-        if (!(error instanceof PlantaUnauthorizedError) || !this.authCode) {
+        if (!(error instanceof PlantaUnauthorizedError)) {
+          throw error;
+        }
+        if (await this.adoptRotatedTokens()) {
+          return;
+        }
+        if (!this.authCode) {
           throw error;
         }
       }
@@ -92,6 +102,27 @@ export class PlantaClient {
     throw new PlantaUnauthorizedError(
       "Missing Planta credentials. Set PLANTA_REFRESH_TOKEN or PLANTA_AUTH_CODE.",
     );
+  }
+
+  /**
+   * A rejected refresh token may just mean another runtime rotated it after we
+   * loaded it: take the newer stored pair (refreshing it if its access token
+   * has expired too). False when the store holds nothing newer.
+   */
+  private async adoptRotatedTokens(): Promise<boolean> {
+    const stored = await this.reloadTokens?.();
+    if (
+      !stored?.refreshToken ||
+      stored.refreshToken === this.tokens?.refreshToken
+    ) {
+      return false;
+    }
+
+    this.tokens = stored;
+    if (!this.isAccessTokenValid()) {
+      await this.refreshTokens();
+    }
+    return true;
   }
 
   private async authorize(code: string): Promise<void> {
@@ -111,7 +142,7 @@ export class PlantaClient {
       );
     }
 
-    this.setTokens({
+    await this.setTokens({
       accessToken: result.data.accessToken,
       refreshToken: result.data.refreshToken,
       tokenType: result.data.tokenType ?? "Bearer",
@@ -140,7 +171,7 @@ export class PlantaClient {
       );
     }
 
-    this.setTokens({
+    await this.setTokens({
       accessToken: result.data.accessToken,
       refreshToken: result.data.refreshToken ?? this.tokens.refreshToken,
       tokenType: result.data.tokenType ?? this.tokens.tokenType ?? "Bearer",
@@ -250,10 +281,11 @@ export class PlantaClient {
   }
 }
 
-export const createPlantaClientFromEnv = (): PlantaClient => {
+export const createPlantaClientFromEnv = async (): Promise<PlantaClient> => {
   return new PlantaClient({
-    tokens: getPlantaTokens() ?? undefined,
+    tokens: (await loadPlantaTokens()) ?? undefined,
     authCode: env.PLANTA_AUTH_CODE,
-    onTokensChanged: setPlantaTokens,
+    onTokensChanged: savePlantaTokens,
+    reloadTokens: loadPlantaTokens,
   });
 };

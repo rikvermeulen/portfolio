@@ -12,7 +12,8 @@ import { createPlantaClientFromEnv } from "./client.ts";
 const MAX_PLANTS_TO_FETCH = 6 as const;
 
 export const fetchPlantaPlantsData = async (): Promise<PlantaPlantsData> => {
-  const plants = await createPlantaClientFromEnv().getPlants();
+  const client = await createPlantaClientFromEnv();
+  const plants = await client.getPlants();
 
   return {
     plantCards: toPlantaPlantCards(plants.slice(0, MAX_PLANTS_TO_FETCH)),

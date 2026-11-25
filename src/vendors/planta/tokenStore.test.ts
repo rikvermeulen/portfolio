@@ -1,10 +1,4 @@
-import type { PlantaTokenSet } from "./types.ts";
-
-import {
-  getPlantaTokens,
-  resetPlantaTokens,
-  setPlantaTokens,
-} from "./tokenStore.ts";
+import { loadPlantaTokens, savePlantaTokens } from "./tokenStore.ts";
 
 const mockEnv = {
   PLANTA_ACCESS_TOKEN: undefined as string | undefined,
@@ -18,102 +12,131 @@ jest.mock("@env", () => ({
   },
 }));
 
-jest.mock("./tokenPersistence.ts", () => ({
-  readPersistedTokens: jest.fn((): PlantaTokenSet | null => null),
-  writePersistedTokens: jest.fn(),
-}));
+const mockMaybeSingle = jest.fn();
+const mockEq = jest.fn(() => ({ maybeSingle: mockMaybeSingle }));
+const mockSelect = jest.fn(() => ({ eq: mockEq }));
+const mockUpsert = jest.fn();
+const mockFrom = jest.fn(() => ({ select: mockSelect, upsert: mockUpsert }));
 
-const { readPersistedTokens, writePersistedTokens } = jest.requireMock(
-  "./tokenPersistence.ts",
-) as {
-  readPersistedTokens: jest.Mock<PlantaTokenSet | null>;
-  writePersistedTokens: jest.Mock;
-};
+jest.mock("../supabase/admin.ts", () => ({
+  createSupabaseAdminClient: () => ({ from: mockFrom }),
+}));
 
 describe("Planta token store", () => {
   beforeEach(() => {
-    resetPlantaTokens();
-    readPersistedTokens.mockReturnValue(null);
-    writePersistedTokens.mockClear();
+    jest.clearAllMocks();
+    mockMaybeSingle.mockResolvedValue({ data: null, error: null });
+    mockUpsert.mockResolvedValue({ error: null });
     mockEnv.PLANTA_ACCESS_TOKEN = undefined;
     mockEnv.PLANTA_REFRESH_TOKEN = undefined;
     mockEnv.PLANTA_TOKEN_TYPE = "Bearer";
   });
 
-  it("returns null when no tokens are configured in env", () => {
-    expect(getPlantaTokens()).toBeNull();
+  it("reads the single token row", async () => {
+    mockMaybeSingle.mockResolvedValue({
+      data: {
+        access_token: "stored-access",
+        refresh_token: "stored-refresh",
+        token_type: "Bearer",
+      },
+      error: null,
+    });
+    mockEnv.PLANTA_REFRESH_TOKEN = "stale-env-refresh";
+
+    await expect(loadPlantaTokens()).resolves.toEqual({
+      accessToken: "stored-access",
+      refreshToken: "stored-refresh",
+      tokenType: "Bearer",
+    });
+    expect(mockFrom).toHaveBeenCalledWith("planta_tokens");
+    expect(mockEq).toHaveBeenCalledWith("id", 1);
   });
 
-  it("seeds from env on first read", () => {
-    mockEnv.PLANTA_ACCESS_TOKEN = "access-1";
-    mockEnv.PLANTA_REFRESH_TOKEN = "refresh-1";
+  it("maps a stored null refresh token to undefined", async () => {
+    mockMaybeSingle.mockResolvedValue({
+      data: { access_token: "a", refresh_token: null, token_type: "Bearer" },
+      error: null,
+    });
 
-    expect(getPlantaTokens()).toEqual({
-      accessToken: "access-1",
-      refreshToken: "refresh-1",
+    await expect(loadPlantaTokens()).resolves.toEqual({
+      accessToken: "a",
+      refreshToken: undefined,
       tokenType: "Bearer",
     });
   });
 
-  it("seeds from a refresh token alone with an empty access token", () => {
+  it("seeds from env when no row is stored yet", async () => {
+    mockEnv.PLANTA_ACCESS_TOKEN = "env-access";
+    mockEnv.PLANTA_REFRESH_TOKEN = "env-refresh";
+
+    await expect(loadPlantaTokens()).resolves.toEqual({
+      accessToken: "env-access",
+      refreshToken: "env-refresh",
+      tokenType: "Bearer",
+    });
+  });
+
+  it("seeds from a refresh token alone with an empty access token", async () => {
     mockEnv.PLANTA_REFRESH_TOKEN = "refresh-only";
     mockEnv.PLANTA_TOKEN_TYPE = undefined;
 
-    expect(getPlantaTokens()).toEqual({
+    await expect(loadPlantaTokens()).resolves.toEqual({
       accessToken: "",
       refreshToken: "refresh-only",
       tokenType: "Bearer",
     });
   });
 
-  it("only seeds from env once, ignoring later env changes", () => {
-    mockEnv.PLANTA_ACCESS_TOKEN = "access-1";
-    getPlantaTokens();
-
-    mockEnv.PLANTA_ACCESS_TOKEN = "access-2";
-
-    expect(getPlantaTokens()?.accessToken).toBe("access-1");
+  it("returns null with no row and no env tokens", async () => {
+    await expect(loadPlantaTokens()).resolves.toBeNull();
   });
 
-  it("returns tokens written via setPlantaTokens over env", () => {
-    mockEnv.PLANTA_ACCESS_TOKEN = "env-access";
-
-    setPlantaTokens({ accessToken: "stored-access", tokenType: "Bearer" });
-
-    expect(getPlantaTokens()).toEqual({
-      accessToken: "stored-access",
-      tokenType: "Bearer",
-    });
-  });
-
-  it("re-seeds from env after reset", () => {
-    setPlantaTokens({ accessToken: "stored-access" });
-    resetPlantaTokens();
-    mockEnv.PLANTA_ACCESS_TOKEN = "post-reset-access";
-
-    expect(getPlantaTokens()?.accessToken).toBe("post-reset-access");
-  });
-
-  it("prefers the persisted file over env when both exist", () => {
-    mockEnv.PLANTA_ACCESS_TOKEN = "env-access";
-    readPersistedTokens.mockReturnValue({
-      accessToken: "file-access",
-      refreshToken: "file-refresh",
-      tokenType: "Bearer",
+  it("throws when the row can't be read", async () => {
+    mockMaybeSingle.mockResolvedValue({
+      data: null,
+      error: { message: "relation does not exist" },
     });
 
-    expect(getPlantaTokens()?.accessToken).toBe("file-access");
+    await expect(loadPlantaTokens()).rejects.toThrow(
+      "Planta token load failed: relation does not exist",
+    );
   });
 
-  it("persists tokens to the durable file on write", () => {
-    const tokens: PlantaTokenSet = {
-      accessToken: "rotated-access",
-      refreshToken: "rotated-refresh",
-      tokenType: "Bearer",
-    };
+  it("rejects a malformed row", async () => {
+    mockMaybeSingle.mockResolvedValue({
+      data: { access_token: 42 },
+      error: null,
+    });
 
-    setPlantaTokens(tokens);
+    await expect(loadPlantaTokens()).rejects.toThrow();
+  });
 
-    expect(writePersistedTokens).toHaveBeenCalledWith(tokens);
+  it("upserts the rotated token pair into the single row", async () => {
+    await savePlantaTokens({ accessToken: "new-access", refreshToken: "new" });
+
+    expect(mockUpsert).toHaveBeenCalledWith(
+      expect.objectContaining({
+        id: 1,
+        access_token: "new-access",
+        refresh_token: "new",
+        token_type: "Bearer",
+      }),
+    );
+  });
+
+  it("stores a missing refresh token as null and keeps the token type", async () => {
+    await savePlantaTokens({ accessToken: "a", tokenType: "JWT" });
+
+    expect(mockUpsert).toHaveBeenCalledWith(
+      expect.objectContaining({ refresh_token: null, token_type: "JWT" }),
+    );
+  });
+
+  it("throws when the rotated pair can't be saved", async () => {
+    mockUpsert.mockResolvedValue({ error: { message: "permission denied" } });
+
+    await expect(savePlantaTokens({ accessToken: "a" })).rejects.toThrow(
+      "Rotated Planta token could not be saved (permission denied)",
+    );
   });
 });

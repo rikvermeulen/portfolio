@@ -4,7 +4,6 @@ import {
   PlantaError,
   PlantaUnauthorizedError,
 } from "./client.ts";
-import { resetPlantaTokens } from "./tokenStore.ts";
 
 const mockEnv = {
   PLANTA_AUTH_CODE: undefined as string | undefined,
@@ -19,10 +18,24 @@ jest.mock("@env", () => ({
   },
 }));
 
-// Keep the token store off disk during client tests (env-seeded, in-memory).
-jest.mock("./tokenPersistence.ts", () => ({
-  readPersistedTokens: jest.fn(() => null),
-  writePersistedTokens: jest.fn(),
+// The real token store against an in-memory stand-in for the Supabase row.
+let mockTokenRow: unknown = null;
+
+jest.mock("../supabase/admin.ts", () => ({
+  createSupabaseAdminClient: () => ({
+    from: () => ({
+      select: () => ({
+        eq: () => ({
+          maybeSingle: () =>
+            Promise.resolve({ data: mockTokenRow, error: null }),
+        }),
+      }),
+      upsert: (row: unknown) => {
+        mockTokenRow = row;
+        return Promise.resolve({ error: null });
+      },
+    }),
+  }),
 }));
 
 const createUnsignedJwt = (payload: Record<string, unknown>): string => {
@@ -40,7 +53,7 @@ const createUnsignedJwt = (payload: Record<string, unknown>): string => {
 describe("Planta client", () => {
   beforeEach(() => {
     jest.restoreAllMocks();
-    resetPlantaTokens();
+    mockTokenRow = null;
     mockEnv.PLANTA_AUTH_CODE = undefined;
     mockEnv.PLANTA_ACCESS_TOKEN = undefined;
     mockEnv.PLANTA_REFRESH_TOKEN = undefined;
@@ -73,7 +86,7 @@ describe("Planta client", () => {
       ),
     );
 
-    const client = createPlantaClientFromEnv();
+    const client = await createPlantaClientFromEnv();
 
     await expect(client.getPlants()).rejects.toBeInstanceOf(
       PlantaUnauthorizedError,
@@ -136,7 +149,7 @@ describe("Planta client", () => {
         ),
       );
 
-    const client = createPlantaClientFromEnv();
+    const client = await createPlantaClientFromEnv();
     const result = await client.getPlants();
 
     expect(result[0]?.id).toBe("plant-1");
@@ -152,10 +165,10 @@ describe("Planta client", () => {
     );
   });
 
-  it("createPlantaClientFromEnv creates an auth-code-only client when no tokens are set", () => {
+  it("createPlantaClientFromEnv creates an auth-code-only client when no tokens are set", async () => {
     mockEnv.PLANTA_AUTH_CODE = "my-auth-code";
 
-    const client = createPlantaClientFromEnv();
+    const client = await createPlantaClientFromEnv();
 
     // The client should not be null and should be a PlantaClient
     expect(client).toBeInstanceOf(PlantaClient);
@@ -171,7 +184,7 @@ describe("Planta client", () => {
       .spyOn(globalThis, "fetch")
       .mockRejectedValue(new Error("network down"));
 
-    const client = createPlantaClientFromEnv();
+    const client = await createPlantaClientFromEnv();
 
     await expect(client.getPlants()).rejects.toBeInstanceOf(PlantaError);
   });
@@ -186,7 +199,7 @@ describe("Planta client", () => {
     abortError.name = "TimeoutError";
     jest.spyOn(globalThis, "fetch").mockRejectedValue(abortError);
 
-    const client = createPlantaClientFromEnv();
+    const client = await createPlantaClientFromEnv();
 
     await expect(client.getPlants()).rejects.toThrow(
       "Planta request timed out.",
@@ -206,7 +219,7 @@ describe("Planta client", () => {
       }),
     );
 
-    const client = createPlantaClientFromEnv();
+    const client = await createPlantaClientFromEnv();
 
     await expect(client.getPlants()).rejects.toBeInstanceOf(PlantaError);
   });
@@ -227,7 +240,7 @@ describe("Planta client", () => {
         ),
       );
 
-    const client = createPlantaClientFromEnv();
+    const client = await createPlantaClientFromEnv();
 
     await expect(client.getPlants()).rejects.toBeInstanceOf(
       PlantaUnauthorizedError,
@@ -236,7 +249,7 @@ describe("Planta client", () => {
 
   it("throws when no credentials are configured at all", async () => {
     // beforeEach leaves all env vars undefined
-    const client = createPlantaClientFromEnv();
+    const client = await createPlantaClientFromEnv();
     await expect(client.getPlants()).rejects.toBeInstanceOf(
       PlantaUnauthorizedError,
     );
@@ -272,7 +285,7 @@ describe("Planta client", () => {
         ),
       );
 
-    const client = createPlantaClientFromEnv();
+    const client = await createPlantaClientFromEnv();
     const result = await client.getPlants();
 
     expect(result[0]?.id).toBe("plant-ok");
@@ -291,7 +304,7 @@ describe("Planta client", () => {
       }),
     );
 
-    const client = createPlantaClientFromEnv();
+    const client = await createPlantaClientFromEnv();
     await expect(client.getPlants()).rejects.toThrow(
       "Planta authorize did not return accessToken.",
     );
@@ -309,7 +322,7 @@ describe("Planta client", () => {
       }),
     );
 
-    const client = createPlantaClientFromEnv();
+    const client = await createPlantaClientFromEnv();
     await expect(client.getPlants()).rejects.toThrow(
       "Planta refresh did not return accessToken.",
     );
@@ -357,7 +370,7 @@ describe("Planta client", () => {
         ),
       );
 
-    const client = createPlantaClientFromEnv();
+    const client = await createPlantaClientFromEnv();
     const result = await client.getPlants();
 
     expect(result[0]?.id).toBe("plant-retry");
@@ -395,7 +408,7 @@ describe("Planta client", () => {
         ),
       );
 
-    const client = createPlantaClientFromEnv();
+    const client = await createPlantaClientFromEnv();
     await expect(client.getPlants()).rejects.toBeInstanceOf(
       PlantaUnauthorizedError,
     );
@@ -457,7 +470,7 @@ describe("Planta client", () => {
         ),
       );
 
-    const client = createPlantaClientFromEnv();
+    const client = await createPlantaClientFromEnv();
     const result = await client.getPlants();
 
     expect(result[0]?.id).toBe("plant-after-auth");
@@ -502,7 +515,7 @@ describe("Planta client", () => {
         ),
       );
 
-    const client = createPlantaClientFromEnv();
+    const client = await createPlantaClientFromEnv();
     const result = await client.getPlants();
 
     expect(result).toHaveLength(1);
@@ -525,7 +538,7 @@ describe("Planta client", () => {
       }),
     );
 
-    const client = createPlantaClientFromEnv();
+    const client = await createPlantaClientFromEnv();
     const result = await client.getPlants();
 
     expect(result).toHaveLength(0);
@@ -554,7 +567,7 @@ describe("Planta client", () => {
         }),
       );
 
-    const client = createPlantaClientFromEnv();
+    const client = await createPlantaClientFromEnv();
     const result = await client.getPlants();
 
     expect(result[0]?.id).toBe("p1");
@@ -632,7 +645,7 @@ describe("Planta client", () => {
 
     jest.spyOn(globalThis, "fetch").mockRejectedValue("a raw string error");
 
-    const client = createPlantaClientFromEnv();
+    const client = await createPlantaClientFromEnv();
 
     await expect(client.getPlants()).rejects.toThrow(
       "Planta network request failed.",
@@ -650,7 +663,7 @@ describe("Planta client", () => {
       .spyOn(globalThis, "fetch")
       .mockResolvedValue(new Response(null, { status: 200 }));
 
-    const client = createPlantaClientFromEnv();
+    const client = await createPlantaClientFromEnv();
     const result = await client.getPlants();
 
     expect(result).toHaveLength(0);
@@ -669,7 +682,7 @@ describe("Planta client", () => {
       }),
     );
 
-    const client = createPlantaClientFromEnv();
+    const client = await createPlantaClientFromEnv();
 
     await expect(client.getPlants()).rejects.toThrow("HTTP 503");
   });
@@ -698,7 +711,7 @@ describe("Planta client", () => {
       ),
     );
 
-    const client = createPlantaClientFromEnv();
+    const client = await createPlantaClientFromEnv();
 
     await expect(client.getPlants()).rejects.toBeInstanceOf(PlantaError);
   });
@@ -730,17 +743,17 @@ describe("Planta client", () => {
         ),
       );
 
-    const client = createPlantaClientFromEnv();
+    const client = await createPlantaClientFromEnv();
     const result = await client.getPlants();
 
     expect(result[0]?.id).toBe("plant-after-ratelimit");
   });
 
-  it("createPlantaClientFromEnv uses empty accessToken and Bearer when only refreshToken is configured", () => {
+  it("createPlantaClientFromEnv uses empty accessToken and Bearer when only refreshToken is configured", async () => {
     mockEnv.PLANTA_REFRESH_TOKEN = "refresh-only";
     mockEnv.PLANTA_TOKEN_TYPE = undefined;
 
-    const client = createPlantaClientFromEnv();
+    const client = await createPlantaClientFromEnv();
 
     expect(client).toBeInstanceOf(PlantaClient);
   });
@@ -780,13 +793,105 @@ describe("Planta client", () => {
       });
 
     // First (cold) client authorizes with the code, then fetches plants.
-    await createPlantaClientFromEnv().getPlants();
-    // Second (warm) client reuses the persisted token — no re-authorize.
-    await createPlantaClientFromEnv().getPlants();
+    await (await createPlantaClientFromEnv()).getPlants();
+    // Second client (any instance) reads the stored token — no re-authorize.
+    await (await createPlantaClientFromEnv()).getPlants();
 
     const authorizeCalls = fetchMock.mock.calls.filter(
       (call) => call[0] === "https://public.planta-api.com/v1/auth/authorize",
     );
     expect(authorizeCalls).toHaveLength(1);
+  });
+
+  describe("when another runtime rotated the token after this one loaded it", () => {
+    const jsonResponse = (body: unknown, status = 200) =>
+      new Response(JSON.stringify(body), {
+        status,
+        headers: { "content-type": "application/json" },
+      });
+
+    const mockPlanta = (freshAccessToken: string) =>
+      jest.spyOn(globalThis, "fetch").mockImplementation((input, init) => {
+        const url = String(input);
+        if (url.endsWith("/auth/refreshToken")) {
+          const { refreshToken } = JSON.parse(String(init?.body)) as {
+            refreshToken: string;
+          };
+          return Promise.resolve(
+            refreshToken === "newer-refresh"
+              ? jsonResponse({
+                  data: {
+                    accessToken: freshAccessToken,
+                    refreshToken: "newest-refresh",
+                  },
+                })
+              : jsonResponse(
+                  { errorType: "unauthorized", message: "rotated" },
+                  401,
+                ),
+          );
+        }
+        return Promise.resolve(jsonResponse({ data: [{ id: "p1" }] }));
+      });
+
+    beforeEach(() => {
+      mockEnv.PLANTA_ACCESS_TOKEN = createUnsignedJwt({ exp: 1 });
+      mockEnv.PLANTA_REFRESH_TOKEN = "stale-refresh";
+    });
+
+    it("adopts the newer stored pair instead of failing", async () => {
+      const validAccess = createUnsignedJwt({
+        exp: Math.floor(Date.now() / 1000) + 3600,
+      });
+      const fetchMock = mockPlanta(validAccess);
+      const client = await createPlantaClientFromEnv();
+      mockTokenRow = {
+        access_token: validAccess,
+        refresh_token: "newer-refresh",
+        token_type: "Bearer",
+      };
+
+      await expect(client.getPlants()).resolves.toEqual([{ id: "p1" }]);
+      expect(
+        new Headers(fetchMock.mock.calls.at(-1)?.[1]?.headers).get(
+          "Authorization",
+        ),
+      ).toBe(`Bearer ${validAccess}`);
+    });
+
+    it("rethrows a non-auth refresh failure without consulting the store", async () => {
+      jest
+        .spyOn(globalThis, "fetch")
+        .mockResolvedValue(
+          jsonResponse({ errorType: "server_error", message: "boom" }, 500),
+        );
+      const client = await createPlantaClientFromEnv();
+      mockTokenRow = {
+        access_token: "unused",
+        refresh_token: "newer-refresh",
+        token_type: "Bearer",
+      };
+
+      await expect(client.getPlants()).rejects.toThrow("server_error: boom");
+    });
+
+    it("refreshes the newer stored pair when its access token expired too", async () => {
+      const freshAccess = createUnsignedJwt({
+        exp: Math.floor(Date.now() / 1000) + 3600,
+      });
+      mockPlanta(freshAccess);
+      const client = await createPlantaClientFromEnv();
+      mockTokenRow = {
+        access_token: createUnsignedJwt({ exp: 1 }),
+        refresh_token: "newer-refresh",
+        token_type: "Bearer",
+      };
+
+      await expect(client.getPlants()).resolves.toEqual([{ id: "p1" }]);
+      expect(mockTokenRow).toMatchObject({
+        access_token: freshAccess,
+        refresh_token: "newest-refresh",
+      });
+    });
   });
 });
