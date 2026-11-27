@@ -25,6 +25,11 @@ export interface DrawerProps {
   readonly footer?: ReactNode;
   /** Extra classes for the sheet surface. */
   readonly className?: string;
+  /**
+   * Classes for a solid sheet background that replaces the default dark glass.
+   * Set the matching text colour through `className`.
+   */
+  readonly surfaceClassName?: string;
 }
 
 export interface DrawerHandleProps {

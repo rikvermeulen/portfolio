@@ -114,8 +114,9 @@ const PlantDetail = ({ plant }: PlantDetailProps) => {
               >
                 <span
                   className={classnames(
-                    "flex size-9 shrink-0 items-center justify-center rounded-full text-white",
+                    "flex size-9 shrink-0 items-center justify-center rounded-full",
                     tile.bg,
+                    tile.ink,
                   )}
                 >
                   <Icon iconClassName="size-4.5" name={tile.icon} />
