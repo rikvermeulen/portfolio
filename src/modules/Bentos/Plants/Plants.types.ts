@@ -17,5 +17,6 @@ export interface PlantDetailProps {
 /** A care action's tile colour + icon (one tint per action type). */
 export interface ActionTile {
   readonly bg: string;
+  readonly ink: string;
   readonly icon: IconName;
 }

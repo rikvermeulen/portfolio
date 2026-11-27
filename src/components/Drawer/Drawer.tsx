@@ -28,6 +28,7 @@ export default function Drawer({
   children,
   footer,
   className,
+  surfaceClassName,
 }: DrawerProps) {
   const reduceMotion = usePrefersReducedMotion();
   const dragControls = useDragControls();
@@ -75,15 +76,33 @@ export default function Drawer({
             open
             transition={SHEET_SPRING}
             className={classnames(
-              "absolute inset-x-0 top-4 bottom-0 z-30 m-0 flex size-auto touch-none flex-col overflow-hidden rounded-tile bg-transparent p-0 text-white shadow-2xl",
+              "absolute inset-x-0 top-4 bottom-0 z-30 m-0 flex size-auto touch-none flex-col overflow-hidden rounded-tile bg-transparent p-0 shadow-2xl",
+              !surfaceClassName && "text-white",
               className,
             )}
           >
-            <Glass blur={16} intensity={1} radius={RADIUS.tile} tint="dark" />
-            <div
-              aria-hidden="true"
-              className="pointer-events-none absolute inset-0 bg-black/50"
-            />
+            {surfaceClassName ? (
+              <div
+                aria-hidden="true"
+                className={classnames(
+                  "pointer-events-none absolute inset-0",
+                  surfaceClassName,
+                )}
+              />
+            ) : (
+              <>
+                <Glass
+                  blur={16}
+                  intensity={1}
+                  radius={RADIUS.tile}
+                  tint="dark"
+                />
+                <div
+                  aria-hidden="true"
+                  className="pointer-events-none absolute inset-0 bg-black/50"
+                />
+              </>
+            )}
 
             <FocusTrap
               isActive={isOpen}
@@ -127,7 +146,7 @@ function DrawerHandle({ dragControls, onClose }: DrawerHandleProps) {
       type="button"
       className="group relative z-10 flex shrink-0 cursor-grab touch-none items-center justify-center pt-2.5 pb-1.5 focus-visible:outline-none active:cursor-grabbing"
     >
-      <span className="h-1 w-9 rounded-full bg-white/35 transition-colors group-hover:bg-white/50 group-focus-visible:bg-white/70" />
+      <span className="h-1 w-9 rounded-full bg-current/35 transition-colors group-hover:bg-current/50 group-focus-visible:bg-current/70" />
     </button>
   );
 }
@@ -135,13 +154,11 @@ function DrawerHandle({ dragControls, onClose }: DrawerHandleProps) {
 /** Default title/description block, shown when no custom `header` is supplied. */
 function DrawerHeader({ title, description, titleId }: DrawerHeaderProps) {
   return (
-    <header className="shrink-0 px-5 pb-4">
+    <header className="shrink-0 px-5 pt-3 pb-4">
       <p id={titleId} className="text-ds-heading">
         {title}
       </p>
-      {description ? (
-        <p className="text-xs text-white/50">{description}</p>
-      ) : null}
+      {description ? <p className="text-xs opacity-50">{description}</p> : null}
     </header>
   );
 }

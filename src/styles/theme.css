@@ -30,10 +30,13 @@
   --color-ds-mint: #dff5e7;
   --color-ds-mint-ink: #143224;
 
-  /* Plants: surface gradient + ink */
+  /* Plants: flat sage surface + deep-green ink (matches the Planta app) */
+  --color-ds-plant-surface: #e7ecdd;
+  --color-ds-plant-ink: #223d1e;
+
+  /* Plants: care-drawer sheet (keeps the original dark forest look) */
   --color-ds-forest-from: #2b552b;
   --color-ds-forest-to: #234823;
-  --color-ds-forest-ink: #e7edde;
 
   /* Plants: one care-action tint per Planta action type */
   --color-ds-plant-water: #9db0bb;
@@ -42,6 +45,20 @@
   --color-ds-plant-clean: #c6b795;
   --color-ds-plant-repot: #2f3c4f;
   --color-ds-plant-done: #172b17;
+
+  /* Plants: status chips — pastel tint + same-hue ink (Planta style) */
+  --color-ds-plant-water-tint: #cde0ee;
+  --color-ds-plant-water-ink: #2c4a5e;
+  --color-ds-plant-mist-tint: #ffdada;
+  --color-ds-plant-mist-ink: #872324;
+  --color-ds-plant-fertilize-tint: #f5e0a3;
+  --color-ds-plant-fertilize-ink: #6b5212;
+  --color-ds-plant-clean-tint: #ebdcbd;
+  --color-ds-plant-clean-ink: #5c4a26;
+  --color-ds-plant-repot-tint: #d2d9e6;
+  --color-ds-plant-repot-ink: #2f3c4f;
+  --color-ds-plant-healthy-tint: #cbd9b4;
+  --color-ds-plant-healthy-ink: #234823;
 
   /* FindMe map */
   --color-ds-map: #dbeefe;

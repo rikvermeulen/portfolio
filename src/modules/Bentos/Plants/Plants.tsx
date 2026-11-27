@@ -52,9 +52,14 @@ function NudgeButton({ onRemind }: NudgeButtonProps) {
       disabled={pending}
       onClick={() => void nudgeRik()}
       type="button"
-      className="absolute right-5 bottom-5 z-20 flex size-9 cursor-pointer items-center justify-center overflow-hidden rounded-full text-white"
+      className="absolute right-5 bottom-5 z-20 flex size-9 cursor-pointer items-center justify-center overflow-hidden rounded-full text-ds-plant-ink"
     >
-      <Glass intensity={2} radius={18} tint="none" className="bg-white/15" />
+      <Glass
+        intensity={2}
+        radius={18}
+        tint="none"
+        className="bg-ds-plant-ink/10"
+      />
       <Icon iconClassName="relative z-10 size-4" name="bell" />
     </button>
   );
@@ -68,8 +73,8 @@ const Plants = ({ sizeKey, plants, onRemind }: PlantsProps) => {
     <Bento
       app="plants"
       sizes={bentos[sizeKey].sizes}
-      surfaceClassName="bg-linear-to-b from-ds-forest-from to-ds-forest-to"
-      className="relative z-0 text-ds-forest-ink"
+      surfaceClassName="bg-ds-plant-surface"
+      className="relative z-0 text-ds-plant-ink"
     >
       <div className="flex size-full flex-col gap-3 p-5">
         <h2 className="bento-title">Plant Care</h2>
@@ -81,7 +86,7 @@ const Plants = ({ sizeKey, plants, onRemind }: PlantsProps) => {
                 aria-label={`View care details for ${plant.name}`}
                 onClick={() => setSelectedId(plant.id)}
                 type="button"
-                className="flex w-full cursor-pointer items-center gap-2 rounded-2xl text-left focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-white/60"
+                className="flex w-full cursor-pointer items-center gap-2 rounded-2xl text-left focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ds-plant-ink/40"
               >
                 {plant.imageUrl && (
                   <Image
@@ -107,8 +112,9 @@ const Plants = ({ sizeKey, plants, onRemind }: PlantsProps) => {
                         <div
                           key={`${status.state}-${status.label}`}
                           className={classnames(
-                            "relative flex size-5 shrink-0 items-center justify-center rounded-full border-[0.5px] border-white text-white",
+                            "relative flex size-5 shrink-0 items-center justify-center rounded-full",
                             tile.bg,
+                            tile.ink,
                           )}
                         >
                           <Icon
@@ -117,7 +123,7 @@ const Plants = ({ sizeKey, plants, onRemind }: PlantsProps) => {
                             name={tile.icon}
                           />
                           {status.state !== "due" && (
-                            <span className="absolute -right-1 -bottom-1 flex size-3 items-center justify-center rounded-full border-[0.5px] border-white bg-ds-plant-done p-0.5 text-white">
+                            <span className="absolute -right-1 -bottom-1 flex size-3 items-center justify-center rounded-full border-[0.5px] border-ds-plant-surface bg-ds-plant-done p-0.5 text-white">
                               <Icon iconClassName="size-2.5" name="check" />
                             </span>
                           )}
@@ -137,7 +143,9 @@ const Plants = ({ sizeKey, plants, onRemind }: PlantsProps) => {
         description={selected?.scientificName}
         isOpen={selected !== null}
         onOpenChange={(open) => !open && setSelectedId(null)}
+        surfaceClassName="bg-linear-to-b from-ds-forest-from to-ds-forest-to"
         title={selected?.name ?? "Plant"}
+        className="text-white"
       >
         {selected && <PlantDetail plant={selected} />}
       </Drawer>
