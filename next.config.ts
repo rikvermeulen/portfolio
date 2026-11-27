@@ -30,6 +30,14 @@ const config: NextConfig = {
   async headers() {
     return [{ source: "/:path*", headers: nextSecurityHeaders }];
   },
+  // Pages from the pre-2026 portfolio; the content is gone, so send visitors home.
+  async redirects() {
+    return ["/work/:path*", "/archive", "/imprint"].map((source) => ({
+      source,
+      destination: "/",
+      permanent: true,
+    }));
+  },
 };
 
 export default config;
