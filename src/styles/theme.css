@@ -38,12 +38,9 @@
   --color-ds-forest-from: #2b552b;
   --color-ds-forest-to: #234823;
 
-  /* Plants: one care-action tint per Planta action type */
-  --color-ds-plant-water: #9db0bb;
+  /* Plants: care-drawer accents and the done badge */
   --color-ds-plant-mist: #c98d88;
   --color-ds-plant-fertilize: #d8bd6b;
-  --color-ds-plant-clean: #c6b795;
-  --color-ds-plant-repot: #2f3c4f;
   --color-ds-plant-done: #172b17;
 
   /* Plants: status chips — pastel tint + same-hue ink (Planta style) */
